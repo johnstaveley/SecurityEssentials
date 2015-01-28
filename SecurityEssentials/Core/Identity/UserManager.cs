@@ -48,37 +48,43 @@ namespace SecurityEssentials.Core.Identity
 
         #region Create
 
-        public async Task<TMIdentityResult> CreateAsync(string userName, string password, string passwordConfirmation, string email)
+        public async Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, string email)
         {
             var user = await UserStore.FindByNameAsync(userName);
 
-            if (Regex.Matches(password, PasswordValidityRegex).Count == 0)
-            {
-                return new TMIdentityResult(PasswordValidityMessage);
-            }
+			var result = ValidatePassword(password);
+			if (result.Succeeded)
+			{
 
-            if (user == null)
-            {
-                user = new User();
-                user.UserName = userName;
-                var securedPassword = new SecuredPassword(password);
-                try
-                {
-                    user.Enabled = false;
-                    user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
-                    user.Salt = Convert.ToBase64String(securedPassword.Salt);
-                    user.Email = email;
-                    await UserStore.CreateAsync(user);
-                }
-                catch (Exception ex)
-                {
-                    return new TMIdentityResult(ex.Message);
-                }
+				if (user == null)
+				{
+					user = new User();
+					user.UserName = userName;
+					var securedPassword = new SecuredPassword(password);
+					try
+					{
+						user.Enabled = false;
+						user.FirstName = firstName;
+						user.LastName = lastName;
+						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
+						user.Salt = Convert.ToBase64String(securedPassword.Salt);
+						user.Email = email;
+						await UserStore.CreateAsync(user);
+					}
+					catch
+					{
+						return new SEIdentityResult("An error occurred creating the user, please contact the system administrator");
+					}
 
-                return new TMIdentityResult();
-            }
+					return new SEIdentityResult();
+				}
 
-            return new TMIdentityResult("Username already registered");
+				return new SEIdentityResult("Username already registered");
+			}
+			else
+			{
+				return result;
+			}
         }
 
         #endregion
@@ -147,24 +153,33 @@ namespace SecurityEssentials.Core.Identity
 
         #region Change
 
-        public async Task<TMIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        public async Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
-            if (Regex.Matches(newPassword, PasswordValidityRegex).Count == 0)
-            {
-                return new TMIdentityResult(PasswordValidityMessage);
-            }
+			var result = ValidatePassword(newPassword);
+			if (result.Succeeded)
+			{
+				await UserStore.ChangePasswordAsync(userId, oldPassword, newPassword);
+				return new SEIdentityResult();
+			}
+			else
+			{
+				return result;
+			}
 
-            await UserStore.ChangePasswordAsync(userId, oldPassword, newPassword);
-            return new TMIdentityResult();
         }
 
-        public async Task<TMIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
+        public async Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
         {
-            if (Regex.Matches(newPassword, PasswordValidityRegex).Count == 0)
-            {
-                return new TMIdentityResult(PasswordValidityMessage);
-            }
-            return await UserStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
+			var result = ValidatePassword(newPassword);
+			if (result.Succeeded)
+			{
+				await UserStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
+				return new SEIdentityResult();
+			}
+			else
+			{
+				return result;
+			}
         }
 
         public async Task<int> GeneratePasswordResetTokenAsync(int userId)
@@ -174,5 +189,19 @@ namespace SecurityEssentials.Core.Identity
 
         #endregion
 
+		public SEIdentityResult ValidatePassword(string password)
+		{
+			if (Regex.Matches(password, PasswordValidityRegex).Count == 0)
+			{
+				return new SEIdentityResult(PasswordValidityMessage);
+			}
+
+			var badPassword = Context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
+			if (badPassword != null)
+			{
+				return new SEIdentityResult("Your password is on a known list of easy to crack passwords, please choose another");
+			}
+			return new SEIdentityResult();
+		}
     }
 }

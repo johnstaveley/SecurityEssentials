@@ -9,6 +9,7 @@ using System.Web.Routing;
 using System.Security.Claims;
 using SecurityEssentials.Model;
 using SecurityEssentials.Core;
+using System.Web.Helpers;
 
 namespace SecurityEssentials
 {
@@ -34,7 +35,7 @@ namespace SecurityEssentials
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 			AuthConfig.RegisterAuth();
-			//AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
+			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
 			using (var context = new SEContext())
 			{
 				context.Database.Initialize(true);

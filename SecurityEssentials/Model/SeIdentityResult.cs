@@ -5,9 +5,9 @@ using System.Web;
 
 namespace SecurityEssentials.Model
 {
-    public class TMIdentityResult
+    public class SEIdentityResult
     {
-        public TMIdentityResult(IEnumerable<string> errors)
+        public SEIdentityResult(IEnumerable<string> errors)
         {
             if (errors != null && errors.Count() > 0)
             {
@@ -23,11 +23,12 @@ namespace SecurityEssentials.Model
         //
         // Summary:
         //     Failure constructor that takes error messages
-        public TMIdentityResult(params string[] errors) : this(errors.ToList()) { }
+        public SEIdentityResult(params string[] errors) : this(errors.ToList()) { }
 
         // Summary:
         //     List of errors
         public IEnumerable<string> Errors { get; private set; }
         public bool Succeeded { get; private set; }
+
     }
 }

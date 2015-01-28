@@ -31,10 +31,11 @@ namespace SecurityEssentials.Controllers
 
         [HttpPost]
         [Authorize]
-        public void LogOff()
+        public ActionResult LogOff()
         {
             UserManager.SignOut();
             Session.Abandon();
+			return RedirectToAction("LogOn");
         }
 
         #endregion
@@ -42,11 +43,11 @@ namespace SecurityEssentials.Controllers
         #region LogOn
 
         [AllowAnonymous]
-        public ActionResult LogOn(string returnUrl, bool unauthorised = false)
+        public ActionResult LogOn(string returnUrl)
         {
             if (Request.IsAuthenticated)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.ReturnUrl = returnUrl;
             return View("LogOn");
@@ -55,7 +56,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
-        public async Task<ActionResult> LogOn(LogOn model, string returnUrl, bool isBackOffice = false)
+        public async Task<ActionResult> LogOn(LogOn model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +64,7 @@ namespace SecurityEssentials.Controllers
                 if (user != null)
                 {
                     await UserManager.SignInAsync(user.UserName, model.RememberMe);
-                    return RedirectToLocal(returnUrl, isBackOffice);
+                    return RedirectToLocal(returnUrl);
                 }
                 else
                 {
@@ -98,14 +99,13 @@ namespace SecurityEssentials.Controllers
             var result = await UserManager.ChangePasswordAsync(Convert.ToInt32(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
+				// TODO: Email recipient with password change acknowledgement
                 return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             else
             {
                 AddErrors(result);
             }
-
-            //// If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -238,11 +238,11 @@ namespace SecurityEssentials.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserManager.CreateAsync(model.UserName, model.Password, model.ConfirmPassword, model.Email);
+				var result = await UserManager.CreateAsync(model.UserName, model.FirstName, model.LastName, model.Password, model.ConfirmPassword, model.Email);
                 if (result.Succeeded)
                 {
                     await UserManager.SignInAsync(model.UserName, isPersistent: false);
-                    return RedirectToAction("Index", "User");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -258,7 +258,7 @@ namespace SecurityEssentials.Controllers
 
         #region Helper Functions
 
-        private void AddErrors(TMIdentityResult result)
+        private void AddErrors(SEIdentityResult result)
         {
             foreach (var error in result.Errors)
             {
@@ -266,24 +266,15 @@ namespace SecurityEssentials.Controllers
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl, bool isBackOffice = false)
+        private ActionResult RedirectToLocal(string returnUrl)
         {
-            // TODO: For some reason this does not work with http://localhost/SecurityEssentials/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FSecurityEssentials%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
-            // but does work with SecurityEssentials/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FSecurityEssentials%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
             else
             {
-                if (isBackOffice)
-                {
-                    return RedirectToAction("Index", "BackOffice");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Portal");
-                }
+            return RedirectToAction("Index", "Home");
             }
         }
 

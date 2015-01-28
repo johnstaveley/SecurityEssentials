@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.Model
 {
-    public class RegisterExternalLogOnModel
+    public class RegisterExternalLogOn
     {
         [Required]
         [Display(Name = "User name")]

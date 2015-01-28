@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.Model
 {
-    public class LocalPasswordModel
+    public class LocalPassword
     {
         [Required]
         [DataType(DataType.Password)]

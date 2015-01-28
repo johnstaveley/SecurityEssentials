@@ -11,14 +11,14 @@ namespace SecurityEssentials.Core.Identity
 {
     public interface IUserManager
     {
-        Task<TMIdentityResult> CreateAsync(string userName, string password, string passwordConfirmation, string email);
+		Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, string email);
         Task SignInAsync(string userName, bool isPersistent);
         Task<User> FindAsync(string userName, string password);
         Task<User> FindById(int userId);
         Task<User> FindByEmailAsync(string email);
         void SignOut();
-        Task<TMIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
-        Task<TMIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
+        Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
+        Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
         Task<int> GeneratePasswordResetTokenAsync(int userId);
     }
 }

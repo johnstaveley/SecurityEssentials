@@ -44,9 +44,9 @@ namespace SecurityEssentials.Model
         /// The number of failed logon attempts made to this user account
         /// </summary>
         public int FailedLogonAttemptCount { get; set; }
-        [Display(Name = "First Name"), Required, MaxLength(200)]
+        [Display(Name = "First Name"), Required, MaxLength(100)]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name"), Required, MaxLength(200)]
+        [Display(Name = "Last Name"), Required, MaxLength(100)]
         public string LastName { get; set; }
 
         /// <summary>

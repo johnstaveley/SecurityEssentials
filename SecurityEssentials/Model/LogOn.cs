@@ -2,7 +2,7 @@
 
 namespace SecurityEssentials.Model
 {
-    public class LogOnModel
+    public class LogOn
     {
         [Required]
         [Display(Name = "User name")]

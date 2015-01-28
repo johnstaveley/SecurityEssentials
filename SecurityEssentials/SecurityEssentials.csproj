@@ -220,6 +220,7 @@
     <Compile Include="Controllers\AntiForgeryControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
@@ -234,18 +235,25 @@
     <Compile Include="Core\SEContext.cs" />
     <Compile Include="Model\AccountViewModels.cs" />
     <Compile Include="Model\ExternalLogOn.cs" />
-    <Compile Include="Model\LocalPasswordModel.cs" />
-    <Compile Include="Model\LogOnModel.cs" />
-    <Compile Include="Model\RegisterExternalLogOnModel.cs" />
-    <Compile Include="Model\RegisterModel.cs" />
+    <Compile Include="Model\LocalPassword.cs" />
+    <Compile Include="Model\LogOn.cs" />
+    <Compile Include="Model\LookupItem.cs" />
+    <Compile Include="Model\LookupType.cs" />
+    <Compile Include="Model\RegisterExternalLogOn.cs" />
+    <Compile Include="Model\Register.cs" />
     <Compile Include="Model\Role.cs" />
-    <Compile Include="Model\TmIdentityResult.cs" />
+    <Compile Include="Model\SeIdentityResult.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\UsersViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -280,10 +288,18 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\app\antiforgerytoken.js" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
@@ -298,6 +314,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\npm.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -338,11 +355,11 @@
     <Content Include="Views\Account\Recover.cshtml" />
     <Content Include="Views\Account\RecoverPassword.cshtml" />
     <Content Include="Views\Account\RecoverPasswordSuccess.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\_Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Core\Identity\Services\" />
-    <Folder Include="Core\Identity\Store\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

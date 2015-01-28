@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace SecurityEssentials
 {
@@ -19,6 +21,9 @@ namespace SecurityEssentials
 			// To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
 			// For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.
 			//config.EnableQuerySupport();
+			config.Formatters.Remove(config.Formatters.XmlFormatter);
+			var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
+			jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 		}
 	}
 }

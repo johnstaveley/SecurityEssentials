@@ -24,7 +24,7 @@ namespace SecurityEssentials.Core.Identity
         public IPasswordHasher PasswordHasher { get; set; }
         public IIdentityValidator<string> PasswordValidator { get; set; }
         protected UserStore<IdentityUser> Store { get; private set; }
-        private SEContext _dbContext { get; set; }
+        private SEContext dbContext { get; set; }
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace SecurityEssentials.Core.Identity
 
         public UserStore(SEContext dbContext)
         {
-            this._dbContext = dbContext;
+            this.dbContext = dbContext;
         }
 
         #endregion
@@ -44,36 +44,36 @@ namespace SecurityEssentials.Core.Identity
             //user.Id = Guid.NewGuid();
             user.DateCreated = DateTime.Now;
 
-            this._dbContext.User.Add(user);
-            this._dbContext.Configuration.ValidateOnSaveEnabled = false;
+            this.dbContext.User.Add(user);
+            this.dbContext.Configuration.ValidateOnSaveEnabled = false;
 
-            if (await this._dbContext.SaveChangesAsync().ConfigureAwait(false) == 0)
+            if (await this.dbContext.SaveChangesAsync().ConfigureAwait(false) == 0)
                 throw new Exception("Error creating new user");
         }
 
         public async Task UpdateAsync(User user)
         {
-            this._dbContext.User.Attach(user);
-            this._dbContext.Entry(user).State = EntityState.Modified;
+            this.dbContext.User.Attach(user);
+            this.dbContext.Entry(user).State = EntityState.Modified;
 
-            await this._dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(User user)
         {
-            this._dbContext.User.Remove(user);
+            this.dbContext.User.Remove(user);
 
-            await this._dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<User> FindByIdAsync(int userId)
         {
-            return await this._dbContext.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            return await this.dbContext.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
         }
 
         public async Task<User> FindByNameAsync(string userName)
         {
-            return await this._dbContext.User.SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) && string.Compare(u.UserName, userName, StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
+            return await this.dbContext.User.SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) && string.Compare(u.UserName, userName, StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
         }
 
         public async Task<int> GeneratePasswordResetTokenAsync(int userId)
@@ -81,7 +81,7 @@ namespace SecurityEssentials.Core.Identity
             var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
             user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
             user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
-            return await this._dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion
@@ -121,10 +121,10 @@ namespace SecurityEssentials.Core.Identity
             if (disposing)
             {
                 // free managed resources
-                if (this._dbContext != null)
+                if (this.dbContext != null)
                 {
-                    this._dbContext.Dispose();
-                    this._dbContext = null;
+                    this.dbContext.Dispose();
+                    this.dbContext = null;
                 }
             }
         }
@@ -135,7 +135,7 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task<User> FindAsync(string userName, string password)
         {
-            var user = await this._dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
+            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
             if (user != null)
             {
                 var securedPassword = new SecuredPassword(Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt));
@@ -144,13 +144,13 @@ namespace SecurityEssentials.Core.Identity
                     if (securedPassword.Verify(password))
                     {
                         user.FailedLogonAttemptCount = 0;
-                        this._dbContext.SaveChanges();
+                        this.dbContext.SaveChanges();
                         return user;
                     }
                     else
                     {
                         user.FailedLogonAttemptCount += 1;
-                        this._dbContext.SaveChanges();
+                        this.dbContext.SaveChanges();
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task<User> FindByEmailAsync(string email)
         {
-            var user = await this._dbContext.User.SingleOrDefaultAsync(u => u.Email == email).ConfigureAwait(false);
+            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.Email == email).ConfigureAwait(false);
             if (user != null)
             {
                 return user;
@@ -196,12 +196,12 @@ namespace SecurityEssentials.Core.Identity
 
         #region Change
 
-        public async Task<TMIdentityResult> ChangePasswordFromTokenAsync(int userId, string passwordResetToken, string newPassword)
+        public async Task<IdentityResult> ChangePasswordFromTokenAsync(int userId, string passwordResetToken, string newPassword)
         {
             var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
             if (user.PasswordResetToken != passwordResetToken || !user.PasswordResetExpiry.HasValue || user.PasswordResetExpiry < DateTime.Now)
             {
-                return new TMIdentityResult("Your password reset token has expired or does not exist");
+                return new IdentityResult("Your password reset token has expired or does not exist");
             }
             var securedPassword = new SecuredPassword(newPassword);
             if (securedPassword.Verify(newPassword))
@@ -212,8 +212,8 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordResetToken = null;
                 user.FailedLogonAttemptCount = 0;
             }
-            await this._dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return new TMIdentityResult();
+            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return new IdentityResult();
         }
 
         public async Task<int> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
@@ -225,7 +225,7 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
                 user.Salt = Convert.ToBase64String(securedPassword.Salt);
             }
-            return await this._dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion
