@@ -19,16 +19,16 @@ namespace SecurityEssentials.App_Start
 #if !DEBUG
                 CookieSecure = CookieSecureOption.Always,
 #endif
-			//	Provider = new CookieAuthenticationProvider
-			//	{
-			//		OnApplyRedirect = ctx =>
-			//		{
-			//			if (!IsWebApiRequest(ctx.Request))
-			//			{
-			//				ctx.Response.Redirect(ctx.RedirectUri);
-			//			}
-			//		}
-			//	}
+				//Provider = new CookieAuthenticationProvider
+				//{
+				//	OnApplyRedirect = ctx =>
+				//	{
+				//		if (!IsWebApiRequest(ctx.Request))
+				//		{
+				//			ctx.Response.Redirect(ctx.RedirectUri);
+				//		}
+				//	}
+				//}
 			});
 			//// Use a cookie to temporarily store information about a user logging in with a third party login provider
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
