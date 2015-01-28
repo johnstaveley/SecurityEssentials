@@ -1,0 +1,101 @@
+﻿@model SecurityEssentials.ViewModel.UserViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Users - Edit";
+    ViewBag.Active = "Admin";
+}
+
+<div class="reports-wrapper">
+    <div class="scrollable">
+        <div class="max-width">
+            <h4>
+                @Html.ActionLink("Users", "Index") &raquo; Edit User
+            </h4>
+            <div class="toriga-item">
+                <header>
+                    <div class="title">Edit User</div>
+
+                </header>
+                <div class="toriga-item-body">
+                    <div class="colMain">
+                        @using (Html.BeginForm("Edit", "User", FormMethod.Post))
+                        {
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(model => model.User.Id)
+                            @Html.HiddenFor(model => model.IsOwnProfile)
+
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.Email))
+                                @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.Email)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.UserName))
+                                @Html.TextBoxFor(model => model.User.UserName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.UserName)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.Title))
+                                @Html.TextBoxFor(model => model.User.Title, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.Title)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.FirstName))
+                                @Html.TextBoxFor(model => model.User.FirstName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.FirstName)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.LastName))
+                                @Html.TextBoxFor(model => model.User.LastName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.LastName)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.TelNoWork))
+                                @Html.TextBoxFor(model => model.User.TelNoWork, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.TelNoWork)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.TelNoHome))
+                                @Html.TextBoxFor(model => model.User.TelNoHome, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.TelNoHome)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.TelNoMobile))
+                                @Html.TextBoxFor(model => model.User.TelNoMobile, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.TelNoMobile)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.Town))
+                                @Html.TextBoxFor(model => model.User.Town, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.Town)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.Postcode))
+                                @Html.TextBoxFor(model => model.User.Postcode, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.Postcode)
+                            </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.SkypeName))
+                                @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User.SkypeName)
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-addon" for="User_DateCreated"> @Html.DisplayName("Date Created")</label>
+                                @Html.TextBoxFor(model => model.User.DateCreated, new { @class = "disabled form-control" })
+                            </div>
+                            <div>
+                                <input type="submit" value="Save" class="button" />
+                                or  @Html.ActionLink("Cancel", "Index", "User")
+                            </div>
+                            @Html.AntiForgeryToken()
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    @Scripts.Render("~/bundles/users")
+    @Scripts.Render("~/bundles/jqueryval")
+}
