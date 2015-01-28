@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace SecurityEssentials.Core
 {
+
+	/// <summary>
+	/// Uses PBKDF2 algorithm with variable number of iterations
+	/// </summary>
     public class SecuredPassword
     {
 

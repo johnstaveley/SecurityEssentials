@@ -14,7 +14,8 @@ namespace SecurityEssentials.Core
 		{
 
 			// Roles
-			context.Role.Add(new Role() { Id = 1, Description = "Admin" });
+			var adminRole = new Role() { Id = 1, Description = "Admin" };
+			context.Role.Add(adminRole);
 
 			// Users
 			context.User.Add(new User() { 
@@ -25,8 +26,10 @@ namespace SecurityEssentials.Core
 				PasswordHash = "BpC/5HcMA4pnktXCPGY6HeNY9fPPk24JvvN2YyR3JFcd2j6Nen0sZHrf1mucLSMuuxp3CfHWaPIct8jp11YYyUXgihhS+9VA4OUJVz7Ak1uvuT6M+qItK1+tdlsihrpk3PkiuWafte0lcStImz2sCJroxtoGzOxOGSnpFehPIgd5TZBvmI3Crphdxq/dJhRwHIVQrnrXzwA+Aapy3bcXvutFmxS9F3/31BU4F5dJcYWHu+KbPydUlFl7RnM6A7DsnNKVcoDnk1CJZiJCz7WWNos+m+iv0CBE4ENDuP20sLW6x51S/ktcz3mdbn9wT38JM5CoLbS1UdVxdYC+Dkv+kQ==", // Password xsHDjxshdjkKK917&
 				Salt = "K6GuRmwFwOupdDba+C1FqKYwyBuxCykesgiY+fmCVBNVwr7qafuQ7oj9HrgM3LTXMB9LtOkWc4Z7VzB3AjobRk4trmwy7yOyvXnZj9XcBom2s5htHz8tiYhgsV/fHLlNfbeFseOXMLqUN4AFf+/+07j2NiaQK+qLFDSOAFpvsfB6kHF5vk2JgJb8qQSaLAW5FrDFn4f6cqYQJg8H127xPm8WYJiU94sw4dd13XxneKUbzez3yikR20U7rfQMRFKUr2a14vApH4kGsg3F89n8B+w2A/Orz/iarA9uzATag0t2r5MPnQeG58odK5uOPTbWz1mka+gXVcY620SAdyo07Q==", // Password xsHDjxshdjkKK917&
 				Title = "Mrs",
-				UserName = "Admin"
+				UserName = "Admin",
+				UserRoles = new List<UserRole>() { new UserRole() { RoleId = adminRole.Id, UserId = 1 } }
 			}); 
+
 			context.User.Add(new User() { 
 				Id = 2, 
 				DateCreated = DateTime.Now, 
@@ -38,7 +41,7 @@ namespace SecurityEssentials.Core
 				UserName = "User" });
 
 			// Lookup Types
-			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" });
+			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" }); // SECURE: I've only included passwords which comply with the password policy (ignorning case)
 
 			// Lookup Items
 			context.LookupItem.Add(new LookupItem() { Id = 1, Description = "primetime21", LookupTypeId = 1 });

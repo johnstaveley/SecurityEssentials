@@ -199,7 +199,7 @@ namespace SecurityEssentials.Core.Identity
 			var badPassword = Context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
 			if (badPassword != null)
 			{
-				return new SEIdentityResult("Your password is on a known list of easy to crack passwords, please choose another");
+				return new SEIdentityResult("Your password is on a known list of easy to guess passwords, please choose another");
 			}
 			return new SEIdentityResult();
 		}
