@@ -1,5 +1,5 @@
 ﻿
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Model
 {
     public class ExternalLogOn
     {

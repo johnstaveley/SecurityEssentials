@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Model
 {
     public class RegisterModel
     {

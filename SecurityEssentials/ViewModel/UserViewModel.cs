@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using SecurityEssentials.Models;
+using SecurityEssentials.Model;
 
 namespace SecurityEssentials.ViewModel
 {

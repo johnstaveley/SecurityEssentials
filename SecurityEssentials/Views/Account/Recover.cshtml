@@ -1,0 +1,48 @@
+﻿@model SecurityEssentials.Model.Recover
+@{
+    ViewBag.Title = "Recover Password";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="toriga-item">
+            <header>
+                <div class="logo"><a href="/SecurityEssentials/Account/LogOn" class="logo"></a></div>
+                <div class="title"> Recover your password </div>
+            </header>
+            <div class="toriga-item-body">
+                @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+                {
+                    <div class="row">
+                        <div class="col-md-8 alert">@ViewBag.StatusMessage</div>
+                    </div>
+                }
+                <div class="row hidden">
+                    <div class="col-md-12">Enter Email To Recover Password</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">@Html.LabelFor(m => m.Email)</div>
+                    <div class="col-md-4">@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })</div>
+                    <div class="col-md-4">@Html.ValidationMessageFor(m => m.Email)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                        @Html.ActionLink("Cancel", "LogOn", "Account", null, new { @class = "btn btn-primary" })                        
+                        <input type="submit" value="Recover" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <p>
+
+    </p>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

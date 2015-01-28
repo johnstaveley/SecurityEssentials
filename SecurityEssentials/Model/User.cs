@@ -8,7 +8,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Model
 {
 
     public class User : IUser<int>

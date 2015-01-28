@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using SecurityEssentials.Models;
+using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace SecurityEssentials.Core.Identity
         #region Declarations
 
         private readonly UserStore<User> UserStore;
-        private readonly UsersContext Context;
+        private readonly SEContext Context;
         private readonly string PasswordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string PasswordValidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
@@ -40,7 +40,7 @@ namespace SecurityEssentials.Core.Identity
 
         public MyUserManager()
         {
-            Context = new UsersContext();
+            Context = new SEContext();
             UserStore = new UserStore<User>(Context);
         }
 

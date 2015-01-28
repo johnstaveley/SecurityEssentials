@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using SecurityEssentials.Models;
+using SecurityEssentials.Model;
 using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 
@@ -37,50 +37,25 @@ namespace SecurityEssentials.Controllers
             Session.Abandon();
         }
 
-        [HttpPost]
-        [Authorize]
-        public ActionResult LogOffBackOffice()
-        {
-            UserManager.SignOut();
-            Session.Abandon();
-            return RedirectToAction("LogOnBackOffice");
-        }
-
         #endregion
 
         #region LogOn
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed"),
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "unauthorised"), AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult LogOn(string returnUrl, bool unauthorised = false)
         {
             if (Request.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Portal");
+                return RedirectToAction("Index", "User");
             }
             ViewBag.ReturnUrl = returnUrl;
-            ViewBag.IsBackOffice = false;
-            ViewBag.Unauthorised = unauthorised;
-            return View("LogOn");
-        }
-
-        [AllowAnonymous]
-        public ActionResult LogOnBackOffice(string returnUrl)
-        {
-            if (Request.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "BackOffice");
-            }
-            ViewBag.ReturnUrl = returnUrl;
-            ViewBag.IsBackOffice = true;
-            ViewBag.Unauthorised = false;
             return View("LogOn");
         }
 
         [HttpPost]
         [AllowAnonymous]
         [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
-        public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl, bool isBackOffice = false)
+        public async Task<ActionResult> LogOn(LogOn model, string returnUrl, bool isBackOffice = false)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +92,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [Authorize]
         [AllowXRequestsEveryXSecondsAttribute(Name = "ManageUser", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> Manage(ManageUserViewModel model)
+        public async Task<ActionResult> Manage(ManageUser model)
         {
             ViewBag.ReturnUrl = Url.Action("Manage");
             var result = await UserManager.ChangePasswordAsync(Convert.ToInt32(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
@@ -147,7 +122,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> Recover(RecoverModel model)
+        public async Task<ActionResult> Recover(Recover model)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +145,7 @@ namespace SecurityEssentials.Controllers
         public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request["PasswordResetToken"] ?? "";
-			using (var context = new UsersContext())
+			using (var context = new SEContext())
 			{
 				var user = context.User.Where(u => u.PasswordResetToken == passwordResetToken).FirstOrDefault();
 				if (user == null)
@@ -183,7 +158,7 @@ namespace SecurityEssentials.Controllers
 					HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
 					return View("Error", error);
 				}
-				RecoverPasswordModel recoverPasswordModel = new RecoverPasswordModel()
+				RecoverPassword recoverPasswordModel = new RecoverPassword()
 				{
 					Id = user.Id,
 					SecurityAnswer = "",
@@ -198,9 +173,9 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> RecoverPassword(RecoverPasswordModel recoverPasswordModel)
+        public async Task<ActionResult> RecoverPassword(RecoverPassword recoverPasswordModel)
         {
-			using (var context = new UsersContext())
+			using (var context = new SEContext())
 			{
 				var user = context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
 				if (user == null)
@@ -230,7 +205,7 @@ namespace SecurityEssentials.Controllers
 					if (result.Succeeded)
 					{
 						context.SaveChanges();
-						//await _userManager.SignInAsync(user.UserName, false);
+						await UserManager.SignInAsync(user.UserName, false);
 						return View("RecoverPasswordSuccess");
 					}
 					else
@@ -259,7 +234,7 @@ namespace SecurityEssentials.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(Register model)
         {
             if (ModelState.IsValid)
             {
@@ -267,7 +242,7 @@ namespace SecurityEssentials.Controllers
                 if (result.Succeeded)
                 {
                     await UserManager.SignInAsync(model.UserName, isPersistent: false);
-                    return RedirectToAction("Index", "Portal");
+                    return RedirectToAction("Index", "User");
                 }
                 else
                 {
@@ -293,8 +268,8 @@ namespace SecurityEssentials.Controllers
 
         private ActionResult RedirectToLocal(string returnUrl, bool isBackOffice = false)
         {
-            // TODO: For some reason this does not work with http://localhost/Toriga.Prototype.Html5Portal/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FToriga.Prototype.Html5Portal%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
-            // but does work with Toriga.Prototype.Html5Portal/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FToriga.Prototype.Html5Portal%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
+            // TODO: For some reason this does not work with http://localhost/SecurityEssentials/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FSecurityEssentials%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
+            // but does work with SecurityEssentials/account/logon/?unauthorised=true&returnUrl=http%3A%2F%2Flocalhost%2FSecurityEssentials%2FPortal%23%2Fproperty%2F8dabe848-5745-427d-9885-b8a16d74e4c6
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

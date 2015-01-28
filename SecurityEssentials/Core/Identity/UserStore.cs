@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using SecurityEssentials.Models;
+using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -24,13 +24,13 @@ namespace SecurityEssentials.Core.Identity
         public IPasswordHasher PasswordHasher { get; set; }
         public IIdentityValidator<string> PasswordValidator { get; set; }
         protected UserStore<IdentityUser> Store { get; private set; }
-        private UsersContext _dbContext { get; set; }
+        private SEContext _dbContext { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public UserStore(UsersContext dbContext)
+        public UserStore(SEContext dbContext)
         {
             this._dbContext = dbContext;
         }

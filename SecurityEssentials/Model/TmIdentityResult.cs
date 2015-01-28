@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Model
 {
     public class TMIdentityResult
     {

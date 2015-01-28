@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Model
 {
 
-    public class ManageUserViewModel
+    public class ManageUser
     {
         [Required]
         [DataType(DataType.Password)]
@@ -23,7 +23,7 @@ namespace SecurityEssentials.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class LogOnViewModel
+    public class LogOn
     {
         [Required]
         [Display(Name = "User name")]
@@ -38,7 +38,7 @@ namespace SecurityEssentials.Models
         public bool RememberMe { get; set; }
     }
 
-    public class RecoverModel
+    public class Recover
     {
         [Required]
         [Display(Name = "Email Address")]
@@ -46,7 +46,7 @@ namespace SecurityEssentials.Models
 
     }
 
-    public class RecoverPasswordModel
+    public class RecoverPassword
     {
         [Required]
         [Display(Name = "User name")]
@@ -76,7 +76,7 @@ namespace SecurityEssentials.Models
         public string PasswordResetToken { get; set; }
     }
 
-    public class RegisterViewModel
+    public class Register
     {
         [Required]
         [Display(Name = "User name")]

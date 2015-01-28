@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
 using System.Web.Security;
+using SecurityEssentials.Model;
 
-namespace SecurityEssentials.Models
+namespace SecurityEssentials.Core
 {
-	public class UsersContext : DbContext
+	public class SEContext : DbContext
 	{
-		public UsersContext()
+		public SEContext()
 			: base("DefaultConnection")
 		{
+			Database.SetInitializer<SEContext>(new SEDatabaseIntialiser());
 		}
 
         public DbSet<User> User { get; set; }

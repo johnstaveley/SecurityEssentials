@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Toriga.Prototype.Html5Portal.Models
+namespace SecurityEssentials.Model
 {
     public class LogOnModel
     {

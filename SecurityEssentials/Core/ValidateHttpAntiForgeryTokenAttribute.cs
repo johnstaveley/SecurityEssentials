@@ -8,6 +8,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 
+// For use with WebAPI
 // See http://aspnet13.orcsweb.com/web-api/overview/security/preventing-cross-site-request-forgery-(csrf)-attacks
 // taken from http://www.asp.net/single-page-application/overview/templates/breezeknockout-template
 namespace SecurityEssentials.Core

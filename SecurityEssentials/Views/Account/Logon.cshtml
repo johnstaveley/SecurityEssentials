@@ -1,0 +1,37 @@
+﻿@model SecurityEssentials.Model.LogOn
+
+@{
+    ViewBag.Title = "Logon";
+}
+
+@using (Html.BeginForm("Logon", "Account", new { returnUrl = ViewBag.ReturnUrl, isBackOffice = ViewBag.IsBackOffice }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="login-wrapper">
+        <div id="login-box" class="well">
+            <a href="#" class="logo"></a>
+@if (ViewBag.Unauthorised == true) {
+    <text><div class="alert alert-danger">You are not logged in, please log in to access the requested content</div></text>
+}
+            @Html.ValidationSummary(true)
+
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username", @class="form-control" })
+                    
+                @Html.ValidationMessageFor(m => m.UserName)&nbsp;
+                    
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class="form-control" })
+                    
+                @Html.ValidationMessageFor(m => m.Password)&nbsp;
+
+                <a href="Recover" class="btn btn-link pull-right">Forgot?</a>  
+  
+                <input type="submit" value="Log in" class="btn btn-primary btn-block" id="login" />
+                    
+            </div>
+        </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

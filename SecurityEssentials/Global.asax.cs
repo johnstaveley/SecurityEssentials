@@ -7,7 +7,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Security.Claims;
-using SecurityEssentials.Models;
+using SecurityEssentials.Model;
+using SecurityEssentials.Core;
 
 namespace SecurityEssentials
 {
@@ -27,7 +28,6 @@ namespace SecurityEssentials
 
 		protected void Application_Start()
 		{
-			//Database.SetInitializer(new MigrateDatabaseToLatestVersion<UserContext, Configuration>());
 			AreaRegistration.RegisterAllAreas();
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -35,7 +35,7 @@ namespace SecurityEssentials
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 			AuthConfig.RegisterAuth();
 			//AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
-			using (var context = new UsersContext())
+			using (var context = new SEContext())
 			{
 				context.Database.Initialize(true);
 			}
