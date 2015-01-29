@@ -83,6 +83,10 @@
                                 <label class="input-group-addon" for="User_DateCreated"> @Html.DisplayName("Date Created")</label>
                                 @Html.TextBoxFor(model => model.User.DateCreated, new { @class = "disabled form-control" })
                             </div>
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.User.Enabled)
+                                @Html.EditorFor(model => model.User.Enabled, new { @class = "form-control" })
+                            </div>
                             <div>
                                 <input type="submit" value="Save" class="button" />
                                 or  @Html.ActionLink("Cancel", "Index", "User")
@@ -96,6 +100,6 @@
     </div>
 </div>
 @section scripts {
-    @Scripts.Render("~/bundles/users")
+    @Scripts.Render("~/bundles/user")
     @Scripts.Render("~/bundles/jqueryval")
 }

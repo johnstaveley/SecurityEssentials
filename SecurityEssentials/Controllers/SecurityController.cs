@@ -16,7 +16,6 @@ namespace SecurityEssentials.Controllers
 			var user = context.User.Where(u => u.Id == 38).FirstOrDefault();
 			user.LastName = "Bill";
 			return View(user); // Will never get here
-
 		}
 
 		public ActionResult AntiXSS()

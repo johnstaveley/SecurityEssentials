@@ -98,5 +98,17 @@ namespace SecurityEssentials.Model
             UserRoles = new List<UserRole>();
         }
 
+		/// <summary>
+		/// READONLY: FirstName concatenated with LastName
+		/// </summary>
+		[NotMapped]
+		public string FullName
+		{
+			get
+			{
+				return string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0} {1}", this.FirstName, this.LastName).Trim();
+			}
+		}
+
     }
 }

@@ -6,6 +6,7 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
     <meta name="description" content="Security Essentials Project" />
 </head>
@@ -36,8 +37,7 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <ul class="nav nav-pills">
-                                        <li>
-                                            @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })
+                                        <li>Logged on as @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
                                         </li>
                                         <li>
                                             <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
@@ -63,15 +63,15 @@
                                 </li>
                                 @if (Request.IsAuthenticated)
                                 {
-                                    if (User.IsInRole("Admin"))
-                                    {
+                                    //if (User.IsInRole("Admin"))
+                                    //{
                                         <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
                                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
                                             <ul class="dropdown-menu">
                                                 <li>@Html.ActionLink("Users", "Index", "User")</li>
                                             </ul>
                                         </li>
-                                    }
+                                    //}
                                 }
                             </ul>
 
@@ -96,6 +96,7 @@
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/antiforgerytoken")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

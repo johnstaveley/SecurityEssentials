@@ -4,21 +4,19 @@
     ViewBag.Title = "Users - Index";
     ViewBag.Active = "Admin";
 }
-<div class="reports-wrapper">
+<div>
     <div class="scrollable">
-        <div class="max-width">
+        <div>
             <div class="input-group">
                 
                 <label for="quickFindCriteria" class="input-group-addon">Quick Find:</label>
                 <input type="text" class="form-control" id="quickFindCriteria" placeholder="First name, last name or email" />
                 <div class="input-group-btn">
-                    <a id="clearquickfind" style="display: none" class="button">
-                        Clear
-                    </a>
+                    <a id="clearquickfind" style="display: none" class="button">Clear</a>
                     <a id="disableclear" class="button">Clear</a>
                 </div>
             </div>
-            <div id="DeleteUserDialog"></div>
+            <div id="DisableUserDialog"></div>
             <div id="kendoUserGrid"></div>
 
             <form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form>
@@ -27,8 +25,9 @@
 </div>
 @section scripts
 {
+    @Styles.Render("~/Content/kendo/2014.1.318/kendoui")
     @Scripts.Render("~/bundles/kendoui")
     @Scripts.Render("~/bundles/quickfind")
-    @Scripts.Render("~/bundles/antiforgerytoken")
     @Scripts.Render("~/bundles/users")
+
 }
