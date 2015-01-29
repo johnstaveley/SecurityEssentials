@@ -28,5 +28,16 @@ namespace SecurityEssentials.Controllers
 
 			return View();
 		}
+
+		public ActionResult AntiXSS()
+		{
+
+			ViewBag.CssTest = "red";
+			ViewBag.HtmlTest = "<b>If unencoded, this text should appear bold</b>";
+			ViewBag.JavaScriptTest = "hello";
+//			ViewBag.JavaScriptTest = "hello'); alert('hello";
+			return View();
+		}
+
 	}
 }

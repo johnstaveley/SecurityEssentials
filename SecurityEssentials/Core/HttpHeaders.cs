@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace SecurityEssentials.Core
+{
+	/// <summary>
+	/// Http handler that ensures the site can never be loaded in an iFrame and any request to the site is made over SSL
+	/// </summary>
+	public class HttpHeaders : IHttpModule
+	{
+		public void Init(HttpApplication context)
+		{
+			context.PreSendRequestHeaders += context_PreSendRequestHeaders;
+		}
+
+		void context_PreSendRequestHeaders(object sender, EventArgs e)
+		{
+			HttpContext.Current.Response.Headers.Add("X-Frame-Options", "Deny");
+#if !DEBUG
+			HttpContext.Current.Response.AddHeader("Strict-Transport-Security", "max-age=31536000");
+#endif
+		}
+
+		public void Dispose()
+		{
+		}
+	}
+}

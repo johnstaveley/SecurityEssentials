@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AntiXssLibrary">
+      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\AntiXssLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
@@ -75,6 +78,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlSanitizationLibrary">
+      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -222,6 +228,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
+    <Compile Include="Core\HttpHeaders.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
     <Compile Include="Core\Identity\UserStore.cs" />
@@ -357,6 +364,7 @@
     <Content Include="Views\Account\RecoverPasswordSuccess.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\_Delete.cshtml" />
+    <Content Include="Views\Home\AntiXSS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

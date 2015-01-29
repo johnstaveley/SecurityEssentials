@@ -9,15 +9,19 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h3>Created by John Staveley</h3>
+                <h3>Created by John Staveley - 29/01/2015</h3>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2013 with the following amendments:
                 <ul>
-                    <li>Built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation</li>
-                    <li>Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
-                    <li>Enforces a strong password policy</li>
-                    <li>Compares password with a database of known bad passwords</li>
+                    <li>Template built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation</li>
+                    <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
+                    <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
+                    <li>Passwords harder to crack - Enforces a strong password policy</li>
+                    <li>Passwords harder to guess - Compares password entered with a database of frequently used passwords</li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Protects sensitive functions against brute force attacks by throttling web requests</li>
+                    <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
+                    <li>Prevents the site in production from ever being requested over http</li>
+                    <li>Unit tests for password hashing</li>
                 </ul>
             </p>
         </div>
