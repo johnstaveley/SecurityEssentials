@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -37,11 +38,8 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <ul class="nav nav-pills">
-                                        <li>Logged on as @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-                                        </li>
-                                        <li>
-                                            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
-                                        </li>
+                                        <li>Logged on as @User.Identity.Name</li>
+                                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                                     </ul>
                                 }
                             }
@@ -63,15 +61,18 @@
                                 </li>
                                 @if (Request.IsAuthenticated)
                                 {
-                                    //if (User.IsInRole("Admin"))
-                                    //{
-                                        <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
-                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
-                                            <ul class="dropdown-menu">
+                                    <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            @if (User.IsInRole("Admin"))
+                                            {
                                                 <li>@Html.ActionLink("Users", "Index", "User")</li>
-                                            </ul>
-                                        </li>
-                                    //}
+                                            }
+                                            <li>@Html.ActionLink("Manage Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, null)</li>
+                                            <li>@Html.ActionLink("Change Password", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                                        </ul>
+
+                                    </li>
                                 }
                             </ul>
 

@@ -18,6 +18,7 @@
             </div>
             <div id="DisableUserDialog"></div>
             <div id="kendoUserGrid"></div>
+            @Html.HiddenFor(model => model.CurrentUserId)
 
             <form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form>
         </div>

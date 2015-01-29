@@ -237,7 +237,6 @@
     <Compile Include="Core\SecuredPassword.cs" />
     <Compile Include="Core\ThrottleAttribute.cs" />
     <Compile Include="Core\ValidateHttpAntiForgeryTokenAttribute.cs" />
-    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

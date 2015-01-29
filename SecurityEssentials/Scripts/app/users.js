@@ -54,6 +54,7 @@ function disableUserCommand(e) {
                                 $(self).dialog("close");
                             } else {
                                 alert("An error occurred: " + data.message);
+                                $(self).dialog("close");
                             }
                         },
                         type: 'POST',

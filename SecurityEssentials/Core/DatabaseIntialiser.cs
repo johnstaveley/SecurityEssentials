@@ -20,8 +20,8 @@ namespace SecurityEssentials.Core
 			// Users
 			context.User.Add(new User() { 
 				Id = 1, 
-				DateCreated = DateTime.Now, 
-				Email = "user@user.com",
+				DateCreated = DateTime.Now,
+				Email = "admin@admin.com",
 				Enabled = true,
 				FirstName = "Admin", 
 				LastName = "User",
@@ -35,8 +35,8 @@ namespace SecurityEssentials.Core
 
 			context.User.Add(new User() { 
 				Id = 2, 
-				DateCreated = DateTime.Now, 
-				Email = "admin@admin.com",
+				DateCreated = DateTime.Now,
+				Email = "user@user.com",
 				Enabled = true,
 				FirstName = "Standard", 
 				LastName = "User",

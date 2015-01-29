@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using SecurityEssentials.Model;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
+using Microsoft.AspNet.Identity;
 
 namespace SecurityEssentials.Controllers
 {
-    public class UserController : AntiForgeryControllerBase
+	[Authorize]
+	public class UserController : AntiForgeryControllerBase
 	{
 
 		#region Declarations
@@ -35,6 +37,7 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		/// <param name="id">The unique identifier for the user</param>
 		/// <remarks>GET: /User/Disable/5</remarks>
+		[Authorize(Roles = "Admin")]
 		public ActionResult Disable(int id)
 		{
 			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
@@ -48,13 +51,13 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		/// <param name="id">The unique identifier of the User to disable</param>
 		/// <remarks>POST: /User/Disable/5</remarks>
-		[HttpPost]
+		[HttpPost, Authorize(Roles = "Admin")]
 		public JsonResult Disable(int id, FormCollection collection)
 		{
 			if (id == 0) return Json(new { success = false, message = "unable to locate user id" });
 			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null) return Json(new { success = false, message = "unable to locate user" });
-			if (user.UserName == User.Identity.Name) return Json(new { success = false, message = "You cannot disable your own account" });
+			if (user.Id == Convert.ToInt32(User.Identity.GetUserId())) return Json(new { success = false, message = "You cannot disable your own account" });
 			user.Enabled = false;
 			context.SaveChanges();
 			return Json(new { success = true, message = "" });
@@ -74,15 +77,11 @@ namespace SecurityEssentials.Controllers
 			using (var context = new SEContext())
 			{
 				var users = context.User.Where(u => u.Id == id);
-				var currentUser = 1;
-				//var currentUser = Convert.ToInt32(User.Identity.Name);
+				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 				if (users == null) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
-
-				var role = context.User.Where(u => u.Id == id)
-					.FirstOrDefault()
-					.UserRoles.ToList();
-
+				// SECURE: Check user should have access to this account
+				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
 				return View(new UserViewModel(currentUser, user));
 			}
 		}
@@ -93,25 +92,32 @@ namespace SecurityEssentials.Controllers
 			using (var context = new SEContext())
 			{
 
-			var users = context.User.Where(u => u.Id == id);
-			if (users == null) return new HttpNotFoundResult();
-			var user = users.FirstOrDefault();
-			var currentUser = 1;
-			//var currentUser = Convert.ToInt32(User.Identity.Name);
+				var users = context.User.Where(u => u.Id == id);
+				if (users == null) return new HttpNotFoundResult();
+				var user = users.FirstOrDefault();
+				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
+				// SECURE: Check user should have access to this account
+				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
 
-			var propertiesToUpdate = new[]
+				var propertiesToUpdate = new[]
                 {
-                    "Email", "FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
-                    "UserName", "Town","Postcode","SkypeName"
+                    "Email", "FirstName", "Enabled", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
+                    "UserName", "Town","Postcode", "SkypeName"
                 };
+				if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
+				{
+					if (user.Id == currentUser && user.Enabled == false)
+					{
+						ModelState.AddModelError("", "You cannot disable your own user account");
+					}
+					else
+					{
+						context.SaveChanges();
+						return RedirectToAction("Index", "User");
+					}
+				}
 
-			if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
-			{
-				context.SaveChanges();
-				return RedirectToAction("Index", "User");
-			}
-
-			return View(new UserViewModel(currentUser, user));
+				return View(new UserViewModel(currentUser, user));
 			}
 		}
 
@@ -119,16 +125,17 @@ namespace SecurityEssentials.Controllers
 
 		#region Index
 
+		[Authorize(Roles = "Admin")]
 		public ActionResult Index(int page = 1)
 		{
-			return View(new UsersViewModel());
-
+			return View(new UsersViewModel(Convert.ToInt32(User.Identity.GetUserId())));
 		}
 
 		#endregion
 
 		#region Read
 
+		[Authorize(Roles = "Admin")]
 		public JsonResult Read(int page = 0, int pageSize = 20, string searchText = "")
 		{
 			string sortDirection = Request["sort[0][dir]"];
@@ -173,10 +180,7 @@ namespace SecurityEssentials.Controllers
 
 		}
 
-
 		#endregion
 
-
-
-    }
+	}
 }

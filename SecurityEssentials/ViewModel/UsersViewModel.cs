@@ -9,14 +9,16 @@ namespace SecurityEssentials.ViewModel
     {
 
         #region Declarations
-        
+
+		public int CurrentUserId { get; set; }
+
         #endregion
 
         #region Constructor
 
-        public UsersViewModel()            
+        public UsersViewModel(int currentUserId)            
         {
-
+			CurrentUserId = currentUserId;
         }
 
         #endregion
