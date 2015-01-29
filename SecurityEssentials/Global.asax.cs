@@ -22,7 +22,6 @@ namespace SecurityEssentials
 		protected void Application_PreSendRequestHeaders()
 		{
             // SECURE: Remove server information disclosure
-			Response.Headers.Remove("Server");
 			Response.Headers.Remove("X-AspNet-Version");
 			Response.Headers.Remove("X-AspNetMvc-Version");
 		}

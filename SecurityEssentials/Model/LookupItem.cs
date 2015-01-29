@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecurityEssentials.Model
 {
@@ -18,15 +19,14 @@ namespace SecurityEssentials.Model
         public int? GroupId { get; set; }
 
         // Foreign keys
-//        public virtual ICollection<EmailQueue> EntityTypeEmailQueues { get; set; }
+        public virtual ICollection<User> SecurityQuestionLookupItems { get; set; }
         public virtual LookupType LookupType { get; set; }
                                            
         public LookupItem()
         {
             IsOther = false;
             IsHidden = false;
-
-            //EntityTypeEmailQueues = new List<EmailQueue>();
+			SecurityQuestionLookupItems = new List<User>();
         }
 
     }

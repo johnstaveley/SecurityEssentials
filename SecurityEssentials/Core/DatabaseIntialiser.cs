@@ -28,6 +28,8 @@ namespace SecurityEssentials.Core
 				TelNoMobile = "07740101235",
 				PasswordHash = "BpC/5HcMA4pnktXCPGY6HeNY9fPPk24JvvN2YyR3JFcd2j6Nen0sZHrf1mucLSMuuxp3CfHWaPIct8jp11YYyUXgihhS+9VA4OUJVz7Ak1uvuT6M+qItK1+tdlsihrpk3PkiuWafte0lcStImz2sCJroxtoGzOxOGSnpFehPIgd5TZBvmI3Crphdxq/dJhRwHIVQrnrXzwA+Aapy3bcXvutFmxS9F3/31BU4F5dJcYWHu+KbPydUlFl7RnM6A7DsnNKVcoDnk1CJZiJCz7WWNos+m+iv0CBE4ENDuP20sLW6x51S/ktcz3mdbn9wT38JM5CoLbS1UdVxdYC+Dkv+kQ==", // Password xsHDjxshdjkKK917&
 				Salt = "K6GuRmwFwOupdDba+C1FqKYwyBuxCykesgiY+fmCVBNVwr7qafuQ7oj9HrgM3LTXMB9LtOkWc4Z7VzB3AjobRk4trmwy7yOyvXnZj9XcBom2s5htHz8tiYhgsV/fHLlNfbeFseOXMLqUN4AFf+/+07j2NiaQK+qLFDSOAFpvsfB6kHF5vk2JgJb8qQSaLAW5FrDFn4f6cqYQJg8H127xPm8WYJiU94sw4dd13XxneKUbzez3yikR20U7rfQMRFKUr2a14vApH4kGsg3F89n8B+w2A/Orz/iarA9uzATag0t2r5MPnQeG58odK5uOPTbWz1mka+gXVcY620SAdyo07Q==", // Password xsHDjxshdjkKK917&
+				SecurityAnswer = "Chairman Meow",
+				SecurityQuestionLookupItemId = 271,
 				Title = "Mrs",
 				UserName = "Admin",
 				UserRoles = new List<UserRole>() { new UserRole() { RoleId = adminRole.Id, UserId = 1 } }
@@ -43,11 +45,14 @@ namespace SecurityEssentials.Core
 				TelNoMobile = "07881231234",
 				PasswordHash = "8FEhrfoeG+vhIwFUEGvEMv/dSYs4dfnjZJRMeSrgkOtrnwPUAwc4Y35eGiRMU3Gw2NS/sCbnHUpeOn+4kNR/AN+FuyfkZBuZZ/72WiAbFIy+o8CzlCSkvv3H7z2rXyw6UgQXJtYcFLJr0GfIZC2xOWbeaBHvFJLpyxkvXORLHzAM779UPHS9at+wOwAr0cf0nfEIpI58tzCQCadBi9fyg4lxDEvpkISDFxE7YKiSrAp5bofosOnNuDRdidBUwqOGvZM9IvaNUigSpY6LKXpe/x7pv72+4jnSmK5QFylXfA33dc8Jl5r1LGDsJa/hKajoCjACYeD0L5ShPd4RrKbPCw==", // Password x12a;pP02icdjshER
 				Salt = "weSUvc9heWYq/6v1OeefzxiFoQBW8f0+g2nV7d77xGeOwKLR5FG/KTWyjfBED7g3vQIr2lL7Nm6kY1XfQQwAL5A6dhy2lS7CSLxUnmifIPqThKuzyL54xzRfBIdqtrAT+TF74BeMXoIW/KdFXYdHMf8hgSHbDyKQkQQ29bpSLb/ieQPniwTeQTUkI+FE5Mgz2wst2uM/76GWo5QIkxRztQ141I0dpdFn7XoNdOFmMnyg2wDceK73nWi3E4ehuHHGuKLfxQTeRKpV183OW6RHMMSpt97g6VPSS1S367nTMHjj0fYFEtBgdSDPHXdpA0m1ZJwbPzzv+xOX0TIBGdNJdQ==", // Password x12a;pP02icdjshER
+				SecurityAnswer = "Mr Miggins",
+				SecurityQuestionLookupItemId = 271,
 				Title = "Mr", 
 				UserName = "User" });
 
 			// Lookup Types
 			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" }); // SECURE: I've only included passwords which comply with the password policy (ignorning case)
+			context.LookupType.Add(new LookupType() { Id = 2, Description = "Security Questions" }); // SECURE: I've included some sample security questions which are difficult to obtain from the public domain
 
 			// Lookup Items
 			context.LookupItem.Add(new LookupItem() { Id = 1, Description = "primetime21", LookupTypeId = 1 });
@@ -319,6 +324,12 @@ namespace SecurityEssentials.Core
 			context.LookupItem.Add(new LookupItem() { Id = 269, Description = "prelude1", LookupTypeId = 1 });
 			context.LookupItem.Add(new LookupItem() { Id = 270, Description = "19721972", LookupTypeId = 1 });
 
+			// Security Questions
+			context.LookupItem.Add(new LookupItem() { Id = 271, Description = "What is the name of your first pet?", LookupTypeId = 2, Ordinal = 2 });
+			context.LookupItem.Add(new LookupItem() { Id = 272, Description = "What is your mother's maiden name?", LookupTypeId = 2, Ordinal = 1 });
+			context.LookupItem.Add(new LookupItem() { Id = 273, Description = "What is the name of the first person you kissed?", LookupTypeId = 2, Ordinal = 4 });
+			context.LookupItem.Add(new LookupItem() { Id = 274, Description = "What was your childhood nickname?", LookupTypeId = 2, Ordinal = 3 });
+			context.LookupItem.Add(new LookupItem() { Id = 275, Description = "What was your favourite childhood film?", LookupTypeId = 2, Ordinal = 5 });
 
 			base.Seed(context);
 		}

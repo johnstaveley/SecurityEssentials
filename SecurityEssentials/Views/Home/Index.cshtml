@@ -16,14 +16,22 @@
                     <li>Template built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation, Kendo UI</li>
                     <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                     <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
+                    <li>TODO: Secure password reset storage - Stores security question answers in an encrypted form</li>
                     <li>Passwords harder to crack - Enforces a strong password policy</li>
                     <li>Passwords harder to guess - Compares password entered with a database of frequently used passwords</li>
                     <li>User management</li>
+                    <li>TODO: User management - Prevent account enumeration</li>
+                    <li></li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Protects sensitive functions against brute force attacks by throttling web requests</li>
                     <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
                     <li>Prevents the site in production from ever being requested over http</li>
-                    <li>Unit tests for password hashing</li>
+                    <li>Removes server information disclosure headers from responses</li>
+                    <li>Unit tests for password hashing and authorization attributes</li>
+                    TODO: Finish of registration process
+                    TODO: Ensure password can accept special characters
+                    TODO: Prevent auto-completion on register form
+                    TODO: Password reset process
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express</p>

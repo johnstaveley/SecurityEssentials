@@ -38,7 +38,7 @@ namespace SecurityEssentials.Model
         public string UserName { get; set; }
 
         [Display(Name = "Security question")]
-        public string SecurityQuestion { get; set; }
+        public int SecurityQuestion { get; set; }
 
         [Required]
         [Display(Name = "Answer to security question")]

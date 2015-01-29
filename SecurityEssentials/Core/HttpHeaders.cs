@@ -6,7 +6,7 @@ using System.Web;
 namespace SecurityEssentials.Core
 {
 	/// <summary>
-	/// Http handler that ensures the site can never be loaded in an iFrame and any request to the site is made over SSL
+	/// Http handler that ensures the site can never be loaded in an iFrame and any request to the site is made over SSL and removes server identity header
 	/// </summary>
 	public class HttpHeaders : IHttpModule
 	{
@@ -21,6 +21,7 @@ namespace SecurityEssentials.Core
 #if !DEBUG
 			HttpContext.Current.Response.AddHeader("Strict-Transport-Security", "max-age=31536000");
 #endif
+	        HttpContext.Current.Response.Headers.Remove("Server"); // Remove server information disclosure
 		}
 
 		public void Dispose()

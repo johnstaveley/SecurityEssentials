@@ -36,7 +36,11 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// Whether the user can login or not
         /// </summary>
-        public bool Enabled { get; set; } 
+        public bool Enabled { get; set; }
+		/// <summary>
+		/// Whether a user you has registered online is approved or not
+		/// </summary>
+		public bool Approved { get; set; } 
         /// <summary>
         /// Mr, Mrs etc
         /// </summary>
@@ -75,11 +79,13 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// A question known to the user which can be used to reset the password
         /// </summary>
-        public string SecurityQuestion { get; set; }
+		[Required, Display(Name="Security Question")]
+        public int SecurityQuestionLookupItemId { get; set; }
         /// <summary>
         /// The answer to the security question known to the user which can be used to reset the password
         /// </summary>
-        public string SecurityAnswer { get; set; }
+		[Required, Display(Name = "Security Answer"), MinLength(4)]
+		public string SecurityAnswer { get; set; }
         /// <summary>
         /// A token which can be used to reset the password which is emailed to the user
         /// </summary>
@@ -89,12 +95,15 @@ namespace SecurityEssentials.Model
         /// </summary>
         public DateTime? PasswordResetExpiry { get; set; }
 
+		// Foreign Key
+		public virtual LookupItem SecurityQuestionLookupItem { get; set; }
+
         // Reverse navigation
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
         public User()
         {
-
+			Approved = false;
             FailedLogonAttemptCount = 0;
             UserRoles = new List<UserRole>();
         }

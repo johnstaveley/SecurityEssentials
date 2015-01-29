@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using SecurityEssentials.Model;
 using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
+using SecurityEssentials.ViewModel;
 
 namespace SecurityEssentials.Controllers
 {
@@ -162,7 +163,7 @@ namespace SecurityEssentials.Controllers
 				{
 					Id = user.Id,
 					SecurityAnswer = "",
-					SecurityQuestion = user.SecurityQuestion,
+					SecurityQuestion = user.SecurityQuestionLookupItemId,
 					PasswordResetToken = passwordResetToken,
 					UserName = user.UserName
 				};
@@ -229,30 +230,45 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+			var context = new SEContext();
+			var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+			var registerViewModel = new RegisterViewModel("", "", new User(), securityQuestions);
+			return View(registerViewModel);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Register(Register model)
+        public async Task<ActionResult> Register(FormCollection collection)
         {
-            if (ModelState.IsValid)
+			var user = new User();
+			var password = collection["Password"].ToString();
+			var confirmPassword = collection["ConfirmPassword"].ToString();
+			if (ModelState.IsValid)
             {
-				var result = await UserManager.CreateAsync(model.UserName, model.FirstName, model.LastName, model.Password, model.ConfirmPassword, model.Email);
-                if (result.Succeeded)
+				var propertiesToUpdate = new[]
                 {
-                    await UserManager.SignInAsync(model.UserName, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    AddErrors(result);
-                }
+                    "Email", "FirstName", "LastName", "UserName", "SecurityQuestionLookupItemId", "SecurityAnswer"
+                };
+				if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
+				{
+					var result = await UserManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword, user.Email);
+					if (result.Succeeded)
+					{
+						await UserManager.SignInAsync(user.UserName, isPersistent: false);
+						return RedirectToAction("Index", "Home");
+					}
+					else
+					{
+						AddErrors(result);
+					}
+				}
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+			var context = new SEContext();
+			var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+			var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
+			return View(registerViewModel);
+		}
 
         #endregion
 
