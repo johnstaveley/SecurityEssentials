@@ -224,6 +224,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AntiForgeryControllerBase.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Core\Consts.cs" />
@@ -364,7 +365,7 @@
     <Content Include="Views\Account\RecoverPasswordSuccess.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\_Delete.cshtml" />
-    <Content Include="Views\Home\AntiXSS.cshtml" />
+    <Content Include="Views\Security\AntiXSS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

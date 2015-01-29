@@ -55,9 +55,10 @@
                                     </ul>
                                 </li>
                                 <li class="@(ViewBag.Active == "Security" ? "active dropdown" : "dropdown")">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Security <span class="caret"></span></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Security Demo<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("AntiXss", "AntiXss", "Home")</li>
+                                        <li>@Html.ActionLink("Info Disclosure", "InformationDisclosure", "Security")</li>
+                                        <li>@Html.ActionLink("AntiXss", "AntiXss", "Security")</li>
                                     </ul>
                                 </li>
                                 @if (Request.IsAuthenticated)

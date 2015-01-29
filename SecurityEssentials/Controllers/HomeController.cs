@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
-	public class HomeController : Controller
+	public class HomeController : AntiForgeryControllerBase
 	{
 		public ActionResult Index()
 		{
@@ -26,16 +26,6 @@ namespace SecurityEssentials.Controllers
 		{
 			ViewBag.Message = "Your contact page.";
 
-			return View();
-		}
-
-		public ActionResult AntiXSS()
-		{
-
-			ViewBag.CssTest = "red";
-			ViewBag.HtmlTest = "<b>If unencoded, this text should appear bold</b>";
-			ViewBag.JavaScriptTest = "hello";
-//			ViewBag.JavaScriptTest = "hello'); alert('hello";
 			return View();
 		}
 
