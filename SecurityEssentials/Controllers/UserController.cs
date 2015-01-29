@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 
 namespace SecurityEssentials.Controllers
 {
+
 	[Authorize]
 	public class UserController : AntiForgeryControllerBase
 	{
@@ -29,7 +30,7 @@ namespace SecurityEssentials.Controllers
 
 		#endregion
 
-		#region Delete
+		#region Disable
 
 		/// <summary>
 		/// 

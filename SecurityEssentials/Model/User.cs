@@ -18,7 +18,7 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// Username used to log into the application
         /// </summary>
-        [Required]
+        [Required, Display(Name="User name")]
         public string UserName { get; set; }
         /// <summary>
         /// An enryption salt which is used to encrypt the password
@@ -31,6 +31,7 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// The date the user was created
         /// </summary> 
+		[Display(Name="Date Created")]
         public DateTime DateCreated { get; set; }
         /// <summary>
         /// Whether the user can login or not
