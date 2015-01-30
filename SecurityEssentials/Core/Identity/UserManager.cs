@@ -72,6 +72,7 @@ namespace SecurityEssentials.Core.Identity
 						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
 						user.SecurityAnswer = securityAnswer;
 						user.UserName = userName;
+						user.UserLogs.Add(new UserLog() { Description = "Account Created" });
 						await UserStore.CreateAsync(user);
 					}
 					catch
@@ -81,7 +82,8 @@ namespace SecurityEssentials.Core.Identity
 
 					return new SEIdentityResult();
 				}
-
+				
+				// TODO: Log duplicate account creation
 				return new SEIdentityResult("Username already registered");
 			}
 			else

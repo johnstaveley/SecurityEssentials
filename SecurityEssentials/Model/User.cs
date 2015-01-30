@@ -94,11 +94,13 @@ namespace SecurityEssentials.Model
 
         // Reverse navigation
         public virtual ICollection<UserRole> UserRoles { get; set; }
+		public virtual ICollection<UserLog> UserLogs { get; set; }
 
         public User()
         {
 			Approved = false;
             FailedLogonAttemptCount = 0;
+			UserLogs = new List<UserLog>();
             UserRoles = new List<UserRole>();
         }
 

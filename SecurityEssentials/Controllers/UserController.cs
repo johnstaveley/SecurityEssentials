@@ -134,6 +134,31 @@ namespace SecurityEssentials.Controllers
 
 		#endregion
 
+
+		#region Edit
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="id">Unique identifier for the user</param>
+		/// <returns></returns>
+		public ActionResult Log(int id)
+		{
+			using (var context = new SEContext())
+			{
+				var users = context.User.Where(u => u.Id == id);
+				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
+				if (users == null) return new HttpNotFoundResult();
+				var user = users.FirstOrDefault();
+				// SECURE: Check user should have access to this account
+				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
+				ViewBag.UserName = user.UserName;
+				return View(user.UserLogs.OrderByDescending(ul => ul.DateCreated).Take(10).ToList());
+			}
+		}
+
+		#endregion
+
 		#region Read
 
 		[Authorize(Roles = "Admin")]

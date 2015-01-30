@@ -251,6 +251,7 @@
     <Compile Include="Model\RegisterExternalLogOn.cs" />
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\SeIdentityResult.cs" />
+    <Compile Include="Model\UserLog.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1027,6 +1028,7 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.autocomplete.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
     <Content Include="Views\Account\RegisterSuccess.cshtml" />
+    <Content Include="Views\User\Log.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

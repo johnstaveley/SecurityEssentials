@@ -32,7 +32,6 @@ namespace SecurityEssentials.Core
 				Title = "Mrs",
 				UserName = "admin@admin.com",
 				UserRoles = new List<UserRole>() { new UserRole() { RoleId = adminRole.Id, UserId = 1 } }
-				,FailedLogonAttemptCount = 8
 				//,PasswordResetToken = "abc",
 				//PasswordResetExpiry = DateTime.Now.AddDays(1)
 			}); 
@@ -335,5 +334,6 @@ namespace SecurityEssentials.Core
 
 			base.Seed(context);
 		}
+
 	}
 }

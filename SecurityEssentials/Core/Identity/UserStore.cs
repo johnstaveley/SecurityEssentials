@@ -81,6 +81,7 @@ namespace SecurityEssentials.Core.Identity
             var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
             user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
             user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+			user.UserLogs.Add(new UserLog() { Description = "Password reset token generated" });
             return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
@@ -162,6 +163,7 @@ namespace SecurityEssentials.Core.Identity
                     {
                         user.FailedLogonAttemptCount += 1;
 						logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
+						user.UserLogs.Add(new UserLog() { Description = "Failed Logon attempt" });
                         this.dbContext.SaveChanges();
                     }
                 }
@@ -223,6 +225,7 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordResetExpiry = null;
                 user.PasswordResetToken = null;
                 user.FailedLogonAttemptCount = 0;
+				user.UserLogs.Add(new UserLog() { Description = "Password reset using token" });
             }
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
             return new IdentityResult();
@@ -237,6 +240,7 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
                 user.Salt = Convert.ToBase64String(securedPassword.Salt);
             }
+			user.UserLogs.Add(new UserLog() { Description = "Password changed" });
             return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 

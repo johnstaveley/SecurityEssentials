@@ -17,11 +17,12 @@ namespace SecurityEssentials.Core
 			Database.SetInitializer<SEContext>(new SEDatabaseIntialiser());
 		}
 
-        public DbSet<User> User { get; set; }
-		public DbSet<Role> Role { get; set; }
 		public DbSet<LookupItem> LookupItem { get; set; }
 		public DbSet<LookupType> LookupType { get; set; }
-
+		public DbSet<Role> Role { get; set; }
+		public DbSet<User> User { get; set; }
+		public DbSet<UserLog> UserLog { get; set; }
+		
 	}
 
 }
