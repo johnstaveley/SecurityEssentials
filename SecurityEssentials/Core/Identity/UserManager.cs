@@ -48,7 +48,7 @@ namespace SecurityEssentials.Core.Identity
 
         #region Create
 
-        public async Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, string email)
+        public async Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, int securityQuestionLookupItemId, string securityAnswer)
         {
             var user = await UserStore.FindByNameAsync(userName);
 
@@ -68,7 +68,9 @@ namespace SecurityEssentials.Core.Identity
 						user.LastName = lastName;
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
 						user.Salt = Convert.ToBase64String(securedPassword.Salt);
-						user.Email = email;
+						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
+						user.SecurityAnswer = securityAnswer;
+						user.UserName = userName;
 						await UserStore.CreateAsync(user);
 					}
 					catch

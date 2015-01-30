@@ -247,11 +247,12 @@ namespace SecurityEssentials.Controllers
             {
 				var propertiesToUpdate = new[]
                 {
-                    "Email", "FirstName", "LastName", "UserName", "SecurityQuestionLookupItemId", "SecurityAnswer"
+                    "FirstName", "LastName", "UserName", "SecurityQuestionLookupItemId", "SecurityAnswer"
                 };
 				if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
 				{
-					var result = await UserManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword, user.Email);
+					var result = await UserManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword, 
+						user.SecurityQuestionLookupItemId, user.SecurityAnswer);
 					if (result.Succeeded)
 					{
 						await UserManager.SignInAsync(user.UserName, isPersistent: false);

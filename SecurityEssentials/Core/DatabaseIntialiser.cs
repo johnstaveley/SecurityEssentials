@@ -21,7 +21,6 @@ namespace SecurityEssentials.Core
 			context.User.Add(new User() { 
 				Id = 1, 
 				DateCreated = DateTime.Now,
-				Email = "admin@admin.com",
 				Enabled = true,
 				FirstName = "Admin", 
 				LastName = "User",
@@ -31,14 +30,13 @@ namespace SecurityEssentials.Core
 				SecurityAnswer = "Chairman Meow",
 				SecurityQuestionLookupItemId = 271,
 				Title = "Mrs",
-				UserName = "Admin",
+				UserName = "admin@admin.com",
 				UserRoles = new List<UserRole>() { new UserRole() { RoleId = adminRole.Id, UserId = 1 } }
 			}); 
 
 			context.User.Add(new User() { 
 				Id = 2, 
 				DateCreated = DateTime.Now,
-				Email = "user@user.com",
 				Enabled = true,
 				FirstName = "Standard", 
 				LastName = "User",
@@ -47,8 +45,9 @@ namespace SecurityEssentials.Core
 				Salt = "weSUvc9heWYq/6v1OeefzxiFoQBW8f0+g2nV7d77xGeOwKLR5FG/KTWyjfBED7g3vQIr2lL7Nm6kY1XfQQwAL5A6dhy2lS7CSLxUnmifIPqThKuzyL54xzRfBIdqtrAT+TF74BeMXoIW/KdFXYdHMf8hgSHbDyKQkQQ29bpSLb/ieQPniwTeQTUkI+FE5Mgz2wst2uM/76GWo5QIkxRztQ141I0dpdFn7XoNdOFmMnyg2wDceK73nWi3E4ehuHHGuKLfxQTeRKpV183OW6RHMMSpt97g6VPSS1S367nTMHjj0fYFEtBgdSDPHXdpA0m1ZJwbPzzv+xOX0TIBGdNJdQ==", // Password x12a;pP02icdjshER
 				SecurityAnswer = "Mr Miggins",
 				SecurityQuestionLookupItemId = 271,
-				Title = "Mr", 
-				UserName = "User" });
+				Title = "Mr",
+				UserName = "user@user.com"
+			});
 
 			// Lookup Types
 			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" }); // SECURE: I've only included passwords which comply with the password policy (ignorning case)

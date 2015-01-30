@@ -157,9 +157,9 @@ namespace SecurityEssentials.Core.Identity
             return null;
         }
 
-        public async Task<User> FindByEmailAsync(string email)
+		public async Task<User> FindByEmailAsync(string userName)
         {
-            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.Email == email).ConfigureAwait(false);
+            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
             if (user != null)
             {
                 return user;

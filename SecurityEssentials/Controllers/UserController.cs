@@ -147,7 +147,7 @@ namespace SecurityEssentials.Controllers
 						(
 						(!string.IsNullOrEmpty(u.FirstName) && u.FirstName.Contains(searchText)) ||
 						(!string.IsNullOrEmpty(u.LastName) && u.LastName.Contains(searchText)) ||
-						(!string.IsNullOrEmpty(u.Email) && u.Email.Contains(searchText))
+						(!string.IsNullOrEmpty(u.UserName) && u.UserName.Contains(searchText))
 						)
 					));
 
@@ -172,7 +172,6 @@ namespace SecurityEssentials.Controllers
 				u.Id,
 				u.UserName,
 				u.FullName,
-				u.Email,
 				u.TelNoMobile,
 				u.Enabled
 			});

@@ -130,7 +130,6 @@ $(document).ready(function () {
             { field: "FullName", sortable: false, title: "Name" },
             { field: "Id", hidden: true },
             { field: "UserName", title: "User Name"},
-            { field: "Email", title: "Email" },
             { field: "TelNoMobile", title: "Mobile No" },
             {
                 field: "Enabled",

@@ -11,30 +11,38 @@
             </hgroup>
             <p>
                 <h3>Created by John Staveley - 29/01/2015</h3>
-                This Mvc solution was adapted from the standard MVC4 template in VS 2013 with the following amendments:
+                This Mvc solution was adapted from the standard MVC4 template in VS 2013 with the following security features:
                 <ul>
                     <li>Template built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation, Kendo UI</li>
                     <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                     <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
                     <li>TODO: Secure password reset storage - Stores security question answers in an encrypted form</li>
-                    <li>Passwords harder to crack - Enforces a strong password policy</li>
+                    <li>Passwords harder to crack - Enforces a strong password policy and allows special characters</li>
                     <li>Passwords harder to guess - Compares password entered with a database of frequently used passwords</li>
                     <li>User management</li>
                     <li>TODO: User management - Prevent account enumeration</li>
-                    <li></li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Protects sensitive functions against brute force attacks by throttling web requests</li>
                     <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
                     <li>Prevents the site in production from ever being requested over http</li>
                     <li>Removes server information disclosure headers from responses</li>
                     <li>Unit tests for password hashing and authorization attributes</li>
+                    <li>Auto-Complete switched off on registration form to protect sensitive data</li>
                     TODO: Finish of registration process
-                    TODO: Ensure password can accept special characters
-                    TODO: Prevent auto-completion on register form
                     TODO: Password reset process
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express</p>
+            <p>To do
+                <ul>
+                    <li>Session tracking - logoff should invalidate the session, (Optional) - Deny multiple sessions</li>
+                    <li>Apply a good SSL policy on the server: <a href="https://www.ssllabs.com/projects/best-practices/">https://www.ssllabs.com/projects/best-practices/</a></li>
+                    <li>In your deployed app, ensure it does not issue any mixed mode SSL warnings</li>
+                    <li>Encrypt the connection string on the production server</li>
+                    <li>Enable retail mode on the production server, this enforces some security settings even if you forget</li>
+                    <li>Run asafaweb.com on your site to check security standards are enforced</li>
+                </ul>
+            </p>
         </div>
     </section>
 }

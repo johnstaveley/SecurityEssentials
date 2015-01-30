@@ -19,11 +19,6 @@
                             @Html.HiddenFor(model => model.IsOwnProfile)
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.User.Email)
-                                @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.Email)
-                            </div>
-                            <div class="form-group">
                                 @Html.LabelFor(model => model.User.UserName)
                                 @Html.TextBoxFor(model => model.User.UserName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.User.UserName)

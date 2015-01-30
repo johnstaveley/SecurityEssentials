@@ -15,11 +15,11 @@ namespace SecurityEssentials.Model
     {
 
 		public int Id { get; set; }
-        /// <summary>
-        /// Username used to log into the application
-        /// </summary>
-        [Required, Display(Name="User name")]
-        public string UserName { get; set; }
+		/// <summary>
+		/// The email address of the user and username used to login to the application
+		/// </summary>
+		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address")]
+		public string UserName { get; set; }
         /// <summary>
         /// An enryption salt which is used to encrypt the password
         /// </summary>
@@ -53,12 +53,6 @@ namespace SecurityEssentials.Model
         public string FirstName { get; set; }
         [Display(Name = "Last Name"), Required, MaxLength(100)]
         public string LastName { get; set; }
-
-        /// <summary>
-        /// The email address of the user
-        /// </summary>
-        [MaxLength(200)]
-        public string Email { get; set; }
 
         [Display(Name = "Home Telephone number"), MaxLength(200)]
         public string TelNoHome { get; set; }
