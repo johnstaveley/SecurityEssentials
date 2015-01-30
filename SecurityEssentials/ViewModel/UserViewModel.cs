@@ -12,6 +12,7 @@ namespace SecurityEssentials.ViewModel
 
         #region Declarations
 
+		public bool IsAdministrator { get; set; }
         public User User { get; set; }
         public bool IsOwnProfile { get; set; }
 
@@ -19,9 +20,10 @@ namespace SecurityEssentials.ViewModel
 
         #region Constructor
 
-        public UserViewModel(int currentUserId, User user)
+        public UserViewModel(int currentUserId, bool isAdministrator, User user)
         {
             if (currentUserId == user.Id) IsOwnProfile = true; else IsOwnProfile = false;
+			IsAdministrator = isAdministrator;
             User = user;
 
         }

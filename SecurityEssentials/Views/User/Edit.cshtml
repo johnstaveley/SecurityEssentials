@@ -17,6 +17,7 @@
                             @Html.ValidationSummary(true)
                             @Html.HiddenFor(model => model.User.Id)
                             @Html.HiddenFor(model => model.IsOwnProfile)
+                            @Html.HiddenFor(model => model.IsAdministrator)
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.UserName)

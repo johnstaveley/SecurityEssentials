@@ -83,7 +83,7 @@ namespace SecurityEssentials.Controllers
 				var user = users.FirstOrDefault();
 				// SECURE: Check user should have access to this account
 				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
-				return View(new UserViewModel(currentUser, user));
+				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user));
 			}
 		}
 
@@ -100,12 +100,16 @@ namespace SecurityEssentials.Controllers
 				// SECURE: Check user should have access to this account
 				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
 
-				var propertiesToUpdate = new[]
+				var propertiesToUpdate = new List<string>()
                 {
-                    "Email", "FirstName", "Enabled", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
-                    "UserName", "Town","Postcode", "SkypeName"
+                    "FirstName", "Enabled", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
+                    "Town","Postcode", "SkypeName"
                 };
-				if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
+				if (User.IsInRole("Admin"))
+				{
+					propertiesToUpdate.Add("UserName");
+				}
+				if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
 				{
 					if (user.Id == currentUser && user.Enabled == false)
 					{
@@ -118,7 +122,7 @@ namespace SecurityEssentials.Controllers
 					}
 				}
 
-				return View(new UserViewModel(currentUser, user));
+				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user ));
 			}
 		}
 
@@ -134,8 +138,7 @@ namespace SecurityEssentials.Controllers
 
 		#endregion
 
-
-		#region Edit
+		#region Log
 
 		/// <summary>
 		/// 
