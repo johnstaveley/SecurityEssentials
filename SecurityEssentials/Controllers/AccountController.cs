@@ -69,7 +69,7 @@ namespace SecurityEssentials.Controllers
                 }
                 else
                 {
-					// SECURE: Increasing wait time (with random component) for each successive logon failure
+					// SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
 					System.Threading.Thread.Sleep(500 + (user.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or account is locked");
                 }

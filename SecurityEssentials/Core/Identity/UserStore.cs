@@ -147,7 +147,8 @@ namespace SecurityEssentials.Core.Identity
             {
                 var securedPassword = new SecuredPassword(Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt));
 				bool checkFailedLogonAttemptCount = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementCheckFailedLogonAttemptCount"].ToString());
-				if (checkFailedLogonAttemptCount == false || user.FailedLogonAttemptCount < 4)
+				int maximumFailedLogonAttemptCount = Convert.ToInt32(ConfigurationManager.AppSettings["AccountManagementMaximumFailedLogonAttemptCount"].ToString());
+				if (checkFailedLogonAttemptCount == false || user.FailedLogonAttemptCount < maximumFailedLogonAttemptCount)
                 {
                     if (securedPassword.Verify(password))
                     {
