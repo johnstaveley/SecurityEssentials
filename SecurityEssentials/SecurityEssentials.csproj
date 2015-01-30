@@ -1025,6 +1025,7 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.binder.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.autocomplete.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
+    <Content Include="Views\Account\RegisterSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

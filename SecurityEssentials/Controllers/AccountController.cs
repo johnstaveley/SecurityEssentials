@@ -253,10 +253,10 @@ namespace SecurityEssentials.Controllers
 				{
 					var result = await UserManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword, 
 						user.SecurityQuestionLookupItemId, user.SecurityAnswer);
-					if (result.Succeeded)
+					if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
 					{
-						await UserManager.SignInAsync(user.UserName, isPersistent: false);
-						return RedirectToAction("Index", "Home");
+						// TODO: Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+						return View("RegisterSuccess");
 					}
 					else
 					{
