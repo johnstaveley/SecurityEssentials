@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SecurityEssentials.Model
 {
 
-    public class ManageUser
+    public class ChangePassword
     {
         [Required]
         [DataType(DataType.Password)]

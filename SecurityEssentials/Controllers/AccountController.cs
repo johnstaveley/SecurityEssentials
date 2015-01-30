@@ -81,29 +81,29 @@ namespace SecurityEssentials.Controllers
 
         #endregion
 
-        #region Manage
+		#region ChangePassword
 
-        public ActionResult Manage(ManageMessageId? message)
+		public ActionResult ChangePassword(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
-            ViewBag.ReturnUrl = Url.Action("Manage");
+            ViewBag.ReturnUrl = Url.Action("ChangePassword");
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "ManageUser", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> Manage(ManageUser model)
+        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
+		public async Task<ActionResult> ChangePassword(ChangePassword model)
         {
-            ViewBag.ReturnUrl = Url.Action("Manage");
+			ViewBag.ReturnUrl = Url.Action("ChangePassword");
             var result = await UserManager.ChangePasswordAsync(Convert.ToInt32(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
 				// TODO: Email recipient with password change acknowledgement
-                return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+				return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             else
             {

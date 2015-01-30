@@ -80,7 +80,7 @@
                                 @Html.TextBoxFor(model => model.User.DateCreated, new { @class = "form-control", disabled = "disabled" })
                             </div>
                             <div>
-                                <input type="submit" value="Save" class="button" />
+                                <input type="submit" value="Save" class="btn btn-primary" />
                                 or  @Html.ActionLink("Cancel", "Index", "User")
                             </div>
                             @Html.AntiForgeryToken()

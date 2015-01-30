@@ -69,7 +69,9 @@
                                                 <li>@Html.ActionLink("Users", "Index", "User")</li>
                                             }
                                             <li>@Html.ActionLink("Manage Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, null)</li>
-                                            <li>@Html.ActionLink("Change Password", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                                            <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                                            <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "User", new { Id = User.Identity.GetUserId() }, null)</li>
+                                            <li>@Html.ActionLink("Change Security Information", "ChangeSecurity", "User", new { Id = User.Identity.GetUserId() }, null)</li>
                                             <li>@Html.ActionLink("Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, null)</li>
                                         </ul>
 

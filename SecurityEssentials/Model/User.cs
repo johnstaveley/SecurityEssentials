@@ -18,16 +18,18 @@ namespace SecurityEssentials.Model
 		/// <summary>
 		/// The email address of the user and username used to login to the application
 		/// </summary>
-		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address")]
+		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage="This does not appear to be a valid email address")]
 		public string UserName { get; set; }
         /// <summary>
         /// An enryption salt which is used to encrypt the password
         /// </summary>
+		[MaxLength(500)]
         public string Salt { get; set; }
         /// <summary>
         /// A hashed version of the password, uses the salt
         /// </summary>
-        public string PasswordHash { get; set; }
+		[MaxLength(500)]
+		public string PasswordHash { get; set; }
         /// <summary>
         /// The date the user was created
         /// </summary> 
@@ -44,7 +46,8 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// Mr, Mrs etc
         /// </summary>
-        public string Title { get; set; }
+        [MaxLength(20)]
+		public string Title { get; set; }
         /// <summary>
         /// The number of failed logon attempts made to this user account
         /// </summary>
@@ -65,9 +68,10 @@ namespace SecurityEssentials.Model
 
         [MaxLength(200)]
         public string Town { get; set; }
+		[MaxLength(20)]
         public string Postcode { get; set; }
 
-        [Display(Name = "Skype Name")]
+        [Display(Name = "Skype Name"), MaxLength(100)]
         public string SkypeName { get; set; }
 
         /// <summary>
@@ -78,11 +82,12 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// The answer to the security question known to the user which can be used to reset the password
         /// </summary>
-		[Required, Display(Name = "Security Answer"), MinLength(4)]
+		[Required, Display(Name = "Security Answer"), MinLength(4), MaxLength(200)]
 		public string SecurityAnswer { get; set; }
         /// <summary>
         /// A token which can be used to reset the password which is emailed to the user
         /// </summary>
+		[MaxLength(500)]
         public string PasswordResetToken { get; set; }
         /// <summary>
         /// The expiry date and time for the token to reset the password
