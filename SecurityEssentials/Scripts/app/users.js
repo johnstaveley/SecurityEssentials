@@ -141,6 +141,15 @@ $(document).ready(function () {
                 attributes: { style: "text-align: center;" }
             },
             {
+                field: "Approved",
+                type: "Boolean",
+                editable: false,
+                sortable: false,
+                title: "Approved",
+                template: "<input type='checkbox' #= Approved ? checked='checked': '' # class='chkbx' disabled='disabled' />",
+                attributes: { style: "text-align: center;" }
+            },
+            {
                 command: [
                     { text: "Edit", className: 'editUser', click: editUserCommand },
                     { text: "Disable", className: 'disableUser', click: disableUserCommand }

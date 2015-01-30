@@ -64,7 +64,8 @@ namespace SecurityEssentials.Core.Identity
 					var securedPassword = new SecuredPassword(password);
 					try
 					{
-						user.Enabled = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementAutoEnableRegistered"].ToString());
+						user.Approved = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"].ToString());
+						user.Enabled = true;
 						user.FirstName = firstName;
 						user.LastName = lastName;
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);

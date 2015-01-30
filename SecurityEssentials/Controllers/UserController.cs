@@ -148,11 +148,13 @@ namespace SecurityEssentials.Controllers
 
 				var propertiesToUpdate = new List<string>()
                 {
-                    "FirstName", "Enabled", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
+                    "FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
                     "Town","Postcode", "SkypeName"
                 };
 				if (User.IsInRole("Admin"))
 				{
+					propertiesToUpdate.Add("Approved");
+					propertiesToUpdate.Add("Enabled");
 					propertiesToUpdate.Add("UserName");
 				}
 				if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
@@ -247,7 +249,8 @@ namespace SecurityEssentials.Controllers
 				u.UserName,
 				u.FullName,
 				u.TelNoMobile,
-				u.Enabled
+				u.Enabled,
+				u.Approved
 			});
 
 			return Json(new { total = recordCount, data = results }, JsonRequestBehavior.AllowGet);

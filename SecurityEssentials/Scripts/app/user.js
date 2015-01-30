@@ -7,6 +7,7 @@ $(document).ready(function () {
     var isAdministrator = Boolean($('#IsAdministrator').val() === "True" ? true : false);
 
     if (isOwnProfile) {
+        $('#User_Approved').attr('disabled', 'disabled');
         $('#User_Enabled').attr('disabled', 'disabled');
     }
 

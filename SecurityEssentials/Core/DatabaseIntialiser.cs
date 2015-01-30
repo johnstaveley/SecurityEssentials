@@ -19,7 +19,8 @@ namespace SecurityEssentials.Core
 
 			// Users
 			context.User.Add(new User() { 
-				Id = 1, 
+				Id = 1,
+				Approved = true,
 				DateCreated = DateTime.Now,
 				Enabled = true,
 				FirstName = "Admin", 
@@ -37,7 +38,8 @@ namespace SecurityEssentials.Core
 			}); 
 
 			context.User.Add(new User() { 
-				Id = 2, 
+				Id = 2,
+				Approved = true,
 				DateCreated = DateTime.Now,
 				Enabled = true,
 				FirstName = "Standard", 

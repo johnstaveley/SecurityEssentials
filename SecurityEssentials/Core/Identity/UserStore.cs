@@ -142,7 +142,8 @@ namespace SecurityEssentials.Core.Identity
 		/// <returns></returns>
 		public async Task<LogonResult> FindAndCheckLogonAsync(string userName, string password)
         {
-            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
+
+            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved).ConfigureAwait(false);
 			var logonResult = new LogonResult();
             if (user != null)
             {

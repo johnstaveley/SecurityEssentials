@@ -69,11 +69,16 @@
                                 @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.User.SkypeName)
                             </div>
-                            if (User.IsInRole("Admin")) { 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.Enabled)
-                                @Html.EditorFor(model => model.User.Enabled, new { @class = "form-control" })
-                            </div>
+                            if (User.IsInRole("Admin"))
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.User.Approved)
+                                    @Html.EditorFor(model => model.User.Approved, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.User.Enabled)
+                                    @Html.EditorFor(model => model.User.Enabled, new { @class = "form-control" })
+                                </div>
                             }
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.DateCreated)
