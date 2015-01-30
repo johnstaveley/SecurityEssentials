@@ -41,8 +41,8 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task CreateAsync(User user)
         {
-            //user.Id = Guid.NewGuid();
-            user.DateCreated = DateTime.Now;
+
+			user.DateCreated = DateTime.Now;
 
             this.dbContext.User.Add(user);
             this.dbContext.Configuration.ValidateOnSaveEnabled = false;
@@ -74,15 +74,6 @@ namespace SecurityEssentials.Core.Identity
         public async Task<User> FindByNameAsync(string userName)
         {
             return await this.dbContext.User.SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) && string.Compare(u.UserName, userName, StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
-        }
-
-        public async Task<int> GeneratePasswordResetTokenAsync(int userId)
-        {
-            var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
-            user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
-            user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
-			user.UserLogs.Add(new UserLog() { Description = "Password reset token generated" });
-            return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion
@@ -143,7 +134,7 @@ namespace SecurityEssentials.Core.Identity
 		public async Task<LogonResult> FindAndCheckLogonAsync(string userName, string password)
         {
 
-            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved).ConfigureAwait(false);
+            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved && u.EmailVerified).ConfigureAwait(false);
 			var logonResult = new LogonResult();
             if (user != null)
             {
@@ -172,15 +163,15 @@ namespace SecurityEssentials.Core.Identity
 			return logonResult;
         }
 
-		public async Task<User> FindByUserNameAsync(string userName)
-        {
-            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
-            if (user != null)
-            {
-                return user;
-            }
-            return null;
-        }
+		//public async Task<User> FindByUserNameAsync(string userName)
+		//{
+		//	var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
+		//	if (user != null)
+		//	{
+		//		return user;
+		//	}
+		//	return null;
+		//}
 
         #endregion 
 

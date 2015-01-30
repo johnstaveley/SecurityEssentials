@@ -1,6 +1,5 @@
 ﻿@model SecurityEssentials.ViewModel.UserViewModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Users - Edit";
     ViewBag.Active = "Admin";
 }
@@ -68,6 +67,10 @@
                                 @Html.LabelFor(model => model.User.SkypeName)
                                 @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.User.SkypeName)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User.EmailVerified)
+                                @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
                             </div>
                             if (User.IsInRole("Admin"))
                             {

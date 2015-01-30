@@ -65,6 +65,8 @@ namespace SecurityEssentials.Core.Identity
 					try
 					{
 						user.Approved = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"].ToString());
+						user.EmailConfirmationToken = Guid.NewGuid().ToString().Replace("-", "");
+						user.EmailVerified = false;
 						user.Enabled = true;
 						user.FirstName = firstName;
 						user.LastName = lastName;
@@ -133,10 +135,10 @@ namespace SecurityEssentials.Core.Identity
             return await UserStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
         }
 
-        public async Task<User> FindByEmailAsync(string email)
-        {
-            return await UserStore.FindByUserNameAsync(email).ConfigureAwait(false);
-        }
+		//public async Task<User> FindByEmailAsync(string email)
+		//{
+		//	return await UserStore.FindByUserNameAsync(email).ConfigureAwait(false);
+		//}
 
         #endregion
 
@@ -188,11 +190,6 @@ namespace SecurityEssentials.Core.Identity
 			}
         }
 
-        public async Task<int> GeneratePasswordResetTokenAsync(int userId)
-        {
-            return await UserStore.GeneratePasswordResetTokenAsync(userId);
-        }
-
         #endregion
 
 		public SEIdentityResult ValidatePassword(string password)
@@ -205,7 +202,7 @@ namespace SecurityEssentials.Core.Identity
 			var badPassword = Context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
 			if (badPassword != null)
 			{
-				return new SEIdentityResult("Your password is on a known list of easy to guess passwords, please choose another");
+				return new SEIdentityResult("Your password is on a list of easy to guess passwords, please choose another");
 			}
 			return new SEIdentityResult();
 		}

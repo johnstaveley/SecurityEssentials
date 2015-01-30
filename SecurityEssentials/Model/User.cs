@@ -36,14 +36,19 @@ namespace SecurityEssentials.Model
 		[Display(Name="Date Created")]
         public DateTime DateCreated { get; set; }
         /// <summary>
-        /// Whether the user can login or not
+        /// Whether the user can login or not i.e. has been locked out for whatever reason
         /// </summary>
         public bool Enabled { get; set; }
 		/// <summary>
-		/// Whether a user you has registered online is approved or not
+		/// Whether a user you has registered online is approved or not, this can be a manual or automatic process
 		/// </summary>
-		public bool Approved { get; set; } 
-        /// <summary>
+		public bool Approved { get; set; }
+		/// <summary>
+		/// Whether the email address has been verified or not
+		/// </summary>
+		[Display(Name="Email Verified")]
+		public bool EmailVerified { get; set; } 
+		/// <summary>
         /// Mr, Mrs etc
         /// </summary>
         [MaxLength(20)]
@@ -89,6 +94,11 @@ namespace SecurityEssentials.Model
         /// </summary>
 		[MaxLength(500)]
         public string PasswordResetToken { get; set; }
+        /// <summary>
+        /// A token which can be used to confirm the email address is valid
+        /// </summary>
+		[MaxLength(500)]
+		public string EmailConfirmationToken { get; set; }		
         /// <summary>
         /// The expiry date and time for the token to reset the password
         /// </summary>

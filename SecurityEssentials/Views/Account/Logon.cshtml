@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Logon";
+    ViewBag.Active = "Home";
 }
 
 @using (Html.BeginForm("Logon", "Account", new { returnUrl = ViewBag.ReturnUrl, isBackOffice = ViewBag.IsBackOffice }))

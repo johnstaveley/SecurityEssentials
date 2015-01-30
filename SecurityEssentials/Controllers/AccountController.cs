@@ -11,6 +11,7 @@ using SecurityEssentials.Model;
 using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
+using System.Configuration;
 
 namespace SecurityEssentials.Controllers
 {
@@ -102,7 +103,15 @@ namespace SecurityEssentials.Controllers
             var result = await UserManager.ChangePasswordAsync(Convert.ToInt32(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-				// TODO: Email recipient with password change acknowledgement
+				SEContext context = new SEContext();
+				var user = context.User.Where(u => u.Id == Convert.ToInt32(User.Identity.GetUserId())).FirstOrDefault();
+				// Email recipient with password change acknowledgement
+				string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap");
+				string emailSubject = string.Format("{0} - Password change confirmation", ConfigurationManager.AppSettings["ApplicationName"].ToString());
+				Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+				// Log changes
+				user.UserLogs.Add(new UserLog() { Description = "Password Changed" });
+				context.SaveChanges();
 				return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             else
@@ -114,9 +123,34 @@ namespace SecurityEssentials.Controllers
 
         #endregion
 
-        #region Recover
+		#region EmailVerify
 
-        [AllowAnonymous]
+		[AllowAnonymous]
+		[AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		public ActionResult EmailVerify()
+		{
+			var emailVerificationToken = Request["EmailVerficationToken"] ?? "";
+			using (var context = new SEContext())
+			{
+				var user = context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
+				if (user == null)
+				{
+					HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerify");
+					return View("Error", error);
+				}
+				user.EmailVerified = true;
+				user.EmailConfirmationToken = null;
+				user.UserLogs.Add(new UserLog() { Description = "User Confirmed Email Address" });
+				context.SaveChanges();
+				return View("EmailVerificationSuccess");
+			}
+		}
+
+		#endregion
+
+		#region Recover
+
+		[AllowAnonymous]
         public ActionResult Recover()
         {
             return View("Recover");
@@ -130,14 +164,18 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 ViewBag.StatusMessage = "Your request has been processed. If the email you entered was valid and your account active then a reset email will be sent to your address";
-                var user = await UserManager.FindByEmailAsync(model.UserName);
+				var context = new SEContext();
+				var user = context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
                 if (user != null)
                 {
-                    if (user.Enabled == true)
-                    {
-                        await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-						// TODO: Send recovery email with link to recover password form
-                    }
+					user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
+					user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+					// Send recovery email with link to recover password form
+					string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.PasswordResetToken);
+					string emailSubject = string.Format("{0} - Complete the password recovery process", ConfigurationManager.AppSettings["ApplicationName"].ToString());
+					Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+					user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
+					context.SaveChanges();
                 }
             }
 
@@ -240,11 +278,13 @@ namespace SecurityEssentials.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+		[AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
         public async Task<ActionResult> Register(FormCollection collection)
         {
 			var user = new User();
 			var password = collection["Password"].ToString();
 			var confirmPassword = collection["ConfirmPassword"].ToString();
+			var context = new SEContext();
 			if (ModelState.IsValid)
             {
 				var propertiesToUpdate = new[]
@@ -257,7 +297,22 @@ namespace SecurityEssentials.Controllers
 						user.SecurityQuestionLookupItemId, user.SecurityAnswer);
 					if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
 					{
-						// TODO: Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+						user = context.User.Where(u => u.UserName == user.UserName).FirstOrDefault();
+						// Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+						string emailBody = "";
+						string emailSubject = "";
+						if (result.Succeeded)
+						{
+							emailSubject = string.Format("{0} - Complete your registration", ConfigurationManager.AppSettings["ApplicationName"].ToString());
+							emailBody = string.Format("Welcome to {0}, to complete your registration we just need to confirm your email address by clicking <a href='{1}Account/EmailVerify?EmailVerficationToken={2}'>{1}Account/EmailVerify?EmailVerficationToken={2}</a>. If you did not request this registration then you can ignore this email and do not need to take any further action", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.EmailConfirmationToken);
+						}
+						else
+						{
+							emailSubject = string.Format("{0} - Duplicate Registration", ConfigurationManager.AppSettings["ApplicationName"].ToString());
+							emailBody = string.Format("You already have an account on {0}. You (or possibly someone else) just attempted to register on {0} with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='{1}Account/LogOn'>{1}Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='{1}Account/LogOn'>{1}Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString());
+						}						 
+
+						Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 						return View("RegisterSuccess");
 					}
 					else
@@ -267,7 +322,6 @@ namespace SecurityEssentials.Controllers
 				}
             }
 
-			var context = new SEContext();
 			var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
 			var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
 			return View(registerViewModel);

@@ -15,10 +15,9 @@ namespace SecurityEssentials.Core.Identity
         Task SignInAsync(string userName, bool isPersistent);
 		Task<LogonResult> FindAsync(string userName, string password);
         Task<User> FindById(int userId);
-		Task<User> FindByEmailAsync(string userName);
         void SignOut();
         Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
         Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
-        Task<int> GeneratePasswordResetTokenAsync(int userId);
-    }
+
+	}
 }
