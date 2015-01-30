@@ -13,7 +13,7 @@ namespace SecurityEssentials.Core.Identity
     {
 		Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, int securityQuestionLookupItemId, string securityAnswer);
         Task SignInAsync(string userName, bool isPersistent);
-        Task<User> FindAsync(string userName, string password);
+		Task<LogonResult> FindAsync(string userName, string password);
         Task<User> FindById(int userId);
 		Task<User> FindByEmailAsync(string userName);
         void SignOut();

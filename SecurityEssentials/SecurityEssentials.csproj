@@ -231,6 +231,7 @@
     <Compile Include="Core\DatabaseIntialiser.cs" />
     <Compile Include="Core\HttpHeaders.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
+    <Compile Include="Core\Identity\LogonResult.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
     <Compile Include="Core\Identity\UserStore.cs" />
     <Compile Include="Core\OrderByExtensions.cs" />

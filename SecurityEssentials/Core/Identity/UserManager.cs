@@ -125,14 +125,14 @@ namespace SecurityEssentials.Core.Identity
             return await UserStore.FindByIdAsync(userId).ConfigureAwait(false);
         }
 
-        public async Task<User> FindAsync(string userName, string password)
+		public async Task<LogonResult> FindAsync(string userName, string password)
         {
-            return await UserStore.FindAsync(userName, password).ConfigureAwait(false);
+            return await UserStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
         }
 
         public async Task<User> FindByEmailAsync(string email)
         {
-            return await UserStore.FindByEmailAsync(email).ConfigureAwait(false);
+            return await UserStore.FindByUserNameAsync(email).ConfigureAwait(false);
         }
 
         #endregion

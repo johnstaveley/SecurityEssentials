@@ -133,31 +133,42 @@ namespace SecurityEssentials.Core.Identity
 
         #region Find
 
-        public async Task<User> FindAsync(string userName, string password)
+		/// <summary>
+		/// Finds the user from the password, if the password is incorrect then increment the number of failed logon attempts
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		public async Task<LogonResult> FindAndCheckLogonAsync(string userName, string password)
         {
             var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
+			var logonResult = new LogonResult();
             if (user != null)
             {
                 var securedPassword = new SecuredPassword(Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt));
-                if (user.FailedLogonAttemptCount < 4)
+				bool checkFailedLogonAttemptCount = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementCheckFailedLogonAttemptCount"].ToString());
+				if (checkFailedLogonAttemptCount == false || user.FailedLogonAttemptCount < 4)
                 {
                     if (securedPassword.Verify(password))
                     {
                         user.FailedLogonAttemptCount = 0;
                         this.dbContext.SaveChanges();
-                        return user;
+						logonResult.Success = true;
+						logonResult.UserName = user.UserName;
+						return logonResult;
                     }
                     else
                     {
                         user.FailedLogonAttemptCount += 1;
+						logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
                         this.dbContext.SaveChanges();
                     }
                 }
             }
-            return null;
+			return logonResult;
         }
 
-		public async Task<User> FindByEmailAsync(string userName)
+		public async Task<User> FindByUserNameAsync(string userName)
         {
             var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
             if (user != null)

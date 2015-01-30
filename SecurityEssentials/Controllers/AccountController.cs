@@ -62,14 +62,16 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
-                if (user != null)
+                if (user.Success)
                 {
                     await UserManager.SignInAsync(user.UserName, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username/password or account is locked");
+					// SECURE: Increasing wait time (with random component) for each successive logon failure
+					System.Threading.Thread.Sleep(500 + (user.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
+                    ModelState.AddModelError("", "Invalid credentials or account is locked");
                 }
             }
 

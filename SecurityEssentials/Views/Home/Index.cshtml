@@ -17,7 +17,7 @@
                     <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                     <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
                     <li>Passwords harder to crack - Enforces a strong password policy and allows special characters</li>
-                    <li>Passwords harder to guess - Compares password entered with a database of frequently used passwords</li>
+                    <li>Passwords harder to guess - Compares password entered with a database of frequently used (and cracked) passwords</li>
                     <li>User management - Prevents account enumeration on register and reset password forms</li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Protects sensitive functions against brute force attacks by throttling web requests</li>
@@ -26,6 +26,7 @@
                     <li>Removes server information disclosure headers from responses</li>
                     <li>Unit tests for password hashing and authorization attributes</li>
                     <li>Auto-Complete switched off on registration form to protect sensitive data</li>
+                    <li>Increasing wait time on logon failure</li>
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express</p>
@@ -42,6 +43,3 @@
         </div>
     </section>
 }
-<p>
-
-</p>
