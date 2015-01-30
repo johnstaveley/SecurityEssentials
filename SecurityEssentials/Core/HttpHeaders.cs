@@ -17,9 +17,9 @@ namespace SecurityEssentials.Core
 
 		void context_PreSendRequestHeaders(object sender, EventArgs e)
 		{
-			HttpContext.Current.Response.Headers.Add("X-Frame-Options", "Deny");
+			HttpContext.Current.Response.Headers.Add("X-Frame-Options", "Deny"); // Prevent site being viewed in an iFrame
 #if !DEBUG
-			HttpContext.Current.Response.AddHeader("Strict-Transport-Security", "max-age=31536000");
+			HttpContext.Current.Response.AddHeader("Strict-Transport-Security", "max-age=31536000"); // Ensure all future requests to the site are made over SSL
 #endif
 	        HttpContext.Current.Response.Headers.Remove("Server"); // Remove server information disclosure
 		}
