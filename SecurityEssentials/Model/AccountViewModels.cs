@@ -27,7 +27,7 @@ namespace SecurityEssentials.Model
     {
         [Required]
         [Display(Name = "Email Address")]
-        public string Email { get; set; }
+        public string UserName { get; set; }
 
     }
 
@@ -38,7 +38,7 @@ namespace SecurityEssentials.Model
         public string UserName { get; set; }
 
         [Display(Name = "Security question")]
-        public int SecurityQuestion { get; set; }
+        public string SecurityQuestion { get; set; }
 
         [Required]
         [Display(Name = "Answer to security question")]

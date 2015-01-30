@@ -128,13 +128,13 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 ViewBag.StatusMessage = "Your request has been processed. If the email you entered was valid and your account active then a reset email will be sent to your address";
-                var user = await UserManager.FindByEmailAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.UserName);
                 if (user != null)
                 {
                     if (user.Enabled == true)
                     {
                         await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-						// TODO: Send recovery email
+						// TODO: Send recovery email with link to recover password form
                     }
                 }
             }
@@ -148,7 +148,7 @@ namespace SecurityEssentials.Controllers
             var passwordResetToken = Request["PasswordResetToken"] ?? "";
 			using (var context = new SEContext())
 			{
-				var user = context.User.Where(u => u.PasswordResetToken == passwordResetToken).FirstOrDefault();
+				var user = context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.Now).FirstOrDefault();
 				if (user == null)
 				{
 					HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
@@ -163,7 +163,7 @@ namespace SecurityEssentials.Controllers
 				{
 					Id = user.Id,
 					SecurityAnswer = "",
-					SecurityQuestion = user.SecurityQuestionLookupItemId,
+					SecurityQuestion = user.SecurityQuestionLookupItem.Description,
 					PasswordResetToken = passwordResetToken,
 					UserName = user.UserName
 				};

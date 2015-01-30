@@ -32,6 +32,8 @@ namespace SecurityEssentials.Core
 				Title = "Mrs",
 				UserName = "admin@admin.com",
 				UserRoles = new List<UserRole>() { new UserRole() { RoleId = adminRole.Id, UserId = 1 } }
+				//,PasswordResetToken = "abc",
+				//PasswordResetExpiry = DateTime.Now.AddDays(1)
 			}); 
 
 			context.User.Add(new User() { 

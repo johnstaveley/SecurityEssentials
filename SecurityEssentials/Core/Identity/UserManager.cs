@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -63,7 +64,7 @@ namespace SecurityEssentials.Core.Identity
 					var securedPassword = new SecuredPassword(password);
 					try
 					{
-						user.Enabled = false;
+						user.Enabled = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementAutoEnableRegistered"].ToString());
 						user.FirstName = firstName;
 						user.LastName = lastName;
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);

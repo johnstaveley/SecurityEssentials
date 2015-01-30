@@ -25,9 +25,9 @@
                     <div class="col-md-12">Enter Email To Recover Password</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">@Html.LabelFor(m => m.Email)</div>
-                    <div class="col-md-4">@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })</div>
-                    <div class="col-md-4">@Html.ValidationMessageFor(m => m.Email)</div>
+                    <div class="col-md-4">@Html.LabelFor(m => m.UserName)</div>
+                    <div class="col-md-4">@Html.TextBoxFor(m => m.UserName, new { @class = "form-control", autocomplete = "off" })</div>
+                    <div class="col-md-4">@Html.ValidationMessageFor(m => m.UserName)</div>
                 </div>
                 <div class="row">
                     <div class="col-md-4"></div>
