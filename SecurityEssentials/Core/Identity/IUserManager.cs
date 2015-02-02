@@ -16,8 +16,8 @@ namespace SecurityEssentials.Core.Identity
 		Task<LogonResult> FindAsync(string userName, string password);
         Task<User> FindById(int userId);
         void SignOut();
-        Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
-        Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
+		Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
+		Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
 
 	}
 }

@@ -17,7 +17,7 @@
                     <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                     <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
                     <li>Passwords harder to crack - Enforces a strong password policy and allows special characters</li>
-                    <li>Passwords harder to guess - Compares password entered with a database of frequently used (and cracked) passwords</li>
+                    <li>Passwords harder to guess - Compares password entered with a database of frequently used (and cracked) passwords and no personal information is allowed to be reused in the password</li>
                     <li>Account management - Prevents account enumeration on register and reset password forms</li>
                     <li>Account management - Each user can see a summary of their most recent account activity to check for any illicit activity</li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
@@ -34,11 +34,6 @@
             <p>To do
                 <ul>
                     <li>Session tracking - logoff should invalidate the session, (Optional) - Deny multiple sessions</li>
-                    <li>Apply a good SSL policy on the server: <a href="https://www.ssllabs.com/projects/best-practices/">https://www.ssllabs.com/projects/best-practices/</a></li>
-                    <li>In your deployed app, ensure it does not issue any mixed mode SSL warnings</li>
-                    <li>Encrypt the connection string on the production server</li>
-                    <li>Enable retail mode on the production server, this enforces some security settings even if you forget</li>
-                    <li>Run asafaweb.com on your site to check security standards are enforced</li>
                 </ul>
             </p>
         </div>

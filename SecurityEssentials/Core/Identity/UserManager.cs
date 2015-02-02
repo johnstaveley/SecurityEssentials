@@ -53,7 +53,7 @@ namespace SecurityEssentials.Core.Identity
         {
             var user = await UserStore.FindByNameAsync(userName);
 
-			var result = ValidatePassword(password);
+			var result = ValidatePassword(password, new List<string>() {firstName, lastName, securityAnswer});
 			if (result.Succeeded)
 			{
 
@@ -135,12 +135,7 @@ namespace SecurityEssentials.Core.Identity
             return await UserStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
         }
 
-		//public async Task<User> FindByEmailAsync(string email)
-		//{
-		//	return await UserStore.FindByUserNameAsync(email).ConfigureAwait(false);
-		//}
-
-        #endregion
+		#endregion
 
         #region SignInOut
 
@@ -161,9 +156,10 @@ namespace SecurityEssentials.Core.Identity
 
         #region Change
 
-        public async Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
-        {
-			var result = ValidatePassword(newPassword);
+		public async Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+		{
+			var user = await FindById(userId);
+			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{
 				await UserStore.ChangePasswordAsync(userId, oldPassword, newPassword);
@@ -174,11 +170,12 @@ namespace SecurityEssentials.Core.Identity
 				return result;
 			}
 
-        }
+		}
 
-        public async Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
-        {
-			var result = ValidatePassword(newPassword);
+		public async Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
+		{
+			var user = await FindById(userId);
+			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{
 				await UserStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
@@ -188,11 +185,11 @@ namespace SecurityEssentials.Core.Identity
 			{
 				return result;
 			}
-        }
+		}
 
         #endregion
 
-		public SEIdentityResult ValidatePassword(string password)
+		public SEIdentityResult ValidatePassword(string password, List<string> bannedWords)
 		{
 			if (Regex.Matches(password, PasswordValidityRegex).Count == 0)
 			{
@@ -203,6 +200,14 @@ namespace SecurityEssentials.Core.Identity
 			if (badPassword != null)
 			{
 				return new SEIdentityResult("Your password is on a list of easy to guess passwords, please choose another");
+			}
+
+			foreach (string bannedWord in bannedWords)
+			{
+				if (password.IndexOf(bannedWord, StringComparison.OrdinalIgnoreCase) >= 0)
+				{
+					return new SEIdentityResult("Your password cannot contain any of your personal information");
+				}
 			}
 			return new SEIdentityResult();
 		}

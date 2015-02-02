@@ -163,16 +163,6 @@ namespace SecurityEssentials.Core.Identity
 			return logonResult;
         }
 
-		//public async Task<User> FindByUserNameAsync(string userName)
-		//{
-		//	var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName).ConfigureAwait(false);
-		//	if (user != null)
-		//	{
-		//		return user;
-		//	}
-		//	return null;
-		//}
-
         #endregion 
 
         #region Create
