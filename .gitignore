@@ -15,7 +15,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
-[Pp]rivate*.config
+[Cc]onfig/
 
 # Roslyn cache directories
 *.ide/
