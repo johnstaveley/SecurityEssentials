@@ -154,11 +154,16 @@ namespace SecurityEssentials.Core.Identity
 			try
 			{
 				var userName = AuthenticationManager.User.Identity.Name;
-				var context = new SEContext();
-				var user = context.User.Where(u => u.UserName == userName).FirstOrDefault();
-				user.UserLogs.Add(new UserLog() { Description = "User Logged Off" });
-				context.SaveChanges();
+				using (var context = new SEContext())
+				{
+					var user = context.User.Where(u => u.UserName == userName).FirstOrDefault();
+					user.UserLogs.Add(new UserLog() { Description = "User Logged Off" });
+					context.SaveChanges();
+				}
 			}
+			catch {
+
+				}
 			finally
 			{
 				AuthenticationManager.SignOut();
