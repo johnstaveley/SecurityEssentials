@@ -145,11 +145,24 @@ namespace SecurityEssentials.Core.Identity
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await UserStore.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+			user.UserLogs.Add(new UserLog() { Description = "User Logged On" });
+			await UserStore.UpdateAsync(user);
         }
 
-        public void SignOut()
+		public void SignOut()
         {
-            AuthenticationManager.SignOut();
+			try
+			{
+				var userName = AuthenticationManager.User.Identity.Name;
+				var context = new SEContext();
+				var user = context.User.Where(u => u.UserName == userName).FirstOrDefault();
+				user.UserLogs.Add(new UserLog() { Description = "User Logged Off" });
+				context.SaveChanges();
+			}
+			finally
+			{
+				AuthenticationManager.SignOut();
+			}
         }
 
         #endregion

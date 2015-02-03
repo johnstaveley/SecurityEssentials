@@ -10,12 +10,12 @@
     @Html.AntiForgeryToken()
 
     <div class="container">
-        <div class="toriga-item">
+        <div>
             <header>
                 <div class="logo"><a href="/SecurityEssentials/Account/LogOn" class="logo"></a></div>
                 <div class="title"> Recover your password </div>
             </header>
-            <div class="toriga-item-body">
+            <div>
                 @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                 {
                     <div class="row">

@@ -1,0 +1,27 @@
+﻿@model SecurityEssentials.ViewModel.LandingViewModel
+@{
+    ViewBag.Title = "Home - Landing Page";
+    ViewBag.Active = "Home";
+}
+
+<div class="container">
+    <div>
+        <header>
+            <div class="title"> Welcome back</div>
+        </header>
+        <div>
+            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+            {
+                <div class="row">
+                    <div class="col-md-8 alert">@ViewBag.StatusMessage</div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-12">Welcome back @Html.DisplayFor(m => m.FirstName)</div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">The last actvity logged against your account was @Html.DisplayFor(m => m.LastAccountActivity). Go @Html.ActionLink("here", "Log", "User", new { Id = Model.UserId }, null) for a full list of your account activity. If you notice any suspicious activity then you should notify your system administrator immediately.</div>
+            </div>
+        </div>
+    </div>
+</div>

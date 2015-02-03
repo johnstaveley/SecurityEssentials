@@ -52,7 +52,7 @@ namespace SecurityEssentials.Controllers
 			{
 
 				var users = context.User.Where(u => u.Id == id);
-				if (users == null) return new HttpNotFoundResult();
+				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
 				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 

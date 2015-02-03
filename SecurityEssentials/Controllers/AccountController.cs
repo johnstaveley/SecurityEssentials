@@ -12,6 +12,7 @@ using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using System.Configuration;
+using System.Web.Security;
 
 namespace SecurityEssentials.Controllers
 {
@@ -35,7 +36,8 @@ namespace SecurityEssentials.Controllers
         [Authorize]
         public ActionResult LogOff()
         {
-            UserManager.SignOut();
+			FormsAuthentication.SignOut();
+			UserManager.SignOut();
             Session.Abandon();
 			return RedirectToAction("LogOn");
         }
@@ -47,10 +49,10 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         public ActionResult LogOn(string returnUrl)
         {
-            if (Request.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+			if (Request.IsAuthenticated)
+			{
+				return RedirectToAction("Landing", "Home");
+			}
             ViewBag.ReturnUrl = returnUrl;
             return View("LogOn");
         }
@@ -347,7 +349,7 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Landing", "Home");
             }
         }
 

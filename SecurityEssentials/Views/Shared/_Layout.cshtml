@@ -47,7 +47,14 @@
                                 <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                        @if (Request.IsAuthenticated)
+                                        {
+                                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                        }
+                                        else
+                                        {
+                                            <li>@Html.ActionLink("Home", "Landing", "Home")</li>
+                                        }
                                         <li>@Html.ActionLink("About", "About", "Home")</li>
                                         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                                     </ul>
