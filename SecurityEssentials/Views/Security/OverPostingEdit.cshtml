@@ -8,9 +8,7 @@
     <div class="scrollable">
         <div class="max-width">
             <h4>Edit User</h4>
-            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage)) {
-            <div class="alert alert-info">@ViewBag.StatusMessage</div>
-            }
+            <div class="jumbotron">@ViewBag.Notification</div>
             <div>
                 <div>
                     <div>

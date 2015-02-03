@@ -20,9 +20,8 @@
                     <li>Passwords harder to guess - Compares password entered with a database of frequently used (and cracked) passwords and no personal information is allowed to be reused in the password</li>
                     <li>Account management - Prevents account enumeration on register and reset password forms</li>
                     <li>Account management - Each user can see a summary of their most recent account activity to check for any illicit activity</li>
-                    <li>Account Management - Protects sensitive functions against brute force attacks by throttling web requests and using CAPTCHA</li>
-                    <li>Account Management - Prevents overposting on all forms</li>
-                    <li>Account Management - All account activity is logged which is viewable by the user, user is reminded of last logon time when they logon</li>
+                    <li>Account Management - Protects sensitive functions against brute force attacks by throttling web requests</li>
+                    <li>Account Management - Prevents overposting</li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
                     <li>Prevents the site in production from ever being requested over http</li>
@@ -32,7 +31,7 @@
                     <li>Increasing wait time on logon failure</li>
                 </ul>
             </p>
-            <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha set up. See readme.txt in project for more information</p>
+            <p>NB: Runs on SQL Express and IIS Express, requires mail server set up in mailSettings in web.config</p>
             <p>To do
                 <ul>
                     <li>Session tracking - logoff should invalidate the session, (Optional) - Deny multiple sessions</li>

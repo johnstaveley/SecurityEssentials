@@ -6,54 +6,47 @@
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
 {
     @Html.AntiForgeryToken()
     <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary()
-    <div class="row">
-        @Html.LabelFor(m => m.User.UserName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.UserName, new { @class = "form-control", autocomplete = "off" })</div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.User.UserName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">@Html.TextBoxFor(m => m.User.UserName, new { @class = "form-control", autocomplete="off" })</div>
     </div>
-    <div class="row">
-        @Html.LabelFor(m => m.User.FirstName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.FirstName, new { @class = "form-control", autocomplete = "off" })</div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.User.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">@Html.TextBoxFor(m => m.User.FirstName, new { @class = "form-control", autocomplete = "off" })</div>
     </div>
-    <div class="row">
-        @Html.LabelFor(m => m.User.LastName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.LastName, new { @class = "form-control", autocomplete = "off" })</div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.User.LastName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">@Html.TextBoxFor(m => m.User.LastName, new { @class = "form-control", autocomplete = "off" })</div>
     </div>
-    <div class="row">
-        @Html.LabelFor(m => m.User.SecurityQuestionLookupItemId, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">
-            @Html.DropDownListFor(model => model.User.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.User.SecurityQuestionLookupItemId, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.User.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })</div>
     </div>
-    <div class="row">
-        @Html.LabelFor(m => m.User.SecurityAnswer, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.PasswordFor(m => m.User.SecurityAnswer, new { @class = "form-control", autocomplete = "off" })</div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.User.SecurityAnswer, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">@Html.PasswordFor(m => m.User.SecurityAnswer, new { @class = "form-control", autocomplete = "off" })</div>
     </div>
-    <div class="row">
-        <label class="col-md-4 control-label" for="Password">Password</label>
-        <div class="col-md-8">
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="Password">Password</label>
+        <div class="col-md-10">
             @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off" })
         </div>
     </div>
-    <div class="row">
-        <label class="col-md-4 control-label" for="ConfirmPassword">Confirm Password</label>
-        <div class="col-md-8">
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="ConfirmPassword">Confirm Password</label>
+        <div class="col-md-10">
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "off" })
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">Enter the figures you see in the box shown</div>
-        <div class="col-md-8">
-            @Html.Partial("_Recaptcha")
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-offset-10 col-md-2">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default btn btn-primary" value="Register" />
         </div>
     </div>
