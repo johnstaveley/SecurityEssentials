@@ -1032,6 +1032,7 @@
     <Content Include="Views\User\ChangeEmailAddress.cshtml" />
     <Content Include="Views\User\ChangeSecurity.cshtml" />
     <Content Include="Views\Account\EmailVerificationSuccess.cshtml" />
+    <Content Include="Views\Security\OverPostingEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

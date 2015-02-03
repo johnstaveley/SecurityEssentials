@@ -57,6 +57,7 @@
                                     <ul class="dropdown-menu">
                                         <li>@Html.ActionLink("Info Disclosure", "InformationDisclosure", "Security")</li>
                                         <li>@Html.ActionLink("AntiXss", "AntiXss", "Security")</li>
+                                        <li>@Html.ActionLink("Overposting", "OverPostingEdit", "Security", new { Id = User.Identity.GetUserId() }, null)</li>
                                     </ul>
                                 </li>
                                 @if (Request.IsAuthenticated)
