@@ -118,7 +118,6 @@ namespace SecurityEssentials.Controllers
 				string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", ConfigurationManager.AppSettings["ApplicationName"].ToString());
 				string emailSubject = string.Format("{0} - Password change confirmation", ConfigurationManager.AppSettings["ApplicationName"].ToString());
 				Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-				user.UserLogs.Add(new UserLog() { Description = "Password Changed" });
 				context.SaveChanges();
 				return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
 			}
