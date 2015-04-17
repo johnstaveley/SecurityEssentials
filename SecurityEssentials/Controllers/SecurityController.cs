@@ -74,6 +74,7 @@ namespace SecurityEssentials.Controllers
 		}
 
 		#endregion
-	}
 #endif
+	}
+
 }
