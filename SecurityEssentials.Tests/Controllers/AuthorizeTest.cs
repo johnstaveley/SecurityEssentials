@@ -7,10 +7,10 @@ using SecurityEssentials.Controllers;
 namespace SecurityEssentials.Tests.Controllers
 {
 	/// <summary>
-	/// Examples to show that the auithorize attribute and roles can be tested for in .Net
+	/// Examples to show that the authorize attribute and roles can be tested for in .Net
 	/// </summary>
 	[TestClass]
-	public class UserTest
+	public class AuthorizeTest
 	{
 
 		[TestMethod]
