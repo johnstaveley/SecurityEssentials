@@ -39,7 +39,7 @@ namespace SecurityEssentials.Controllers
 		/// <param name="id">The unique identifier for the user</param>
 		/// <remarks>GET: /User/Disable/5</remarks>
 		[Authorize(Roles = "Admin")]
-		public ActionResult Disable(int id)
+        public ActionResult Disable(int id)
 		{
 			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null) return new HttpNotFoundResult();
@@ -53,7 +53,8 @@ namespace SecurityEssentials.Controllers
 		/// <param name="id">The unique identifier of the User to disable</param>
 		/// <remarks>POST: /User/Disable/5</remarks>
 		[HttpPost, Authorize(Roles = "Admin")]
-		public JsonResult Disable(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public JsonResult Disable(int id, FormCollection collection)
 		{
 			if (id == 0) return Json(new { success = false, message = "unable to locate user id" });
 			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
@@ -134,7 +135,8 @@ namespace SecurityEssentials.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, FormCollection collection)
 		{
 			using (var context = new SEContext())
 			{

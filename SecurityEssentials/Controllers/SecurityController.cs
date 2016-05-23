@@ -32,9 +32,9 @@ namespace SecurityEssentials.Controllers
 		}
 
 
-		#region Edit
+        #region Edit
 
-		public ActionResult OverPostingEdit(int id)
+        public ActionResult OverPostingEdit(int id)
 		{
 			using (var context = new SEContext())
 			{
@@ -46,7 +46,8 @@ namespace SecurityEssentials.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult OverPostingEdit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult OverPostingEdit(int id, FormCollection collection)
 		{
 			using (var context = new SEContext())
 			{

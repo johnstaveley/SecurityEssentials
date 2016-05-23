@@ -40,6 +40,7 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[Authorize]
+        [ValidateAntiForgeryToken]
 		public ActionResult LogOff()
 		{
 			FormsAuthentication.SignOut();
@@ -65,7 +66,8 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
+        [ValidateAntiForgeryToken]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
 		public async Task<ActionResult> LogOn(LogOn model, string returnUrl)
 		{
 			if (ModelState.IsValid)
@@ -104,7 +106,8 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[Authorize]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
+        [ValidateAntiForgeryToken]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
 		public async Task<ActionResult> ChangePassword(ChangePassword model)
 		{
 			ViewBag.ReturnUrl = Url.Action("ChangePassword");
@@ -165,7 +168,8 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [ValidateAntiForgeryToken]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
 		public ActionResult Recover(Recover model)
 		{
 			if (ModelState.IsValid)
@@ -223,7 +227,8 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [ValidateAntiForgeryToken]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
 		public async Task<ActionResult> RecoverPassword(RecoverPassword recoverPasswordModel)
 		{
 			using (var context = new SEContext())
@@ -290,7 +295,8 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [ValidateAntiForgeryToken]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
 		public async Task<ActionResult> Register(FormCollection collection)
 		{
 			var user = new User();

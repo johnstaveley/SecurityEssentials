@@ -7,7 +7,7 @@ using SecurityEssentials.Controllers;
 namespace SecurityEssentials.Tests.Controllers
 {
 
-	[TestClass, Ignore]
+	[TestClass]
 	public class ValidateAntiForgeryTokenTest
 	{
 
