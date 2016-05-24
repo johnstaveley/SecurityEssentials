@@ -5,7 +5,7 @@ using System.IO;
 namespace SecurityEssentials.Core
 {
     /// <summary>
-    /// Class to handle the encryption method used to Encrypt tiger Kidnap data
+    /// Class to handle the encryption method used to Encrypt data
     /// </summary>
     public sealed class Encryption
     {
