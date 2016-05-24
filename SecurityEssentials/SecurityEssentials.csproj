@@ -243,6 +243,7 @@
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
     <Compile Include="Core\Email.cs" />
+    <Compile Include="Core\Encryption.cs" />
     <Compile Include="Core\HttpHeaders.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
     <Compile Include="Core\Identity\LogonResult.cs" />

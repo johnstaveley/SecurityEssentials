@@ -129,6 +129,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ValidateAntiForgeryTokenTest.cs" />
     <Compile Include="Controllers\AuthorizeTest.cs" />
+    <Compile Include="Core\Security\Encryption.cs" />
     <Compile Include="Core\Security\SecuredPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
