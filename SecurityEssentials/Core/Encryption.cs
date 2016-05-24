@@ -10,13 +10,7 @@ namespace SecurityEssentials.Core
     public sealed class Encryption
     {
 
-        #region Declarations
-
         private RijndaelManaged encryptionAlgorithm;
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Constructor
@@ -25,17 +19,13 @@ namespace SecurityEssentials.Core
         {
 
             encryptionAlgorithm = new RijndaelManaged();
-            //encryptionAlgorithm.BlockSize = 128;
+            encryptionAlgorithm.BlockSize = 128;
             encryptionAlgorithm.KeySize = 256;
             encryptionAlgorithm.Mode = CipherMode.CFB;          // Cipher feedback mode
             encryptionAlgorithm.Padding = PaddingMode.PKCS7;    // How to deal with the padding of blocks
             // require Initialization vector to avoid patterns in input producing patterns in output
 
         }
-
-        #endregion
-
-        #region Decrypt
 
         /// <summary>
         /// Decrypt an input byte array and return a string
@@ -51,57 +41,45 @@ namespace SecurityEssentials.Core
 
             byte[] bytKey;
             byte[] bytIV;
+            byte[] bytInput = System.Text.Encoding.Unicode.GetBytes(input);
             CreateKey(password, salt, iterationCount, out bytKey, out bytIV);
-            int decryptedByteCount = 0;
             ICryptoTransform decryptor = encryptionAlgorithm.CreateDecryptor(bytKey, bytIV);
-            Byte[] bytInput = System.Text.Encoding.Unicode.GetBytes(input);
-            MemoryStream stream = new MemoryStream(bytInput);
-            CryptoStream cryptoStream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read);
-            byte[] bytOutput;
-            try {
-                
-                bytOutput = new byte[bytInput.Length];
-                decryptedByteCount = cryptoStream.Read(bytOutput, 0, bytOutput.Length);
-                cryptoStream.Close();
-                cryptoStream.Dispose();
-                }
-            catch (CryptographicException ex)
+            var cipher = Convert.FromBase64String(input);
+
+            try
+            {
+                using (var msDecrypt = new MemoryStream(cipher))
                 {
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (var srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            output = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            catch (CryptographicException ex)
+            {
                 // http://support.microsoft.com/kb/842791 indicate that an exception 'Padding is invalid and cannot be removed' indicates the decryption has failed
                 if (ex.Message.Contains("Padding is invalid and cannot be removed"))
-                    {
+                {
                     output = null;
                     return false;
-                    }
-                else 
-                    {
-                    throw; 
-                    }
                 }
-            finally
+                else
                 {
-                stream.Flush();
-                decryptor.Dispose();
-                stream.Close();
-                stream.Dispose();
+                    throw;
                 }
-            output = System.Text.Encoding.Unicode.GetString(bytOutput, 0, decryptedByteCount);
+            }
             return true;
 
         }
-
-        #endregion
-
-        #region Dispose
 
         public void Dispose()
         {
             encryptionAlgorithm.Dispose();
         }
-
-        #endregion
-
-        #region Encrypt
 
         /// <summary>
         /// Encrypt an input string and return the encrypted byte array
@@ -120,19 +98,6 @@ namespace SecurityEssentials.Core
             byte[] bytIV;
             CreateKey(password, salt, iterationCount, out bytKey, out bytIV);
             byte[] bytInput = System.Text.Encoding.Unicode.GetBytes(input);
-            //MemoryStream stream = new MemoryStream();
-            //ICryptoTransform encryptor = encryptionAlgorithm.CreateEncryptor(bytKey, bytIV);
-            //CryptoStream cryptoStream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write);
-            //cryptoStream.Write(bytInput, 0, bytInput.Length);
-            //stream.Flush();
-            //cryptoStream.FlushFinalBlock();
-            //cryptoStream.Close();
-            //cryptoStream.Dispose();
-            //encryptor.Dispose();
-            //output = output = System.Text.Encoding.Unicode.GetString(stream.ToArray());
-            //stream.Close();
-            //stream.Dispose();
-            //return true;
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -140,20 +105,17 @@ namespace SecurityEssentials.Core
                 {
                     using (CryptoStream cryptoStream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write))
                     {
-                        cryptoStream.Write(bytInput, 0, bytInput.Length);
-                        stream.Flush();
-                        cryptoStream.FlushFinalBlock();
-                        output = System.Text.Encoding.Unicode.GetString(stream.ToArray());
+                        using (var swEncrypt = new StreamWriter(cryptoStream))
+                        {
+                            swEncrypt.Write(input);
+                        }
+                        output = Convert.ToBase64String(stream.ToArray());
                     }
                 }
             }
             return true;
-            
+
         }
-
-        #endregion
-
-        #region CreateKey
 
         /// <summary>
         /// Creates the encryption key for the parameters passed in
@@ -173,8 +135,6 @@ namespace SecurityEssentials.Core
             IV = rfc2898DeriveBytes.GetBytes(encryptionAlgorithm.BlockSize / 8);
 
         }
-
-        #endregion
 
 
     }
