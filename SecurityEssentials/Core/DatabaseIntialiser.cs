@@ -63,6 +63,7 @@ namespace SecurityEssentials.Core
 				Title = "Mr",
 				UserName = "user@user.com"
 			});
+            encryptor.Dispose();
 
 			// Lookup Types
 			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" }); // SECURE: I've only included passwords which comply with the password policy (ignorning case)

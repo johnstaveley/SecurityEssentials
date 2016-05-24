@@ -90,29 +90,6 @@ namespace SecurityEssentials.Controllers
 
 		#endregion
 
-		#region ChangeSecurity
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="id">Unique identifier for the user</param>
-		/// <returns></returns>
-		public ActionResult ChangeSecurity(int id)
-		{
-			using (var context = new SEContext())
-			{
-				var users = context.User.Where(u => u.Id == id);
-				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
-				if (users.ToList().Count == 0) return new HttpNotFoundResult();
-				var user = users.FirstOrDefault();
-				// SECURE: Check user should have access to this account
-				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
-				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user));
-			}
-		}
-
-		#endregion
-
 		#region Edit
 
 		/// <summary>

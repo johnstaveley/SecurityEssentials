@@ -87,7 +87,7 @@ namespace SecurityEssentials.Model
         /// <summary>
         /// The encrypted answer to the security question known to the user which can be used to reset the password
         /// </summary>
-		[Required, Display(Name = "Security Answer"), MinLength(4), MaxLength(1000)]
+		[Required, Display(Name = "Security Answer"), MinLength(4), MaxLength(40)]
 		public string SecurityAnswer { get; set; }
         /// <summary>
         /// A token which can be used to reset the password which is emailed to the user

@@ -7,7 +7,7 @@ namespace SecurityEssentials.Core
     /// <summary>
     /// Class to handle the encryption method used to Encrypt data
     /// </summary>
-    public sealed class Encryption
+    public sealed class Encryption : IDisposable
     {
 
         private RijndaelManaged encryptionAlgorithm;

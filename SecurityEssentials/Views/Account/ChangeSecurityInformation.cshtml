@@ -1,0 +1,60 @@
+﻿@model SecurityEssentials.ViewModel.ChangeSecurityInformationViewModel
+@{
+    ViewBag.Title = "Change Security Information";
+    ViewBag.Active = "Admin";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("ChangeSecurityInformation", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+        <hr />
+    @Html.ValidationSummary()
+    if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-info">@Model.ErrorMessage</div>
+    }
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            You're logged in as <strong>@User.Identity.Name</strong><br />
+        </div>
+    </div>
+
+    <div class="row">
+        Re-enter your password, then your new security information to complete this action.
+    </div>
+    <div class="row">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
+        <div class="col-md-8">@Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off", maxlength=20 })</div>
+    </div>
+    <div class="row">
+        @Html.LabelFor(m => m.SecurityQuestionLookupItemId, new { @class = "col-md-4 control-label" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })
+        </div>
+    </div>
+    <div class="row">
+        @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-4 control-label" })
+        <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswer, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+    </div>
+    <div class="row">
+        @Html.LabelFor(m => m.SecurityAnswerConfirm, new { @class = "col-md-4 control-label" })
+        <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswerConfirm, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">Enter the figures you see in the box shown</div>
+        <div class="col-md-8">
+            @Html.Partial("_Recaptcha")
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-10 col-md-2">
+            <input type="submit" class="btn btn-default btn btn-primary" value="Register" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
