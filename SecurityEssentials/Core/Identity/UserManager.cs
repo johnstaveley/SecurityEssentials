@@ -73,7 +73,12 @@ namespace SecurityEssentials.Core.Identity
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
 						user.Salt = Convert.ToBase64String(securedPassword.Salt);
 						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
-						user.SecurityAnswer = securityAnswer;
+                        var encryptor = new Encryption();
+                        string encryptedSecurityAnswer = "";
+                        encryptor.Encrypt(ConfigurationManager.AppSettings["encryptionPassword"], user.Salt,
+                            Convert.ToInt32(ConfigurationManager.AppSettings["encryptionIterationCount"]), securityAnswer, out encryptedSecurityAnswer);
+
+                        user.SecurityAnswer = encryptedSecurityAnswer;
 						user.UserName = userName;
 						user.UserLogs.Add(new UserLog() { Description = "Account Created" });
 						await UserStore.CreateAsync(user);

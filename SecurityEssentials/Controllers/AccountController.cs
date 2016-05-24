@@ -244,7 +244,11 @@ namespace SecurityEssentials.Controllers
 					HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: Your account is not currently approved or active"), "Account", "Recover");
 					return View("Error", error);
 				}
-				if (user.SecurityAnswer != recoverPasswordModel.SecurityAnswer)
+                var encryptor = new Encryption();
+                string encryptedSecurityAnswer = "";
+                encryptor.Encrypt(ConfigurationManager.AppSettings["encryptionPassword"], user.Salt, 
+                    Convert.ToInt32(ConfigurationManager.AppSettings["encryptionIterationCount"]), recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
+				if (user.SecurityAnswer != encryptedSecurityAnswer)
 				{
 					ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
 					return View("RecoverPassword", recoverPasswordModel);

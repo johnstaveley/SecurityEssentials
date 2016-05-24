@@ -257,7 +257,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Core\SEContext.cs" />
-    <Compile Include="Model\AccountViewModels.cs" />
+    <Compile Include="ViewModel\AccountViewModels.cs" />
     <Compile Include="Model\ExternalLogOn.cs" />
     <Compile Include="Model\LocalPassword.cs" />
     <Compile Include="Model\LogOn.cs" />

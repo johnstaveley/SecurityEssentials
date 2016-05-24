@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Model
+namespace SecurityEssentials.ViewModel
 {
 
     public class ChangePassword
@@ -42,6 +42,7 @@ namespace SecurityEssentials.Model
 
         [Required]
         [Display(Name = "Answer to security question")]
+        [MaxLength(20, ErrorMessage="The length of the security answer is too long")]
         public string SecurityAnswer { get; set; }
 
         [Required]
