@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials", "SecurityEssentials\SecurityEssentials.csproj", "{AC8E9B1B-9815-4398-B755-57A59615788C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Tests", "SecurityEssentials.Tests\SecurityEssentials.Tests.csproj", "{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Unit.Tests", "SecurityEssentials.Tests\SecurityEssentials.Unit.Tests.csproj", "{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{09560B8F-66F4-41A7-8A9F-115634B90F1B}"
 	ProjectSection(SolutionItems) = preProject

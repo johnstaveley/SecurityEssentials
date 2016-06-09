@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace SecurityEssentials.Core
 {
-    public static class Services
+    public class Services : IServices
     {
 
         #region SendEmail
@@ -24,7 +20,7 @@ namespace SecurityEssentials.Core
         /// <param name="body">The body of the email.</param>
         /// <param name="htmlEmail">Is the email html</param>
         /// <returns>boolean value</returns>
-        public static bool SendEmail(string from, ICollection<string> toAddresses, ICollection<string> cc, ICollection<string> bcc, string subject,
+        public bool SendEmail(string from, ICollection<string> toAddresses, ICollection<string> cc, ICollection<string> bcc, string subject,
                                     string body, bool htmlEmail)
         {
             if (toAddresses == null) throw new ArgumentException("toAddresses has not been specified");

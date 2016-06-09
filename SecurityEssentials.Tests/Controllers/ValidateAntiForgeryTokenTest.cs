@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurityEssentials.Controllers;
 
-namespace SecurityEssentials.Tests.Controllers
+namespace SecurityEssentials.Unit.Tests.Controllers
 {
 
 	[TestClass]

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurityEssentials.Core;
 
-namespace SecurityEssentials.Tests
+namespace SecurityEssentials.Unit.Tests
 {
     /// <summary>
     /// Summary description for Encryption2

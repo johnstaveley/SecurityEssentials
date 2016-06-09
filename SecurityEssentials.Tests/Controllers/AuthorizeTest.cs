@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurityEssentials.Controllers;
 
-namespace SecurityEssentials.Tests.Controllers
+namespace SecurityEssentials.Unit.Tests.Controllers
 {
 	/// <summary>
 	/// Examples to show that the authorize attribute and roles can be tested for in .Net

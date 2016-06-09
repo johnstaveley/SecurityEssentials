@@ -18,10 +18,11 @@ namespace SecurityEssentials.Core.Identity
 
         #region Declarations
 
-        private readonly UserStore<User> UserStore;
-        private readonly SEContext Context;
-        private readonly string PasswordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
-        private readonly string PasswordValidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
+        private readonly UserStore<User> _userStore;
+        private readonly SEContext _context;
+        private readonly AppConfiguration _configuration;
+        private readonly string _passwordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
+        private readonly string _passwordValidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
         #endregion
 
@@ -41,8 +42,9 @@ namespace SecurityEssentials.Core.Identity
 
         public MyUserManager()
         {
-            Context = new SEContext();
-            UserStore = new UserStore<User>(Context);
+            _context = new SEContext();
+            _userStore = new UserStore<User>(_context);
+            _configuration = new AppConfiguration();
         }
 
         #endregion
@@ -51,7 +53,7 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task<SEIdentityResult> CreateAsync(string userName, string firstName, string lastName, string password, string passwordConfirmation, int securityQuestionLookupItemId, string securityAnswer)
         {
-            var user = await UserStore.FindByNameAsync(userName);
+            var user = await _userStore.FindByNameAsync(userName);
 
 			var result = ValidatePassword(password, new List<string>() {firstName, lastName, securityAnswer});
 			if (result.Succeeded)
@@ -64,7 +66,7 @@ namespace SecurityEssentials.Core.Identity
 					var securedPassword = new SecuredPassword(password);
 					try
 					{
-						user.Approved = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"].ToString());
+						user.Approved = _configuration.AccountManagementRegisterAutoApprove;
 						user.EmailConfirmationToken = Guid.NewGuid().ToString().Replace("-", "");
 						user.EmailVerified = false;
 						user.Enabled = true;
@@ -76,20 +78,21 @@ namespace SecurityEssentials.Core.Identity
                         string encryptedSecurityAnswer = "";
                         using (var encryptor = new Encryption())
                         {
-                            encryptor.Encrypt(ConfigurationManager.AppSettings["encryptionPassword"], user.Salt,
-                                Convert.ToInt32(ConfigurationManager.AppSettings["encryptionIterationCount"]), securityAnswer, out encryptedSecurityAnswer);
+                            encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                                _configuration.EncryptionIterationCount, securityAnswer, out encryptedSecurityAnswer);
                         }
                         user.SecurityAnswer = encryptedSecurityAnswer;
 						user.UserName = userName;
 						user.UserLogs.Add(new UserLog() { Description = "Account Created" });
-						await UserStore.CreateAsync(user);
+						await _userStore.CreateAsync(user);
+
 					}
 					catch
 					{
 						return new SEIdentityResult("An error occurred creating the user, please contact the system administrator");
 					}
 
-					return new SEIdentityResult();
+                    return new SEIdentityResult();
 				}
 				
 				// TODO: Log duplicate account creation
@@ -116,13 +119,13 @@ namespace SecurityEssentials.Core.Identity
             if (disposing)
             {
                 // free managed resources
-                if (this.Context != null)
+                if (this._context != null)
                 {
-                    this.Context.Dispose();
+                    this._context.Dispose();
                 }
-                if (this.UserStore != null)
+                if (this._userStore != null)
                 {
-                    this.UserStore.Dispose();
+                    this._userStore.Dispose();
                 }
             }
         }
@@ -133,12 +136,12 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task<User> FindById(int userId)
         {
-            return await UserStore.FindByIdAsync(userId).ConfigureAwait(false);
+            return await _userStore.FindByIdAsync(userId).ConfigureAwait(false);
         }
 
 		public async Task<LogonResult> FindAsync(string userName, string password)
         {
-            return await UserStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
+            return await _userStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
         }
 
 		#endregion
@@ -147,12 +150,12 @@ namespace SecurityEssentials.Core.Identity
 
         public async Task SignInAsync(string userName, bool isPersistent)
         {
-            var user = await UserStore.FindByNameAsync(userName);
+            var user = await _userStore.FindByNameAsync(userName);
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = await UserStore.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var identity = await _userStore.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
 			user.UserLogs.Add(new UserLog() { Description = "User Logged On" });
-			await UserStore.UpdateAsync(user);
+			await _userStore.UpdateAsync(user);
         }
 
 		public void SignOut()
@@ -186,7 +189,7 @@ namespace SecurityEssentials.Core.Identity
 			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{
-				await UserStore.ChangePasswordAsync(userId, oldPassword, newPassword);
+				await _userStore.ChangePasswordAsync(userId, oldPassword, newPassword);
 				return new SEIdentityResult();
 			}
 			else
@@ -202,7 +205,7 @@ namespace SecurityEssentials.Core.Identity
 			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{
-				await UserStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
+				await _userStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
 				return new SEIdentityResult();
 			}
 			else
@@ -215,12 +218,12 @@ namespace SecurityEssentials.Core.Identity
 
 		public SEIdentityResult ValidatePassword(string password, List<string> bannedWords)
 		{
-			if (Regex.Matches(password, PasswordValidityRegex).Count == 0)
+			if (Regex.Matches(password, _passwordValidityRegex).Count == 0)
 			{
-				return new SEIdentityResult(PasswordValidityMessage);
+				return new SEIdentityResult(_passwordValidityMessage);
 			}
 
-			var badPassword = Context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
+			var badPassword = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
 			if (badPassword != null)
 			{
 				return new SEIdentityResult("Your password is on a list of easy to guess passwords, please choose another");

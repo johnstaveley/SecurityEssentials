@@ -9,9 +9,9 @@
     <ProjectGuid>{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SecurityEssentials.Tests</RootNamespace>
-    <AssemblyName>SecurityEssentials.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>SecurityEssentials.Unit.Tests</RootNamespace>
+    <AssemblyName>SecurityEssentials.Unit.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NuGetPackageImportStamp>324b73cf</NuGetPackageImportStamp>

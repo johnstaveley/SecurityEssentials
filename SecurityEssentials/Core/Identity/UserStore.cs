@@ -49,6 +49,7 @@ namespace SecurityEssentials.Core.Identity
 
             if (await this.dbContext.SaveChangesAsync().ConfigureAwait(false) == 0)
                 throw new Exception("Error creating new user");
+
         }
 
         public async Task UpdateAsync(User user)

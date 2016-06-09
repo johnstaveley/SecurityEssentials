@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using SecurityEssentials.Model;
@@ -10,19 +11,35 @@ using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using System.Configuration;
 using System.Web.Security;
-using Recaptcha.Web;
-using Recaptcha.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
     public class AccountController : AntiForgeryControllerBase
     {
 
-        private IUserManager UserManager;
+        private IAppConfiguration _configuration;
+        private IRecaptcha _recaptcha;
+        private IServices _services;
+        private ISEContext _context;
+        private IUserManager _userManager;
 
-        public AccountController()
+        public AccountController() : this(new AppConfiguration(), new SEContext(), new MyUserManager(), new SecurityCheckRecaptcha(), new Services())
         {
-            UserManager = new MyUserManager();
+        }
+
+        public AccountController(IAppConfiguration configuration, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services)
+        {
+            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (context == null) throw new ArgumentNullException("context");
+            if (recaptcha == null) throw new ArgumentNullException("recaptcha");
+            if (services == null) throw new ArgumentNullException("services");
+            if (userManager == null) throw new ArgumentNullException("userManager");
+
+            _configuration = configuration;
+            _context = context;
+            _recaptcha = recaptcha;
+            _services = services;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -31,7 +48,7 @@ namespace SecurityEssentials.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-            UserManager.SignOut();
+            _userManager.SignOut();
             Session.Abandon();
             return RedirectToAction("LogOn");
         }
@@ -55,10 +72,10 @@ namespace SecurityEssentials.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindAsync(model.UserName, model.Password);
+                var user = await _userManager.FindAsync(model.UserName, model.Password);
                 if (user.Success)
                 {
-                    await UserManager.SignInAsync(user.UserName, model.RememberMe);
+                    await _userManager.SignInAsync(user.UserName, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -91,15 +108,15 @@ namespace SecurityEssentials.Controllers
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
             var userId = Convert.ToInt32(User.Identity.GetUserId());
-            var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
                 SEContext context = new SEContext();
-                var user = context.User.Where(u => u.Id == userId).FirstOrDefault();
+                var user = await _userManager.FindById(userId);
                 // Email recipient with password change acknowledgement
-                string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                string emailSubject = string.Format("{0} - Password change confirmation", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
+                string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
+                _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                 context.SaveChanges();
                 return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
@@ -148,15 +165,15 @@ namespace SecurityEssentials.Controllers
                 using (var context = new SEContext())
                 {
                     var user = context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
-                    var recaptchaSuccess = ValidateRecaptcha();
+                    var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     if (user != null && recaptchaSuccess)
                     {
                         user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                         user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
                         // Send recovery email with link to recover password form
                         string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.PasswordResetToken);
-                        string emailSubject = string.Format("{0} - Complete the password recovery process", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                        Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                        string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
+                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                         user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
                         context.SaveChanges();
                         return View("RecoverSuccess");
@@ -218,8 +235,8 @@ namespace SecurityEssentials.Controllers
                 string encryptedSecurityAnswer = "";
                 using (var encryptor = new Encryption())
                 {
-                    encryptor.Encrypt(ConfigurationManager.AppSettings["encryptionPassword"], user.Salt,
-                        Convert.ToInt32(ConfigurationManager.AppSettings["encryptionIterationCount"]), recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
+                    encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                        _configuration.EncryptionIterationCount, recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
                 }
                 if (user.SecurityAnswer != encryptedSecurityAnswer)
                 {
@@ -231,14 +248,14 @@ namespace SecurityEssentials.Controllers
                     ModelState.AddModelError("ConfirmPassword", "The passwords do not match");
                     return View("RecoverPassword", recoverPasswordModel);
                 }
-                var recaptchaSuccess = ValidateRecaptcha();
+                var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                 if (ModelState.IsValid && recaptchaSuccess)
                 {
-                    var result = await UserManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
+                    var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
                     if (result.Succeeded)
                     {
                         context.SaveChanges();
-                        await UserManager.SignInAsync(user.UserName, false);
+                        await _userManager.SignInAsync(user.UserName, false);
                         return View("RecoverPasswordSuccess");
                     }
                     else
@@ -273,63 +290,57 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangeSecurityInformation(ChangeSecurityInformationViewModel model)
         {
             string errorMessage = "";
-            using (var context = new SEContext())
+
+            if (ModelState.IsValid)
             {
-
-                if (ModelState.IsValid)
+                var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+                var logonResult = await _userManager.FindAsync(User.Identity.Name, model.Password);
+                if (recaptchaSuccess && logonResult.Success)
                 {
-                    var recaptchaSuccess = ValidateRecaptcha();
-                    var logonResult = await UserManager.FindAsync(User.Identity.Name, model.Password);
-                    if (recaptchaSuccess && logonResult.Success)
+                    if (model.SecurityAnswer == model.SecurityAnswerConfirm)
                     {
-                        if (model.SecurityAnswer == model.SecurityAnswerConfirm)
+                        var user = _context.User.Where(u => u.UserName == logonResult.UserName).FirstOrDefault();
+                        string encryptedSecurityAnswer = "";
+                        using (var encryptor = new Encryption())
                         {
-                            var user = context.User.Where(u => u.UserName == logonResult.UserName).FirstOrDefault();
-                            string encryptedSecurityAnswer = "";
-                            using (var encryptor = new Encryption())
-                            {
-                                encryptor.Encrypt(ConfigurationManager.AppSettings["encryptionPassword"], user.Salt,
-                                    Convert.ToInt32(ConfigurationManager.AppSettings["encryptionIterationCount"]), model.SecurityAnswer, out encryptedSecurityAnswer);
-                            }
-                            user.SecurityAnswer = encryptedSecurityAnswer;
-                            user.SecurityQuestionLookupItemId = model.SecurityQuestionLookupItemId;
-                            user.UserLogs.Add(new UserLog() { Description = "User Changed Security Information" });
-                            context.SaveChanges();
+                            encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                                _configuration.EncryptionIterationCount, model.SecurityAnswer, out encryptedSecurityAnswer);
+                        }
+                        user.SecurityAnswer = encryptedSecurityAnswer;
+                        user.SecurityQuestionLookupItemId = model.SecurityQuestionLookupItemId;
+                        user.UserLogs.Add(new UserLog() { Description = "User Changed Security Information" });
+                        _context.SaveChanges();
 
-                            // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                            string emailBody = "";
-                            string emailSubject = "";
-                            emailSubject = string.Format("{0} - Security Information Changed", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                            emailBody = string.Format("Hello {0}, please be advised that the security information on your account for {1} been changed. If you did not initiate this action then please contact the site administrator as soon as possible", user.FullName, ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                            Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { logonResult.UserName }, null, null, emailSubject, emailBody, true);
-                            return View("ChangeSecurityInformationSuccess");
-                        }
-                        else
-                        {
-                            errorMessage = "The security question answers do not match";
-                        }
+                        // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+                        string emailBody = "";
+                        string emailSubject = "";
+                        emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName.ToString());
+                        emailBody = string.Format("Hello {0}, please be advised that the security information on your account for {1} been changed. If you did not initiate this action then please contact the site administrator as soon as possible", user.FullName, ConfigurationManager.AppSettings["ApplicationName"].ToString());
+                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { logonResult.UserName }, null, null, emailSubject, emailBody, true);
+                        return View("ChangeSecurityInformationSuccess");
                     }
-                 else
+                    else
                     {
-                        errorMessage = "Security information incorrect or account locked out";
+                        errorMessage = "The security question answers do not match";
                     }
                 }
-
-                var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+                else
+                {
+                    errorMessage = "Security information incorrect or account locked out";
+                }
+            }
+                var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
                 var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, errorMessage);
                 return View(changeSecurityInformationViewModel);
-            }
+            
         }
 
         [AllowAnonymous]
         public ActionResult Register()
         {
-            using (var context = new SEContext())
-            {
-                var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-                var registerViewModel = new RegisterViewModel("", "", new User(), securityQuestions);
-                return View(registerViewModel);
-            }
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var registerViewModel = new RegisterViewModel("", "", new User(), securityQuestions);
+            return View(registerViewModel);
         }
 
         [HttpPost]
@@ -341,80 +352,54 @@ namespace SecurityEssentials.Controllers
             var user = new User();
             var password = collection["Password"].ToString();
             var confirmPassword = collection["ConfirmPassword"].ToString();
-            using (var context = new SEContext())
-            {
 
-                if (ModelState.IsValid)
-                {
-                    var propertiesToUpdate = new[]
-                {
+            if (ModelState.IsValid)
+            {
+                var propertiesToUpdate = new[]
+            {
                     "FirstName", "LastName", "UserName", "SecurityQuestionLookupItemId", "SecurityAnswer"
                 };
-                    if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
+                if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
+                {
+                    var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+                    if (recaptchaSuccess)
                     {
-                        var recaptchaSuccess = ValidateRecaptcha();
-                        if (recaptchaSuccess)
+                        var result = await _userManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword,
+                            user.SecurityQuestionLookupItemId, user.SecurityAnswer);
+                        if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
                         {
-                            var result = await UserManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword,
-                                user.SecurityQuestionLookupItemId, user.SecurityAnswer);
-                            if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
+                            user = _context.User.Where(u => u.UserName == user.UserName).First();
+                            // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+                            string emailBody = "";
+                            string emailSubject = "";
+                            if (result.Succeeded)
                             {
-                                user = context.User.Where(u => u.UserName == user.UserName).FirstOrDefault();
-                                // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                                string emailBody = "";
-                                string emailSubject = "";
-                                if (result.Succeeded)
-                                {
-                                    emailSubject = string.Format("{0} - Complete your registration", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                                    emailBody = string.Format("Welcome to {0}, to complete your registration we just need to confirm your email address by clicking <a href='{1}Account/EmailVerify?EmailVerficationToken={2}'>{1}Account/EmailVerify?EmailVerficationToken={2}</a>. If you did not request this registration then you can ignore this email and do not need to take any further action", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.EmailConfirmationToken);
-                                }
-                                else
-                                {
-                                    emailSubject = string.Format("{0} - Duplicate Registration", ConfigurationManager.AppSettings["ApplicationName"].ToString());
-                                    emailBody = string.Format("You already have an account on {0}. You (or possibly someone else) just attempted to register on {0} with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='{1}Account/LogOn'>{1}Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='{1}Account/LogOn'>{1}Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString());
-                                }
-
-                                Services.SendEmail(ConfigurationManager.AppSettings["DefaultFromEmailAddress"].ToString(), new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                                return View("RegisterSuccess");
+                                emailSubject = string.Format("{0} - Complete your registration", _configuration.ApplicationName);
+                                emailBody = string.Format("Welcome to {0}, to complete your registration we just need to confirm your email address by clicking <a href='{1}Account/EmailVerify?EmailVerficationToken={2}'>{1}Account/EmailVerify?EmailVerficationToken={2}</a>. If you did not request this registration then you can ignore this email and do not need to take any further action", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.EmailConfirmationToken);
                             }
                             else
                             {
-                                AddErrors(result);
+                                emailSubject = string.Format("{0} - Duplicate Registration", _configuration.ApplicationName);
+                                emailBody = string.Format("You already have an account on {0}. You (or possibly someone else) just attempted to register on {0} with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='{1}Account/LogOn'>{1}Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='{1}Account/LogOn'>{1}Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString());
                             }
+
+                            _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                            return View("RegisterSuccess");
+                        }
+                        else
+                        {
+                            AddErrors(result);
                         }
                     }
                 }
-
-                var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            }
+                var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
                 var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
                 return View(registerViewModel);
-            }
+            
         }
 
         #region Helper Functions
-
-        private bool ValidateRecaptcha()
-        {
-
-            bool recaptchaSuccess = true;
-
-            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
-
-            if (String.IsNullOrEmpty(recaptchaHelper.Response))
-            {
-                ModelState.AddModelError("", "Captcha answer cannot be empty.");
-                recaptchaSuccess = false;
-            }
-
-            RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
-
-            if (recaptchaResult != RecaptchaVerificationResult.Success)
-            {
-                ModelState.AddModelError("", "Incorrect captcha answer.");
-                recaptchaSuccess = false;
-            }
-            return recaptchaSuccess;
-        }
 
         private void AddErrors(SEIdentityResult result)
         {

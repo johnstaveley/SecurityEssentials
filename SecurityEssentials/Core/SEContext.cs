@@ -9,8 +9,8 @@ using SecurityEssentials.Model;
 
 namespace SecurityEssentials.Core
 {
-	public class SEContext : DbContext
-	{
+	public class SEContext : DbContext, ISEContext
+    {
 		public SEContext()
 			: base("DefaultConnection")
 		{

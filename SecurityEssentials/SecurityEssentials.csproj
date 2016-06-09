@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SecurityEssentials</RootNamespace>
     <AssemblyName>SecurityEssentials</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -240,16 +240,22 @@
     <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Core\AppConfiguration.cs" />
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
     <Compile Include="Core\Email.cs" />
     <Compile Include="Core\Encryption.cs" />
     <Compile Include="Core\HttpHeaders.cs" />
+    <Compile Include="Core\IAppConfiguration.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
     <Compile Include="Core\Identity\LogonResult.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
     <Compile Include="Core\Identity\UserStore.cs" />
+    <Compile Include="Core\IRecaptcha.cs" />
+    <Compile Include="Core\ISEContext.cs" />
+    <Compile Include="Core\IServices.cs" />
     <Compile Include="Core\OrderByExtensions.cs" />
+    <Compile Include="Core\Recaptcha.cs" />
     <Compile Include="Core\SecuredPassword.cs" />
     <Compile Include="Core\ThrottleAttribute.cs" />
     <Compile Include="Core\ValidateHttpAntiForgeryTokenAttribute.cs" />
