@@ -44,7 +44,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
                 new UserLog() { Id = 1, DateCreated = _lastAccountActivity, Description = "did old stuff" }
             } });
-            //_context.User = 
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
@@ -61,6 +60,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestCleanup]
         public void Teardown()
         {
+            _httpContext.VerifyAllExpectations();
+            _httpRequest.VerifyAllExpectations();
             _userManager.VerifyAllExpectations();
             _recaptcha.VerifyAllExpectations();
             _services.VerifyAllExpectations();
@@ -104,8 +105,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             string returnUrl = null;
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
-            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
-                .Return(Task.FromResult<LogonResult>(new LogonResult() { Success = true }));
+            UserManagerAttemptsLoginWithResult(true);
             _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return(Task.FromResult(0));
 
@@ -116,6 +116,42 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             AssertRedirectToActionReturned(result);
         }
 
+        [TestMethod]
+        public async Task GIVEN_CredentialsInCorrect_WHEN_Logon_THEN_ErrorViewReturned()
+        {
+            // Arrange
+            string returnUrl = null;
+            LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password1", RememberMe = false };
+            UserManagerAttemptsLoginWithResult(false);
+
+            // Act
+            var result = await _sut.LogOn(logon, returnUrl);
+
+            // Assert
+            AssertViewResultWithError(result, "Invalid credentials or account is locked");
+            _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+        }
+
+        private void UserManagerAttemptsLoginWithResult(bool isSuccess)
+        {
+
+            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(Task.FromResult<LogonResult>(new LogonResult() { Success = isSuccess }));
+        }
+
+        public void AssertViewResultWithError(ActionResult actionResult, string errorValue)
+        {
+            Assert.IsNotNull(actionResult, "No result was returned from controller");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
+            var viewResult = (ViewResult) actionResult;
+            Assert.IsNotNull(viewResult.ViewData.ModelState);
+            Assert.IsFalse(viewResult.ViewData.ModelState.ToList().Count == 0);
+            var error = viewResult.ViewData.ModelState.ToList()[0].Value.Errors.ToList();
+            Assert.AreEqual(errorValue, error[0].ErrorMessage);
+            
+            
+
+        }
 
         public T AssertViewResultReturnsType<T>(ActionResult actionResult)
         {
