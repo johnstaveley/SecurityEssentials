@@ -12,5 +12,7 @@ namespace SecurityEssentials.Core
         DbSet<UserLog> UserLog { get; set; }
 
         int SaveChanges();
+
+        void Dispose();
     }
 }

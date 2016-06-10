@@ -22,24 +22,28 @@ namespace SecurityEssentials.Controllers
         private IServices _services;
         private ISEContext _context;
         private IUserManager _userManager;
+        private IUserIdentity _userIdentity;
 
-        public AccountController() : this(new AppConfiguration(), new SEContext(), new MyUserManager(), new SecurityCheckRecaptcha(), new Services())
+        public AccountController() : this(new AppConfiguration(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
         {
+            // TODO: Replace with your DI Framework of choice
         }
 
-        public AccountController(IAppConfiguration configuration, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services)
+        public AccountController(IAppConfiguration configuration, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
             if (recaptcha == null) throw new ArgumentNullException("recaptcha");
             if (services == null) throw new ArgumentNullException("services");
             if (userManager == null) throw new ArgumentNullException("userManager");
+            if(userIdentity == null) throw new ArgumentNullException("userIdentity");
 
             _configuration = configuration;
             _context = context;
             _recaptcha = recaptcha;
             _services = services;
             _userManager = userManager;
+            _userIdentity = userIdentity;
         }
 
         [HttpPost]
@@ -58,7 +62,7 @@ namespace SecurityEssentials.Controllers
         {
             if (Request.IsAuthenticated)
             {
-                return RedirectToAction("Landing", "Home");
+                return RedirectToAction("Landing", "Account");
             }
             ViewBag.ReturnUrl = returnUrl;
             return View("LogOn");
@@ -107,17 +111,16 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangePassword(ChangePassword model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
-            var userId = Convert.ToInt32(User.Identity.GetUserId());
+            var userId = _userIdentity.GetUserId(this);
             var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                SEContext context = new SEContext();
-                var user = await _userManager.FindById(userId);
+                var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
                 // Email recipient with password change acknowledgement
                 string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
                 string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
                 _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                context.SaveChanges();
+                _context.SaveChanges();
                 return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             else
@@ -272,15 +275,12 @@ namespace SecurityEssentials.Controllers
             }
         }
 
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult ChangeSecurityInformation()
         {
-            using (var context = new SEContext())
-            {
-                var securityQuestions = context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-                var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, "");
-                return View(changeSecurityInformationViewModel);
-            }
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, "");
+            return View(changeSecurityInformationViewModel);
         }
 
         [HttpPost]
@@ -294,7 +294,7 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                var logonResult = await _userManager.FindAsync(User.Identity.Name, model.Password);
+                var logonResult = await _userManager.FindAsync(_userIdentity.GetUserName(this), model.Password);
                 if (recaptchaSuccess && logonResult.Success)
                 {
                     if (model.SecurityAnswer == model.SecurityAnswerConfirm)
@@ -329,10 +329,10 @@ namespace SecurityEssentials.Controllers
                     errorMessage = "Security information incorrect or account locked out";
                 }
             }
-                var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-                var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, errorMessage);
-                return View(changeSecurityInformationViewModel);
-            
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, errorMessage);
+            return View(changeSecurityInformationViewModel);
+
         }
 
         [AllowAnonymous]
@@ -393,10 +393,25 @@ namespace SecurityEssentials.Controllers
                     }
                 }
             }
-                var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-                var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
-                return View(registerViewModel);
-            
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
+            return View(registerViewModel);
+
+        }
+
+        public ActionResult Landing()
+        {
+            var currentUserId = _userIdentity.GetUserId(this);
+            var users = _context.User.Where(u => u.Id == currentUserId);
+            if (users.ToList().Count == 0) return new HttpNotFoundResult();
+            var user = users.FirstOrDefault();
+            var activityLogs = user.UserLogs.OrderByDescending(d => d.DateCreated);
+            UserLog lastAccountActivity = null;
+            if (activityLogs.ToList().Count > 1)
+            {
+                lastAccountActivity = activityLogs.Skip(1).FirstOrDefault();
+            }
+            return View(new LandingViewModel(user.FirstName, lastAccountActivity, currentUserId));
         }
 
         #region Helper Functions
@@ -417,7 +432,7 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-                return RedirectToAction("Landing", "Home");
+                return RedirectToAction("Landing", "Account");
             }
         }
 

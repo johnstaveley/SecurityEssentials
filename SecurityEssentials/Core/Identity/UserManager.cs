@@ -13,14 +13,14 @@ using System.Configuration;
 namespace SecurityEssentials.Core.Identity
 {
 
-    public class MyUserManager : IUserManager, IDisposable
+    public class AppUserManager : IUserManager, IDisposable
     {
 
         #region Declarations
 
         private readonly UserStore<User> _userStore;
-        private readonly SEContext _context;
-        private readonly AppConfiguration _configuration;
+        private readonly ISEContext _context;
+        private readonly IAppConfiguration _configuration;
         private readonly string _passwordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string _passwordValidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
@@ -40,11 +40,21 @@ namespace SecurityEssentials.Core.Identity
 
         #region Constructor
 
-        public MyUserManager()
+        public AppUserManager(IAppConfiguration configuration, ISEContext context, UserStore<User> userStore)
         {
-            _context = new SEContext();
-            _userStore = new UserStore<User>(_context);
-            _configuration = new AppConfiguration();
+
+            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (context == null) throw new ArgumentNullException("context");
+            if (userStore == null) throw new ArgumentNullException("userStore");
+
+            _configuration = configuration;
+            _context = context;
+            _userStore = userStore;
+
+        }
+
+        public AppUserManager() : this (new AppConfiguration(), new SEContext(), new UserStore<User>(new SEContext()))
+        {
         }
 
         #endregion

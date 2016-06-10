@@ -247,8 +247,10 @@
     <Compile Include="Core\Encryption.cs" />
     <Compile Include="Core\HttpHeaders.cs" />
     <Compile Include="Core\IAppConfiguration.cs" />
+    <Compile Include="Core\Identity\IUserIdentity.cs" />
     <Compile Include="Core\Identity\IUserManager.cs" />
     <Compile Include="Core\Identity\LogonResult.cs" />
+    <Compile Include="Core\Identity\UserIdentity.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
     <Compile Include="Core\Identity\UserStore.cs" />
     <Compile Include="Core\IRecaptcha.cs" />
@@ -1061,7 +1063,7 @@
     <Content Include="Views\User\ChangeEmailAddress.cshtml" />
     <Content Include="Views\Account\EmailVerificationSuccess.cshtml" />
     <Content Include="Views\Security\OverPostingEdit.cshtml" />
-    <Content Include="Views\Home\Landing.cshtml" />
+    <Content Include="Views\Account\Landing.cshtml" />
     <Content Include="Views\Shared\_Recaptcha.cshtml" />
     <Content Include="Views\Account\RecoverSuccess.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
