@@ -11,6 +11,9 @@ using SecurityEssentials.Model;
 using System.Collections.Generic;
 using SecurityEssentials.ViewModel;
 using Rhino.Mocks.Constraints;
+using System.Threading.Tasks;
+using System.Web.Routing;
+using System.Web;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
@@ -21,6 +24,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private AccountController _sut;
         private IAppConfiguration _configuration;
         private ISEContext _context;
+        private HttpContextBase _httpContext;
+        private HttpRequestBase _httpRequest;
         private IUserManager _userManager;
         private IRecaptcha _recaptcha;
         private IServices _services;
@@ -45,6 +50,21 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _services = MockRepository.GenerateMock<IServices>();
             _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
             _sut = new AccountController(_configuration, _context, _userManager, _recaptcha, _services, _userIdentity);
+            _httpContext = MockRepository.GenerateMock<HttpContextBase>();
+            _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
+            _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
+            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
+            _httpContext.Stub(c => c.Request).Return(_httpRequest);
+            _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
+        }
+
+        [TestCleanup]
+        public void Teardown()
+        {
+            _userManager.VerifyAllExpectations();
+            _recaptcha.VerifyAllExpectations();
+            _services.VerifyAllExpectations();
+            _userIdentity.VerifyAllExpectations();
         }
 
         [TestMethod]
@@ -79,17 +99,22 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_CredentialsCorrect_WHEN_Logon_THEN_RedirectsToLandingPage()
+        public async Task GIVEN_CredentialsCorrect_WHEN_Logon_THEN_RedirectsToLandingPage()
         {
             // Arrange
-            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
+            string returnUrl = null;
+            LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
+            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(Task.FromResult<LogonResult>(new LogonResult() { Success = true }));
+            _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
+                .Return(Task.FromResult(0));
 
             // Act
-            var result = _sut.Landing();
+            var result = await _sut.LogOn(logon, returnUrl );
 
             // Assert
             Assert.IsNotNull(result, "No result was returned from controller");
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult), "Not HttpNotFoundResult returned from controller");
+            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");
 
         }
 

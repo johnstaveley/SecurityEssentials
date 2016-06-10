@@ -76,7 +76,7 @@ namespace SecurityEssentials.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.LogonAsync(model.UserName, model.Password);
+                var user = await _userManager.TrySignInAsync(model.UserName, model.Password);
                 if (user.Success)
                 {
                     await _userManager.SignInAsync(user.UserName, model.RememberMe);
@@ -294,7 +294,7 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                var logonResult = await _userManager.LogonAsync(_userIdentity.GetUserName(this), model.Password);
+                var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
                 if (recaptchaSuccess && logonResult.Success)
                 {
                     if (model.SecurityAnswer == model.SecurityAnswerConfirm)
