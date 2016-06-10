@@ -159,6 +159,47 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
+        {
+            // Arrange
+            var message = AccountController.ManageMessageId.ChangePasswordSuccess;
+
+            // Act
+            var result = _sut.ChangePassword(message);
+
+            // Assert
+            AssertViewResultReturned(result, null);
+            var viewResult = (ViewResult) result;
+            Assert.AreEqual("Your password has been changed.", viewResult.ViewBag.StatusMessage);
+
+        }
+
+        [TestMethod, Ignore]
+        public async Task GIVEN_CorrectInformationProvided_WHEN_ChangePassword_THEN_SavesRedirectsAndEmails()
+        {
+            // Arrange
+            var model = new ViewModel.ChangePassword()
+            { 
+             OldPassword = "password",
+             NewPassword = "pAssword1",
+             ConfirmPassword = "pAssword1"
+            };
+            _userManager.Expect(a => a.ChangePasswordAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(Task.FromResult(new SEIdentityResult() { }));
+            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(5);
+
+            // Act
+            var result = await _sut.ChangePassword(model);
+
+            // Assert
+            AssertRedirectToActionReturned(result, "ChangePasswordSuccess", "Account");
+            _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, 
+                Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+            _context.AssertWasCalled(a => a.SaveChanges());
+
+        }
+
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)
         {
 
@@ -193,7 +234,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.IsNotNull(actionResult, "No result was returned from controller");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
             var viewResult = (ViewResult)actionResult;
-            Assert.AreEqual(viewName, viewResult.ViewName);
+            if (!string.IsNullOrEmpty(viewName))
+            {
+                Assert.AreEqual(viewName, viewResult.ViewName);
+            }
 
         }
 
