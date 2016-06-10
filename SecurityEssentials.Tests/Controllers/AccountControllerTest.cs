@@ -28,6 +28,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private HttpRequestBase _httpRequest;
         private IUserManager _userManager;
         private IRecaptcha _recaptcha;
+        private string _returnUrl = null;
         private IServices _services;
         private IUserIdentity _userIdentity;
         private DateTime _lastAccountActivity;
@@ -103,33 +104,59 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task GIVEN_CredentialsCorrect_WHEN_Logon_THEN_RedirectsToLandingPage()
         {
             // Arrange
-            string returnUrl = null;
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
             UserManagerAttemptsLoginWithResult(true);
             _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return(Task.FromResult(0));
 
             // Act
-            var result = await _sut.LogOn(logon, returnUrl );
+            var result = await _sut.LogOn(logon, _returnUrl );
 
             // Assert
-            AssertRedirectToActionReturned(result);
+            AssertRedirectToActionReturned(result, "Landing", "Account");
         }
 
         [TestMethod]
-        public async Task GIVEN_CredentialsInCorrect_WHEN_Logon_THEN_ErrorViewReturned()
+        public async Task GIVEN_CredentialsIncorrect_WHEN_Logon_THEN_ErrorViewReturned()
         {
             // Arrange
-            string returnUrl = null;
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password1", RememberMe = false };
             UserManagerAttemptsLoginWithResult(false);
 
             // Act
-            var result = await _sut.LogOn(logon, returnUrl);
+            var result = await _sut.LogOn(logon, _returnUrl);
 
             // Assert
             AssertViewResultWithError(result, "Invalid credentials or account is locked");
             _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+        }
+
+
+        [TestMethod]
+        public void GIVEN_UserAuthenticated_WHEN_LogonViewRequested_THEN_RedirectToLandingPage()
+        {
+            // Arrange
+            _httpRequest.Stub(x => x.IsAuthenticated).Return(true);
+
+            // Act
+            var result = _sut.LogOn(_returnUrl);
+
+            // Assert
+            AssertRedirectToActionReturned(result, "Landing", "Account");
+
+        }
+
+        [TestMethod]
+        public void GIVEN_UserIsNotAuthenticated_WHEN_LogonViewRequested_THEN_ShowsView()
+        {
+            // Arrange
+
+            // Act
+            var result = _sut.LogOn(_returnUrl);
+
+            // Assert
+            AssertViewResultReturned(result, "LogOn");
+
         }
 
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)
@@ -148,8 +175,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.IsFalse(viewResult.ViewData.ModelState.ToList().Count == 0);
             var error = viewResult.ViewData.ModelState.ToList()[0].Value.Errors.ToList();
             Assert.AreEqual(errorValue, error[0].ErrorMessage);
-            
-            
 
         }
 
@@ -163,13 +188,22 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        public void AssertRedirectToActionReturned(ActionResult result)
+        public void AssertViewResultReturned(ActionResult actionResult, string viewName)
+        {
+            Assert.IsNotNull(actionResult, "No result was returned from controller");
+            Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
+            var viewResult = (ViewResult)actionResult;
+            Assert.AreEqual(viewName, viewResult.ViewName);
+
+        }
+
+        public void AssertRedirectToActionReturned(ActionResult result, string action, string controller)
         {
             Assert.IsNotNull(result, "No result was returned from controller");
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");
             var redirectResult = (RedirectToRouteResult)result;
-            Assert.AreEqual("Landing", redirectResult.RouteValues.Values.ToList()[0]);
-            Assert.AreEqual("Account", redirectResult.RouteValues.Values.ToList()[1]);
+            Assert.AreEqual(action, redirectResult.RouteValues.Values.ToList()[0]);
+            Assert.AreEqual(controller, redirectResult.RouteValues.Values.ToList()[1]);
 
         }
 
