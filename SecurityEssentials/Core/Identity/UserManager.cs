@@ -149,7 +149,7 @@ namespace SecurityEssentials.Core.Identity
             return await _userStore.FindByIdAsync(userId).ConfigureAwait(false);
         }
 
-		public async Task<LogonResult> FindAsync(string userName, string password)
+		public async Task<LogonResult> LogonAsync(string userName, string password)
         {
             return await _userStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
         }

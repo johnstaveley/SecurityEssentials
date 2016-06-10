@@ -63,6 +63,36 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             
         }
 
+        [TestMethod]
+        public void GIVEN_AccountNotFound_WHEN_UserLands_THEN_HttpNotFound()
+        {
+            // Arrange
+            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
+
+            // Act
+            var result = _sut.Landing();
+
+            // Assert
+            Assert.IsNotNull(result, "No result was returned from controller");
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult), "Not HttpNotFoundResult returned from controller");
+
+        }
+
+        [TestMethod]
+        public void GIVEN_CredentialsCorrect_WHEN_Logon_THEN_RedirectsToLandingPage()
+        {
+            // Arrange
+            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
+
+            // Act
+            var result = _sut.Landing();
+
+            // Assert
+            Assert.IsNotNull(result, "No result was returned from controller");
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult), "Not HttpNotFoundResult returned from controller");
+
+        }
+
 
         public T AssertViewResultReturnsType<T>(ActionResult actionResult)
         {
