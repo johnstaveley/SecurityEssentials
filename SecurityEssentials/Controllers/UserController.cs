@@ -17,15 +17,23 @@ namespace SecurityEssentials.Controllers
 
 		#region Declarations
 
-		private SEContext context { get; set; }
+		private ISEContext _context { get; set; }
 
-		#endregion
+        #endregion
 
-		#region Constructor
+        #region Constructor
 
-		public UserController()
+        public UserController() : this(new SEContext())
+        {
+
+        }
+
+
+		public UserController(ISEContext context)
 		{
-			context = new SEContext();
+            if (context == null) throw new ArgumentNullException("context");
+
+            _context = context;
 		}
 
 		#endregion
@@ -41,7 +49,7 @@ namespace SecurityEssentials.Controllers
 		[Authorize(Roles = "Admin")]
         public ActionResult Disable(int id)
 		{
-			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
+			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null) return new HttpNotFoundResult();
 			return PartialView("_Disable", user);
 		}
@@ -57,11 +65,11 @@ namespace SecurityEssentials.Controllers
         public JsonResult Disable(int id, FormCollection collection)
 		{
 			if (id == 0) return Json(new { success = false, message = "unable to locate user id" });
-			User user = context.User.Where(u => u.Id == id).FirstOrDefault();
+			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null) return Json(new { success = false, message = "unable to locate user" });
 			if (user.Id == Convert.ToInt32(User.Identity.GetUserId())) return Json(new { success = false, message = "You cannot disable your own account" });
 			user.Enabled = false;
-			context.SaveChanges();
+			_context.SaveChanges();
 			return Json(new { success = true, message = "" });
 		}
 
@@ -197,7 +205,7 @@ namespace SecurityEssentials.Controllers
 			string sortDirection = Request["sort[0][dir]"];
 			string sortField = Request["sort[0][field]"];
 
-			var users = context.User.Where(
+			var users = _context.User.Where(
 				u => (searchText == "" ||
 						(
 						(!string.IsNullOrEmpty(u.FirstName) && u.FirstName.Contains(searchText)) ||

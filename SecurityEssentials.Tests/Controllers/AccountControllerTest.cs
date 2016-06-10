@@ -113,9 +113,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = await _sut.LogOn(logon, returnUrl );
 
             // Assert
-            Assert.IsNotNull(result, "No result was returned from controller");
-            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");
-
+            AssertRedirectToActionReturned(result);
         }
 
 
@@ -128,5 +126,16 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             return (T)viewResult.ViewData.Model;
 
         }
+
+        public void AssertRedirectToActionReturned(ActionResult result)
+        {
+            Assert.IsNotNull(result, "No result was returned from controller");
+            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");
+            var redirectResult = (RedirectToRouteResult)result;
+            Assert.AreEqual("Landing", redirectResult.RouteValues.Values.ToList()[0]);
+            Assert.AreEqual("Account", redirectResult.RouteValues.Values.ToList()[1]);
+
+        }
+
     }
 }
