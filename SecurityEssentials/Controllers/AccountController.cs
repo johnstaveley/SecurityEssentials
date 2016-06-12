@@ -336,10 +336,10 @@ namespace SecurityEssentials.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-            var registerViewModel = new RegisterViewModel("", "", new User(), securityQuestions);
+            var registerViewModel = new RegisterViewModel("", _configuration.HasRecaptcha, "", new User(), securityQuestions);
             return View(registerViewModel);
         }
 
@@ -362,7 +362,7 @@ namespace SecurityEssentials.Controllers
                 if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
                 {
                     var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                    if (recaptchaSuccess)
+                    if (recaptchaSuccess || !_configuration.HasRecaptcha)
                     {
                         var result = await _userManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword,
                             user.SecurityQuestionLookupItemId, user.SecurityAnswer);
@@ -394,7 +394,7 @@ namespace SecurityEssentials.Controllers
                 }
             }
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-            var registerViewModel = new RegisterViewModel(confirmPassword, password, user, securityQuestions);
+            var registerViewModel = new RegisterViewModel(confirmPassword, _configuration.HasRecaptcha, password, user, securityQuestions);
             return View(registerViewModel);
 
         }

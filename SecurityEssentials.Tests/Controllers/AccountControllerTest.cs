@@ -40,6 +40,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _lastAccountActivity = DateTime.Parse("2016-05-10");
             _configuration = MockRepository.GenerateStub<IAppConfiguration>();
             _context = MockRepository.GenerateStub<ISEContext>();
+            _context.LookupItem = new TestDbSet<LookupItem>();
             _context.User = new TestDbSet<User>();
             _context.User.Add(new User() { Id = 5, FirstName = _firstName, UserLogs = new List<UserLog>() {
                 new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
@@ -131,7 +132,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
         }
 
-
         [TestMethod]
         public void GIVEN_UserAuthenticated_WHEN_LogonViewRequested_THEN_RedirectToLandingPage()
         {
@@ -198,6 +198,20 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
             _context.AssertWasCalled(a => a.SaveChanges());
 
+        }
+
+        [TestMethod]
+        public async Task WHEN_RegisterGet_THEN_ViewReturned()
+        {
+            // Arrange
+            _configuration.Stub(a => a.HasRecaptcha).Return(true);
+
+            // Act
+            var result = await _sut.Register();
+
+            // Assert
+            var model = AssertViewResultReturnsType<RegisterViewModel>(result);
+            Assert.IsTrue(model.HasRecaptcha);
         }
 
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)

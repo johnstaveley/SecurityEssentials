@@ -9,7 +9,9 @@
   <add key="recaptchaPrivateKey" value="" />
 </appSettings>
 
-3) Create a file Config/PrivateMailSettings.config with your values here:
+3) Turn on recaptcha in web.config
+
+4) Create a file Config/PrivateMailSettings.config with your values here:
 
 <network host="localhost" port="25" defaultCredentials="true" />
 

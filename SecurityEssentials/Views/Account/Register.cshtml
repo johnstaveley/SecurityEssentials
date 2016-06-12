@@ -46,12 +46,14 @@
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "off" })
         </div>
     </div>
+    @if (Model.HasRecaptcha) {
     <div class="row">
         <div class="col-md-4">Enter the figures you see in the box shown</div>
         <div class="col-md-8">
-            @Html.Partial("_Recaptcha")
+                Html.Partial("_Recaptcha");
         </div>
     </div>
+    }
     <div class="row">
         <div class="col-md-offset-10 col-md-2">
             <input type="submit" class="btn btn-default btn btn-primary" value="Register" />

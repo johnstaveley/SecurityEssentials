@@ -19,14 +19,16 @@ namespace SecurityEssentials.Core
         public string DefaultFromEmailAddress { get; private set; }
         public string EncryptionPassword { get; private set; }
         public int EncryptionIterationCount { get; private set; }
+        public bool HasRecaptcha { get; private set; }
 
         public AppConfiguration()
         {
             AccountManagementRegisterAutoApprove = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"]);
+            ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
             DefaultFromEmailAddress = ConfigurationManager.AppSettings["DefaultFromEmailAddress"];
             EncryptionPassword = ConfigurationManager.AppSettings["EncryptionPassword"];
             EncryptionIterationCount = Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]);
-            ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
+            HasRecaptcha = Convert.ToBoolean(ConfigurationManager.AppSettings["HasRecaptcha"]);
         }
     }
 }

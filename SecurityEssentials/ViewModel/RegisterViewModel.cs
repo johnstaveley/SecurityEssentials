@@ -22,13 +22,16 @@ namespace SecurityEssentials.ViewModel
 
 		public User User { get; set; }
 
+        public bool HasRecaptcha { get; set; }
+
         #endregion
 
         #region Constructor
 
-        public RegisterViewModel(string confirmPassword, string password, User user, List<LookupItem> securityQuestions)            
+        public RegisterViewModel(string confirmPassword, bool hasRecaptcha, string password, User user, List<LookupItem> securityQuestions)            
         {
 			ConfirmPassword = confirmPassword;
+            HasRecaptcha = hasRecaptcha;
 			Password = password;
 			User = user;
 			SecurityQuestions = new SelectList(securityQuestions, "Id", "Description");
