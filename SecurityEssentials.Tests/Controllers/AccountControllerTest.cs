@@ -164,12 +164,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             var message = AccountController.ManageMessageId.ChangePasswordSuccess;
+            _configuration.Stub(a => a.HasRecaptcha).Return(true);
 
             // Act
             var result = _sut.ChangePassword(message);
 
             // Assert
-            AssertViewResultReturned(result, null);
+            var model = AssertViewResultReturnsType<ChangePasswordViewModel>(result);
+            Assert.IsTrue(model.HasRecaptcha);
             var viewResult = (ViewResult) result;
             Assert.AreEqual("Your password has been changed.", viewResult.ViewBag.StatusMessage);
 
@@ -179,7 +181,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task GIVEN_CorrectInformationProvided_WHEN_ChangePassword_THEN_SavesRedirectsAndEmails()
         {
             // Arrange
-            var model = new ViewModel.ChangePassword()
+            var model = new ViewModel.ChangePasswordViewModel()
             { 
              OldPassword = "password",
              NewPassword = "pAssword1",
@@ -197,6 +199,33 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, 
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
             _context.AssertWasCalled(a => a.SaveChanges());
+
+        }
+
+        [TestMethod]
+        public async Task WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
+        {
+            // Arrange
+            _configuration.Stub(a => a.HasRecaptcha).Return(true);
+
+            // Act
+            var result = await _sut.ChangeSecurityInformation();
+
+            // Assert
+            var model = AssertViewResultReturnsType<ChangeSecurityInformationViewModel>(result);
+            Assert.IsTrue(model.HasRecaptcha);
+        }
+
+        [TestMethod]
+        public void WHEN_RecoverGet_THEN_ViewReturned()
+        {
+            // Arrange
+
+            // Act
+            var result = _sut.Recover();
+
+            // Assert
+            AssertViewResultReturned(result, "Recover");
 
         }
 

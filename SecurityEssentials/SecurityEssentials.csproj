@@ -278,6 +278,7 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ChangePassword.cs" />
     <Compile Include="ViewModel\LandingViewModel.cs" />
     <Compile Include="ViewModel\ChangeSecurityInformationViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />

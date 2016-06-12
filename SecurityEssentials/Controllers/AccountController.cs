@@ -101,31 +101,39 @@ namespace SecurityEssentials.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
-            return View();
+            var model = new ChangePasswordViewModel()
+            {
+                HasRecaptcha = _configuration.HasRecaptcha
+            };
+            return View(model);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> ChangePassword(ChangePassword model)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
             var userId = _userIdentity.GetUserId(this);
-            var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
+            var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+            if (recaptchaSuccess || !_configuration.HasRecaptcha)
             {
-                var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
-                // Email recipient with password change acknowledgement
-                string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
-                string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
-                _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                _context.SaveChanges();
-                return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
-            }
-            else
-            {
-                AddErrors(result);
+                var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
+                    // Email recipient with password change acknowledgement
+                    string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
+                    string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
+                    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                    _context.SaveChanges();
+                    return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
+                }
+                else
+                {
+                    AddErrors(result);
+                }
             }
             return View(model);
         }
@@ -276,10 +284,10 @@ namespace SecurityEssentials.Controllers
         }
 
         [Authorize]
-        public ActionResult ChangeSecurityInformation()
+        public async Task<ActionResult> ChangeSecurityInformation()
         {
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, "");
+            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel("", _configuration.HasRecaptcha, securityQuestions);
             return View(changeSecurityInformationViewModel);
         }
 
@@ -295,7 +303,7 @@ namespace SecurityEssentials.Controllers
             {
                 var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                 var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
-                if (recaptchaSuccess && logonResult.Success)
+                if ((recaptchaSuccess || !_configuration.HasRecaptcha) && logonResult.Success)
                 {
                     if (model.SecurityAnswer == model.SecurityAnswerConfirm)
                     {
@@ -330,7 +338,7 @@ namespace SecurityEssentials.Controllers
                 }
             }
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
-            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(securityQuestions, errorMessage);
+            var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(errorMessage, _configuration.HasRecaptcha, securityQuestions);
             return View(changeSecurityInformationViewModel);
 
         }

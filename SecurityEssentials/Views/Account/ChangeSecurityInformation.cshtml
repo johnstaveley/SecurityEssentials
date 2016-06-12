@@ -42,12 +42,15 @@
         @Html.LabelFor(m => m.SecurityAnswerConfirm, new { @class = "col-md-4 control-label" })
         <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswerConfirm, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
     </div>
-    <div class="row">
-        <div class="col-md-4">Enter the figures you see in the box shown</div>
-        <div class="col-md-8">
-            @Html.Partial("_Recaptcha")
+    @if (Model.HasRecaptcha)
+    {
+        <div class="row">
+            <div class="col-md-4">Enter the figures you see in the box shown</div>
+            <div class="col-md-8">
+                Html.Partial("_Recaptcha");
+            </div>
         </div>
-    </div>
+    }
     <div class="row">
         <div class="col-md-offset-10 col-md-2">
             <input type="submit" class="btn btn-default btn btn-primary" value="Save Changes" />

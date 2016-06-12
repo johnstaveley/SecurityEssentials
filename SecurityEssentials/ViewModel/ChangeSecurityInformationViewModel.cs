@@ -12,6 +12,10 @@ namespace SecurityEssentials.ViewModel
 
         #region Declarations
 
+        public bool HasRecaptcha { get; set; }
+
+        public string ErrorMessage { get; set; }
+
         [Required, MaxLength(20)]
         public string Password { get; set; }
 
@@ -26,16 +30,15 @@ namespace SecurityEssentials.ViewModel
         [Required, Display(Name = "New Security Answer Confirmation"), MinLength(4), MaxLength(40)]
         public string SecurityAnswerConfirm { get; set; }
 
-        public string ErrorMessage { get; set; }
-
         #endregion
 
         #region Constructor
 
-        public ChangeSecurityInformationViewModel(List<LookupItem> securityQuestions, string errorMessage)
+        public ChangeSecurityInformationViewModel(string errorMessage, bool hasRecaptcha, List<LookupItem> securityQuestions)
         {
             SecurityQuestions = new SelectList(securityQuestions, "Id", "Description");
             ErrorMessage = errorMessage;
+            HasRecaptcha = hasRecaptcha;
         }
 
         public ChangeSecurityInformationViewModel()
