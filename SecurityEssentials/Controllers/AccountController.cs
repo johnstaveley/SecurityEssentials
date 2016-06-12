@@ -116,23 +116,34 @@ namespace SecurityEssentials.Controllers
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
             var userId = _userIdentity.GetUserId(this);
-            var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-            if (recaptchaSuccess || !_configuration.HasRecaptcha)
+            var recaptchaSuccess = true;
+            if (_configuration.HasRecaptcha)
             {
-                var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
-                if (result.Succeeded)
+                _recaptcha.ValidateRecaptcha(this);
+            }
+            if (recaptchaSuccess)
+            {
+                var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
+                if (user != null)
                 {
-                    var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
-                    // Email recipient with password change acknowledgement
-                    string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
-                    string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
-                    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                    _context.SaveChanges();
-                    return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        // Email recipient with password change acknowledgement
+                        string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
+                        string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
+                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                        _context.SaveChanges();
+                        return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
                 }
                 else
                 {
-                    AddErrors(result);
+                    return HttpNotFound();
                 }
             }
             return View(model);
@@ -162,73 +173,78 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         public ActionResult Recover()
         {
-            return View("Recover");
+            var model = new RecoverViewModel()
+            {
+                HasRecaptcha = _configuration.HasRecaptcha
+            };
+            return View("Recover", model);
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public ActionResult Recover(Recover model)
+        public ActionResult Recover(RecoverViewModel model)
         {
             if (ModelState.IsValid)
             {
-                using (var context = new SEContext())
-                {
-                    var user = context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
-                    var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                    if (user != null && recaptchaSuccess)
+                var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
+                var recaptchaSuccess = true;
+                if (_configuration.HasRecaptcha) {
+                    _recaptcha.ValidateRecaptcha(this);
+                    if (!recaptchaSuccess)
                     {
-                        user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
-                        user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
-                        // Send recovery email with link to recover password form
-                        string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.PasswordResetToken);
-                        string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
-                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                        user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
-                        context.SaveChanges();
-                        return View("RecoverSuccess");
+                        return View(model);
                     }
                 }
+                if (user != null)
+                {
+                    user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
+                    user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+                    // Send recovery email with link to recover password form
+                    string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.PasswordResetToken);
+                    string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
+                    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+                    user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
+                    _context.SaveChanges();
+                }
             }
+            return View("RecoverSuccess");
 
-            return View(model);
         }
 
         [AllowAnonymous]
         public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request["PasswordResetToken"] ?? "";
-            using (var context = new SEContext())
+            var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.Now).FirstOrDefault();
+            if (user == null)
             {
-                var user = context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.Now).FirstOrDefault();
-                if (user == null)
-                {
-                    HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
-                    return View("Error", error);
-                }
-                if (user.Enabled == false)
-                {
-                    HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
-                    return View("Error", error);
-                }
-                RecoverPassword recoverPasswordModel = new RecoverPassword()
-                {
-                    Id = user.Id,
-                    SecurityAnswer = "",
-                    SecurityQuestion = user.SecurityQuestionLookupItem.Description,
-                    PasswordResetToken = passwordResetToken,
-                    UserName = user.UserName
-                };
-                return View("RecoverPassword", recoverPasswordModel);
+                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
+                return View("Error", error);
             }
+            if (user.Enabled == false)
+            {
+                HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
+                return View("Error", error);
+            }
+            RecoverPasswordViewModel recoverPasswordModel = new RecoverPasswordViewModel()
+            {
+                Id = user.Id,
+                HasRecaptcha = _configuration.HasRecaptcha,
+                SecurityAnswer = "",
+                SecurityQuestion = user.SecurityQuestionLookupItem.Description,
+                PasswordResetToken = passwordResetToken,
+                UserName = user.UserName
+            };
+            return View("RecoverPassword", recoverPasswordModel);            
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> RecoverPassword(RecoverPassword recoverPasswordModel)
+        public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
         {
             using (var context = new SEContext())
             {
@@ -259,7 +275,11 @@ namespace SecurityEssentials.Controllers
                     ModelState.AddModelError("ConfirmPassword", "The passwords do not match");
                     return View("RecoverPassword", recoverPasswordModel);
                 }
-                var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+                var recaptchaSuccess = true;
+                if (_configuration.HasRecaptcha)
+                {
+                    _recaptcha.ValidateRecaptcha(this);
+                }
                 if (ModelState.IsValid && recaptchaSuccess)
                 {
                     var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
@@ -301,9 +321,13 @@ namespace SecurityEssentials.Controllers
 
             if (ModelState.IsValid)
             {
-                var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+                var recaptchaSuccess = true;
+                if (_configuration.HasRecaptcha)
+                {
+                    _recaptcha.ValidateRecaptcha(this);
+                }
                 var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
-                if ((recaptchaSuccess || !_configuration.HasRecaptcha) && logonResult.Success)
+                if (recaptchaSuccess && logonResult.Success)
                 {
                     if (model.SecurityAnswer == model.SecurityAnswerConfirm)
                     {
@@ -369,8 +393,12 @@ namespace SecurityEssentials.Controllers
                 };
                 if (TryUpdateModel(user, "User", propertiesToUpdate, collection))
                 {
-                    var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                    if (recaptchaSuccess || !_configuration.HasRecaptcha)
+                    var recaptchaSuccess = true;
+                    if (_configuration.HasRecaptcha)
+                    {
+                        _recaptcha.ValidateRecaptcha(this);
+                    }
+                    if (recaptchaSuccess)
                     {
                         var result = await _userManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword,
                             user.SecurityQuestionLookupItemId, user.SecurityAnswer);

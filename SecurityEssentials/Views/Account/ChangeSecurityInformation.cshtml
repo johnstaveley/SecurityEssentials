@@ -42,7 +42,7 @@
         @Html.LabelFor(m => m.SecurityAnswerConfirm, new { @class = "col-md-4 control-label" })
         <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswerConfirm, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
     </div>
-    @if (Model.HasRecaptcha)
+    if (Model.HasRecaptcha)
     {
         <div class="row">
             <div class="col-md-4">Enter the figures you see in the box shown</div>

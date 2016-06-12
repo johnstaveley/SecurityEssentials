@@ -10,7 +10,6 @@ using SecurityEssentials.Unit.Tests.TestDbSet;
 using SecurityEssentials.Model;
 using System.Collections.Generic;
 using SecurityEssentials.ViewModel;
-using Rhino.Mocks.Constraints;
 using System.Threading.Tasks;
 using System.Web.Routing;
 using System.Web;
@@ -39,6 +38,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             _lastAccountActivity = DateTime.Parse("2016-05-10");
             _configuration = MockRepository.GenerateStub<IAppConfiguration>();
+            _configuration.Stub(a => a.HasRecaptcha).Return(true);
             _context = MockRepository.GenerateStub<ISEContext>();
             _context.LookupItem = new TestDbSet<LookupItem>();
             _context.User = new TestDbSet<User>();
@@ -164,7 +164,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             var message = AccountController.ManageMessageId.ChangePasswordSuccess;
-            _configuration.Stub(a => a.HasRecaptcha).Return(true);
 
             // Act
             var result = _sut.ChangePassword(message);
@@ -206,7 +205,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
         {
             // Arrange
-            _configuration.Stub(a => a.HasRecaptcha).Return(true);
 
             // Act
             var result = await _sut.ChangeSecurityInformation();
@@ -225,7 +223,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = _sut.Recover();
 
             // Assert
-            AssertViewResultReturned(result, "Recover");
+            var model = AssertViewResultReturnsType<RecoverViewModel>(result);
+            Assert.IsTrue(model.HasRecaptcha);
 
         }
 
@@ -233,7 +232,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task WHEN_RegisterGet_THEN_ViewReturned()
         {
             // Arrange
-            _configuration.Stub(a => a.HasRecaptcha).Return(true);
 
             // Act
             var result = await _sut.Register();

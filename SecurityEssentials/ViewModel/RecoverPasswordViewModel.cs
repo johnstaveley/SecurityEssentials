@@ -1,18 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.ViewModel
 {
-
-    public class Recover
-    {
-        [Required]
-        [Display(Name = "Email Address")]
-        public string UserName { get; set; }
-
-    }
-
-    public class RecoverPassword
+	    public class RecoverPasswordViewModel
     {
         [Required]
         [Display(Name = "User name")]
@@ -41,6 +31,8 @@ namespace SecurityEssentials.ViewModel
         public int Id { get; set; }
 
         public string PasswordResetToken { get; set; }
+
+        public bool HasRecaptcha { get; set; }
     }
 
 }
