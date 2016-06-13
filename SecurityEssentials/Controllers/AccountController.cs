@@ -153,7 +153,7 @@ namespace SecurityEssentials.Controllers
         [AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
         public async Task<ActionResult> EmailVerify()
         {
-            var emailVerificationToken = Request["EmailVerficationToken"] ?? "";
+            var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
             var user = _context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
             if (user == null)
             {

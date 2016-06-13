@@ -43,10 +43,16 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _context = MockRepository.GenerateStub<ISEContext>();
             _context.LookupItem = new TestDbSet<LookupItem>();
             _context.User = new TestDbSet<User>();
-            _context.User.Add(new User() { Id = 5, FirstName = _firstName, UserLogs = new List<UserLog>() {
+            _context.User.Add(new User()
+            {
+                Id = 5,
+                FirstName = _firstName,
+                EmailConfirmationToken = "test1",
+                UserLogs = new List<UserLog>() {
                 new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
                 new UserLog() { Id = 1, DateCreated = _lastAccountActivity, Description = "did old stuff" }
             } });
+            _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
@@ -215,20 +221,20 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.IsTrue(model.HasRecaptcha);
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task GIVEN_RequestVerificationToken_WHEN_EmailVerify_THEN_UserStatusUpdated()
         {
             // Arrange
             var requestItems = new NameValueCollection();
             requestItems.Add("EmailVerficationToken", "test1");
-            _httpRequest.Stub(a => a.Params).Return(requestItems);         
+            _httpRequest.Stub(a => a.QueryString).Return(requestItems);
 
             // Act
             var result = await _sut.EmailVerify();
 
             // Assert
             AssertViewResultReturned(result, "EmailVerificationSuccess");
-
+            _context.AssertWasCalled(a => a.SaveChangesAsync());
 
         }
 
