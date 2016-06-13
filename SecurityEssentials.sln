@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials", "SecurityEssentials\SecurityEssentials.csproj", "{AC8E9B1B-9815-4398-B755-57A59615788C}"
 EndProject
@@ -12,20 +12,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{09560B
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Acceptance.Tests", "SecurityEssentials.Acceptance.Tests\SecurityEssentials.Acceptance.Tests.csproj", "{8E3FF9F2-3785-4969-AC8E-BB81134C3310}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Integration|Any CPU = Integration|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AC8E9B1B-9815-4398-B755-57A59615788C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC8E9B1B-9815-4398-B755-57A59615788C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC8E9B1B-9815-4398-B755-57A59615788C}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{AC8E9B1B-9815-4398-B755-57A59615788C}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{AC8E9B1B-9815-4398-B755-57A59615788C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC8E9B1B-9815-4398-B755-57A59615788C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Integration|Any CPU.Build.0 = Integration|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
