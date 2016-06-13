@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -218,13 +219,15 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task GIVEN_RequestVerificationToken_WHEN_EmailVerify_THEN_UserStatusUpdated()
         {
             // Arrange
-            //_httpContext.Request["EmailVerficationToken"] = "test1";
+            var requestItems = new NameValueCollection();
+            requestItems.Add("EmailVerficationToken", "test1");
+            _httpRequest.Stub(a => a.Params).Return(requestItems);         
 
             // Act
             var result = await _sut.EmailVerify();
 
             // Assert
-
+            AssertViewResultReturned(result, "EmailVerificationSuccess");
 
 
         }
