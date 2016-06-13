@@ -176,7 +176,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task GIVEN_CorrectInformationProvided_WHEN_ChangePassword_THEN_SavesRedirectsAndEmails()
         {
             // Arrange
@@ -194,7 +194,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = await _sut.ChangePassword(model);
 
             // Assert
-            AssertRedirectToActionReturned(result, "ChangePasswordSuccess", "Account");
+            AssertRedirectToActionReturned(result, SecurityEssentials.Controllers.AccountController.ManageMessageId.ChangePasswordSuccess, "ChangePassword");
             _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, 
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
             _context.AssertWasCalled(a => a.SaveChanges());
@@ -212,6 +212,21 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             var model = AssertViewResultReturnsType<ChangeSecurityInformationViewModel>(result);
             Assert.IsTrue(model.HasRecaptcha);
+        }
+
+        [TestMethod, Ignore]
+        public async Task GIVEN_RequestVerificationToken_WHEN_EmailVerify_THEN_UserStatusUpdated()
+        {
+            // Arrange
+            //_httpContext.Request["EmailVerficationToken"] = "test1";
+
+            // Act
+            var result = await _sut.EmailVerify();
+
+            // Assert
+
+
+
         }
 
         [TestMethod]
@@ -282,7 +297,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        public void AssertRedirectToActionReturned(ActionResult result, string action, string controller)
+        public void AssertRedirectToActionReturned(ActionResult result, object action, string controller)
         {
             Assert.IsNotNull(result, "No result was returned from controller");
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");

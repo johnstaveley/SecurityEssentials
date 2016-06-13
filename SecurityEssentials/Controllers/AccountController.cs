@@ -151,23 +151,20 @@ namespace SecurityEssentials.Controllers
 
         [AllowAnonymous]
         [AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public ActionResult EmailVerify()
+        public async Task<ActionResult> EmailVerify()
         {
             var emailVerificationToken = Request["EmailVerficationToken"] ?? "";
-            using (var context = new SEContext())
+            var user = _context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
+            if (user == null)
             {
-                var user = context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
-                if (user == null)
-                {
-                    HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerify");
-                    return View("Error", error);
-                }
-                user.EmailVerified = true;
-                user.EmailConfirmationToken = null;
-                user.UserLogs.Add(new UserLog() { Description = "User Confirmed Email Address" });
-                context.SaveChanges();
-                return View("EmailVerificationSuccess");
+                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerify");
+                return View("Error", error);
             }
+            user.EmailVerified = true;
+            user.EmailConfirmationToken = null;
+            user.UserLogs.Add(new UserLog() { Description = "User Confirmed Email Address" });
+            await _context.SaveChangesAsync();
+            return View("EmailVerificationSuccess");
         }
 
         [AllowAnonymous]

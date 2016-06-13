@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using SecurityEssentials.Model;
+using System.Threading.Tasks;
 
 namespace SecurityEssentials.Core
 {
@@ -12,6 +13,7 @@ namespace SecurityEssentials.Core
         DbSet<UserLog> UserLog { get; set; }
 
         int SaveChanges();
+        Task<int> SaveChangesAsync();
 
         void Dispose();
     }
