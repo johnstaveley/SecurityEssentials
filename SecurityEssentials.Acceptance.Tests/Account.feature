@@ -1,4 +1,5 @@
-﻿Feature: Account
+﻿@Ignore
+Feature: Account
 	In order to securely access the application
 	As a user
 	I want to be manage my account
