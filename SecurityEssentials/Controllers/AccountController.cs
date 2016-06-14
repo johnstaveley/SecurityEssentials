@@ -18,28 +18,32 @@ namespace SecurityEssentials.Controllers
     {
 
         private IAppConfiguration _configuration;
+        private IEncryption _encryption; 
         private IRecaptcha _recaptcha;
         private IServices _services;
         private ISEContext _context;
         private IUserManager _userManager;
         private IUserIdentity _userIdentity;
 
-        public AccountController() : this(new AppConfiguration(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
+        public AccountController()
+            : this(new AppConfiguration(), new Encryption(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
         {
             // TODO: Replace with your DI Framework of choice
         }
 
-        public AccountController(IAppConfiguration configuration, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
+        public AccountController(IAppConfiguration configuration, IEncryption encryption, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
+            if (encryption == null) throw new ArgumentNullException("encryption");
             if (recaptcha == null) throw new ArgumentNullException("recaptcha");
             if (services == null) throw new ArgumentNullException("services");
             if (userManager == null) throw new ArgumentNullException("userManager");
-            if(userIdentity == null) throw new ArgumentNullException("userIdentity");
+            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
 
             _configuration = configuration;
             _context = context;
+            _encryption = encryption;
             _recaptcha = recaptcha;
             _services = services;
             _userManager = userManager;
@@ -181,13 +185,14 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public ActionResult Recover(RecoverViewModel model)
+        public async Task<ActionResult> Recover(RecoverViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
                 var recaptchaSuccess = true;
-                if (_configuration.HasRecaptcha) {
+                if (_configuration.HasRecaptcha)
+                {
                     _recaptcha.ValidateRecaptcha(this);
                     if (!recaptchaSuccess)
                     {
@@ -199,7 +204,8 @@ namespace SecurityEssentials.Controllers
                     user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                     user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
                     // Send recovery email with link to recover password form
-                    string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.", ConfigurationManager.AppSettings["ApplicationName"].ToString(), ConfigurationManager.AppSettings["WebsiteBaseUrl"].ToString(), user.PasswordResetToken);
+                    string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.",
+                        _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
                     string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
                     _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                     user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
@@ -234,7 +240,7 @@ namespace SecurityEssentials.Controllers
                 PasswordResetToken = passwordResetToken,
                 UserName = user.UserName
             };
-            return View("RecoverPassword", recoverPasswordModel);            
+            return View("RecoverPassword", recoverPasswordModel);
         }
 
         [HttpPost]
@@ -243,61 +249,56 @@ namespace SecurityEssentials.Controllers
         [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
         public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
         {
-            using (var context = new SEContext())
+            var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
+            if (user == null)
             {
-                var user = context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
-                if (user == null)
+                HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is not valid"), "Account", "RecoverPassword");
+                return View("Error", error);
+            }
+            if (!(user.Enabled))
+            {
+                HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: Your account is not currently approved or active"), "Account", "Recover");
+                return View("Error", error);
+            }
+            string encryptedSecurityAnswer = "";
+            _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                    _configuration.EncryptionIterationCount, recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
+            if (user.SecurityAnswer != encryptedSecurityAnswer)
+            {
+                ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
+                return View("RecoverPassword", recoverPasswordModel);
+            }
+            if (recoverPasswordModel.Password != recoverPasswordModel.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "The passwords do not match");
+                return View("RecoverPassword", recoverPasswordModel);
+            }
+            var recaptchaSuccess = true;
+            if (_configuration.HasRecaptcha)
+            {
+                _recaptcha.ValidateRecaptcha(this);
+            }
+            if (ModelState.IsValid && recaptchaSuccess)
+            {
+                var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
+                if (result.Succeeded)
                 {
-                    HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is not valid"), "Account", "RecoverPassword");
-                    return View("Error", error);
-                }
-                if (!(user.Enabled))
-                {
-                    HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: Your account is not currently approved or active"), "Account", "Recover");
-                    return View("Error", error);
-                }
-                string encryptedSecurityAnswer = "";
-                using (var encryptor = new Encryption())
-                {
-                    encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
-                        _configuration.EncryptionIterationCount, recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
-                }
-                if (user.SecurityAnswer != encryptedSecurityAnswer)
-                {
-                    ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
-                    return View("RecoverPassword", recoverPasswordModel);
-                }
-                if (recoverPasswordModel.Password != recoverPasswordModel.ConfirmPassword)
-                {
-                    ModelState.AddModelError("ConfirmPassword", "The passwords do not match");
-                    return View("RecoverPassword", recoverPasswordModel);
-                }
-                var recaptchaSuccess = true;
-                if (_configuration.HasRecaptcha)
-                {
-                    _recaptcha.ValidateRecaptcha(this);
-                }
-                if (ModelState.IsValid && recaptchaSuccess)
-                {
-                    var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
-                    if (result.Succeeded)
-                    {
-                        context.SaveChanges();
-                        await _userManager.SignInAsync(user.UserName, false);
-                        return View("RecoverPasswordSuccess");
-                    }
-                    else
-                    {
-                        AddErrors(result);
-                        return View("RecoverPassword", recoverPasswordModel);
-                    }
+                    _context.SaveChanges();
+                    await _userManager.SignInAsync(user.UserName, false);
+                    return View("RecoverPasswordSuccess");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Password change was not successful");
+                    AddErrors(result);
                     return View("RecoverPassword", recoverPasswordModel);
                 }
             }
+            else
+            {
+                ModelState.AddModelError("", "Password change was not successful");
+                return View("RecoverPassword", recoverPasswordModel);
+            }
+
         }
 
         [Authorize]

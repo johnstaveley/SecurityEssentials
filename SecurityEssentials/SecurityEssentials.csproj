@@ -253,6 +253,7 @@
     <Compile Include="Core\Identity\UserIdentity.cs" />
     <Compile Include="Core\Identity\UserManager.cs" />
     <Compile Include="Core\Identity\UserStore.cs" />
+    <Compile Include="Core\IEncryption.cs" />
     <Compile Include="Core\IRecaptcha.cs" />
     <Compile Include="Core\ISEContext.cs" />
     <Compile Include="Core\IServices.cs" />

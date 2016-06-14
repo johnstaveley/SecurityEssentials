@@ -8,5 +8,6 @@
         int EncryptionIterationCount { get; }
         string EncryptionPassword { get; }
         bool HasRecaptcha { get; }
+        string WebsiteBaseUrl { get; }
     }
 }

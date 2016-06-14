@@ -23,6 +23,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         private AccountController _sut;
         private IAppConfiguration _configuration;
+        private IEncryption _encryption;
         private ISEContext _context;
         private HttpContextBase _httpContext;
         private HttpRequestBase _httpRequest;
@@ -33,6 +34,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private IUserIdentity _userIdentity;
         private DateTime _lastAccountActivity;
         private string _firstName = "Bob";
+        private string _testUserName = "testuserName";
+        private int _testUserId = 5;
+        private string _encryptedSecurityAnswer = "encryptedSecurityAnswer";
 
         [TestInitialize]
         public void Setup()
@@ -45,19 +49,26 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _context.User = new TestDbSet<User>();
             _context.User.Add(new User()
             {
-                Id = 5,
+                Id = _testUserId,
+                Enabled = true,
+                Approved = true,
+                EmailVerified = true,
                 FirstName = _firstName,
+                UserName = _testUserName,
                 EmailConfirmationToken = "test1",
+                SecurityQuestionLookupItemId = 1,
+                SecurityAnswer = _encryptedSecurityAnswer,
                 UserLogs = new List<UserLog>() {
                 new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
                 new UserLog() { Id = 1, DateCreated = _lastAccountActivity, Description = "did old stuff" }
             } });
             _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
+            _encryption = MockRepository.GenerateMock<IEncryption>();
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
             _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
-            _sut = new AccountController(_configuration, _context, _userManager, _recaptcha, _services, _userIdentity);
+            _sut = new AccountController(_configuration, _encryption, _context, _userManager, _recaptcha, _services, _userIdentity);
             _httpContext = MockRepository.GenerateMock<HttpContextBase>();
             _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
             _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
@@ -69,6 +80,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestCleanup]
         public void Teardown()
         {
+            _encryption.VerifyAllExpectations();
             _httpContext.VerifyAllExpectations();
             _httpRequest.VerifyAllExpectations();
             _userManager.VerifyAllExpectations();
@@ -263,6 +275,47 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             var model = AssertViewResultReturnsType<RegisterViewModel>(result);
             Assert.IsTrue(model.HasRecaptcha);
+        }
+
+        [TestMethod]
+        public async Task GIVEN_ValidSubmissionData_WHEN_Recover_THEN_SavesEmailsAndSuccessViewReturned()
+        {
+            // Arrange
+            RecoverViewModel model = new RecoverViewModel()
+            {
+                UserName = _testUserName
+            };
+
+            // Act
+            var result = await _sut.Recover(model);
+
+            // Assert
+            AssertViewResultReturned(result, "RecoverSuccess");
+            _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+                Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+            _context.AssertWasCalled(a => a.SaveChanges());           
+
+        }
+
+        [TestMethod]
+        public async Task GIVEN_ValidSubmissionData_WHEN_RecoverPassword_THEN_SavesEmailsAndSuccessViewReturned()
+        {
+            // Arrange
+            var model = new RecoverPasswordViewModel()
+            {
+                Id = _testUserId
+            };
+            _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
+            _userManager.Expect(a => a.ChangePasswordFromTokenAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new SEIdentityResult()));
+            _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return(Task.FromResult(0));
+
+            // Act
+            var result = await _sut.RecoverPassword(model);
+
+            // Assert
+            AssertViewResultReturned(result, "RecoverPasswordSuccess");
+            _context.AssertWasCalled(a => a.SaveChanges());
+
         }
 
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)
