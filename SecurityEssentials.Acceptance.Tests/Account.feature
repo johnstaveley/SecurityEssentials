@@ -30,3 +30,13 @@ Scenario: Can register
 	And I click submit
 	Then I am shown a confirmation message
 
+Scenario: Can reset password
+	Given I navigate to the website
+	And I click logon
+	And I click password reminder
+	And I am taken to the password reminder page
+	And I enter my email address
+	When I click submit
+	Then I am shown a confirmation message
+	And I receive an email with a link
+
