@@ -960,7 +960,7 @@
     <Content Include="Web.Integration.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="Web.Live.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
@@ -1074,7 +1074,6 @@
     <Content Include="Views\Account\ChangeSecurityInformationSuccess.cshtml" />
     <Content Include="Views\Account\ChangeSecurityInformation.cshtml" />
     <Compile Include="ViewModel\RecoverPasswordViewModel.cs" />
-    <None Include="Web.Integration.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
