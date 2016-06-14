@@ -20,7 +20,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 		public static void BeforeFeature()
 		{
 
-			var webDriver = new FirefoxDriver();
+            IWebDriver webDriver = new FirefoxDriver();
 			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
 			FeatureContext.Current.SetWebDriver(webDriver);
 
