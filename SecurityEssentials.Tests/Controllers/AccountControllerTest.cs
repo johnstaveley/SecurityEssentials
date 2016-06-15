@@ -319,7 +319,32 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        [TestMethod]
+		[TestMethod, Ignore]
+		public async Task GIVEN_ValidSubmissionData_WHEN_Register_THEN_UserIsEmailedConfirmation()
+		{
+			// Arrange
+			var collection = new NameValueCollection();
+			collection.Add("Password", "password");
+			collection.Add("ConfirmPassword", "password");
+			collection.Add("User.UserName", _testUserName);
+			collection.Add("User.FirstName", "First name");
+			collection.Add("User.LastName", "Last Name");
+			collection.Add("User.SecurityQuestionLookupItemId", "1");
+			collection.Add("User.SecurityAnswer", "Bloggs");
+			_userManager.Expect(a => a.CreateAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new SEIdentityResult()));
+
+			// Act
+			var result = await _sut.Register(new FormCollection(collection));
+
+			// Assert
+			AssertViewResultReturned(result, "RegisterSuccess");
+			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+			_context.AssertWasCalled(a => a.SaveChanges());
+
+		}
+
+		[TestMethod]
         public async Task GIVEN_ValidSubmissionData_WHEN_RecoverPasswordGet_THEN_ViewShown()
         {
             // Arrange
