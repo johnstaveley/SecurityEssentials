@@ -217,9 +217,9 @@ namespace SecurityEssentials.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult RecoverPassword()
+        public async Task<ActionResult> RecoverPassword()
         {
-            var passwordResetToken = Request["PasswordResetToken"] ?? "";
+            var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
             var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.Now).FirstOrDefault();
             if (user == null)
             {

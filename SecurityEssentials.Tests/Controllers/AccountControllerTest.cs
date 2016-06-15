@@ -57,6 +57,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 UserName = _testUserName,
                 EmailConfirmationToken = "test1",
                 SecurityQuestionLookupItemId = 1,
+                SecurityQuestionLookupItem = new LookupItem() { Id = 1, Description = "test question" },
                 SecurityAnswer = _encryptedSecurityAnswer,
                 UserLogs = new List<UserLog>() {
                 new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
@@ -315,6 +316,30 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             AssertViewResultReturned(result, "RecoverPasswordSuccess");
             _context.AssertWasCalled(a => a.SaveChanges());
+
+        }
+
+        [TestMethod]
+        public async Task GIVEN_ValidSubmissionData_WHEN_RecoverPasswordGet_THEN_ViewShown()
+        {
+            // Arrange
+            var requestItems = new NameValueCollection();
+            var passwordResetToken = "testreset1";
+            requestItems.Add("PasswordResetToken", passwordResetToken);
+            _httpRequest.Stub(a => a.QueryString).Return(requestItems);
+            var user = _context.User.Where(u => u.Id == _testUserId).First();
+            user.PasswordResetToken = passwordResetToken;
+            user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+
+            // Act
+            var result = await _sut.RecoverPassword();
+
+            // Assert
+            var model = AssertViewResultReturnsType<RecoverPasswordViewModel>(result);
+            Assert.AreEqual(passwordResetToken, model.PasswordResetToken);
+            Assert.AreEqual(_testUserId, model.Id);
+            Assert.AreEqual("test question", model.SecurityQuestion);
+
 
         }
 
