@@ -235,6 +235,31 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
+        public async Task WHEN_ChangeSecurityInformation_THEN_ViewReturned()
+        {
+            // Arrange
+            var model = new ChangeSecurityInformationViewModel()
+            {
+                SecurityAnswer = "a",
+                SecurityAnswerConfirm = "a"
+            };
+            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(Task.FromResult(new LogonResult() {  Success = true, UserName = _testUserName }));
+            _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
+
+
+            // Act
+            var result = await _sut.ChangeSecurityInformation(model);
+
+            // Assert
+            AssertViewResultReturned(result, "ChangeSecurityInformationSuccess");
+            _context.AssertWasCalled(a => a.SaveChangesAsync());
+            _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+                Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));            
+
+        }
+
+        [TestMethod]
         public async Task GIVEN_RequestVerificationToken_WHEN_EmailVerify_THEN_UserStatusUpdated()
         {
             // Arrange

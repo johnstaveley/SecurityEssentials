@@ -331,21 +331,18 @@ namespace SecurityEssentials.Controllers
                     {
                         var user = _context.User.Where(u => u.UserName == logonResult.UserName).FirstOrDefault();
                         string encryptedSecurityAnswer = "";
-                        using (var encryptor = new Encryption())
-                        {
-                            encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                        _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
                                 _configuration.EncryptionIterationCount, model.SecurityAnswer, out encryptedSecurityAnswer);
-                        }
                         user.SecurityAnswer = encryptedSecurityAnswer;
                         user.SecurityQuestionLookupItemId = model.SecurityQuestionLookupItemId;
                         user.UserLogs.Add(new UserLog() { Description = "User Changed Security Information" });
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
                         string emailBody = "";
                         string emailSubject = "";
-                        emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName.ToString());
-                        emailBody = string.Format("Hello {0}, please be advised that the security information on your account for {1} been changed. If you did not initiate this action then please contact the site administrator as soon as possible", user.FullName, ConfigurationManager.AppSettings["ApplicationName"].ToString());
+                        emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName);
+                        emailBody = string.Format("Hello {0}, please be advised that the security information on your account for {1} been changed. If you did not initiate this action then please contact the site administrator as soon as possible", user.FullName, _configuration.ApplicationName);
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { logonResult.UserName }, null, null, emailSubject, emailBody, true);
                         return View("ChangeSecurityInformationSuccess");
                     }
