@@ -34,7 +34,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private IUserIdentity _userIdentity;
         private DateTime _lastAccountActivity;
         private string _firstName = "Bob";
-        private string _testUserName = "testuserName";
+        private string _testUserName = "testuserName@test.com";
         private int _testUserId = 5;
         private string _encryptedSecurityAnswer = "encryptedSecurityAnswer";
 
@@ -319,7 +319,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public async Task GIVEN_ValidSubmissionData_WHEN_Register_THEN_UserIsEmailedConfirmation()
 		{
 			// Arrange
@@ -340,7 +340,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			AssertViewResultReturned(result, "RegisterSuccess");
 			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
 				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
-			_context.AssertWasCalled(a => a.SaveChanges());
 
 		}
 
