@@ -18,76 +18,41 @@ using System.Web;
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
     [TestClass]
-    public class AccountControllerTest
+    public class AccountControllerTest : BaseControllerTest
     {
 
         private AccountController _sut;
         private IAppConfiguration _configuration;
         private IEncryption _encryption;
-        private ISEContext _context;
-        private HttpContextBase _httpContext;
-        private HttpRequestBase _httpRequest;
         private IUserManager _userManager;
         private IRecaptcha _recaptcha;
         private string _returnUrl = null;
         private IServices _services;
-        private IUserIdentity _userIdentity;
-        private DateTime _lastAccountActivity;
-        private string _firstName = "Bob";
-        private string _testUserName = "testuserName@test.com";
-        private int _testUserId = 5;
-        private string _encryptedSecurityAnswer = "encryptedSecurityAnswer";
 
         [TestInitialize]
         public void Setup()
         {
-            _lastAccountActivity = DateTime.Parse("2016-05-10");
+            base.BaseSetup();
             _configuration = MockRepository.GenerateStub<IAppConfiguration>();
             _configuration.Stub(a => a.HasRecaptcha).Return(true);
-            _context = MockRepository.GenerateStub<ISEContext>();
-            _context.LookupItem = new TestDbSet<LookupItem>();
-            _context.User = new TestDbSet<User>();
-            _context.User.Add(new User()
-            {
-                Id = _testUserId,
-                Enabled = true,
-                Approved = true,
-                EmailVerified = true,
-                FirstName = _firstName,
-                UserName = _testUserName,
-                EmailConfirmationToken = "test1",
-                SecurityQuestionLookupItemId = 1,
-                SecurityQuestionLookupItem = new LookupItem() { Id = 1, Description = "test question" },
-                SecurityAnswer = _encryptedSecurityAnswer,
-                UserLogs = new List<UserLog>() {
-                new UserLog() { Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff" },
-                new UserLog() { Id = 1, DateCreated = _lastAccountActivity, Description = "did old stuff" }
-            } });
-            _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
             _encryption = MockRepository.GenerateMock<IEncryption>();
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
-            _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
             _sut = new AccountController(_configuration, _encryption, _context, _userManager, _recaptcha, _services, _userIdentity);
-            _httpContext = MockRepository.GenerateMock<HttpContextBase>();
-            _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
             _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
             _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
-            _httpContext.Stub(c => c.Request).Return(_httpRequest);
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
         }
 
         [TestCleanup]
         public void Teardown()
         {
+            base.VerifyAllExpectations();
             _encryption.VerifyAllExpectations();
-            _httpContext.VerifyAllExpectations();
-            _httpRequest.VerifyAllExpectations();
             _userManager.VerifyAllExpectations();
             _recaptcha.VerifyAllExpectations();
             _services.VerifyAllExpectations();
-            _userIdentity.VerifyAllExpectations();
         }
 
         [TestMethod]
@@ -397,50 +362,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(Task.FromResult<LogonResult>(new LogonResult() { Success = isSuccess }));
-        }
-
-        public void AssertViewResultWithError(ActionResult actionResult, string errorValue)
-        {
-            Assert.IsNotNull(actionResult, "No result was returned from controller");
-            Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
-            var viewResult = (ViewResult) actionResult;
-            Assert.IsNotNull(viewResult.ViewData.ModelState);
-            Assert.IsFalse(viewResult.ViewData.ModelState.ToList().Count == 0);
-            var error = viewResult.ViewData.ModelState.ToList()[0].Value.Errors.ToList();
-            Assert.AreEqual(errorValue, error[0].ErrorMessage);
-
-        }
-
-        public T AssertViewResultReturnsType<T>(ActionResult actionResult)
-        {
-            Assert.IsNotNull(actionResult, "No result was returned from controller");
-            Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
-            var viewResult = (ViewResult) actionResult;
-            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(T), "Not expected type returned as data");
-            return (T)viewResult.ViewData.Model;
-
-        }
-
-        public void AssertViewResultReturned(ActionResult actionResult, string viewName)
-        {
-            Assert.IsNotNull(actionResult, "No result was returned from controller");
-            Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
-            var viewResult = (ViewResult)actionResult;
-            if (!string.IsNullOrEmpty(viewName))
-            {
-                Assert.AreEqual(viewName, viewResult.ViewName);
-            }
-
-        }
-
-        public void AssertRedirectToActionReturned(ActionResult result, object action, string controller)
-        {
-            Assert.IsNotNull(result, "No result was returned from controller");
-            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult), "Not RedirectToRouteResult returned from controller");
-            var redirectResult = (RedirectToRouteResult)result;
-            Assert.AreEqual(action, redirectResult.RouteValues.Values.ToList()[0]);
-            Assert.AreEqual(controller, redirectResult.RouteValues.Values.ToList()[1]);
-
         }
 
     }

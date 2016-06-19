@@ -16,5 +16,10 @@ namespace SecurityEssentials.Core.Identity
         {
             return controller.User.Identity.Name;
         }
+
+        public bool IsUserInRole(Controller controller, string role)
+        {
+            return controller.User.IsInRole(role);
+        }
     }
 }

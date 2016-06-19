@@ -7,5 +7,7 @@ namespace SecurityEssentials.Core.Identity
         int GetUserId(Controller controller);
 
         string GetUserName(Controller controller);
+
+        bool IsUserInRole(Controller controller, string role);
     }
 }

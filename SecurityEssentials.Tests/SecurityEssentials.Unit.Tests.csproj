@@ -153,6 +153,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTest.cs" />
+    <Compile Include="Controllers\BaseControllerTest.cs" />
+    <Compile Include="Controllers\UserControllerTest.cs" />
     <Compile Include="Controllers\ValidateAntiForgeryTokenTest.cs" />
     <Compile Include="Controllers\AuthorizeTest.cs" />
     <Compile Include="Core\Security\Encryption.cs" />

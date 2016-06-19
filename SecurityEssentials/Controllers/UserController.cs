@@ -7,6 +7,7 @@ using SecurityEssentials.Model;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using Microsoft.AspNet.Identity;
+using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Controllers
 {
@@ -18,22 +19,24 @@ namespace SecurityEssentials.Controllers
 		#region Declarations
 
 		private ISEContext _context { get; set; }
+        private IUserIdentity _userIdentity { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public UserController() : this(new SEContext())
+        public UserController() : this(new SEContext(), new UserIdentity())
         {
 
         }
 
-
-		public UserController(ISEContext context)
+		public UserController(ISEContext context, IUserIdentity userIdentity)
 		{
             if (context == null) throw new ArgumentNullException("context");
+            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
 
             _context = context;
+            _userIdentity = userIdentity;
 		}
 
 		#endregion
@@ -67,7 +70,7 @@ namespace SecurityEssentials.Controllers
 			if (id == 0) return Json(new { success = false, message = "unable to locate user id" });
 			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null) return Json(new { success = false, message = "unable to locate user" });
-			if (user.Id == Convert.ToInt32(User.Identity.GetUserId())) return Json(new { success = false, message = "You cannot disable your own account" });
+			if (user.Id == _userIdentity.GetUserId(this)) return Json(new { success = false, message = "You cannot disable your own account" });
 			user.Enabled = false;
 			_context.SaveChanges();
 			return Json(new { success = true, message = "" });
@@ -87,12 +90,11 @@ namespace SecurityEssentials.Controllers
 			using (var context = new SEContext())
 			{
 				var users = context.User.Where(u => u.Id == id);
-				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
 				// SECURE: Check user should have access to this account
-				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
-				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user));
+                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+                return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 			}
 		}
 
@@ -110,12 +112,11 @@ namespace SecurityEssentials.Controllers
 			using (var context = new SEContext())
 			{
 				var users = context.User.Where(u => u.Id == id);
-				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
 				// SECURE: Check user should have access to this account
-				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
-				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user));
+                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+                return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 			}
 		}
 
@@ -129,16 +130,15 @@ namespace SecurityEssentials.Controllers
 				var users = context.User.Where(u => u.Id == id);
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
-				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 				// SECURE: Check user should have access to this account
-				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
+                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
 
 				var propertiesToUpdate = new List<string>()
                 {
                     "FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
                     "Town","Postcode", "SkypeName"
                 };
-				if (User.IsInRole("Admin"))
+				if (_userIdentity.IsUserInRole(this, "Admin"))
 				{
 					propertiesToUpdate.Add("Approved");
 					propertiesToUpdate.Add("Enabled");
@@ -146,7 +146,7 @@ namespace SecurityEssentials.Controllers
 				}
 				if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
 				{
-					if (user.Id == currentUser && user.Enabled == false)
+                    if (user.Id == _userIdentity.GetUserId(this) && user.Enabled == false)
 					{
 						ModelState.AddModelError("", "You cannot disable your own user account");
 					}
@@ -157,7 +157,7 @@ namespace SecurityEssentials.Controllers
 					}
 				}
 
-				return View(new UserViewModel(currentUser, User.IsInRole("Admin"), user ));
+                return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 			}
 		}
 
@@ -168,7 +168,7 @@ namespace SecurityEssentials.Controllers
 		[Authorize(Roles = "Admin")]
 		public ActionResult Index(int page = 1)
 		{
-			return View(new UsersViewModel(Convert.ToInt32(User.Identity.GetUserId())));
+			return View(new UsersViewModel(_userIdentity.GetUserId(this)));
 		}
 
 		#endregion
@@ -185,11 +185,10 @@ namespace SecurityEssentials.Controllers
 			using (var context = new SEContext())
 			{
 				var users = context.User.Where(u => u.Id == id);
-				var currentUser = Convert.ToInt32(User.Identity.GetUserId());
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
 				// SECURE: Check user should have access to this account
-				if (!User.IsInRole("Admin") && currentUser != user.Id) return new HttpNotFoundResult();
+                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
 				ViewBag.UserName = user.UserName;
 				return View(user.UserLogs.OrderByDescending(ul => ul.DateCreated).Take(10).ToList());
 			}
