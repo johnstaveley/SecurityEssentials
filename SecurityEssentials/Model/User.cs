@@ -57,8 +57,10 @@ namespace SecurityEssentials.Model
         /// The number of failed logon attempts made to this user account
         /// </summary>
         public int FailedLogonAttemptCount { get; set; }
+
         [Display(Name = "First Name"), Required, MaxLength(100)]
         public string FirstName { get; set; }
+
         [Display(Name = "Last Name"), Required, MaxLength(100)]
         public string LastName { get; set; }
 
@@ -73,6 +75,7 @@ namespace SecurityEssentials.Model
 
         [MaxLength(200)]
         public string Town { get; set; }
+
 		[MaxLength(20)]
         public string Postcode { get; set; }
 

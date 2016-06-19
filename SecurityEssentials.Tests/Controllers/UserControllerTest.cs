@@ -44,7 +44,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Arrange
 
-
             // Act
             var result = _sut.Disable(_testUserId);
 
@@ -89,6 +88,92 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.AreEqual(_testUserId, viewModel.User.Id);
             Assert.IsTrue(viewModel.IsOwnProfile);
 
+        }
+
+        [TestMethod]
+        public void GIVEN_UserExists_WHEN_EditGet_THEN_ViewReturned()
+        {
+
+            // Arrange
+            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+
+
+            // Act
+            var result = _sut.Edit(_testUserId);
+
+            // Assert
+            var viewModel = AssertViewResultReturnsType<UserViewModel>(result);
+            Assert.AreEqual(_testUserId, viewModel.User.Id);
+            Assert.IsTrue(viewModel.IsOwnProfile);
+
+        }
+
+        [TestMethod]
+        public void GIVEN_SubmissionCorrect_WHEN_EditPost_THEN_ViewReturned()
+        {
+
+            // Arrange
+            var collection = new NameValueCollection();
+            collection.Add("FirstName", "new");
+            collection.Add("LastName", "name");
+
+            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+
+            // Act
+            var result = _sut.Edit(_testUserId, new FormCollection(collection));
+
+            // Assert
+            AssertRedirectToActionReturned(result, "Index", "User");
+            _context.AssertWasCalled(a => a.SaveChanges());
+
+        }
+
+        [TestMethod]
+        public void WHEN_Index_THEN_ViewReturned()
+        {
+
+            // Arrange
+
+            // Act
+            var result = _sut.Index();
+
+            // Assert
+            AssertViewResultReturnsType<UsersViewModel>(result);
+
+        }
+
+        [TestMethod]
+        public void GIVEN_UserExists_WHEN_LogGet_THEN_ViewReturned()
+        {
+
+            // Arrange
+            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+
+            // Act
+            var result = _sut.Log(_testUserId);
+
+            // Assert
+            var viewModel = AssertViewResultReturnsType<List<UserLog>>(result);
+            Assert.AreEqual(2, viewModel.Count);
+        }
+
+        [TestMethod]
+        public void GIVEN_DataExists_WHEN_Read_THEN_JsonReturned()
+        {
+
+            // Arrange
+            var requestItems = new NameValueCollection();
+            requestItems.Add("sort[0][dir]", "");
+            requestItems.Add("sort[0][field]", "");     
+            // TODO: Fix this as a.Form doesn't work
+            _httpRequest.Stub(a => a.Form).Return(requestItems);
+
+            // Act
+            var result = _sut.Read();
+
+            // Assert
+            var dataReturned = AssertJsonResultReturned(result);
+            // TODO: Validate it returns 1 item
         }
 
     }
