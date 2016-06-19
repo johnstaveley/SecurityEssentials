@@ -73,5 +73,23 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public void GIVEN_UserExists_WHEN_ChangeEmailAddressGet_THEN_ViewReturned()
+        {
+
+            // Arrange
+            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+
+
+            // Act
+            var result = _sut.ChangeEmailAddress(_testUserId);
+
+            // Assert
+            var viewModel = AssertViewResultReturnsType <UserViewModel>(result);
+            Assert.AreEqual(_testUserId, viewModel.User.Id);
+            Assert.IsTrue(viewModel.IsOwnProfile);
+
+        }
+
     }
 }

@@ -87,15 +87,12 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		public ActionResult ChangeEmailAddress(int id)
 		{
-			using (var context = new SEContext())
-			{
-				var users = context.User.Where(u => u.Id == id);
-				if (users.ToList().Count == 0) return new HttpNotFoundResult();
-				var user = users.FirstOrDefault();
-				// SECURE: Check user should have access to this account
-                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-                return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
-			}
+			var users = _context.User.Where(u => u.Id == id);
+			if (users.ToList().Count == 0) return new HttpNotFoundResult();
+			var user = users.FirstOrDefault();
+			// SECURE: Check user should have access to this account
+            if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+            return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 		}
 
 		#endregion
@@ -109,25 +106,20 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		public ActionResult Edit(int id)
 		{
-			using (var context = new SEContext())
-			{
-				var users = context.User.Where(u => u.Id == id);
-				if (users.ToList().Count == 0) return new HttpNotFoundResult();
-				var user = users.FirstOrDefault();
-				// SECURE: Check user should have access to this account
-                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-                return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
-			}
+			var users = _context.User.Where(u => u.Id == id);
+			if (users.ToList().Count == 0) return new HttpNotFoundResult();
+			var user = users.FirstOrDefault();
+			// SECURE: Check user should have access to this account
+            if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+            return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 		}
 
 		[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection)
 		{
-			using (var context = new SEContext())
-			{
 
-				var users = context.User.Where(u => u.Id == id);
+				var users = _context.User.Where(u => u.Id == id);
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
 				// SECURE: Check user should have access to this account
@@ -152,13 +144,13 @@ namespace SecurityEssentials.Controllers
 					}
 					else
 					{
-						context.SaveChanges();
+						_context.SaveChanges();
 						return RedirectToAction("Index", "User");
 					}
 				}
 
                 return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
-			}
+			
 		}
 
 		#endregion
@@ -182,16 +174,14 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		public ActionResult Log(int id)
 		{
-			using (var context = new SEContext())
-			{
-				var users = context.User.Where(u => u.Id == id);
-				if (users.ToList().Count == 0) return new HttpNotFoundResult();
-				var user = users.FirstOrDefault();
-				// SECURE: Check user should have access to this account
-                if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-				ViewBag.UserName = user.UserName;
-				return View(user.UserLogs.OrderByDescending(ul => ul.DateCreated).Take(10).ToList());
-			}
+			var users = _context.User.Where(u => u.Id == id);
+			if (users.ToList().Count == 0) return new HttpNotFoundResult();
+			var user = users.FirstOrDefault();
+			// SECURE: Check user should have access to this account
+            if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+			ViewBag.UserName = user.UserName;
+			return View(user.UserLogs.OrderByDescending(ul => ul.DateCreated).Take(10).ToList());
+			
 		}
 
 		#endregion
