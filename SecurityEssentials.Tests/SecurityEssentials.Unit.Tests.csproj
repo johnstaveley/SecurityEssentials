@@ -157,8 +157,9 @@
     <Compile Include="Controllers\UserControllerTest.cs" />
     <Compile Include="Controllers\ValidateAntiForgeryTokenTest.cs" />
     <Compile Include="Controllers\AuthorizeTest.cs" />
-    <Compile Include="Core\Security\Encryption.cs" />
-    <Compile Include="Core\Security\SecuredPassword.cs" />
+    <Compile Include="Core\Identity\UserManagerTests.cs" />
+    <Compile Include="Core\Security\EncryptionTests.cs" />
+    <Compile Include="Core\Security\SecuredPasswordTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestDbSet\TestDbSet.cs" />
   </ItemGroup>
