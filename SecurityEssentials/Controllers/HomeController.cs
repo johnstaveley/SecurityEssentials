@@ -16,21 +16,21 @@ namespace SecurityEssentials.Controllers
 		{
 			ViewBag.Message = "Security Essentials";
 
-			return View();
+			return View("Index");
 		}
 
 		public ActionResult About()
 		{
 			ViewBag.Message = "";
 
-			return View();
+			return View("About");
 		}
 
 		public ActionResult Contact()
 		{
 			ViewBag.Message = "Your contact page.";
 
-			return View();
+			return View("Contact");
 		}
 
 	}

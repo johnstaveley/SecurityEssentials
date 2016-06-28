@@ -105,7 +105,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        public void AssertViewResultReturned(ActionResult actionResult, string viewName)
+        public ViewResult AssertViewResultReturned(ActionResult actionResult, string viewName)
         {
             Assert.IsNotNull(actionResult, "No result was returned from controller");
             Assert.IsInstanceOfType(actionResult, typeof(ViewResult), "Not ViewResult returned from controller");
@@ -114,7 +114,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             {
                 Assert.AreEqual(viewName, viewResult.ViewName);
             }
-
+            return viewResult;
         }
 
         public void AssertPartialViewResultReturned(ActionResult actionResult, string partialViewName)
