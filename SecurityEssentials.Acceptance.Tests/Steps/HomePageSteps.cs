@@ -42,5 +42,20 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
 		}
 
+		[Given(@"I click register")]
+		public void GivenIClickRegister()
+		{
+			var homePage = ScenarioContext.Current.GetPage<HomePage>();
+			homePage.ClickRegister();
+		}
+
+		[Given(@"I click login")]
+		public void GivenIClickLogin()
+		{
+			var homePage = ScenarioContext.Current.GetPage<HomePage>();
+			homePage.ClickLogin();
+		}
+
+
 	}
 }

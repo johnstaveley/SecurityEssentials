@@ -1,5 +1,4 @@
-﻿@Ignore
-Feature: Account
+﻿Feature: Account
 	In order to securely access the application
 	As a user
 	I want to be manage my account
@@ -17,6 +16,7 @@ Scenario: Home Page Loads
 Scenario: Can register
 	Given I navigate to the website
 	And I click register
+	And I navigate to the 'register' page
 	And I enter the following registration details:
 	| Field            | Value                              |
 	| Username         | test                               |
@@ -27,12 +27,12 @@ Scenario: Can register
 	| SecurityAnswer   | Bloggs                             |
 	| Password         | Test456789                         |
 	| ConfirmPassword  | Test45678                          |
-	And I click submit
+	And I click register
 	Then I am shown a confirmation message
 
 Scenario: Can reset password
 	Given I navigate to the website
-	And I click logon
+	And I click login
 	And I click password reminder
 	And I am taken to the password reminder page
 	And I enter my email address

@@ -86,9 +86,11 @@
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\RegisterPage.cs" />
     <Compile Include="Pages\HomePage.cs" />
     <Compile Include="Pages\PageTitles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steps\RegisterPageSteps.cs" />
     <Compile Include="Steps\HomePageSteps.cs" />
     <Compile Include="Steps\Hooks.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />

@@ -3,6 +3,7 @@ using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 {
@@ -19,6 +20,28 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			var homePage = HomePage.NavigateToPage(webDriver, uri);
 			ScenarioContext.Current.Set(homePage);
 		}
+
+		[Given(@"I navigate to the '(.*)' page")]
+		public void GivenINavigateToThePage(string pageName)
+		{
+
+			var webDriver = FeatureContext.Current.GetWebDriver();
+			var uri = FeatureContext.Current.GetBaseUri();
+			BasePage page = null;
+			switch (pageName)
+			{
+				case "Home":
+					page = ScenarioContext.Current.GetPage<HomePage>();
+					break;
+				case "Register":
+					page = ScenarioContext.Current.GetPage<RegisterPage>();
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			ScenarioContext.Current.Set(page);
+		}
+
 
 	}
 }

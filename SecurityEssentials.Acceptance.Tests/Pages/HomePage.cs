@@ -9,6 +9,16 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 	{
 		public MenuBar MenuBar { get; private set; }
 
+		private IWebElement Register
+		{
+			get { return this.GetVisibleWebElement(By.Id("registerLink")); }
+		}
+
+		private IWebElement Login
+		{
+			get { return this.GetVisibleWebElement(By.Id("loginLink")); }
+		}
+
 		public HomePage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.HOME)
 		{
@@ -23,6 +33,16 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			PageFactory.InitElements(webDriver, homePage);
 			return homePage;
 		}
+		public void ClickLogin()
+		{
+			Login.Click();
+		}
+
+		public void ClickRegister()
+		{
+			Register.Click();
+		}
+
 	}
 
 }

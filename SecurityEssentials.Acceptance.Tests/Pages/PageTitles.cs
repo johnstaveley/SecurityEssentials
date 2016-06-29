@@ -4,6 +4,7 @@
 	{
 		public const string TITLE_ROOT = "Security Essentials - ";
 		public const string HOME = TITLE_ROOT + "Home";
+		public const string REGISTRATION = TITLE_ROOT + "Register";
 		public const string CHANGE_PASSWORD = TITLE_ROOT + "Admin";
 	}
 }

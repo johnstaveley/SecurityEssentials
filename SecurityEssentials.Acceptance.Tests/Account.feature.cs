@@ -18,7 +18,6 @@ namespace SecurityEssentials.Acceptance.Tests
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.1.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute()]
-    [Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
     public partial class AccountFeature
     {
         
@@ -32,8 +31,7 @@ namespace SecurityEssentials.Acceptance.Tests
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner(null, 0);
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Account", "\tIn order to securely access the application\r\n\tAs a user\r\n\tI want to be manage my" +
-                    " account", ProgrammingLanguage.CSharp, new string[] {
-                        "Ignore"});
+                    " account", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -72,7 +70,7 @@ namespace SecurityEssentials.Acceptance.Tests
         
         public virtual void FeatureBackground()
         {
-#line 7
+#line 6
 #line hidden
         }
         
@@ -82,13 +80,13 @@ namespace SecurityEssentials.Acceptance.Tests
         public virtual void HomePageLoads()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Home Page Loads", ((string[])(null)));
-#line 13
+#line 12
 this.ScenarioSetup(scenarioInfo);
-#line 7
+#line 6
 this.FeatureBackground();
-#line 14
+#line 13
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 15
+#line 14
  testRunner.When("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             this.ScenarioCleanup();
@@ -100,14 +98,16 @@ this.FeatureBackground();
         public virtual void CanRegister()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Can register", ((string[])(null)));
-#line 17
+#line 16
 this.ScenarioSetup(scenarioInfo);
-#line 7
+#line 6
 this.FeatureBackground();
-#line 18
+#line 17
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 19
+#line 18
  testRunner.And("I click register", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 19
+ testRunner.And("I navigate to the \'register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
@@ -139,7 +139,7 @@ this.FeatureBackground();
 #line 20
  testRunner.And("I enter the following registration details:", ((string)(null)), table1, "And ");
 #line 30
- testRunner.And("I click submit", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I click register", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31
  testRunner.Then("I am shown a confirmation message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -154,12 +154,12 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Can reset password", ((string[])(null)));
 #line 33
 this.ScenarioSetup(scenarioInfo);
-#line 7
+#line 6
 this.FeatureBackground();
 #line 34
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 35
- testRunner.And("I click logon", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 36
  testRunner.And("I click password reminder", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 37
