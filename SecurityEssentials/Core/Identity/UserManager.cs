@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Text.RegularExpressions;
 using System.Configuration;
+using System.Web.Security;
 
 namespace SecurityEssentials.Core.Identity
 {

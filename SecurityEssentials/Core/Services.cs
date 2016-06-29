@@ -7,8 +7,6 @@ namespace SecurityEssentials.Core
     public class Services : IServices
     {
 
-        #region SendEmail
-
         /// <summary>
         ///     Send Email - Requires smtp settings inside the web.config file
         /// </summary>
@@ -63,7 +61,15 @@ namespace SecurityEssentials.Core
 
         }
 
-        #endregion
+        /// <summary>
+        /// Pauses program execution
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        public void Wait(int milliseconds)
+        {
+            System.Threading.Thread.Sleep(milliseconds);
+        }
+
 
     }
 }

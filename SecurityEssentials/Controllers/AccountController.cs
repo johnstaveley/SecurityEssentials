@@ -18,7 +18,8 @@ namespace SecurityEssentials.Controllers
     {
 
         private IAppConfiguration _configuration;
-        private IEncryption _encryption; 
+        private IEncryption _encryption;
+        private IFormsAuth _formsAuth;
         private IRecaptcha _recaptcha;
         private IServices _services;
         private ISEContext _context;
@@ -26,16 +27,17 @@ namespace SecurityEssentials.Controllers
         private IUserIdentity _userIdentity;
 
         public AccountController()
-            : this(new AppConfiguration(), new Encryption(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
+            : this(new AppConfiguration(), new Encryption(), new FormsAuth(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
         {
             // TODO: Replace with your DI Framework of choice
         }
 
-        public AccountController(IAppConfiguration configuration, IEncryption encryption, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
+        public AccountController(IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
             if (encryption == null) throw new ArgumentNullException("encryption");
+            if (formsAuth == null) throw new ArgumentNullException("formsAuth");
             if (recaptcha == null) throw new ArgumentNullException("recaptcha");
             if (services == null) throw new ArgumentNullException("services");
             if (userManager == null) throw new ArgumentNullException("userManager");
@@ -44,6 +46,7 @@ namespace SecurityEssentials.Controllers
             _configuration = configuration;
             _context = context;
             _encryption = encryption;
+            _formsAuth = formsAuth;
             _recaptcha = recaptcha;
             _services = services;
             _userManager = userManager;
@@ -55,10 +58,10 @@ namespace SecurityEssentials.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            FormsAuthentication.SignOut();
+            _formsAuth.SignOut();
             _userManager.SignOut();
             Session.Abandon();
-            return RedirectToAction("LogOn");
+            return RedirectToAction("LogOn", "Account");
         }
 
         [AllowAnonymous]
@@ -89,7 +92,7 @@ namespace SecurityEssentials.Controllers
                 else
                 {
                     // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
-                    System.Threading.Thread.Sleep(500 + (user.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
+                    _services.Wait(500 + (user.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or account is locked");
                 }
             }

@@ -21,6 +21,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         protected ISEContext _context;
         protected HttpContextBase _httpContext;
         protected HttpRequestBase _httpRequest;
+        protected HttpSessionStateBase _httpSession;
         protected IUserIdentity _userIdentity;
         protected string _encryptedSecurityAnswer = "encryptedSecurityAnswer";
         protected string _firstName = "Bob";
@@ -36,9 +37,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _context.User.Add(GetUser());
             _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
             _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
+            _httpSession = MockRepository.GenerateMock<HttpSessionStateBase>();
             _httpContext = MockRepository.GenerateMock<HttpContextBase>();
             _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
             _httpContext.Stub(c => c.Request).Return(_httpRequest);
+            _httpContext.Stub(c => c.Session).Return(_httpSession);
 
         }
 
@@ -46,6 +49,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             _httpContext.VerifyAllExpectations();
             _httpRequest.VerifyAllExpectations();
+            _httpSession.VerifyAllExpectations();
             _userIdentity.VerifyAllExpectations();
 
         }

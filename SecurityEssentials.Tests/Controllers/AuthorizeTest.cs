@@ -23,12 +23,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestInitialize]
         public void Setup()
         {
-            _context = MockRepository.GenerateStub<ISEContext>();
-            _userIdentity = MockRepository.GenerateStub<IUserIdentity>();
+            base.BaseSetup();
             _sut = new UserController(_context, _userIdentity);
-            _httpContext = MockRepository.GenerateMock<HttpContextBase>();
-            _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
-            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
 
         }

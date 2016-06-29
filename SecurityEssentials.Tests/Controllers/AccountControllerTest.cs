@@ -24,6 +24,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private AccountController _sut;
         private IAppConfiguration _configuration;
         private IEncryption _encryption;
+        private IFormsAuth _formsAuth;
         private IUserManager _userManager;
         private IRecaptcha _recaptcha;
         private string _returnUrl = null;
@@ -36,10 +37,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _configuration = MockRepository.GenerateStub<IAppConfiguration>();
             _configuration.Stub(a => a.HasRecaptcha).Return(true);
             _encryption = MockRepository.GenerateMock<IEncryption>();
+            _formsAuth = MockRepository.GenerateMock<IFormsAuth>();
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
-            _sut = new AccountController(_configuration, _encryption, _context, _userManager, _recaptcha, _services, _userIdentity);
+            _sut = new AccountController(_configuration, _encryption, _formsAuth, _context, _userManager, _recaptcha, _services, _userIdentity);
             _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
             _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
@@ -108,6 +110,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password1", RememberMe = false };
             UserManagerAttemptsLoginWithResult(false);
+            _services.Expect(a => a.Wait(Arg<int>.Is.Anything));
 
             // Act
             var result = await _sut.LogOn(logon, _returnUrl);
@@ -115,6 +118,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             AssertViewResultWithError(result, "Invalid credentials or account is locked");
             _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+            _services.AssertWasCalled(a => a.Wait(Arg<int>.Matches(b => b >= 500)));
         }
 
         [TestMethod]
@@ -355,6 +359,21 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.AreEqual("test question", model.SecurityQuestion);
 
 
+        }
+
+        [TestMethod]
+        public void WHEN_LogOff_THEN_SessionAbandoned()
+        {
+
+            // Arrange
+            _formsAuth.Expect(a => a.SignOut());
+            _httpSession.Expect(h => h.Abandon());
+
+            // Act
+            var result = _sut.LogOff();
+
+            // Assert
+            AssertRedirectToActionReturned(result, "LogOn", "Account");
         }
 
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)
