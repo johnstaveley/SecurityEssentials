@@ -2,9 +2,9 @@
 {
 	public static class PageTitles
 	{
-		public const string TITLE_ROOT = "Security Essentials - ";
-		public const string HOME = TITLE_ROOT + "Home";
-		public const string REGISTRATION = TITLE_ROOT + "Register";
-		public const string CHANGE_PASSWORD = TITLE_ROOT + "Admin";
+		public const string TITLE_ROOT = " - Security Essentials Project";
+        public const string HOME = "Home Page" + TITLE_ROOT;
+        public const string REGISTRATION = "Register" + TITLE_ROOT;
+        public const string CHANGE_PASSWORD = "Admin" + TITLE_ROOT;
 	}
 }

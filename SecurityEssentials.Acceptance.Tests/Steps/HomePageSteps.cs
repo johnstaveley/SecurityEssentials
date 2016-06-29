@@ -11,11 +11,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	[Binding]
 	public class HomePageSteps
 	{
-		[Then(@"I am taken to the homepage")]
+		[Given(@"I am taken to the homepage")]
 		[When(@"I am taken to the homepage")]
 		public void ThenIAmTakenToTheHomepage()
 		{
-			var homePage = ScenarioContext.Current.GetPage<HomePage>();
+			
+            var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			Assert.IsTrue(homePage.IsCurrentPage);
 		}
 
@@ -42,14 +43,15 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
 		}
 
-		[Given(@"I click register")]
-		public void GivenIClickRegister()
+        [Given(@"I click register in the title bar")]
+		public void GivenIClickRegisterInTheTitleBar()
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			homePage.ClickRegister();
 		}
 
-		[Given(@"I click login")]
+		[When(@"I click login")]
+        [Given(@"I click login")]
 		public void GivenIClickLogin()
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
