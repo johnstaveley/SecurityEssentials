@@ -123,7 +123,7 @@ this.FeatureBackground();
         public virtual void CanRegister()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Can register", new string[] {
-                        "Ignore"});
+                        "ignore"});
 #line 24
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -165,7 +165,7 @@ this.FeatureBackground();
 #line 28
  testRunner.And("I enter the following registration details:", ((string)(null)), table1, "And ");
 #line 38
- testRunner.And("I click register", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.When("I submit my registration details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 39
  testRunner.Then("I am shown a confirmation message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

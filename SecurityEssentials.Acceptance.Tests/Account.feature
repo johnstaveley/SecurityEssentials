@@ -20,7 +20,7 @@ Scenario: I can login
 	When I click login
 	Then I am taken to the login page
 
-@Ignore
+@ignore
 Scenario: Can register
 	Given I navigate to the website
 	And I click register in the title bar
@@ -35,7 +35,7 @@ Scenario: Can register
 	| SecurityAnswer   | Bloggs                             |
 	| Password         | Test456789                         |
 	| ConfirmPassword  | Test45678                          |
-	And I click register
+	When I submit my registration details
 	Then I am shown a confirmation message
 
 @Ignore
