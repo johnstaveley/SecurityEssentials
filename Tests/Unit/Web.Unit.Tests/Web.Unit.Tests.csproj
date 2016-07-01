@@ -165,11 +165,15 @@
     <Compile Include="TestDbSet\TestDbSet.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="RecaptchaNet.Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\SecurityEssentials\SecurityEssentials.Web.csproj">
