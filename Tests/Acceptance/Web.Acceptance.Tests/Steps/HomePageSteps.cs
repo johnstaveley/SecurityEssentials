@@ -14,8 +14,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		[Given(@"I am taken to the homepage")]
 		[When(@"I am taken to the homepage")]
 		public void ThenIAmTakenToTheHomepage()
-		{
-			
+		{			
             var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			Assert.IsTrue(homePage.IsCurrentPage);
 		}
@@ -56,6 +55,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			homePage.ClickLogin();
+
 		}
 
 

@@ -8,17 +8,26 @@ Background:
 	#| Field    | Value         |
 	#| UserName | Test          |
 	#| Password | Testeration12 |
+	#| LastLoginAttempt |2016-06-30 12:00:01 |
 
 Scenario: Home Page Loads
 	Given I navigate to the website
 	When I am taken to the homepage
 
 @Ignore
-Scenario: I can login
+Scenario: When I enter correct login details I am taken to the landing page
 	Given I navigate to the website
 	And I am taken to the homepage
-	When I click login
-	Then I am taken to the login page
+	And I click login
+	And I am taken to the login page
+	And I enter the following login data:
+	| Field    | Value         |
+	| UserName | Test          |
+	| Password | Testeration12 |
+	When I submit the login form
+	Then I am taken to the landing page and the following message is shown:
+	| Field                                      |
+	| User last logged in at 30/06/2016 12:00:01 |	
 
 @ignore
 Scenario: Can register

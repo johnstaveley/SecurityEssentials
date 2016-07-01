@@ -21,11 +21,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			ScenarioContext.Current.Set(homePage);
 		}
 
-        [Then(@"I am taken to the login page")]
+		[Given(@"I am taken to the login page")]
         public void ThenIAmTakenToTheLoginPage()
         {
-            var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
-        }
+			var loginPage = new LoginPage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+			ScenarioContext.Current.Set<BasePage>(loginPage);
+			Assert.IsTrue(loginPage.IsCurrentPage);
+		}
 
 		[Given(@"I navigate to the '(.*)' page")]
 		public void GivenINavigateToThePage(string pageName)

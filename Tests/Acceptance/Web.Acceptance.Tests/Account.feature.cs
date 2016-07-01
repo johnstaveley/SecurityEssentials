@@ -80,38 +80,59 @@ namespace SecurityEssentials.Acceptance.Tests
         public virtual void HomePageLoads()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Home Page Loads", ((string[])(null)));
-#line 12
+#line 13
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 13
- testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 14
+ testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 15
  testRunner.When("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("I can login")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I enter correct login details I am taken to the landing page")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
-        public virtual void ICanLogin()
+        public virtual void WhenIEnterCorrectLoginDetailsIAmTakenToTheLandingPage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can login", new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter correct login details I am taken to the landing page", new string[] {
                         "Ignore"});
-#line 17
+#line 18
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 18
- testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 19
- testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 20
- testRunner.When("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 21
- testRunner.Then("I am taken to the login page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 22
+ testRunner.And("I am taken to the login page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table1.AddRow(new string[] {
+                        "UserName",
+                        "Test"});
+            table1.AddRow(new string[] {
+                        "Password",
+                        "Testeration12"});
+#line 23
+ testRunner.And("I enter the following login data:", ((string)(null)), table1, "And ");
+#line 27
+ testRunner.When("I submit the login form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field"});
+            table2.AddRow(new string[] {
+                        "User last logged in at 30/06/2016 12:00:01"});
+#line 28
+ testRunner.Then("I am taken to the landing page and the following message is shown:", ((string)(null)), table2, "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -124,49 +145,49 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Can register", new string[] {
                         "ignore"});
-#line 24
+#line 33
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 25
+#line 34
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 26
+#line 35
  testRunner.And("I click register in the title bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
+#line 36
  testRunner.And("I navigate to the \'register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "Username",
                         "test"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "Email",
                         "test@staveley.org"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "FirstName",
                         "Test"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "LastName",
                         "Test"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "SecurityQuestion",
                         "What is your mother\'s maiden name?"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "SecurityAnswer",
                         "Bloggs"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "Password",
                         "Test456789"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "ConfirmPassword",
                         "Test45678"});
-#line 28
- testRunner.And("I enter the following registration details:", ((string)(null)), table1, "And ");
-#line 38
+#line 37
+ testRunner.And("I enter the following registration details:", ((string)(null)), table3, "And ");
+#line 47
  testRunner.When("I submit my registration details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 39
+#line 48
  testRunner.Then("I am shown a confirmation message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -180,25 +201,25 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Can reset password", new string[] {
                         "Ignore"});
-#line 42
+#line 51
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 43
+#line 52
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 44
+#line 53
  testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
+#line 54
  testRunner.And("I click password reminder", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 46
+#line 55
  testRunner.And("I am taken to the password reminder page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 47
+#line 56
  testRunner.And("I enter my email address", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 48
+#line 57
  testRunner.When("I click submit", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 49
+#line 58
  testRunner.Then("I am shown a confirmation message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 50
+#line 59
  testRunner.And("I receive an email with a link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
