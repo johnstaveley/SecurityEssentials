@@ -24,7 +24,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
         [Then(@"I am taken to the login page")]
         public void ThenIAmTakenToTheLoginPage()
         {
-            ScenarioContext.Current.Pending();
+            var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
         }
 
 		[Given(@"I navigate to the '(.*)' page")]

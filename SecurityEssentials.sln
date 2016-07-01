@@ -3,16 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials", "SecurityEssentials\SecurityEssentials.csproj", "{AC8E9B1B-9815-4398-B755-57A59615788C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Unit.Tests", "SecurityEssentials.Tests\SecurityEssentials.Unit.Tests.csproj", "{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Web", "SecurityEssentials\SecurityEssentials.Web.csproj", "{AC8E9B1B-9815-4398-B755-57A59615788C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{09560B8F-66F4-41A7-8A9F-115634B90F1B}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityEssentials.Acceptance.Tests", "SecurityEssentials.Acceptance.Tests\SecurityEssentials.Acceptance.Tests.csproj", "{8E3FF9F2-3785-4969-AC8E-BB81134C3310}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C4100ED1-7C81-4B0E-8EA9-24264764DE22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{CCD62364-6792-41E8-A501-7F4D43AF8CD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Acceptance", "Acceptance", "{D710B6F1-E786-4E82-B92E-98AACA955F50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Unit.Tests", "Tests\Unit\Web.Unit.Tests\Web.Unit.Tests.csproj", "{BE375AC1-572D-4EC6-BD6F-A841C67E04C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Acceptance.Tests", "Tests\Acceptance\Web.Acceptance.Tests\Web.Acceptance.Tests.csproj", "{8E3FF9F2-3785-4969-AC8E-BB81134C3310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +48,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCD62364-6792-41E8-A501-7F4D43AF8CD2} = {C4100ED1-7C81-4B0E-8EA9-24264764DE22}
+		{D710B6F1-E786-4E82-B92E-98AACA955F50} = {C4100ED1-7C81-4B0E-8EA9-24264764DE22}
+		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5} = {CCD62364-6792-41E8-A501-7F4D43AF8CD2}
+		{8E3FF9F2-3785-4969-AC8E-BB81134C3310} = {D710B6F1-E786-4E82-B92E-98AACA955F50}
 	EndGlobalSection
 EndGlobal
