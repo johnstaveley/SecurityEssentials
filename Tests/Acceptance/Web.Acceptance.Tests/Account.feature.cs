@@ -118,7 +118,7 @@ this.FeatureBackground();
                         "Value"});
             table1.AddRow(new string[] {
                         "UserName",
-                        "Test"});
+                        "Test@test.com"});
             table1.AddRow(new string[] {
                         "Password",
                         "Testeration12"});
@@ -213,13 +213,20 @@ this.FeatureBackground();
  testRunner.And("I click recover password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 57
  testRunner.And("I am taken to the password recovery page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table4.AddRow(new string[] {
+                        "UserName",
+                        "Test@test.com"});
 #line 58
- testRunner.And("I enter my email address", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 59
- testRunner.When("I click submit", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 60
- testRunner.Then("I am shown a confirmation message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("I enter the following recover data:", ((string)(null)), table4, "And ");
 #line 61
+ testRunner.When("I submit the password recovery form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 62
+ testRunner.Then("I am taken to the recover success page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 63
  testRunner.And("I receive an email with a link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

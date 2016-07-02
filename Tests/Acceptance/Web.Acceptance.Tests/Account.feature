@@ -24,7 +24,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 	And I am taken to the login page
 	And I enter the following login data:
 	| Field    | Value         |
-	| UserName | Test          |
+	| UserName | Test@test.com |
 	| Password | Testeration12 |
 	When I click the login button
 	Then I am taken to the landing page and the following message is shown:
@@ -55,8 +55,10 @@ Scenario: When I enter a valid account and security information I can reset my p
 	And I click login
 	And I click recover password
 	And I am taken to the password recovery page
-	And I enter my email address
-	When I click submit
-	Then I am shown a confirmation message
+	And I enter the following recover data:
+	| Field    | Value         |
+	| UserName | Test@test.com |
+	When I submit the password recovery form
+	Then I am taken to the recover success page
 	And I receive an email with a link
 
