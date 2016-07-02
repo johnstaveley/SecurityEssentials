@@ -50,6 +50,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			ScenarioContext.Current.Set(page);
 		}
 
+		[Then(@"I am taken to the registration success page")]
+		public void ThenIAmTakenToTheRegistrationSuccessPage()
+		{
+			BasePage page = ScenarioContext.Current.GetPage<RegisterSuccessPage>();
+			Assert.IsTrue(page.IsCurrentPage);
+		}
+
 
 	}
 }

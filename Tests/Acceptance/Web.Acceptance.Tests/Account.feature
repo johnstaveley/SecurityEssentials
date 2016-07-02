@@ -5,10 +5,12 @@
 
 Background: 
 	#Given the following user is setup in the database:
-	#| Field    | Value         |
-	#| UserName | Test          |
-	#| Password | Testeration12 |
-	#| LastLoginAttempt |2016-06-30 12:00:01 |
+	#| Field            | Value                |
+	#| UserName         | Test@test.com        |
+	#| Password         | Testeration12        |
+	#| LastLoginAttempt | 2016-06-30 12:00:01  |
+	#| SecurityQuestion | Mother's maiden name |
+	#| SecurityAnswer   | Baggins              |
 
 Scenario: Home Page Loads
 	Given I navigate to the website
@@ -24,13 +26,13 @@ Scenario: When I enter correct login details I am taken to the landing page
 	| Field    | Value         |
 	| UserName | Test          |
 	| Password | Testeration12 |
-	When I submit the login form
+	When I click the login button
 	Then I am taken to the landing page and the following message is shown:
 	| Field                                      |
 	| User last logged in at 30/06/2016 12:00:01 |	
 
 @ignore
-Scenario: Can register
+Scenario: When I enter valid registration details I can register a new user
 	Given I navigate to the website
 	And I click register in the title bar
 	And I navigate to the 'register' page
@@ -45,14 +47,14 @@ Scenario: Can register
 	| Password         | Test456789                         |
 	| ConfirmPassword  | Test45678                          |
 	When I submit my registration details
-	Then I am shown a confirmation message
+	Then I am taken to the registration success page
 
 @Ignore
-Scenario: Can reset password
+Scenario: When I enter a valid account and security information I can reset my password
 	Given I navigate to the website
 	And I click login
-	And I click password reminder
-	And I am taken to the password reminder page
+	And I click recover password
+	And I am taken to the password recovery page
 	And I enter my email address
 	When I click submit
 	Then I am shown a confirmation message
