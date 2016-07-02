@@ -24,15 +24,17 @@ namespace SecurityEssentials.Core.Identity
         public IPasswordHasher PasswordHasher { get; set; }
         public IIdentityValidator<string> PasswordValidator { get; set; }
         protected UserStore<IdentityUser> Store { get; private set; }
-        private SEContext dbContext { get; set; }
+        private ISEContext _context { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public UserStore(SEContext dbContext)
+        public UserStore(ISEContext context)
         {
-            this.dbContext = dbContext;
+			if (context == null) throw new ArgumentNullException("context");
+
+            _context = context;
         }
 
         #endregion
@@ -44,37 +46,37 @@ namespace SecurityEssentials.Core.Identity
 
 			user.DateCreated = DateTime.Now;
 
-            this.dbContext.User.Add(user);
-            this.dbContext.Configuration.ValidateOnSaveEnabled = false;
+            _context.User.Add(user);
+			_context.SetConfigurationValidateOnSaveEnabled(false);
 
-            if (await this.dbContext.SaveChangesAsync().ConfigureAwait(false) == 0)
+            if (await this._context.SaveChangesAsync().ConfigureAwait(false) == 0)
                 throw new Exception("Error creating new user");
 
         }
 
         public async Task UpdateAsync(User user)
         {
-            this.dbContext.User.Attach(user);
-            this.dbContext.Entry(user).State = EntityState.Modified;
+            _context.User.Attach(user);
+			_context.SetModified(user);
 
-            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this._context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(User user)
         {
-            this.dbContext.User.Remove(user);
+            _context.User.Remove(user);
 
-            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this._context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<User> FindByIdAsync(int userId)
         {
-            return await this.dbContext.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            return await this._context.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
         }
 
         public async Task<User> FindByNameAsync(string userName)
         {
-            return await this.dbContext.User.SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) && string.Compare(u.UserName, userName, StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
+            return await this._context.User.SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) && string.Compare(u.UserName, userName, StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
         }
 
         #endregion
@@ -114,10 +116,10 @@ namespace SecurityEssentials.Core.Identity
             if (disposing)
             {
                 // free managed resources
-                if (this.dbContext != null)
+                if (this._context != null)
                 {
-                    this.dbContext.Dispose();
-                    this.dbContext = null;
+                    this._context.Dispose();
+                    this._context = null;
                 }
             }
         }
@@ -135,7 +137,7 @@ namespace SecurityEssentials.Core.Identity
 		public async Task<LogonResult> FindAndCheckLogonAsync(string userName, string password)
         {
 
-            var user = await this.dbContext.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved && u.EmailVerified).ConfigureAwait(false);
+            var user = await this._context.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved && u.EmailVerified).ConfigureAwait(false);
 			var logonResult = new LogonResult();
             if (user != null)
             {
@@ -147,7 +149,7 @@ namespace SecurityEssentials.Core.Identity
                     if (securedPassword.Verify(password))
                     {
                         user.FailedLogonAttemptCount = 0;
-                        this.dbContext.SaveChanges();
+                        this._context.SaveChanges();
 						logonResult.Success = true;
 						logonResult.UserName = user.UserName;
 						return logonResult;
@@ -157,7 +159,7 @@ namespace SecurityEssentials.Core.Identity
                         user.FailedLogonAttemptCount += 1;
 						logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
 						user.UserLogs.Add(new UserLog() { Description = "Failed Logon attempt" });
-                        this.dbContext.SaveChanges();
+                        this._context.SaveChanges();
                     }
                 }
             }
@@ -210,7 +212,7 @@ namespace SecurityEssentials.Core.Identity
                 user.FailedLogonAttemptCount = 0;
 				user.UserLogs.Add(new UserLog() { Description = "Password reset using token" });
             }
-            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this._context.SaveChangesAsync().ConfigureAwait(false);
             return new IdentityResult();
         }
 
@@ -224,7 +226,7 @@ namespace SecurityEssentials.Core.Identity
                 user.Salt = Convert.ToBase64String(securedPassword.Salt);
             }
 			user.UserLogs.Add(new UserLog() { Description = "Password changed" });
-            return await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            return await this._context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion

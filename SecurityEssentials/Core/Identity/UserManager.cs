@@ -22,6 +22,7 @@ namespace SecurityEssentials.Core.Identity
         private readonly UserStore<User> _userStore;
         private readonly ISEContext _context;
         private readonly IAppConfiguration _configuration;
+		private readonly IEncryption _encryption;
         private readonly string _passwordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string _passwordValidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
@@ -41,20 +42,22 @@ namespace SecurityEssentials.Core.Identity
 
         #region Constructor
 
-        public AppUserManager(IAppConfiguration configuration, ISEContext context, UserStore<User> userStore)
+        public AppUserManager(IAppConfiguration configuration, ISEContext context, IEncryption encryption, UserStore<User> userStore)
         {
 
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
+			if (encryption == null) throw new ArgumentNullException("encryption");
             if (userStore == null) throw new ArgumentNullException("userStore");
 
             _configuration = configuration;
             _context = context;
+			_encryption = encryption;
             _userStore = userStore;
 
         }
 
-        public AppUserManager() : this (new AppConfiguration(), new SEContext(), new UserStore<User>(new SEContext()))
+        public AppUserManager() : this (new AppConfiguration(), new SEContext(), new Encryption(), new UserStore<User>(new SEContext()))
         {
         }
 
@@ -87,11 +90,8 @@ namespace SecurityEssentials.Core.Identity
 						user.Salt = Convert.ToBase64String(securedPassword.Salt);
 						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
                         string encryptedSecurityAnswer = "";
-                        using (var encryptor = new Encryption())
-                        {
-                            encryptor.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                        _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
                                 _configuration.EncryptionIterationCount, securityAnswer, out encryptedSecurityAnswer);
-                        }
                         user.SecurityAnswer = encryptedSecurityAnswer;
 						user.UserName = userName;
 						user.UserLogs.Add(new UserLog() { Description = "Account Created" });
@@ -157,8 +157,6 @@ namespace SecurityEssentials.Core.Identity
 
 		#endregion
 
-        #region SignInOut
-
         public async Task SignInAsync(string userName, bool isPersistent)
         {
             var user = await _userStore.FindByNameAsync(userName);
@@ -174,12 +172,9 @@ namespace SecurityEssentials.Core.Identity
 			try
 			{
 				var userName = AuthenticationManager.User.Identity.Name;
-				using (var context = new SEContext())
-				{
-					var user = context.User.Where(u => u.UserName == userName).FirstOrDefault();
-					user.UserLogs.Add(new UserLog() { Description = "User Logged Off" });
-					context.SaveChanges();
-				}
+				var user = _context.User.Where(u => u.UserName == userName).FirstOrDefault();
+				user.UserLogs.Add(new UserLog() { Description = "User Logged Off" });
+				_context.SaveChanges();
 			}
 			catch {
 
@@ -189,8 +184,6 @@ namespace SecurityEssentials.Core.Identity
 				AuthenticationManager.SignOut();
 			}
         }
-
-        #endregion
 
         #region Change
 
@@ -227,6 +220,12 @@ namespace SecurityEssentials.Core.Identity
 
         #endregion
 
+		/// <summary>
+		/// The checks a password for minimum complexity, checks against a list of bad passwords and a list of banned words (usually personal information)
+		/// </summary>
+		/// <param name="password"></param>
+		/// <param name="bannedWords"></param>
+		/// <returns></returns>
 		public SEIdentityResult ValidatePassword(string password, List<string> bannedWords)
 		{
 			if (Regex.Matches(password, _passwordValidityRegex).Count == 0)
@@ -234,7 +233,7 @@ namespace SecurityEssentials.Core.Identity
 				return new SEIdentityResult(_passwordValidityMessage);
 			}
 
-			var badPassword = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description == password.ToLower()).FirstOrDefault();
+			var badPassword = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description.ToLower() == password.ToLower()).FirstOrDefault();
 			if (badPassword != null)
 			{
 				return new SEIdentityResult("Your password is on a list of easy to guess passwords, please choose another");

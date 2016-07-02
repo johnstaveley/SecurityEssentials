@@ -14,6 +14,8 @@ namespace SecurityEssentials.Core
 
         int SaveChanges();
         Task<int> SaveChangesAsync();
+		void SetModified(object entity);
+		void SetConfigurationValidateOnSaveEnabled(bool isValidated);
 
         void Dispose();
     }

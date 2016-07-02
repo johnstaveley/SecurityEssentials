@@ -18,6 +18,7 @@ namespace SecurityEssentials.Core.Identity
 		void SignOut();
 		Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
 		Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword);
+		SEIdentityResult ValidatePassword(string password, List<string> bannedWords);
 
 	}
 }

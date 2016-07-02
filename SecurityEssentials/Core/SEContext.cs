@@ -22,7 +22,18 @@ namespace SecurityEssentials.Core
 		public DbSet<Role> Role { get; set; }
 		public DbSet<User> User { get; set; }
 		public DbSet<UserLog> UserLog { get; set; }
-		
+
+		public void SetModified(object entity)
+		{
+			Entry(entity).State = EntityState.Modified;
+		}
+
+		public void SetConfigurationValidateOnSaveEnabled(bool isValidated)
+		{
+			this.Configuration.ValidateOnSaveEnabled = isValidated;
+		}
+
+
 	}
 
 }
