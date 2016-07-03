@@ -31,11 +31,11 @@ Scenario: When I enter correct login details I am taken to the landing page
 	| Field                                      |
 	| User last logged in at 30/06/2016 12:00:01 |	
 
-@ignore
+@Ignore
 Scenario: When I enter valid registration details I can register a new user
 	Given I navigate to the website
 	And I click register in the title bar
-	And I navigate to the 'register' page
+	And I navigate to the 'Register' page
 	And I enter the following registration details:
 	| Field            | Value                              |
 	| Username         | test                               |

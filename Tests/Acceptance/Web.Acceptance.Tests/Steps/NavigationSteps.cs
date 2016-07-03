@@ -36,18 +36,19 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			var webDriver = FeatureContext.Current.GetWebDriver();
 			var uri = FeatureContext.Current.GetBaseUri();
 			BasePage page = null;
-			switch (pageName)
+			switch (pageName.ToLower())
 			{
-				case "Home":
-					page = ScenarioContext.Current.GetPage<HomePage>();
+				case "home":
+					page = new HomePage(webDriver, uri);
 					break;
-				case "Register":
-					page = ScenarioContext.Current.GetPage<RegisterPage>();
+				case "register":
+					page = new RegisterPage(webDriver, uri);
 					break;
 				default:
 					throw new NotImplementedException();
 			}
 			ScenarioContext.Current.Set(page);
+			Assert.IsTrue(page.IsCurrentPage);
 		}
 
 		[Then(@"I am taken to the registration success page")]

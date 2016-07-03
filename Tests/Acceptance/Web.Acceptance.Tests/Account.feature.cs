@@ -144,7 +144,7 @@ this.FeatureBackground();
         public virtual void WhenIEnterValidRegistrationDetailsICanRegisterANewUser()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter valid registration details I can register a new user", new string[] {
-                        "ignore"});
+                        "Ignore"});
 #line 35
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -154,7 +154,7 @@ this.FeatureBackground();
 #line 37
  testRunner.And("I click register in the title bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 38
- testRunner.And("I navigate to the \'register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I navigate to the \'Register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
