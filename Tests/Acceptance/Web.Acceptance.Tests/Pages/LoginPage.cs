@@ -50,12 +50,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 			foreach (var row in table.Rows)
 			{
-				switch (row[0])
+				switch (row[0].ToLower())
 				{
-					case "Username":
+					case "username":
 						UserName.SendKeys(row[1]);
 						break;
-					case "Password":
+					case "password":
 						Password.SendKeys(row[1]);
 						break;
 					default:

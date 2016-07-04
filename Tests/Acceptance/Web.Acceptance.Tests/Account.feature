@@ -6,7 +6,7 @@
 Background: 
 	#Given the following user is setup in the database:
 	#| Field            | Value                |
-	#| UserName         | Test@test.com        |
+	#| UserName         | user@user.com        |
 	#| Password         | Testeration12        |
 	#| LastLoginAttempt | 2016-06-30 12:00:01  |
 	#| SecurityQuestion | Mother's maiden name |
@@ -20,15 +20,27 @@ Scenario: When I enter correct login details I am taken to the landing page
 	Given I navigate to the website
 	And I am taken to the homepage
 	And I click login
-	And I am taken to the login page
+	And I navigate to the 'login' page
 	And I enter the following login data:
-	| Field    | Value         |
-	| UserName | Test@test.com |
-	| Password | Testeration12 |
+	| Field    | Value             |
+	| UserName | user@user.com     |
+	| Password | x12a;pP02icdjshER |
 	When I click the login button
-	Then I am taken to the landing page and the following message is shown:
-	| Field                                      |
-	| User last logged in at 30/06/2016 12:00:01 |	
+	Then I navigate to the 'Landing' page
+	Then the following last activity message is shown: 'The last actvity logged against your account was'
+
+@ignore
+Scenario: When I enter incorrect login details then a warning is displayed
+	Given I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I navigate to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | user@user.com     |
+	| Password | x12a;pP02icdjshER |
+	When I click the login button
+	Then A warning is displayed 'Invalid credentials or the account is locked'
 
 @Ignore
 Scenario: When I enter valid registration details I can register a new user

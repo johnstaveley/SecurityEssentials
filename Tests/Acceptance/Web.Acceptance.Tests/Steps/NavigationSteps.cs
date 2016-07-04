@@ -21,34 +21,38 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			ScenarioContext.Current.Set(homePage);
 		}
 
-		[Given(@"I am taken to the login page")]
-        public void ThenIAmTakenToTheLoginPage()
-        {
-			var loginPage = new LoginPage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
-			ScenarioContext.Current.Set<BasePage>(loginPage);
-			Assert.IsTrue(loginPage.IsCurrentPage);
-		}
-
+		[Then(@"I navigate to the '(.*)' page")]
 		[Given(@"I navigate to the '(.*)' page")]
 		public void GivenINavigateToThePage(string pageName)
 		{
 
 			var webDriver = FeatureContext.Current.GetWebDriver();
 			var uri = FeatureContext.Current.GetBaseUri();
-			BasePage page = null;
 			switch (pageName.ToLower())
 			{
 				case "home":
-					page = new HomePage(webDriver, uri);
+					var homePage = new HomePage(webDriver, uri);
+					Assert.IsTrue(homePage.IsCurrentPage);
+					ScenarioContext.Current.Set(homePage);
+					break;
+				case "landing":
+					var landingPage = new LandingPage(webDriver, uri);
+					Assert.IsTrue(landingPage.IsCurrentPage);
+					ScenarioContext.Current.Set(landingPage);
+					break;
+				case "login":
+					var loginPage = new LoginPage(webDriver, uri);
+					Assert.IsTrue(loginPage.IsCurrentPage);
+					ScenarioContext.Current.Set(loginPage);
 					break;
 				case "register":
-					page = new RegisterPage(webDriver, uri);
-					break;
+					var registerPage = new RegisterPage(webDriver, uri);
+					Assert.IsTrue(registerPage.IsCurrentPage);
+					ScenarioContext.Current.Set(registerPage);
+break;
 				default:
 					throw new NotImplementedException();
 			}
-			ScenarioContext.Current.Set(page);
-			Assert.IsTrue(page.IsCurrentPage);
 		}
 
 		[Then(@"I am taken to the registration success page")]

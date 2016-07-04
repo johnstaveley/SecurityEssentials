@@ -1,10 +1,5 @@
-﻿using System;
-using System.Globalization;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
-using SecurityEssentials.Acceptance.Tests.Utility;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
@@ -24,7 +19,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void GivenIClickTheLoginButton()
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
-			loginPage.ClickRecoverPassword();
+			loginPage.ClickSubmit();
 		}
 
 		[Given(@"I enter the following login data:")]
