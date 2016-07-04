@@ -16,7 +16,6 @@ Scenario: Home Page Loads
 	Given I navigate to the website
 	When I am taken to the homepage
 
-@Ignore
 Scenario: When I enter correct login details I am taken to the landing page
 	Given I navigate to the website
 	And I am taken to the homepage

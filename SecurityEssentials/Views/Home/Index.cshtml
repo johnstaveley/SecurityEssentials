@@ -10,11 +10,10 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h3>Created by John Staveley - Last updated 02/07/2016</h3>
+                <h3>Created by John Staveley - Last updated 06/07/2016</h3>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015 with the following security features:
                 <ul>
                     <li>Template built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation, Kendo UI</li>
-                    <li>No components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                     <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
                     <li>Secure security answer storage - Stores answer to security question using RijndaelManaged encryption algorithm with configurable key</li>
                     <li>Passwords harder to crack - Enforces a strong password policy and allows special characters</li>
@@ -26,11 +25,12 @@
                     <li>Account Management - All account activity is logged which is viewable by the user, user is reminded of last logon time when they logon</li>
                     <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
                     <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
-                    <li>Prevents the site in production from ever being requested over http</li>
+                    <li>Prevents the site in production from ever being requested over http after initial call</li>
                     <li>Removes server information disclosure headers from responses</li>
                     <li>Unit tests for password hashing and authorization attributes</li>
                     <li>Auto-Complete switched off on registration form to protect sensitive data</li>
                     <li>Increasing wait time on logon failure</li>
+                    <li>Reduced chance of using components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information</p>

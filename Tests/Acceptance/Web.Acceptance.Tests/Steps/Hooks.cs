@@ -8,7 +8,9 @@ using OpenQA.Selenium.Support.Extensions;
 using TechTalk.SpecFlow;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.Resources;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support.Events;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 {
@@ -34,6 +36,15 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 		{
 			if (FeatureContext.Current.HasWebDriver()) FeatureContext.Current.GetWebDriver().Quit();
 		}
-		
+
+		[AfterScenario]
+		public static void AfterScenario() {
+			if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]) == true) {
+				string fileName = string.Format("{0}TestFailure-{1}.png", ConfigurationManager.AppSettings["TestScreenCaptureDirectory"].ToString(), DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ImageFormat.Png);
+			}
+		}
+
+
 	}
 }
