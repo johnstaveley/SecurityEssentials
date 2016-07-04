@@ -2,14 +2,9 @@
 
 1) Register for a recaptcha account here: https://www.google.com/recaptcha/admin#list (I used localhost for the site name)
 
-2) Create a file Config/PrivateAppSettings.config with your values here:
+2) Put your settings into the web.config/AppSettings under recaptchaPublicKey and recaptchaPrivateKey
 
-<appSettings>
-  <add key="recaptchaPublicKey" value="" />
-  <add key="recaptchaPrivateKey" value="" />
-</appSettings>
-
-3) Turn on recaptcha in web.config
+3) Turn on recaptcha in web.config HasRecaptcha = true
 
 4) Create a file Config/PrivateMailSettings.config with your values here:
 

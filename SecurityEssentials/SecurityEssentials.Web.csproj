@@ -499,7 +499,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.woff" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.ttf" />
-    <Content Include="Config\PrivateAppSettings.config" />
     <Content Include="Config\PrivateMailSettings.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -956,9 +955,6 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.Integration.config">
       <DependentUpon>Web.config</DependentUpon>
