@@ -50,6 +50,16 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(recoverPage.IsCurrentPage);
 					ScenarioContext.Current.Set(recoverPage);
 					break;
+				case "recover password":
+					var recoverPasswordPage = new RecoverPasswordPage(webDriver, uri);
+					Assert.IsTrue(recoverPasswordPage.IsCurrentPage);
+					ScenarioContext.Current.Set(recoverPasswordPage);
+					break;
+				case "recover password success":
+					var recoverPasswordSuccessPage = new RecoverPasswordSuccessPage(webDriver, uri);
+					Assert.IsTrue(recoverPasswordSuccessPage.IsCurrentPage);
+					ScenarioContext.Current.Set(recoverPasswordSuccessPage);
+					break;
 				case "recover success":
 					var recoverSuccessPage = new RecoverSuccessPage(webDriver, uri);
 					Assert.IsTrue(recoverSuccessPage.IsCurrentPage);
@@ -66,7 +76,7 @@ break;
 					ScenarioContext.Current.Set(registerSuccessPage);
 break;
 				default:
-					throw new NotImplementedException();
+					throw new NotImplementedException(pageName);
 			}
 		}
 

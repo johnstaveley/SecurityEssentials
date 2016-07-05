@@ -19,8 +19,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			recoverPage.EnterDetails(table);
 		}
 
-		[When(@"I submit the password recovery form")]
-		public void WhenISubmitThePasswordRecoveryForm()
+		[When(@"I submit the recover form")]
+		public void WhenISubmitTheRecoverForm()
 		{
 			var recoverPage = ScenarioContext.Current.GetPage<RecoverPage>();
 			recoverPage.ClickSubmit();

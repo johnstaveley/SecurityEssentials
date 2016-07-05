@@ -88,6 +88,8 @@
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\LandingPage.cs" />
     <Compile Include="Pages\LoginPage.cs" />
+    <Compile Include="Pages\RecoverPasswordPage.cs" />
+    <Compile Include="Pages\RecoverPasswordSuccessPage.cs" />
     <Compile Include="Pages\RecoverSuccessPage.cs" />
     <Compile Include="Pages\RecoverPage.cs" />
     <Compile Include="Pages\RegisterSuccessPage.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Steps\BasePageSteps.cs" />
     <Compile Include="Steps\LandingPageSteps.cs" />
     <Compile Include="Steps\LoginPageSteps.cs" />
+    <Compile Include="Steps\RecoverPasswordSteps.cs" />
     <Compile Include="Steps\RecoverSteps.cs" />
     <Compile Include="Steps\RegisterPageSteps.cs" />
     <Compile Include="Steps\HomePageSteps.cs" />

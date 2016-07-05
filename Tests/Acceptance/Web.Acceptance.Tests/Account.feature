@@ -4,13 +4,10 @@
 	I want to be manage my account
 
 Background: 
-	#Given the following user is setup in the database:
-	#| Field            | Value                |
-	#| UserName         | user@user.com        |
-	#| Password         | Testeration12        |
-	#| LastLoginAttempt | 2016-06-30 12:00:01  |
-	#| SecurityQuestion | Mother's maiden name |
-	#| SecurityAnswer   | Baggins              |
+	#Given the following users are setup in the database:
+	#| UserName       | FirstName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
+	#| user@user.com  | Standard  | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
+	#| user2@user.com | User      | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
 
 Scenario: Home Page Loads
 	Given I navigate to the website
@@ -69,7 +66,18 @@ Scenario: When I enter a valid account and security information I can reset my p
 	And I enter the following recover data:
 	| Field    | Value         |
 	| UserName | Test@test.com |
-	When I submit the password recovery form
+	When I submit the recover form
 	Then I am navigated to the 'Recover Success' page
 	#And I receive an email with a reset link
 
+Scenario: When I receive a password reset link, I can enter my security information and change my password	
+	Given I navigate to the password reset link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
+	And I am navigated to the 'Recover Password' page
+	And I enter the following recover password data:
+	| Field            | Value            |
+	| SecurityAnswer   | Mr Miggins       |
+	| Password         | NewPassword45678 |
+	| Confirm Password | NewPassword45678 |
+	When I submit the recover passord form
+	Then I am navigated to the 'Recover Password Success' page
+	#And I receive an email notifying me of the password change

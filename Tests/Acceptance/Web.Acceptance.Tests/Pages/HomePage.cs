@@ -33,6 +33,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			PageFactory.InitElements(webDriver, homePage);
 			return homePage;
 		}
+
 		public void ClickLogin()
 		{
 			Login.Click();

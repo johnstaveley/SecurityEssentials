@@ -9,7 +9,9 @@
 		public const string LANDING = "Home - Landing Page" + TITLE_ROOT;
 		public const string LOGIN = "Logon" + TITLE_ROOT;
 		public const string REGISTER_SUCCESS = "Register Success" + TITLE_ROOT;
+		public const string RECOVER = "Recover Password" + TITLE_ROOT;
 		public const string RECOVER_PASSWORD = "Recover Password" + TITLE_ROOT;
+		public const string RECOVER_PASSWORD_SUCCESS = "Recover Password Success" + TITLE_ROOT;
 		public const string RECOVER_SUCCESS = "Recover Success" + TITLE_ROOT;
 		
 	}
