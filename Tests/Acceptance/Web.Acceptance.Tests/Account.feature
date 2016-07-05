@@ -5,9 +5,9 @@
 
 Background: 
 	#Given the following users are setup in the database:
-	#| UserName       | FirstName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
-	#| user@user.com  | Standard  | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
-	#| user2@user.com | User      | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
+	#| UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
+	#| user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
+	#| user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
 
 Scenario: Home Page Loads
 	Given I navigate to the website
@@ -57,7 +57,24 @@ Scenario: When I enter valid registration details I can register a new user
 	Then I am navigated to the 'Register Success' page
 	#And I receive a registration email
 
-Scenario: When I enter a valid account and security information I can reset my password
+Scenario: When I enter registration details which are currently being used I am advised of registration success
+	Given I navigate to the website
+	And I click register in the title bar
+	And I am navigated to the 'Register' page
+	And I enter the following registration details:
+	| Field            | Value                               |
+	| Username         | user@user.com                       |
+	| FirstName        | Standard                            |
+	| LastName         | User                                |
+	| SecurityQuestion | What is the name of your first pet? |
+	| SecurityAnswer   | Mr Miggins                          |
+	| Password         | x12a;pP02icdjshER                   |
+	| ConfirmPassword  | x12a;pP02icdjshER                   |
+	When I submit my registration details
+	Then I am navigated to the 'Register Success' page
+	#And I am notified via email
+
+Scenario: When I attempt password recovery using a valid account I am notified of success
 	Given I navigate to the website
 	And I click login
 	And I am navigated to the 'Login' page
@@ -70,7 +87,19 @@ Scenario: When I enter a valid account and security information I can reset my p
 	Then I am navigated to the 'Recover Success' page
 	#And I receive an email with a reset link
 
-Scenario: When I receive a password reset link, I can enter my security information and change my password	
+Scenario: When I attempt password recovery using an invalid account I am notified of success
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I click recover password
+	And I am navigated to the 'Recover' page
+	And I enter the following recover data:
+	| Field    | Value           |
+	| UserName | Bogus@bogus.com |
+	When I submit the recover form
+	Then I am navigated to the 'Recover Success' page
+
+Scenario: When I click on a valid password reset link, I can enter my security information and change my password	
 	Given I navigate to the password reset link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
 	And I am navigated to the 'Recover Password' page
 	And I enter the following recover password data:
@@ -81,3 +110,4 @@ Scenario: When I receive a password reset link, I can enter my security informat
 	When I submit the recover passord form
 	Then I am navigated to the 'Recover Password Success' page
 	#And I receive an email notifying me of the password change
+	#And the password reset token is removed from the database

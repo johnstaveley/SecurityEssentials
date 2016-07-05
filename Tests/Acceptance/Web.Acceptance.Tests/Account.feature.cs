@@ -228,11 +228,13 @@ this.FeatureBackground();
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I enter a valid account and security information I can reset my password")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I enter registration details which are currently being used I am advised of " +
+            "registration success")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
-        public virtual void WhenIEnterAValidAccountAndSecurityInformationICanResetMyPassword()
+        public virtual void WhenIEnterRegistrationDetailsWhichAreCurrentlyBeingUsedIAmAdvisedOfRegistrationSuccess()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter a valid account and security information I can reset my password", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter registration details which are currently being used I am advised of " +
+                    "registration success", ((string[])(null)));
 #line 60
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -240,65 +242,155 @@ this.FeatureBackground();
 #line 61
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 62
- testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I click register in the title bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 63
- testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 64
- testRunner.And("I click recover password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 65
- testRunner.And("I am navigated to the \'Recover\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I am navigated to the \'Register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table5.AddRow(new string[] {
+                        "Username",
+                        "user@user.com"});
+            table5.AddRow(new string[] {
+                        "FirstName",
+                        "Standard"});
+            table5.AddRow(new string[] {
+                        "LastName",
+                        "User"});
+            table5.AddRow(new string[] {
+                        "SecurityQuestion",
+                        "What is the name of your first pet?"});
+            table5.AddRow(new string[] {
+                        "SecurityAnswer",
+                        "Mr Miggins"});
+            table5.AddRow(new string[] {
+                        "Password",
+                        "x12a;pP02icdjshER"});
+            table5.AddRow(new string[] {
+                        "ConfirmPassword",
+                        "x12a;pP02icdjshER"});
+#line 64
+ testRunner.And("I enter the following registration details:", ((string)(null)), table5, "And ");
+#line 73
+ testRunner.When("I submit my registration details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 74
+ testRunner.Then("I am navigated to the \'Register Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I attempt password recovery using a valid account I am notified of success")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
+        public virtual void WhenIAttemptPasswordRecoveryUsingAValidAccountIAmNotifiedOfSuccess()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using a valid account I am notified of success", ((string[])(null)));
+#line 77
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 78
+ testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 79
+ testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 80
+ testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 81
+ testRunner.And("I click recover password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 82
+ testRunner.And("I am navigated to the \'Recover\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table6.AddRow(new string[] {
                         "UserName",
                         "Test@test.com"});
-#line 66
- testRunner.And("I enter the following recover data:", ((string)(null)), table5, "And ");
-#line 69
+#line 83
+ testRunner.And("I enter the following recover data:", ((string)(null)), table6, "And ");
+#line 86
  testRunner.When("I submit the recover form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 70
+#line 87
  testRunner.Then("I am navigated to the \'Recover Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I receive a password reset link, I can enter my security information and cha" +
-            "nge my password")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I attempt password recovery using an invalid account I am notified of succes" +
+            "s")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
-        public virtual void WhenIReceiveAPasswordResetLinkICanEnterMySecurityInformationAndChangeMyPassword()
+        public virtual void WhenIAttemptPasswordRecoveryUsingAnInvalidAccountIAmNotifiedOfSuccess()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I receive a password reset link, I can enter my security information and cha" +
-                    "nge my password", ((string[])(null)));
-#line 73
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using an invalid account I am notified of succes" +
+                    "s", ((string[])(null)));
+#line 90
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 74
- testRunner.Given("I navigate to the password reset link with token \'83ababb4-a0c1-4f2c-8593-32dd40b" +
-                    "920d2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 75
- testRunner.And("I am navigated to the \'Recover Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 91
+ testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 92
+ testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 93
+ testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 94
+ testRunner.And("I click recover password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 95
+ testRunner.And("I am navigated to the \'Recover\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
-            table6.AddRow(new string[] {
+            table7.AddRow(new string[] {
+                        "UserName",
+                        "Bogus@bogus.com"});
+#line 96
+ testRunner.And("I enter the following recover data:", ((string)(null)), table7, "And ");
+#line 99
+ testRunner.When("I submit the recover form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 100
+ testRunner.Then("I am navigated to the \'Recover Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I click on a valid password reset link, I can enter my security information " +
+            "and change my password")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
+        public virtual void WhenIClickOnAValidPasswordResetLinkICanEnterMySecurityInformationAndChangeMyPassword()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid password reset link, I can enter my security information " +
+                    "and change my password", ((string[])(null)));
+#line 102
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 103
+ testRunner.Given("I navigate to the password reset link with token \'83ababb4-a0c1-4f2c-8593-32dd40b" +
+                    "920d2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 104
+ testRunner.And("I am navigated to the \'Recover Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table8.AddRow(new string[] {
                         "SecurityAnswer",
                         "Mr Miggins"});
-            table6.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "Password",
                         "NewPassword45678"});
-            table6.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "Confirm Password",
                         "NewPassword45678"});
-#line 76
- testRunner.And("I enter the following recover password data:", ((string)(null)), table6, "And ");
-#line 81
+#line 105
+ testRunner.And("I enter the following recover password data:", ((string)(null)), table8, "And ");
+#line 110
  testRunner.When("I submit the recover passord form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 82
+#line 111
  testRunner.Then("I am navigated to the \'Recover Password Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
