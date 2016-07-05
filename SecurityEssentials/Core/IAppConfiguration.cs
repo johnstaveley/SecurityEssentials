@@ -7,6 +7,7 @@
         string DefaultFromEmailAddress { get; }
         int EncryptionIterationCount { get; }
         string EncryptionPassword { get; }
+		bool HasEmailConfigured { get; }
         bool HasRecaptcha { get; }
         string WebsiteBaseUrl { get; }
     }

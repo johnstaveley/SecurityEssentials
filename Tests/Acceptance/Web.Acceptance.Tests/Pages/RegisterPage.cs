@@ -18,32 +18,27 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
         private IWebElement Username
 		{
-			get { return this.GetVisibleWebElement(By.Id("Username")); }
-		}
-
-        private IWebElement Email
-		{
-			get { return this.GetVisibleWebElement(By.Id("Email")); }
+			get { return this.GetVisibleWebElement(By.Id("User_UserName")); }
 		}
 
         private IWebElement FirstName
 		{
-			get { return this.GetVisibleWebElement(By.Id("FirstName")); }
+			get { return this.GetVisibleWebElement(By.Id("User_FirstName")); }
 		}
 
         private IWebElement LastName
 		{
-			get { return this.GetVisibleWebElement(By.Id("LastName")); }
+			get { return this.GetVisibleWebElement(By.Id("User_LastName")); }
 		}
 
         private IWebElement SecurityQuestion
 		{
-            get { return this.GetVisibleWebElement(By.Id("SecurityQuestionLookupItemId")); }
+			get { return this.GetVisibleWebElement(By.Id("User_SecurityQuestionLookupItemId")); }
 		}
 
         private IWebElement SecurityAnswer
 		{
-			get { return this.GetVisibleWebElement(By.Id("SecurityAnswer")); }
+			get { return this.GetVisibleWebElement(By.Id("User_SecurityAnswer")); }
 		}
 
         private IWebElement Password
@@ -56,7 +51,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		}
         
 		public RegisterPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.HOME)
+			: base(webDriver, baseUri, PageTitles.REGISTER)
 		{
 			MenuBar = new MenuBar(webDriver, baseUri);
 		}
@@ -71,30 +66,27 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
             foreach (var row in table.Rows)
             {
-                switch (row[0])
+                switch (row[0].ToLower())
                 {
-                    case "Username":
+                    case "username":
                         Username.SendKeys(row[1]);
                         break;
-                    case "Email":
-                        Email.SendKeys(row[1]);
-                        break;
-                    case "FirstName":
+                    case "firstname":
                         FirstName.SendKeys(row[1]);
                         break;
-                    case "LastName":
+                    case "lastname":
                         LastName.SendKeys(row[1]);
                         break;
-                    case "SecurityQuestion":
+                    case "securityquestion":
                         // todo
                         break;
-                    case "SecurityAnswer":
+                    case "securityanswer":
                         SecurityAnswer.SendKeys(row[1]);
                         break;
-                    case "Password":
+                    case "password":
                         Password.SendKeys(row[1]);
                         break;
-                    case "ConfirmPassword":
+                    case "confirmpassword":
                         ConfirmPassword.SendKeys(row[1]);
                         break;
                     default:

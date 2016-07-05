@@ -1,5 +1,7 @@
 ﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using TechTalk.SpecFlow;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
@@ -29,6 +31,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			loginPage.EnterDetails(table);
 		}
 
+		[Then(@"The following errors are displayed:")]
+		public void ThenTheFollowingErrorsAreDisplayed(Table table)
+		{
+			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
+			var actualErrors = loginPage.Errors;
+			var expectedErrors = table.Rows.Select(a => a[0]).ToList();
+			Assert.IsTrue(actualErrors.SequenceEqual(expectedErrors));
+		}
 
 	}
 }

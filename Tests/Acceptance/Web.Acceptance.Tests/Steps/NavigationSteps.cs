@@ -21,8 +21,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			ScenarioContext.Current.Set(homePage);
 		}
 
-		[Then(@"I navigate to the '(.*)' page")]
-		[Given(@"I navigate to the '(.*)' page")]
+		[Then(@"I am navigated to the '(.*)' page")]
+		[Given(@"I am navigated to the '(.*)' page")]
 		public void GivenINavigateToThePage(string pageName)
 		{
 
@@ -45,10 +45,25 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(loginPage.IsCurrentPage);
 					ScenarioContext.Current.Set(loginPage);
 					break;
+				case "recover":
+					var recoverPage = new RecoverPage(webDriver, uri);
+					Assert.IsTrue(recoverPage.IsCurrentPage);
+					ScenarioContext.Current.Set(recoverPage);
+					break;
+				case "recover success":
+					var recoverSuccessPage = new RecoverSuccessPage(webDriver, uri);
+					Assert.IsTrue(recoverSuccessPage.IsCurrentPage);
+					ScenarioContext.Current.Set(recoverSuccessPage);
+					break;
 				case "register":
 					var registerPage = new RegisterPage(webDriver, uri);
 					Assert.IsTrue(registerPage.IsCurrentPage);
 					ScenarioContext.Current.Set(registerPage);
+break;
+				case "register success":
+					var registerSuccessPage = new RegisterSuccessPage(webDriver, uri);
+					Assert.IsTrue(registerSuccessPage.IsCurrentPage);
+					ScenarioContext.Current.Set(registerSuccessPage);
 break;
 				default:
 					throw new NotImplementedException();

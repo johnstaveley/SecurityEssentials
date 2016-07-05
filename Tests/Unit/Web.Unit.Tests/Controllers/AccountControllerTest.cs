@@ -116,7 +116,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = await _sut.LogOn(logon, _returnUrl);
 
             // Assert
-            AssertViewResultWithError(result, "Invalid credentials or account is locked");
+            AssertViewResultWithError(result, "Invalid credentials or the account is locked");
             _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
             _services.AssertWasCalled(a => a.Wait(Arg<int>.Matches(b => b >= 500)));
         }

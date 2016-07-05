@@ -93,7 +93,7 @@ namespace SecurityEssentials.Controllers
                 {
                     // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
                     _services.Wait(500 + (user.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
-                    ModelState.AddModelError("", "Invalid credentials or account is locked");
+                    ModelState.AddModelError("", "Invalid credentials or the account is locked");
                 }
             }
 

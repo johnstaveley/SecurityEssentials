@@ -95,6 +95,7 @@
     <Compile Include="Pages\HomePage.cs" />
     <Compile Include="Pages\PageTitles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steps\BasePageSteps.cs" />
     <Compile Include="Steps\LandingPageSteps.cs" />
     <Compile Include="Steps\LoginPageSteps.cs" />
     <Compile Include="Steps\RecoverSteps.cs" />

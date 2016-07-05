@@ -20,56 +20,56 @@ Scenario: When I enter correct login details I am taken to the landing page
 	Given I navigate to the website
 	And I am taken to the homepage
 	And I click login
-	And I navigate to the 'login' page
+	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
 	| UserName | user@user.com     |
 	| Password | x12a;pP02icdjshER |
 	When I click the login button
-	Then I navigate to the 'Landing' page
+	Then I am navigated to the 'Landing' page
 	Then the following last activity message is shown: 'The last actvity logged against your account was'
 
-@ignore
 Scenario: When I enter incorrect login details then a warning is displayed
 	Given I navigate to the website
 	And I am taken to the homepage
 	And I click login
-	And I navigate to the 'login' page
+	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
 	| UserName | user@user.com     |
-	| Password | x12a;pP02icdjshER |
+	| Password | y12a;pP02icdjshET |
 	When I click the login button
-	Then A warning is displayed 'Invalid credentials or the account is locked'
+	Then The following errors are displayed:
+	| Field                                        |
+	| Invalid credentials or the account is locked |
 
-@Ignore
 Scenario: When I enter valid registration details I can register a new user
 	Given I navigate to the website
 	And I click register in the title bar
-	And I navigate to the 'Register' page
+	And I am navigated to the 'Register' page
 	And I enter the following registration details:
 	| Field            | Value                              |
-	| Username         | test                               |
-	| Email            | test@staveley.org                  |
-	| FirstName        | Test                               |
-	| LastName         | Test                               |
+	| Username         | test@test.com                      |
+	| FirstName        | Tester                             |
+	| LastName         | Tester                             |
 	| SecurityQuestion | What is your mother's maiden name? |
 	| SecurityAnswer   | Bloggs                             |
 	| Password         | Test456789                         |
-	| ConfirmPassword  | Test45678                          |
+	| ConfirmPassword  | Test456789                         |
 	When I submit my registration details
-	Then I am taken to the registration success page
+	Then I am navigated to the 'Register Success' page
+	#And I receive a registration email
 
-@Ignore
 Scenario: When I enter a valid account and security information I can reset my password
 	Given I navigate to the website
 	And I click login
+	And I am navigated to the 'Login' page
 	And I click recover password
-	And I am taken to the password recovery page
+	And I am navigated to the 'Recover' page
 	And I enter the following recover data:
 	| Field    | Value         |
 	| UserName | Test@test.com |
 	When I submit the password recovery form
-	Then I am taken to the recover success page
-	And I receive an email with a link
+	Then I am navigated to the 'Recover Success' page
+	#And I receive an email with a reset link
 

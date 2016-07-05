@@ -11,7 +11,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 	{
 
 		public RecoverSuccessPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.RECOVER_PASSWORD)
+			: base(webDriver, baseUri, PageTitles.RECOVER_SUCCESS)
 		{
 		}
 

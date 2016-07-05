@@ -19,8 +19,10 @@ namespace SecurityEssentials.Core
         public string DefaultFromEmailAddress { get; private set; }
         public string EncryptionPassword { get; private set; }
         public int EncryptionIterationCount { get; private set; }
+		public bool HasEmailConfigured { get; private set; }
         public bool HasRecaptcha { get; private set; }
         public string WebsiteBaseUrl { get; private set; }
+		
 
         public AppConfiguration()
         {
@@ -30,6 +32,7 @@ namespace SecurityEssentials.Core
             EncryptionPassword = ConfigurationManager.AppSettings["EncryptionPassword"];
             EncryptionIterationCount = Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]);
             HasRecaptcha = Convert.ToBoolean(ConfigurationManager.AppSettings["HasRecaptcha"]);
+			HasEmailConfigured = Convert.ToBoolean(ConfigurationManager.AppSettings["HasEmailConfigured"]);
             WebsiteBaseUrl = ConfigurationManager.AppSettings["WebsiteBaseUrl"];
         }
     }

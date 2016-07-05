@@ -10,4 +10,6 @@
 
 <network host="localhost" port="25" defaultCredentials="true" />
 
-5) if you deploy this into production make sure you remove the two test users from the databaseInitializer
+5) Set in web.config HasEmailConfigured = true
+
+6) if you deploy this into production make sure you remove the two test users from the databaseInitializer

@@ -7,6 +7,19 @@ namespace SecurityEssentials.Core
     public class Services : IServices
     {
 
+		private readonly IAppConfiguration _configuration;
+
+		public Services() : this(new AppConfiguration())
+		{
+
+		}
+
+		public Services(IAppConfiguration configuration)
+		{
+			if (configuration == null) throw new ArgumentNullException("configuration");
+			_configuration = configuration;
+		}
+
         /// <summary>
         ///     Send Email - Requires smtp settings inside the web.config file
         /// </summary>
@@ -21,6 +34,8 @@ namespace SecurityEssentials.Core
         public bool SendEmail(string from, ICollection<string> toAddresses, ICollection<string> cc, ICollection<string> bcc, string subject,
                                     string body, bool htmlEmail)
         {
+			if (!_configuration.HasEmailConfigured) return true;
+
             if (toAddresses == null) throw new ArgumentException("toAddresses has not been specified");
             using (var message = new MailMessage())
             {

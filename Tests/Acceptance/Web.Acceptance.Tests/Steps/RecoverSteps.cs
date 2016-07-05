@@ -33,13 +33,5 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			Assert.IsTrue(page.IsCurrentPage);
 		}
 
-		[Then(@"I am taken to the recover success page")]
-		public void ThenIAmTakenToTheRecoverSuccessPage()
-		{
-			BasePage page = ScenarioContext.Current.GetPage<RecoverSuccessPage>();
-			Assert.IsTrue(page.IsCurrentPage);
-		}
-
-
 	}
 }

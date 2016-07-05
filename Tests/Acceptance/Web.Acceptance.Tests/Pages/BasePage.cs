@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Configuration;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -46,26 +48,25 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			}
 		}
 
+		private IWebElement ErrorSummary
+		{
+			get { return this.GetVisibleWebElement(By.ClassName("validation-summary-errors")); }
+		}
+
+		public List<string> Errors
+		{
+			get { return ErrorSummary.FindElements(By.TagName("li")).Select(a => a.Text).ToList(); }
+		}
+
+		private IWebElement LastAccountActivity
+		{
+			get { return this.GetVisibleWebElement(By.Id("LastAccountActivity")); }
+		}
+
 		public void ReloadPage()
 		{
 			Driver.Navigate().Refresh();
 		}
-
-		//Commented out code is result of breaking change on Driver.FindElements in Selenium 2.46
-		//Commented out code is preferred is change is fixed.
-		//Explicit reason for breaking change not known but commented code works with Selenium 2.42.
-		public string GetErrorMessage(string errorFieldId)
-		{
-
-			var element = Driver.FindElement(By.Id(errorFieldId));
-			return element != null ? element.Text : null;
-		}
-
-		public IAlert AlertPresent()
-		{
-			return ExpectedConditions.AlertIsPresent().Invoke(Driver);
-		}
-
 
 	}
 
