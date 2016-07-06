@@ -1,6 +1,5 @@
 ﻿using TechTalk.SpecFlow;
 using SecurityEssentials.Acceptance.Tests.Web.Pages;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -30,6 +29,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			var uri = FeatureContext.Current.GetBaseUri();
 			switch (pageName.ToLower())
 			{
+				case "change password":
+					var changePasswordPage = new ChangePasswordPage(webDriver, uri);
+					Assert.IsTrue(changePasswordPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changePasswordPage);
+					break;
 				case "home":
 					var homePage = new HomePage(webDriver, uri);
 					Assert.IsTrue(homePage.IsCurrentPage);

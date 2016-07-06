@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Security.Principal;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using TechTalk.SpecFlow;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestTools.Resources;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.Events;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 {

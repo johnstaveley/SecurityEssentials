@@ -74,14 +74,14 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+                                        <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             @if (User.IsInRole("Admin"))
                                             {
                                                 <li>@Html.ActionLink("Users", "Index", "User")</li>
                                             }
                                             <li>@Html.ActionLink("Manage Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, null)</li>
-                                            <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                                            <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id="changePassword" })</li>
                                             <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "User", new { Id = User.Identity.GetUserId() }, null)</li>
                                             <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", new { Id = User.Identity.GetUserId() }, null)</li>
                                             <li>@Html.ActionLink("Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, null)</li>

@@ -6,10 +6,10 @@
 Background: 
 	Given I delete all cookies from the cache
 	#Given the following users are setup in the database:
-	#| UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
-	#| user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
-	#| user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
-
+	#| # | UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
+	#| # | user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
+	#| # | user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
+	#| # | user3@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
 
 Scenario: Home Page Loads
 	Given I navigate to the website
@@ -113,3 +113,64 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	Then I am navigated to the 'Recover Password Success' page
 	#And I receive an email notifying me of the password change
 	#And the password reset token is removed from the database
+
+Scenario: I can change my password
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | user3@user.com    |
+	| Password | x12a;pP02icdjshER |
+	And I click the login button
+	And I am navigated to the 'Landing' page
+	And I select Admin -> Change Password from the menu
+	And I am navigated to the 'Change Password' page
+	And I enter the following change password data:
+	| Field              | Value             |
+	| CurrentPassword    | x12a;pP02icdjshER |
+	| NewPassword        | NewPassword45678  |
+	| ConfirmNewPassword | NewPassword45678  |
+	When I submit the change password form
+	Then A confirmation message 'Your password has been changed.' is shown
+	# And an email is sent
+	# And a log entry is made
+
+Scenario: The application will prevent a brute force login attempt
+	Given I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt1@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt2@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt3@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt4@user.com |
+	| Password | rhubarb           |
+	When I click the login button
+	Then an error message is shown 'You have performed this action more than 3 times in the last 60 seconds.'

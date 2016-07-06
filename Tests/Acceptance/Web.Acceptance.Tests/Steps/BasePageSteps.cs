@@ -12,7 +12,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	public class BasePageSteps
 	{
 
-
+		[Then(@"an error message is shown '(.*)'")]
+		public void ThenAnErrorMessageIsShown(string message)
+		{
+			var driver = FeatureContext.Current.GetWebDriver();
+			Assert.IsTrue(driver.PageSource.Contains(message));
+		}
 
 	}
 }
