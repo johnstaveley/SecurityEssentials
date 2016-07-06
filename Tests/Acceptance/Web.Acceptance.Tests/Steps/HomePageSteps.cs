@@ -35,6 +35,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
 		}
 
+		[Given(@"I delete all cookies from the cache")]
+		public void GivenIDeleteAllCookiesFromTheCache()
+		{
+			var driver = FeatureContext.Current.GetWebDriver();
+			driver.Manage().Cookies.DeleteAllCookies();
+		}
+
 
 	}
 }

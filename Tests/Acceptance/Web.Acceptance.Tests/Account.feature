@@ -4,17 +4,19 @@
 	I want to be manage my account
 
 Background: 
+	Given I delete all cookies from the cache
 	#Given the following users are setup in the database:
 	#| UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
 	#| user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
 	#| user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
+
 
 Scenario: Home Page Loads
 	Given I navigate to the website
 	When I am taken to the homepage
 
 Scenario: When I enter correct login details I am taken to the landing page
-	Given I navigate to the website
+	Given I navigate to the website	
 	And I am taken to the homepage
 	And I click login
 	And I am navigated to the 'login' page
