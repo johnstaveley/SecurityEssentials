@@ -34,6 +34,16 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(changePasswordPage.IsCurrentPage);
 					ScenarioContext.Current.Set(changePasswordPage);
 					break;
+				case "change security information":
+					var changeSecurityInformationPage = new ChangeSecurityInformationPage(webDriver, uri);
+					Assert.IsTrue(changeSecurityInformationPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changeSecurityInformationPage);
+					break;
+				//case "change security information success":
+				//	var changeSecurityInformationSuccessPage = new ChangeSecurityInformationSuccessPage(webDriver, uri);
+				//	Assert.IsTrue(changeSecurityInformationSuccessPage.IsCurrentPage);
+				//	ScenarioContext.Current.Set(changeSecurityInformationSuccessPage);
+				//	break;
 				case "home":
 					var homePage = new HomePage(webDriver, uri);
 					Assert.IsTrue(homePage.IsCurrentPage);
@@ -91,6 +101,19 @@ break;
 			Assert.IsTrue(page.IsCurrentPage);
 		}
 
+		[Given(@"I select Admin -> Change Password from the menu")]
+		public void GivenISelectAdmin_ChangePasswordFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+			homePage.MenuBar.AdminTab.GotoChangePasswordPage();
+		}
+
+		[Given(@"I select Admin -> Change Security Information from the menu")]
+		public void GivenISelectAdmin_ChangeSecurityInformationFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+			homePage.MenuBar.AdminTab.GotoChangeSecurityInformationPage();
+		}
 
 	}
 }

@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
+using OpenQA.Selenium.Support.UI;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
@@ -31,9 +32,9 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			get { return this.GetVisibleWebElement(By.Id("User_LastName")); }
 		}
 
-        private IWebElement SecurityQuestion
+        private SelectElement SecurityQuestion
 		{
-			get { return this.GetVisibleWebElement(By.Id("User_SecurityQuestionLookupItemId")); }
+			get { return new SelectElement(this.GetVisibleWebElement(By.Id("User_SecurityQuestionLookupItemId"))); }
 		}
 
         private IWebElement SecurityAnswer
@@ -78,7 +79,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
                         LastName.SendKeys(row[1]);
                         break;
                     case "securityquestion":
-                        // todo
+						SecurityQuestion.SelectByText(row[1]);
                         break;
                     case "securityanswer":
                         SecurityAnswer.SendKeys(row[1]);

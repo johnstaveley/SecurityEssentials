@@ -20,5 +20,15 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 			PageFactory.InitElements(_driver, changePasswordPage);
 			return changePasswordPage;
 		}
+
+		public ChangeSecurityInformationPage GotoChangeSecurityInformationPage()
+		{
+			ClickMenu();
+			Click("changeSecurityInformation");
+			var changeSecurityInformationPage = new ChangeSecurityInformationPage(_driver, _baseUri);
+			PageFactory.InitElements(_driver, changeSecurityInformationPage);
+			return changeSecurityInformationPage;
+		}
+
 	}
 }
