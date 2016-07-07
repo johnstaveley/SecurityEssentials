@@ -7,6 +7,7 @@
         public const string REGISTER = "Register" + TITLE_ROOT;
         public const string CHANGE_PASSWORD = "Change Password" + TITLE_ROOT;
 		public const string CHANGE_SECURITY_INFORMATION = "Change Security Information" + TITLE_ROOT;
+		public const string CHANGE_SECURITY_INFORMATION_SUCCESS = "Change Security Information Success" + TITLE_ROOT;
 		public const string LANDING = "Home - Landing Page" + TITLE_ROOT;
 		public const string LOGIN = "Logon" + TITLE_ROOT;
 		public const string REGISTER_SUCCESS = "Register Success" + TITLE_ROOT;

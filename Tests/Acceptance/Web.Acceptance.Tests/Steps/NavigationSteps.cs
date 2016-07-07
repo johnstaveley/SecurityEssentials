@@ -39,11 +39,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(changeSecurityInformationPage.IsCurrentPage);
 					ScenarioContext.Current.Set(changeSecurityInformationPage);
 					break;
-				//case "change security information success":
-				//	var changeSecurityInformationSuccessPage = new ChangeSecurityInformationSuccessPage(webDriver, uri);
-				//	Assert.IsTrue(changeSecurityInformationSuccessPage.IsCurrentPage);
-				//	ScenarioContext.Current.Set(changeSecurityInformationSuccessPage);
-				//	break;
+				case "change security information success":
+					var changeSecurityInformationSuccessPage = new ChangeSecurityInformationSuccessPage(webDriver, uri);
+					Assert.IsTrue(changeSecurityInformationSuccessPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changeSecurityInformationSuccessPage);
+					break;
 				case "home":
 					var homePage = new HomePage(webDriver, uri);
 					Assert.IsTrue(homePage.IsCurrentPage);

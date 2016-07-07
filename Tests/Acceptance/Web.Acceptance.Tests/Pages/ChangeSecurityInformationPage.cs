@@ -15,7 +15,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		private SelectElement SecurityQuestion
 		{
-			get { return new SelectElement(this.GetVisibleWebElement(By.Id("SecurityInformation"))); }
+			get { return new SelectElement(this.GetVisibleWebElement(By.Id("SecurityQuestionLookupItemId"))); }
 		}
 
 		private IWebElement SecurityAnswer
@@ -55,7 +55,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						SecurityAnswer.SendKeys(row[1]);
 						break;
 					case "securityanswerconfirm":
-						SecurityAnswer.SendKeys(row[1]);
+						SecurityAnswerConfirm.SendKeys(row[1]);
 						break;
 					default:
 						throw new Exception(string.Format("Field {0} not defined", row[0]));

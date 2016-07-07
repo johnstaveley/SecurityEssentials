@@ -136,7 +136,6 @@ Scenario: I can change my password
 	# And an email is sent
 	# And a log entry is made
 
-@Ignore
 Scenario: I can change my security information
 	Given I navigate to the website
 	And I click login
@@ -150,10 +149,11 @@ Scenario: I can change my security information
 	And I select Admin -> Change Security Information from the menu
 	And I am navigated to the 'Change security Information' page
 	And I enter the following change security information data:
-	| Field              | Value             |
-	| CurrentPassword    | x12a;pP02icdjshER |
-	| NewPassword        | NewPassword45678  |
-	| ConfirmNewPassword | NewPassword45678  |
+	| Field                 | Value                             |
+	| Password              | x12a;pP02icdjshER                 |
+	| SecurityQuestion      | What was your childhood nickname? |
+	| SecurityAnswer        | Adelweiss                         |
+	| SecurityAnswerConfirm | Adelweiss                         |
 	When I submit the change security information form
 	Then I am navigated to the 'Change Security Information Success' page
 	# And an email is sent
