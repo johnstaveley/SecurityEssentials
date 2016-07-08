@@ -72,15 +72,15 @@
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.EmailVerified)
-                                    @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
+                                    @Html.CheckBoxFor(model => model.User.EmailVerified)
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.Approved)
-                                    @Html.CheckBoxFor(model => model.User.Approved, new { @class = "form-control" })
+                                    @Html.CheckBoxFor(model => model.User.Approved)
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.Enabled)
-                                    @Html.CheckBoxFor(model => model.User.Enabled, new { @class = "form-control" })
+                                    @Html.CheckBoxFor(model => model.User.Enabled)
                                 </div>
                             }
                             else

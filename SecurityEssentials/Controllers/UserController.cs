@@ -122,6 +122,7 @@ namespace SecurityEssentials.Controllers
 				var users = _context.User.Where(u => u.Id == id);
 				if (users.ToList().Count == 0) return new HttpNotFoundResult();
 				var user = users.FirstOrDefault();
+				var isOwnProfile = user.Id == _userIdentity.GetUserId(this);
 				// SECURE: Check user should have access to this account
                 if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
 
@@ -130,17 +131,18 @@ namespace SecurityEssentials.Controllers
                     "FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
                     "Town","Postcode", "SkypeName"
                 };
-				if (_userIdentity.IsUserInRole(this, "Admin"))
+				if (_userIdentity.IsUserInRole(this, "Admin") && !isOwnProfile)
 				{
 					propertiesToUpdate.Add("Approved");
+					propertiesToUpdate.Add("EmailVerified");
 					propertiesToUpdate.Add("Enabled");
 					propertiesToUpdate.Add("UserName");
 				}
 				if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
 				{
-                    if (user.Id == _userIdentity.GetUserId(this) && user.Enabled == false)
+                    if (isOwnProfile && (user.Enabled == false || user.EmailVerified == false))
 					{
-						ModelState.AddModelError("", "You cannot disable your own user account");
+						ModelState.AddModelError("", "You cannot disable or mark as email unverified, your own user account");
 					}
 					else
 					{
