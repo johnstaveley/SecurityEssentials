@@ -1,11 +1,13 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
 	public class LoginPage : BasePage
 	{
+		public MenuBar MenuBar { get; private set; }
 
 		private IWebElement UserName
 		{
@@ -30,7 +32,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public LoginPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.LOGIN)
 		{
-			
+			MenuBar = new MenuBar(webDriver, baseUri);
 		}
 
 		public void ClickSubmit()

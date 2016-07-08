@@ -68,19 +68,26 @@
                                 @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.User.SkypeName)
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.EmailVerified)
-                                @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
-                            </div>
                             if (User.IsInRole("Admin"))
                             {
                                 <div class="form-group">
+                                    @Html.LabelFor(model => model.User.EmailVerified)
+                                    @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
                                     @Html.LabelFor(model => model.User.Approved)
-                                    @Html.EditorFor(model => model.User.Approved, new { @class = "form-control" })
+                                    @Html.CheckBoxFor(model => model.User.Approved, new { @class = "form-control" })
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.Enabled)
-                                    @Html.EditorFor(model => model.User.Enabled, new { @class = "form-control" })
+                                    @Html.CheckBoxFor(model => model.User.Enabled, new { @class = "form-control" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.User.EmailVerified)
+                                    @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
                                 </div>
                             }
                             <div class="form-group">
@@ -88,7 +95,7 @@
                                 @Html.TextBoxFor(model => model.User.DateCreated, new { @class = "form-control", disabled = "disabled" })
                             </div>
                             <div>
-                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <input id="submit" type="submit" value="Save" class="btn btn-primary" />
                                 or  @Html.ActionLink("Cancel", "Index", "User")
                             </div>
                             @Html.AntiForgeryToken()

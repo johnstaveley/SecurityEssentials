@@ -112,7 +112,8 @@ break;
 		public void GivenISelectAdmin_ChangeSecurityInformationFromTheMenu()
 		{
 			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
-			homePage.MenuBar.AdminTab.GotoChangeSecurityInformationPage();
+	
+				homePage.MenuBar.AdminTab.GotoChangeSecurityInformationPage();
 		}
 
 	}

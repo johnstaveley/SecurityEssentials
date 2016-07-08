@@ -1,11 +1,13 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
 	public class RecoverPage : BasePage
 	{
+		public MenuBar MenuBar { get; private set; }
 
 		private IWebElement UserName
 		{
@@ -20,6 +22,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public RecoverPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.RECOVER)
 		{
+			MenuBar = new MenuBar(webDriver, baseUri);
 		}
 
 

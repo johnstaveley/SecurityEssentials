@@ -2,11 +2,14 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using OpenQA.Selenium.Support.UI;
+using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
 	public class ChangeSecurityInformationPage : BasePage
 	{
+
+		public MenuBar MenuBar { get; private set; }
 
 		private IWebElement Password
 		{
@@ -36,6 +39,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public ChangeSecurityInformationPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.CHANGE_SECURITY_INFORMATION)
 		{
+			MenuBar = new MenuBar(webDriver, baseUri);
 		}
 
 		public void EnterDetails(Table table)

@@ -1,11 +1,13 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
 	public class ChangePasswordPage : BasePage
 	{
+		public MenuBar MenuBar { get; private set; }
 
 		private IWebElement CurrentPassword
 		{
@@ -35,6 +37,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public ChangePasswordPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.CHANGE_PASSWORD)
 		{
+			MenuBar = new MenuBar(webDriver, baseUri);
 		}
 
 		public void EnterDetails(Table table)

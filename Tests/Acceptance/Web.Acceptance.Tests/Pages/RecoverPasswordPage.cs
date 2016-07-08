@@ -1,12 +1,14 @@
 ﻿using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
 	public class RecoverPasswordPage : BasePage
 	{
+		public MenuBar MenuBar { get; private set; }
 
 		private IWebElement Password
 		{
@@ -31,6 +33,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public RecoverPasswordPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.RECOVER_PASSWORD)
 		{
+			MenuBar = new MenuBar(webDriver, baseUri);
 		}
 
 		public void EnterDetails(Table table)
