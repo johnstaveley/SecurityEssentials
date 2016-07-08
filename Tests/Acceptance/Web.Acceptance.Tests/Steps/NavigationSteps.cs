@@ -83,12 +83,17 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					var registerPage = new RegisterPage(webDriver, uri);
 					Assert.IsTrue(registerPage.IsCurrentPage);
 					ScenarioContext.Current.Set(registerPage);
-break;
+					break;
 				case "register success":
 					var registerSuccessPage = new RegisterSuccessPage(webDriver, uri);
 					Assert.IsTrue(registerSuccessPage.IsCurrentPage);
 					ScenarioContext.Current.Set(registerSuccessPage);
-break;
+					break;
+				case "user edit":
+					var userEditPage = new UserEditPage(webDriver, uri);
+					Assert.IsTrue(userEditPage.IsCurrentPage);
+					ScenarioContext.Current.Set(userEditPage);
+					break;
 				default:
 					throw new NotImplementedException(pageName);
 			}
@@ -114,6 +119,14 @@ break;
 			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
 	
 				homePage.MenuBar.AdminTab.GotoChangeSecurityInformationPage();
+		}
+
+		[Given(@"I select Admin -> Manage Account from the menu")]
+		public void GivenISelectAdmin_ManageAccountFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+
+			homePage.MenuBar.AdminTab.GotoManageAccountPage();
 		}
 
 	}

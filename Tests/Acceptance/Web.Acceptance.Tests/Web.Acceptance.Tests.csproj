@@ -86,6 +86,7 @@
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\UserEditPage.cs" />
     <Compile Include="Pages\ChangeSecurityInformationPage.cs" />
     <Compile Include="Pages\LandingPage.cs" />
     <Compile Include="Pages\LoginPage.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Steps\LoginPageSteps.cs" />
     <Compile Include="Steps\ChangePasswordSteps.cs" />
     <Compile Include="Steps\RecoverPasswordSteps.cs" />
+    <Compile Include="Steps\UserEditSteps.cs" />
     <Compile Include="Steps\RecoverSteps.cs" />
     <Compile Include="Steps\RegisterPageSteps.cs" />
     <Compile Include="Steps\HomePageSteps.cs" />

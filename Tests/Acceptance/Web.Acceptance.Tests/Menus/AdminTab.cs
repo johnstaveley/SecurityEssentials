@@ -30,5 +30,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 			return changeSecurityInformationPage;
 		}
 
+		public UserEditPage GotoManageAccountPage()
+		{
+			ClickMenu();
+			Click("manageAccount");
+			var page = new UserEditPage(_driver, _baseUri);
+			PageFactory.InitElements(_driver, page);
+			return page;
+		}
+
 	}
 }

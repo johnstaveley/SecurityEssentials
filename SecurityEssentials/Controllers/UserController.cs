@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using SecurityEssentials.Model;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
-using Microsoft.AspNet.Identity;
 using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Controllers

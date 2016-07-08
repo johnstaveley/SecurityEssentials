@@ -114,6 +114,33 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	#And I receive an email notifying me of the password change
 	#And the password reset token is removed from the database
 
+@ignore
+Scenario: I can change my account information
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | user@user.com     |
+	| Password | x12a;pP02icdjshER |
+	And I click the login button
+	And I am navigated to the 'Landing' page
+	And I select Admin -> Manage Account from the menu
+	And I am navigated to the 'User Edit' page
+	And I enter the following change account information data:
+	| Field                 | Value      |
+	| Title                 | Mrs        |
+	| FirstName             | Sarah      |
+	| LastName              | Page       |
+	| WorkTelephoneNumber   | 0123456789 |
+	| HomeTelephoneNumber   | 0987654321 |
+	| MobileTelephoneNumber | 0778412457 |
+	| Town                  | Leeds      |
+	| PostCode              | LS10 1EF   |
+	| SkypeName             | SarahPage  |
+	When I submit the manage account form
+	Then A confirmation message 'Your account information has been changed.' is shown
+
 Scenario: I can change my password
 	Given I navigate to the website
 	And I click login
@@ -158,7 +185,6 @@ Scenario: I can change my security information
 	Then I am navigated to the 'Change Security Information Success' page
 	# And an email is sent
 	# And a log entry is made
-
 
 Scenario: The application will prevent a brute force login attempt
 	Given I navigate to the website

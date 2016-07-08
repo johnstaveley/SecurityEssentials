@@ -15,6 +15,6 @@
 		public const string RECOVER_PASSWORD = "Recover Password" + TITLE_ROOT;
 		public const string RECOVER_PASSWORD_SUCCESS = "Recover Password Success" + TITLE_ROOT;
 		public const string RECOVER_SUCCESS = "Recover Success" + TITLE_ROOT;
-		
+		public const string USER_EDIT = "Users - Edit" + TITLE_ROOT;
 	}
 }
