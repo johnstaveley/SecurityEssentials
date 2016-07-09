@@ -29,6 +29,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			var uri = FeatureContext.Current.GetBaseUri();
 			switch (pageName.ToLower())
 			{
+				case "account log":
+					var accountLogPage = new AccountLogPage(webDriver, uri);
+					Assert.IsTrue(accountLogPage.IsCurrentPage);
+					ScenarioContext.Current.Set(accountLogPage);
+					break;
 				case "change password":
 					var changePasswordPage = new ChangePasswordPage(webDriver, uri);
 					Assert.IsTrue(changePasswordPage.IsCurrentPage);
@@ -58,6 +63,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					var loginPage = new LoginPage(webDriver, uri);
 					Assert.IsTrue(loginPage.IsCurrentPage);
 					ScenarioContext.Current.Set(loginPage);
+					break;
+				case "manage users":
+					var userIndexPage = new UserIndexPage(webDriver, uri);
+					Assert.IsTrue(userIndexPage.IsCurrentPage);
+					ScenarioContext.Current.Set(userIndexPage);
 					break;
 				case "recover":
 					var recoverPage = new RecoverPage(webDriver, uri);
@@ -128,6 +138,23 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 
 			homePage.MenuBar.AdminTab.GotoManageAccountPage();
 		}
+
+		[When(@"I select Admin -> Account Log from the menu")]
+		public void GivenISelectAdmin_AccountLogFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+
+			homePage.MenuBar.AdminTab.GotoAccountLogPage();
+		}
+
+		[Given(@"I select Admin -> Manage Users from the menu")]
+		public void WhenISelectAdmin_ManageUsersFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+
+			homePage.MenuBar.AdminTab.GotoManageUsersPage();
+		}
+
 
 	}
 }

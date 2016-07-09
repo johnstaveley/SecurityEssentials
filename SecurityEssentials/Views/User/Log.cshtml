@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<SecurityEssentials.Model.UserLog>
 
 @{
-    ViewBag.Title = "Log";
+    ViewBag.Title = "Account Log";
     ViewBag.Active = "Admin";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>User Activity Log</h2>
 
-<p>Viewing ten most recent ten log entries for @ViewBag.UserName</p>
+<p id="mostRecentMessage">Viewing ten most recent log entries for @ViewBag.UserName</p>
 <p>If you suspect your account has been compromised, please change your password immediately</p>
 <table class="table">
     <tr>

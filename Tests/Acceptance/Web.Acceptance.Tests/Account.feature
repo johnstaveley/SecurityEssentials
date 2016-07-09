@@ -139,6 +139,7 @@ Scenario: I can change my account information
 	| SkypeName             | SarahPage  |
 	When I submit the manage account form
 	Then A confirmation message 'Your account information has been changed' is shown
+	#And The database now contains the following user information
 
 Scenario: I can change my password
 	Given I navigate to the website
@@ -184,6 +185,39 @@ Scenario: I can change my security information
 	Then I am navigated to the 'Change Security Information Success' page
 	# And an email is sent
 	# And a log entry is made
+
+Scenario: I can view my user activity log information
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | user3@user.com    |
+	| Password | x12a;pP02icdjshER |
+	And I click the login button
+	And I am navigated to the 'Landing' page
+	When I select Admin -> Account Log from the menu
+	Then I am navigated to the 'Account Log' page
+	And I am shown the message 'Viewing ten most recent log entries for user3@user.com'
+
+@Ignore
+Scenario: As an admin I can manage my users
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | admin@admin.com   |
+	| Password | xsHDjxshdjkKK917& |
+	And I click the login button
+	And I am navigated to the 'Landing' page
+	And I select Admin -> Manage Users from the menu
+	And I am navigated to the 'Manage Users' page
+	When I click on 'user3'
+	Then I am navigated to the 'User Edit' page
+	And The following user edit information is displayed:
+	| Field    | Value          |
+	| UserName | user3@user.com |
 
 Scenario: The application will prevent a brute force login attempt
 	Given I navigate to the website

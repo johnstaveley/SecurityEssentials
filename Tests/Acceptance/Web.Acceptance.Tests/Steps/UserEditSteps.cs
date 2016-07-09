@@ -30,5 +30,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			Assert.IsTrue(page.GetStatusMessage().Contains(message));
 		}
 
+		[Then(@"The following user edit information is displayed:")]
+		public void ThenTheFollowingUserEditInformationIsDisplayed(Table table)
+		{
+			var page = ScenarioContext.Current.GetPage<UserEditPage>();
+			//var username = table.Rows[0].;
+			Assert.Inconclusive("Write this");
+		}
+
+
 	}
 }

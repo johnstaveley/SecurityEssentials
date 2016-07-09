@@ -39,5 +39,24 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 			return page;
 		}
 
+		public AccountLogPage GotoAccountLogPage()
+		{
+			ClickMenu();
+			Click("accountLog");
+			var page = new AccountLogPage(_driver, _baseUri);
+			PageFactory.InitElements(_driver, page);
+			return page;
+		}
+
+		public UserIndexPage GotoManageUsersPage()
+		{
+			ClickMenu();
+			Click("manageUsers");
+			var page = new UserIndexPage(_driver, _baseUri);
+			PageFactory.InitElements(_driver, page);
+			return page;
+
+		}
+
 	}
 }
