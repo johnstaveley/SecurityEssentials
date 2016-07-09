@@ -114,7 +114,6 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	#And I receive an email notifying me of the password change
 	#And the password reset token is removed from the database
 
-@ignore
 Scenario: I can change my account information
 	Given I navigate to the website
 	And I click login
@@ -139,7 +138,7 @@ Scenario: I can change my account information
 	| PostCode              | LS10 1EF   |
 	| SkypeName             | SarahPage  |
 	When I submit the manage account form
-	Then A confirmation message 'Your account information has been changed.' is shown
+	Then A confirmation message 'Your account information has been changed' is shown
 
 Scenario: I can change my password
 	Given I navigate to the website

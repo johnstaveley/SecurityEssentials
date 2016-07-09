@@ -22,6 +22,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			changePasswordPage.ClickSubmit();
 		}
 
+		[Scope(Scenario="I can change my password")]
 		[Then(@"A confirmation message '(.*)' is shown")]
 		public void ThenAConfirmationMessageIsShown(string message)
 		{

@@ -22,5 +22,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			page.ClickSubmit();
 		}
 
+		[Scope(Scenario = "I can change my account information")]
+		[Then(@"A confirmation message '(.*)' is shown")]
+		public void ThenAConfirmationMessageIsShown(string message)
+		{
+			var page = ScenarioContext.Current.GetPage<UserEditPage>();
+			Assert.IsTrue(page.GetStatusMessage().Contains(message));
+		}
+
 	}
 }

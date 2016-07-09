@@ -123,8 +123,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = _sut.Edit(_testUserId, new FormCollection(collection));
 
             // Assert
-            AssertRedirectToActionReturned(result, "Index", "User");
+			var viewResult = AssertViewResultReturned(result, "Edit");
             _context.AssertWasCalled(a => a.SaveChanges());
+			Assert.AreEqual("Your account information has been changed", viewResult.ViewBag.StatusMessage);
 
         }
 

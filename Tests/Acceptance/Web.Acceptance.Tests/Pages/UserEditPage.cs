@@ -11,6 +11,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		public MenuBar MenuBar { get; private set; }
 
+		private IWebElement StatusMessage
+		{
+			get { return this.GetVisibleWebElement(By.Id("statusMessage")); }
+		}
+
 		private IWebElement UserName
 		{
 			get { return this.GetVisibleWebElement(By.Id("User_UserName")); }
@@ -140,6 +145,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public void ClickSubmit()
 		{
 			SubmitButton.Click();
+		}
+
+		public string GetStatusMessage()
+		{
+			return StatusMessage.Text;
 		}
 
 	}
