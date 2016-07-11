@@ -38,6 +38,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			Assert.Inconclusive("Write this");
 		}
 
+		[When(@"I click on '(.*)'")]
+		public void WhenIClickOn(string p0)
+		{
+			ScenarioContext.Current.Pending();
+		}
 
 	}
 }

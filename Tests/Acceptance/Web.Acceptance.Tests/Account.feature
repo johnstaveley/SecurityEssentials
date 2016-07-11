@@ -4,7 +4,7 @@
 	I want to be manage my account
 
 Background: 
-	Given I delete all cookies from the cache
+	Given I delete all cookies from the cache 
 	#Given the following users are setup in the database:
 	#| # | UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
 	#| # | user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
