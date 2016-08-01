@@ -219,6 +219,7 @@ Scenario: As an admin I can manage my users
 	| Field    | Value          |
 	| UserName | user3@user.com |
 
+@Ignore
 Scenario: The application will prevent a brute force login attempt
 	Given I navigate to the website
 	And I am taken to the homepage
