@@ -78,7 +78,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 120)]
         public async Task<ActionResult> LogOn(LogOn model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
@@ -157,7 +157,7 @@ namespace SecurityEssentials.Controllers
         }
 
         [AllowAnonymous]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> EmailVerify()
         {
             var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
@@ -187,7 +187,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> Recover(RecoverViewModel model)
         {
             if (ModelState.IsValid)
@@ -249,7 +249,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
         {
             var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
@@ -315,7 +315,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangeSecurityInformation", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangeSecurityInformation", ContentName = "TooManyRequests", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> ChangeSecurityInformation(ChangeSecurityInformationViewModel model)
         {
             string errorMessage = "";
@@ -376,7 +376,7 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        [AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 120)]
         public async Task<ActionResult> Register(FormCollection collection)
         {
             var user = new User();
