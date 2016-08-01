@@ -17,11 +17,11 @@
 }
             @Html.ValidationSummary(true)
 
-                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username", @class="form-control" })
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username", @class="form-control", autocomplete="OFF" })
                     
                 @Html.ValidationMessageFor(m => m.UserName)&nbsp;
                     
-                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class="form-control" })
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class="form-control", autocomplete = "OFF" })
                     
                 @Html.ValidationMessageFor(m => m.Password)&nbsp;
 
