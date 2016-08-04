@@ -100,6 +100,18 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			{
 				switch (row[0].ToLower())
 				{
+					case "approved":
+						var approved = Convert.ToBoolean(row[1]);
+						if ((Approved.Selected && !approved) || (!Approved.Selected && approved)) { Approved.Click(); }
+						break;
+					case "emailverified":
+						var emailVerified = Convert.ToBoolean(row[1]);
+						if ((EmailVerified.Selected && !emailVerified) || (!EmailVerified.Selected && emailVerified)) { EmailVerified.Click(); }
+						break;
+					case "enabled":
+						var enabled = Convert.ToBoolean(row[1]);
+						if ((Enabled.Selected && !enabled) || (!Enabled.Selected && enabled)) { Enabled.Click(); }
+						break;
 					case "firstname":
 						FirstName.Clear();
 						FirstName.SendKeys(row[1]);

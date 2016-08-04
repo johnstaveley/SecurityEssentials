@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Security|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PAT|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Security\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>

@@ -1075,7 +1075,7 @@
     <Content Include="Views\Account\ChangeSecurityInformationSuccess.cshtml" />
     <Content Include="Views\Account\ChangeSecurityInformation.cshtml" />
     <Compile Include="ViewModel\RecoverPasswordViewModel.cs" />
-    <None Include="Web.Security.config">
+    <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
@@ -1096,7 +1096,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Security|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PAT|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
