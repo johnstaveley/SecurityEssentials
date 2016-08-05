@@ -31,6 +31,8 @@ namespace SecurityEssentials
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 			AuthConfig.RegisterAuth();
 			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
+			//SECURE: Remove automatic XFrame option header so we can add it in filters to entire site
+			System.Web.Helpers.AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
 			using (var context = new SEContext())
 			{
 				context.Database.Initialize(true);
