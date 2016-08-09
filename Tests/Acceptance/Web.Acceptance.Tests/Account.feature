@@ -11,7 +11,7 @@ Background:
 	#| # | user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
 	#| # | user3@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
 
-Scenario: Home Page Loads
+Scenario: Home Page Loads 
 	Given I navigate to the website
 	When I am taken to the homepage
 
@@ -28,6 +28,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 	Then I am navigated to the 'Landing' page
 	Then the following last activity message is shown: 'The last actvity logged against your account was'
 
+@PAT
 Scenario: When I enter incorrect login details then a warning is displayed
 	Given I navigate to the website
 	And I am taken to the homepage
@@ -42,6 +43,7 @@ Scenario: When I enter incorrect login details then a warning is displayed
 	| Field                                        |
 	| Invalid credentials or the account is locked |
 
+@PAT
 Scenario: When I enter valid registration details I can register a new user
 	Given I navigate to the website
 	And I click register in the title bar
@@ -59,6 +61,7 @@ Scenario: When I enter valid registration details I can register a new user
 	Then I am navigated to the 'Register Success' page
 	#And I receive a registration email
 
+@PAT
 Scenario: When I enter registration details which are currently being used I am advised of registration success
 	Given I navigate to the website
 	And I click register in the title bar
@@ -76,6 +79,7 @@ Scenario: When I enter registration details which are currently being used I am 
 	Then I am navigated to the 'Register Success' page
 	#And I am notified via email
 
+@PAT
 Scenario: When I attempt password recovery using a valid account I am notified of success
 	Given I navigate to the website
 	And I click login
@@ -89,6 +93,7 @@ Scenario: When I attempt password recovery using a valid account I am notified o
 	Then I am navigated to the 'Recover Success' page
 	#And I receive an email with a reset link
 
+@PAT
 Scenario: When I attempt password recovery using an invalid account I am notified of success
 	Given I navigate to the website
 	And I click login
@@ -101,6 +106,7 @@ Scenario: When I attempt password recovery using an invalid account I am notifie
 	When I submit the recover form
 	Then I am navigated to the 'Recover Success' page
 
+@PAT
 Scenario: When I click on a valid password reset link, I can enter my security information and change my password	
 	Given I navigate to the password reset link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
 	And I am navigated to the 'Recover Password' page
@@ -114,6 +120,7 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	#And I receive an email notifying me of the password change
 	#And the password reset token is removed from the database
 
+@PAT
 Scenario: I can change my account information
 	Given I navigate to the website
 	And I click login
@@ -141,6 +148,7 @@ Scenario: I can change my account information
 	Then A confirmation message 'Your account information has been changed' is shown
 	#And The database now contains the following user information
 
+@PAT
 Scenario: I can change my password
 	Given I navigate to the website
 	And I click login
@@ -163,6 +171,7 @@ Scenario: I can change my password
 	# And an email is sent
 	# And a log entry is made
 
+@PAT
 Scenario: I can change my security information
 	Given I navigate to the website
 	And I click login
@@ -186,6 +195,7 @@ Scenario: I can change my security information
 	# And an email is sent
 	# And a log entry is made
 
+@PAT
 Scenario: I can view my user activity log information
 	Given I navigate to the website
 	And I click login
@@ -201,6 +211,7 @@ Scenario: I can view my user activity log information
 	And I am shown the message 'Viewing ten most recent log entries for user3@user.com'
 
 @Ignore
+@PAT
 Scenario: As an admin I can manage my users
 	Given I navigate to the website
 	And I click login
