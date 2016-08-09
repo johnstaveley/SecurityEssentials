@@ -10,36 +10,53 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h3>Created by John Staveley - Last updated 09/07/2016</h3>
-                This Mvc solution was adapted from the standard MVC4 template in VS 2015 with the following security features:
+                <h3>Created by John Staveley - Last updated 09/08/2016</h3>
+                This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+                <ol>
+                    <li>SQL Injection: It uses Entity Framework ORM</li>
+                    <li>Weak account management: 
+                        <ul>
+                            <li>Uses claims based auth/li>
+                            <li>Uses the strong hash PBKDF2 with an adaptable number of iterations</li>
+                            <li>Enforces a strong password - Bans weak passwords, enforces minimum password strength and allows special characters</li>
+                            <li>Has a water tight account management process</li>
+                            <li>Prevents anti-enumeration through well designed messages</li>
+                            <li>Logs account activity which can be checked by the user to see if there is any illicit activity</li>
+                            <li>Emails on key account events</li>
+                            <li>Verifies email</li>
+                            <li>Prevents brute force of logon</li>
+                            <li>Prevents brute force of registration or password reset through anti-throttling and CAPTCHA</li>
+                            <li>Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm</li>
+                            <li>Increasing wait time on logon failure rather than account lock out</li>
+                            <li>Unit tests for password hashing and authorization attributes</li>
+                        </ul>
+                    </li>
+                    <li>XSS: Incorporation of the WPL AntiXSS library to encode all output</li>
+                    <li>Insecure direct object references: In user edit page it checks the user is entitled to be there</li>
+                    <li>Security misconfiguration: Doesn't turn on anything you don't really need</li>
+                    <li>Sensitive data exposure: 
+                        <ul>
+                            <li>Auto-complete off on registration page</li>
+                            <li>Enforces TLS of all data in production through use of web.configs</li>
+                            <li>Ensures website can only ever be requested over TLS using HSTS header</li>
+                            <li>Turns off verbose errors and trace in production</li>
+                            <li>Removes unnecessary headers which indicate .net framework version</li>
+                            <li>Removes server information disclosure headers from responses</li>
+                        </ul>
+                    </li>
+                    <li>Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role</li>
+                    <li>CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller</li>
+                    <li>Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated</li>
+                    <li>Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4</li>
+                </ol>
+                Other threats it protects against and features:
                 <ul>
-                    <li>Template built on the latest technology - MVC 5, EF 6, Bootstrap 3, Claims based authentication and authorisation, Kendo UI</li>
-                    <li>Secure password storage - Stores passwords with a cryptographically secure Salt and Hash using the PBKDF2 algorithm with an adaptable number of iterations</li>
-                    <li>Secure security answer storage - Stores answer to security question using RijndaelManaged encryption algorithm with configurable key</li>
-                    <li>Passwords harder to crack - Enforces a strong password policy and allows special characters</li>
-                    <li>Passwords harder to guess - Compares password entered with a database of frequently used (and cracked) passwords and no personal information is allowed to be reused in the password</li>
-                    <li>Account management - Prevents account enumeration on register and reset password forms</li>
-                    <li>Account management - Each user can see a summary of their most recent account activity to check for any illicit activity</li>
-                    <li>Account Management - Protects sensitive functions against brute force attacks by throttling web requests and using CAPTCHA</li>
-                    <li>Account Management - Prevents overposting on all forms</li>
-                    <li>Account Management - All account activity is logged which is viewable by the user, user is reminded of last logon time when they logon</li>
-                    <li>Controllers and AJAX are protected against the CSRF attack by using an AntiForgeryToken</li>
-                    <li>Prevents the site from being opened inside an iFrame (anti-clickjacking)</li>
-                    <li>Prevents the site in production from ever being requested over http after initial call</li>
-                    <li>Removes server information disclosure headers from responses</li>
-                    <li>Auto-Complete switched off on registration and logon forms to protect sensitive data</li>
-                    <li>Increasing wait time on logon failure</li>
-                    <li>Reduced chance of using components with know vulnerabilities, built on the latest version of .Net and up to date NuGet packages</li>
-                    <li>Unit tests for password hashing and authorization attributes</li>
+                    <li>Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame</li>
+                    <li>Form overposting: Example given of how to avoid this</li>
                     <li>Acceptance tests for key functionality</li>
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information</p>
-            <p>To do
-                <ul>
-                    <li>Session tracking - logoff should invalidate the session, (Optional) - Deny multiple sessions</li>
-                </ul>
-            </p>
         </div>
     </section>
 }
