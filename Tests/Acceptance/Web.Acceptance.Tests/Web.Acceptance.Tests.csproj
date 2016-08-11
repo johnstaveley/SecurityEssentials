@@ -125,6 +125,7 @@
     <Compile Include="Steps\HomePageSteps.cs" />
     <Compile Include="Steps\Hooks.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />
+    <Compile Include="Steps\UtilitySteps.cs" />
     <Compile Include="Utility\Repeater.cs" />
   </ItemGroup>
   <ItemGroup>
