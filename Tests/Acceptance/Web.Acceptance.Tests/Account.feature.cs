@@ -668,8 +668,8 @@ this.FeatureBackground();
         public virtual void AsAnAdminICanManageMyUsers()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("As an admin I can manage my users", new string[] {
-                        "Ignore",
-                        "PAT"});
+                        "PAT",
+                        "Ignore"});
 #line 217
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -701,7 +701,7 @@ this.FeatureBackground();
 #line 228
  testRunner.And("I am navigated to the \'Manage Users\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 229
- testRunner.When("I click on \'user3\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I click on user 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 230
  testRunner.Then("I am navigated to the \'User Edit\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

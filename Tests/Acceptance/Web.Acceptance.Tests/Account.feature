@@ -212,8 +212,8 @@ Scenario: I can view my user activity log information
 	Then I am navigated to the 'Account Log' page
 	And I am shown the message 'Viewing ten most recent log entries for user3@user.com'
 
-@Ignore
 @PAT
+@Ignore
 Scenario: As an admin I can manage my users
 	Given I navigate to the website
 	And I click login
@@ -226,7 +226,7 @@ Scenario: As an admin I can manage my users
 	And I am navigated to the 'Landing' page
 	And I select Admin -> Manage Users from the menu
 	And I am navigated to the 'Manage Users' page
-	When I click on 'user3'
+	When I click on user 3
 	Then I am navigated to the 'User Edit' page
 	And The following user edit information is displayed:
 	| Field    | Value          |

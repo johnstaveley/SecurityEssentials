@@ -38,10 +38,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			Assert.Inconclusive("Write this");
 		}
 
-		[When(@"I click on '(.*)'")]
-		public void WhenIClickOn(string p0)
+		[When(@"I click on user (.*)")]
+		public void WhenIClickOn(int userId)
 		{
-			ScenarioContext.Current.Pending();
+			var page = ScenarioContext.Current.GetPage<UserIndexPage>();
+			page.ClickEditUser(userId);
 		}
 
 	}
