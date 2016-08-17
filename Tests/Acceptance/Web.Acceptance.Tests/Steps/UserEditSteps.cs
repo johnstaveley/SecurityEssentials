@@ -1,6 +1,8 @@
 ﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using TechTalk.SpecFlow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TechTalk.SpecFlow.Assist;
+using SecurityEssentials.Acceptance.Tests.Model;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
@@ -34,8 +36,15 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void ThenTheFollowingUserEditInformationIsDisplayed(Table table)
 		{
 			var page = ScenarioContext.Current.GetPage<UserEditPage>();
-			//var username = table.Rows[0].;
-			Assert.Inconclusive("Write this");
+			var user = table.CreateInstance<User>();
+			Assert.AreEqual(user.UserName, page.GetUserName());
+			Assert.AreEqual(user.Title, page.GetTitle());
+			Assert.AreEqual(user.FirstName, page.GetFirstName());
+			Assert.AreEqual(user.Surname, page.GetLastName());
+			Assert.AreEqual(user.MobileTelephoneNumber, page.GetMobileTelephoneNumber());
+			Assert.AreEqual(user.Approved, page.GetApproved());
+			Assert.AreEqual(user.EmailVerified, page.GetEmailVerified());
+			Assert.AreEqual(user.Enabled, page.GetEnabled());
 		}
 
 		[When(@"I click on user (.*)")]

@@ -68,17 +68,17 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		private IWebElement EmailVerified
 		{
-			get { return this.GetVisibleWebElement(By.Id("EmailVerified")); }
+			get { return this.GetVisibleWebElement(By.Id("User_EmailVerified")); }
 		}
 
 		private IWebElement Approved
 		{
-			get { return this.GetVisibleWebElement(By.Id("Approved")); }
+			get { return this.GetVisibleWebElement(By.Id("User_Approved")); }
 		}
 
 		private IWebElement Enabled
 		{
-			get { return this.GetVisibleWebElement(By.Id("Enabled")); }
+			get { return this.GetVisibleWebElement(By.Id("User_Enabled")); }
 		}
 
 
@@ -152,6 +152,46 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						throw new Exception(string.Format("Field {0} not defined", row[0]));
 				}
 			}
+		}
+
+		public bool GetApproved()
+		{
+			return this.Approved.Selected;
+		}
+
+		public bool GetEmailVerified()
+		{
+			return this.EmailVerified.Selected;
+		}
+
+		public bool GetEnabled()
+		{
+			return this.Enabled.Selected;
+		}
+
+		public string GetFirstName()
+		{
+			return this.FirstName.GetAttribute("value");
+		}
+
+		public string GetLastName()
+		{
+			return this.LastName.GetAttribute("value");
+		}
+
+		public string GetMobileTelephoneNumber()
+		{
+			return this.TelNoMobile.GetAttribute("value");
+		}
+
+		public string GetTitle()
+		{
+			return this.Title.GetAttribute("value");
+		}
+
+		public string GetUserName()
+		{
+			return this.UserName.GetAttribute("value");
 		}
 
 		public void ClickSubmit()

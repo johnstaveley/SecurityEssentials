@@ -213,7 +213,6 @@ Scenario: I can view my user activity log information
 	And I am shown the message 'Viewing ten most recent log entries for user3@user.com'
 
 @PAT
-@Ignore
 Scenario: As an admin I can manage my users
 	Given I navigate to the website
 	And I click login
@@ -229,8 +228,15 @@ Scenario: As an admin I can manage my users
 	When I click on user 3
 	Then I am navigated to the 'User Edit' page
 	And The following user edit information is displayed:
-	| Field    | Value          |
-	| UserName | user3@user.com |
+	| Field                 | Value          |
+	| UserName              | user3@user.com |
+	| Title                 | Mrs            |
+	| FirstName             | Standard       |
+	| Surname               | User3          |
+	| MobileTelephoneNumber | 07881231234    |
+	| Approved              | true           |
+	| EmailVerified         | true           |
+	| Enabled               | true           |
 
 @Ignore
 Scenario: The application will prevent a brute force login attempt

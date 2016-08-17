@@ -10,7 +10,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		private IWebElement EditUser(int id)
 		{
-			return this.GetVisibleWebElement(By.XPath(string.Format("xpath=(//a[contains(text(),'Edit')])[{0}]", id)));
+			var elements = Driver.FindElements(By.XPath("//a[contains(text(),'Edit')]"));
+			return elements[id];
 		}
 
 		public UserIndexPage(IWebDriver webDriver, Uri baseUri)

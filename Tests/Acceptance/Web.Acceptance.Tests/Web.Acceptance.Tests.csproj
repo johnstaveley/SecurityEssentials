@@ -94,6 +94,7 @@
     <Compile Include="Menus\MenuBar.cs" />
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Pages\UserIndexPage.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\AccountLogPage.cs" />
