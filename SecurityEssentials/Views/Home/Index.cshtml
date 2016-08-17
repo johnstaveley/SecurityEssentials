@@ -10,7 +10,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h3>Created by John Staveley - Last updated 09/08/2016</h3>
+                <h4>Created by John Staveley - Last updated 17/08/2016</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -23,7 +23,7 @@
                             <li>Prevents anti-enumeration through well designed messages</li>
                             <li>Logs account activity which can be checked by the user to see if there is any illicit activity</li>
                             <li>Emails on key account events</li>
-                            <li>Verifies email</li>
+                            <li>Verifies email by sending an email to the specified address</li>
                             <li>Prevents brute force of logon</li>
                             <li>Prevents brute force of registration or password reset through anti-throttling and CAPTCHA</li>
                             <li>Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm</li>
@@ -57,6 +57,40 @@
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information</p>
+            <p>
+                <h2>Steps to secure your website on the server</h2>
+                When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
+                <ul>
+                    <li>Apply a good SSL policy on the server: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
+                    <li>Configure your server to avoid a Poodle downgrade attack</li>
+                    <li>Enable retail mode on the production server</li>
+                    <li>Patch the server up to the hilt</li>
+                    <li>Register for HSTS preload</li>
+                </ul>
+            </p>
+            <p>
+                <h2>How to ensure your application remains secure over time</h2>
+                <ul>
+                    <li>Add unit tests to ensure correct role is applied to functions requiring security such as admin</li>
+	                <li>Run all existing unit and acceptance tests</li>
+                    <li>Run OWASP Dependency checker as build step and check report to see if you need to upgrade a dependency</li>
+	                <li>Run OWASP Zap to do a regular pen test of your application on the build server</li>
+	                <li>Patch the server!</li>
+	                <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
+                </ul>
+            </p>
+            <p><h2>How your build process can ensure you remain secure over time</h2>
+            Following this process will help prevent security regressions from occurring. As part of your build process you should run all unit and acceptance tests provided with this project, you can also run OWASP Dependency checker and OWASP Zap automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
+            <ul>
+                <li>(Some of) 1, 3, 5, 6, 8, 10 - OWASP Zap</li>
+                <li>2. Account management process - Unit and acceptance tests</li>
+                <li>4. Insecure direct object references - Unit tests</li>
+                <li>7. Missing file level access control - Unit tests</li>
+                <li>8. CSRF - Unit tests and ZAP</li>
+                <li>9. Vulnerable dependencies - OWASP Dependency checker</li>
+                <li>10. Unvalidated redirects and forwards - Unit tests</li>
+            </ul>
+            </p>
         </div>
     </section>
 }
