@@ -7,17 +7,15 @@ using SecurityEssentials.Controllers;
 using Rhino.Mocks;
 using SecurityEssentials.Core;
 using SecurityEssentials.Core.Identity;
-using SecurityEssentials.Unit.Tests.TestDbSet;
 using SecurityEssentials.Model;
 using System.Collections.Generic;
 using SecurityEssentials.ViewModel;
 using System.Threading.Tasks;
 using System.Web.Routing;
-using System.Web;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-    [TestClass]
+	[TestClass]
     public class AccountControllerTest : BaseControllerTest
     {
 
@@ -68,7 +66,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var data = AssertViewResultReturnsType<LandingViewModel>(result);
-            Assert.AreEqual(_lastAccountActivity.ToString("dd/MM/yyyy HH:mm"), data.LastAccountActivity);
+            Assert.AreEqual(_lastAccountActivity.ToLocalTime().ToString("dd/MM/yyyy HH:mm"), data.LastAccountActivity);
             Assert.AreEqual(_firstName, data.FirstName);
             
         }
@@ -169,7 +167,24 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        [TestMethod]
+
+		[TestMethod]
+		public void GIVEN_UserExists_WHEN_ChangeEmailAddressGet_THEN_ViewReturned()
+		{
+
+			// Arrange
+			_userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+
+			// Act
+			var result = _sut.ChangeEmailAddress();
+
+			// Assert
+			var viewModel = AssertViewResultReturnsType<ChangeEmailAddressViewModel>(result);
+			Assert.AreEqual(_testUserName, viewModel.UserName);
+
+		}
+
+		[TestMethod]
         public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
         {
             // Arrange
@@ -368,7 +383,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _httpRequest.Stub(a => a.QueryString).Return(requestItems);
             var user = _context.User.Where(u => u.Id == _testUserId).First();
             user.PasswordResetToken = passwordResetToken;
-            user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+            user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
 
             // Act
             var result = await _sut.RecoverPassword();

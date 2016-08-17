@@ -44,7 +44,7 @@ namespace SecurityEssentials.Core.Identity
         public async Task CreateAsync(User user)
         {
 
-			user.DateCreated = DateTime.Now;
+			user.DateCreated = DateTime.UtcNow;
 
             _context.User.Add(user);
 			_context.SetConfigurationValidateOnSaveEnabled(false);
@@ -198,7 +198,7 @@ namespace SecurityEssentials.Core.Identity
         public async Task<IdentityResult> ChangePasswordFromTokenAsync(int userId, string passwordResetToken, string newPassword)
         {
             var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
-            if (user.PasswordResetToken != passwordResetToken || !user.PasswordResetExpiry.HasValue || user.PasswordResetExpiry < DateTime.Now)
+            if (user.PasswordResetToken != passwordResetToken || !user.PasswordResetExpiry.HasValue || user.PasswordResetExpiry < DateTime.UtcNow)
             {
                 return new IdentityResult("Your password reset token has expired or does not exist");
             }

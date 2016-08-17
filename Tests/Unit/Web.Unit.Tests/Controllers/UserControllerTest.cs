@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurityEssentials.Controllers;
 using Rhino.Mocks;
-using SecurityEssentials.Core;
-using SecurityEssentials.Core.Identity;
-using SecurityEssentials.Unit.Tests.TestDbSet;
 using SecurityEssentials.Model;
 using System.Collections.Generic;
 using SecurityEssentials.ViewModel;
-using System.Threading.Tasks;
 using System.Web.Routing;
-using System.Web;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-    [TestClass]
+	[TestClass]
     public class UserControllerTest : BaseControllerTest
     {
 
@@ -69,24 +63,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var user = _context.User.Where(u => u.Id == _testUserId).First();
             Assert.IsFalse(user.Enabled);
             _context.AssertWasCalled(a => a.SaveChanges());
-
-        }
-
-        [TestMethod]
-        public void GIVEN_UserExists_WHEN_ChangeEmailAddressGet_THEN_ViewReturned()
-        {
-
-            // Arrange
-            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
-
-
-            // Act
-            var result = _sut.ChangeEmailAddress(_testUserId);
-
-            // Assert
-            var viewModel = AssertViewResultReturnsType <UserViewModel>(result);
-            Assert.AreEqual(_testUserId, viewModel.User.Id);
-            Assert.IsTrue(viewModel.IsOwnProfile);
 
         }
 

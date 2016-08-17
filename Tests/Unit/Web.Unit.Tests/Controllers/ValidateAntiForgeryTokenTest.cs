@@ -14,7 +14,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		[TestMethod]
 		public void AllHttpPostControllerActionsShouldBeDecoratedWithValidateAntiForgeryTokenAttribute()
 		{
-			var allControllerTypes = typeof(SecurityController).Assembly.GetTypes()
+			var allControllerTypes = typeof(AccountController).Assembly.GetTypes()
 			   .Where(type => typeof(Controller).IsAssignableFrom(type));
 			var allControllerActions = allControllerTypes.SelectMany(type => type.GetMethods());
 

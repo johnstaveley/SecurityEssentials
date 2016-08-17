@@ -30,7 +30,7 @@ namespace SecurityEssentials.Core
             context.User.Add(new User() { 
 				Id = 1,
 				Approved = true,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Admin", 
@@ -51,7 +51,7 @@ namespace SecurityEssentials.Core
             context.User.Add(new User() { 
 				Id = 2,
 				Approved = true,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard", 
@@ -68,7 +68,7 @@ namespace SecurityEssentials.Core
 			{
 				Id = 3,
 				Approved = true,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",
@@ -81,13 +81,13 @@ namespace SecurityEssentials.Core
 				Title = "Mrs",
 				UserName = "user2@user.com",
 				PasswordResetToken = "83ababb4-a0c1-4f2c-8593-32dd40b920d2",
-				PasswordResetExpiry = DateTime.Now.AddDays(1)
+				PasswordResetExpiry = DateTime.UtcNow.AddDays(1)
 			});
 			context.User.Add(new User()
 			{
 				Id = 4,
 				Approved = true,
-				DateCreated = DateTime.Now,
+				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",

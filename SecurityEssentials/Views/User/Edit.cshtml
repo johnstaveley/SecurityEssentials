@@ -98,7 +98,7 @@
                             }
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.DateCreated)
-                                @Html.TextBoxFor(model => model.User.DateCreated, new { @class = "form-control", disabled = "disabled" })
+                                @Html.TextBoxFor(model => model.User.DateCreated.ToLocalTime(), new { @class = "form-control", disabled = "disabled" })
                             </div>
                             <div>
                                 <input id="submit" type="submit" value="Save" class="btn btn-primary" />

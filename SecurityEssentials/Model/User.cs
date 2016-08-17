@@ -31,7 +31,7 @@ namespace SecurityEssentials.Model
 		[MaxLength(500)]
 		public string PasswordHash { get; set; }
         /// <summary>
-        /// The date the user was created
+        /// The date the user was created (UTC)
         /// </summary> 
 		[Display(Name="Date Created")]
         public DateTime DateCreated { get; set; }
@@ -103,9 +103,24 @@ namespace SecurityEssentials.Model
 		[MaxLength(500)]
 		public string EmailConfirmationToken { get; set; }		
         /// <summary>
-        /// The expiry date and time for the token to reset the password
+        /// The expiry date and time for the token to reset the password (UTC)
         /// </summary>
         public DateTime? PasswordResetExpiry { get; set; }
+
+		/// <summary>
+		/// Any new email address change request 
+		/// </summary>
+		[MaxLength(200), MinLength(7), Display(Name = "New Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "This does not appear to be a valid email address")]
+		public string NewUserName { get; set; }
+		/// <summary>
+		/// A token which can be used to change the email address which is emailed to the user
+		/// </summary>
+		[MaxLength(500)]
+		public string ChangeEmailAddressToken { get; set; }
+		/// <summary>
+		/// The expiry date and time for the token to reset the password (UTC)
+		/// </summary>
+		public DateTime? NewUserNameRequestExpiryDate { get; set; }
 
 		// Foreign Key
 		public virtual LookupItem SecurityQuestionLookupItem { get; set; }

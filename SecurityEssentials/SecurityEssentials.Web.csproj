@@ -287,6 +287,7 @@
     <Compile Include="ViewModel\ChangeSecurityInformationViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\UsersViewModel.cs" />
+    <Compile Include="ViewModel\ChangeEmailAddressViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1063,7 +1064,7 @@
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
     <Content Include="Views\Account\RegisterSuccess.cshtml" />
     <Content Include="Views\User\Log.cshtml" />
-    <Content Include="Views\User\ChangeEmailAddress.cshtml" />
+    <Content Include="Views\Account\ChangeEmailAddress.cshtml" />
     <Content Include="Views\Account\EmailVerificationSuccess.cshtml" />
     <Content Include="Views\Account\Landing.cshtml" />
     <Content Include="Views\Shared\_Recaptcha.cshtml" />

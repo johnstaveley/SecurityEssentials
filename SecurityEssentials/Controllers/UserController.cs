@@ -77,25 +77,6 @@ namespace SecurityEssentials.Controllers
 
 		#endregion
 
-		#region ChangeEmailAddress
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="id">Unique identifier for the user</param>
-		/// <returns></returns>
-		public ActionResult ChangeEmailAddress(int id)
-		{
-			var users = _context.User.Where(u => u.Id == id);
-			if (users.ToList().Count == 0) return new HttpNotFoundResult();
-			var user = users.FirstOrDefault();
-			// SECURE: Check user should have access to this account
-			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-			return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
-		}
-
-		#endregion
-
 		#region Edit
 
 		/// <summary>

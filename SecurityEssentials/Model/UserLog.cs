@@ -33,7 +33,7 @@ namespace SecurityEssentials.Model
 
         public UserLog()
         {
-			DateCreated = DateTime.Now;
+			DateCreated = DateTime.UtcNow;
         }
 
 

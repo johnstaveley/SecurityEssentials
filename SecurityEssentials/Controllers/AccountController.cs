@@ -101,7 +101,23 @@ namespace SecurityEssentials.Controllers
             return View(model);
         }
 
-        public ActionResult ChangePassword(ManageMessageId? message)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="id">Unique identifier for the user</param>
+		/// <returns></returns>
+		public ActionResult ChangeEmailAddress()
+		{
+			var userId = _userIdentity.GetUserId(this);
+			var users = _context.User.Where(u => u.Id == userId);
+			if (users.ToList().Count == 0) return new HttpNotFoundResult();
+			var user = users.FirstOrDefault();
+			// SECURE: Check user should have access to this account
+			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
+		}
+
+		public ActionResult ChangePassword(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -205,7 +221,7 @@ namespace SecurityEssentials.Controllers
                 if (user != null)
                 {
                     user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
-                    user.PasswordResetExpiry = DateTime.Now.AddMinutes(15);
+                    user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
                     // Send recovery email with link to recover password form
                     string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.",
                         _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
@@ -223,7 +239,7 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> RecoverPassword()
         {
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
-            var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.Now).FirstOrDefault();
+            var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow).FirstOrDefault();
             if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
