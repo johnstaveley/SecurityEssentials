@@ -61,18 +61,6 @@
                                 </li>
                                 @if (Request.IsAuthenticated)
                                 {
-
-                                    <li class="@(ViewBag.Active == "Security" ? "active dropdown" : "dropdown")">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Security Demo<span class="caret"></span></a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Info Disclosure", "InformationDisclosure", "Security")</li>
-                                            <li>@Html.ActionLink("AntiXss", "AntiXss", "Security")</li>
-                                            <li>@Html.ActionLink("Overposting", "OverPostingEdit", "Security", new { Id = User.Identity.GetUserId() }, null)</li>
-                                        </ul>
-                                    </li>
-                                }
-                                @if (Request.IsAuthenticated)
-                                {
                                     <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
                                         <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
                                         <ul class="dropdown-menu">

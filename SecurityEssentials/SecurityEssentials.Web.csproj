@@ -239,7 +239,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AntiForgeryControllerBase.cs" />
-    <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Core\AppConfiguration.cs" />
@@ -996,7 +995,6 @@
     <Content Include="Views\Account\RecoverPasswordSuccess.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\_Disable.cshtml" />
-    <Content Include="Views\Security\AntiXSS.cshtml" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.web.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.view.min.js.map" />
@@ -1067,7 +1065,6 @@
     <Content Include="Views\User\Log.cshtml" />
     <Content Include="Views\User\ChangeEmailAddress.cshtml" />
     <Content Include="Views\Account\EmailVerificationSuccess.cshtml" />
-    <Content Include="Views\Security\OverPostingEdit.cshtml" />
     <Content Include="Views\Account\Landing.cshtml" />
     <Content Include="Views\Shared\_Recaptcha.cshtml" />
     <Content Include="Views\Account\RecoverSuccess.cshtml" />
