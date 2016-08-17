@@ -94,6 +94,7 @@
     <Compile Include="Menus\MenuBar.cs" />
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
+    <Compile Include="Model\HttpHeader.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Pages\UserIndexPage.cs" />
     <Compile Include="Pages\BasePage.cs" />
@@ -113,9 +114,15 @@
     <Compile Include="Pages\HomePage.cs" />
     <Compile Include="Pages\PageTitles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Security.feature</DependentUpon>
+    </Compile>
     <Compile Include="Steps\BasePageSteps.cs" />
     <Compile Include="Steps\AccountLogSteps.cs" />
     <Compile Include="Steps\ChangeSecurityInformationSteps.cs" />
+    <Compile Include="Steps\HttpSteps.cs" />
     <Compile Include="Steps\LandingPageSteps.cs" />
     <Compile Include="Steps\LoginPageSteps.cs" />
     <Compile Include="Steps\ChangePasswordSteps.cs" />
@@ -128,6 +135,7 @@
     <Compile Include="Steps\NavigationSteps.cs" />
     <Compile Include="Steps\UtilitySteps.cs" />
     <Compile Include="Utility\Repeater.cs" />
+    <Compile Include="Utility\HttpWeb.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Account.feature">
@@ -148,6 +156,10 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+    <None Include="Security.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Security.feature.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
