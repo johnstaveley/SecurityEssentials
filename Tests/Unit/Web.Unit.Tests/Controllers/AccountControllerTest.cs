@@ -104,7 +104,28 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             AssertRedirectToActionReturned(result, "Landing", "Account");
         }
 
-        [TestMethod]
+		/// <summary>
+		/// SECURITY: Ensures OWASP Unvalidated redirects vulnerability does not exist
+		/// </summary>
+		/// <returns></returns>
+		[TestMethod]
+		public async Task GIVEN_CredentialsCorrectAndExternalReturnUrlProvided_WHEN_Logon_THEN_RedirectsToLandingPage()
+		{
+			// Arrange
+			LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
+			_returnUrl = "http://www.ebay.co.uk/";
+			UserManagerAttemptsLoginWithResult(true);
+			_userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
+				.Return(Task.FromResult(0));
+
+			// Act
+			var result = await _sut.LogOn(logon, _returnUrl);
+
+			// Assert
+			AssertRedirectToActionReturned(result, "Landing", "Account");
+		}
+
+		[TestMethod]
         public async Task GIVEN_CredentialsIncorrect_WHEN_Logon_THEN_ErrorViewReturned()
         {
             // Arrange
