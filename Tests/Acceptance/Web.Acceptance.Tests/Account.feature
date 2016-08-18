@@ -171,6 +171,29 @@ Scenario: I can change my password
 	# And an email is sent
 	# And a log entry is made
 
+@Ignore
+@PAT
+Scenario: I can change my email address
+	Given I navigate to the website
+	And I click login
+	And I am navigated to the 'Login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | user3@user.com    |
+	| Password | x12a;pP02icdjshER |
+	And I click the login button
+	And I am navigated to the 'Landing' page
+	And I select Admin -> Change Email Address from the menu
+	And I am navigated to the 'Change email address' page
+	And I enter the following change email address data:
+	| Field           | Value             |
+	| Password        | x12a;pP02icdjshER |
+	| NewEmailAddress | user4@user.com    |
+	When I submit the change security information form
+	Then I am navigated to the 'Change Email Address Pending' page
+	# And an email is sent
+	# And a log entry is made
+
 @PAT
 Scenario: I can change my security information
 	Given I navigate to the website

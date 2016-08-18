@@ -116,7 +116,7 @@ namespace SecurityEssentials.Model
 		/// A token which can be used to change the email address which is emailed to the user
 		/// </summary>
 		[MaxLength(500)]
-		public string ChangeEmailAddressToken { get; set; }
+		public string ChangeUserNameToken { get; set; }
 		/// <summary>
 		/// The expiry date and time for the token to reset the password (UTC)
 		/// </summary>

@@ -39,6 +39,15 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 			return page;
 		}
 
+		public AccountLogPage GotoChangeEmailAddressPage()
+		{
+			ClickMenu();
+			Click("changeEmailAddress");
+			var page = new AccountLogPage(_driver, _baseUri);
+			PageFactory.InitElements(_driver, page);
+			return page;
+		}
+
 		public AccountLogPage GotoAccountLogPage()
 		{
 			ClickMenu();

@@ -181,6 +181,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			// Assert
 			var viewModel = AssertViewResultReturnsType<ChangeEmailAddressViewModel>(result);
 			Assert.AreEqual(_testUserName, viewModel.UserName);
+			Assert.IsFalse(viewModel.IsFormLocked);
 
 		}
 

@@ -117,6 +117,44 @@ namespace SecurityEssentials.Controllers
 			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
 		}
 
+
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
+		[AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		public async Task<ActionResult> ChangeEmailAddress(ChangeEmailAddressViewModel model)
+		{
+			var user = _context.User.Where(u => u.Id == _userIdentity.GetUserId(this) && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
+			if (ModelState.IsValid)
+			{
+				var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
+				if (logonResult.Success)
+				{
+
+					if (user != null)
+						{
+						user.ChangeUserNameToken = Guid.NewGuid().ToString().Replace("-", "");
+						user.NewUserNameRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
+						user.NewUserName = model.NewUserName;
+						// Send change username with link to recover password form
+						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/ChnagePasswordConfirm?PasswordResetToken={2}'>{1}Account/RecoverPassword?ChangeEmailAddressToken={2}</a>. If you did not request this then you can ignore this email.",
+							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.ChangeUserNameToken);
+						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
+						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+						user.UserLogs.Add(new UserLog() { Description = "Change username/email address link generated and sent" });
+						_context.SaveChanges();
+						return View("ChangeEmailAddressPending");
+					}
+				}
+				else
+				{
+					ModelState.AddModelError("Password", "The password is not correct");
+				}
+			}
+			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
+
+		}
+
 		public ActionResult ChangePassword(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -131,7 +169,7 @@ namespace SecurityEssentials.Controllers
             return View(model);
         }
 
-        [HttpPost]
+		[HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]

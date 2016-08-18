@@ -139,6 +139,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			homePage.MenuBar.AdminTab.GotoManageAccountPage();
 		}
 
+		[Given(@"I select Admin -> Change Email Address from the menu")]
+		public void GivenISelectAdmin_ChangeEmailAddressFromTheMenu()
+		{
+			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
+
+			homePage.MenuBar.AdminTab.GotoChangeEmailAddressPage();
+		}
+
 		[When(@"I select Admin -> Account Log from the menu")]
 		public void GivenISelectAdmin_AccountLogFromTheMenu()
 		{
