@@ -113,10 +113,10 @@ namespace SecurityEssentials.Model
 		[MaxLength(200), MinLength(7), Display(Name = "New Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "This does not appear to be a valid email address")]
 		public string NewUserName { get; set; }
 		/// <summary>
-		/// A token which can be used to change the email address which is emailed to the user
+		/// A token which can be used to change the email address/user name which is emailed to the user
 		/// </summary>
 		[MaxLength(500)]
-		public string ChangeUserNameToken { get; set; }
+		public string NewUserNameToken { get; set; }
 		/// <summary>
 		/// The expiry date and time for the token to reset the password (UTC)
 		/// </summary>

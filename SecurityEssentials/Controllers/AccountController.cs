@@ -133,12 +133,12 @@ namespace SecurityEssentials.Controllers
 
 					if (user != null)
 						{
-						user.ChangeUserNameToken = Guid.NewGuid().ToString().Replace("-", "");
+						user.NewUserNameToken = Guid.NewGuid().ToString().Replace("-", "");
 						user.NewUserNameRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
 						user.NewUserName = model.NewUserName;
 						// Send change username with link to recover password form
-						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/ChnagePasswordConfirm?PasswordResetToken={2}'>{1}Account/RecoverPassword?ChangeEmailAddressToken={2}</a>. If you did not request this then you can ignore this email.",
-							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.ChangeUserNameToken);
+						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/NewUserNameConfirm?NewUserNameToken={2}'>{1}Account/NewUserNameConfirm?NewUserNameToken={2}</a>. If you did not request this then you can ignore this email.",
+							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewUserNameToken);
 						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
 						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 						user.UserLogs.Add(new UserLog() { Description = "Change username/email address link generated and sent" });
@@ -154,6 +154,31 @@ namespace SecurityEssentials.Controllers
 			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
 
 		}
+
+		[AllowAnonymous]
+		public async Task<ActionResult> NewUserNameConfirm()
+		{
+			var newUserNameToken = Request.QueryString["NewUserNameToken"] ?? "";
+			var user = _context.User.Where(u => u.NewUserNameToken == newUserNameToken && u.NewUserNameRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
+			if (user == null)
+			{
+				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "NewUserNameConfirm");
+				return View("Error", error);
+			}
+			if (user.Enabled == false)
+			{
+				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "NewUserNameConfirm");
+				return View("Error", error);
+			}
+			user.UserName = user.NewUserName;
+			user.NewUserName = null;
+			user.NewUserNameRequestExpiryDate = null;
+			user.NewUserNameToken = null;
+			_context.SaveChanges();
+			_userManager.SignOut();
+			return View("NewUserNameSuccess");
+		}
+
 
 		public ActionResult ChangePassword(ManageMessageId? message)
         {

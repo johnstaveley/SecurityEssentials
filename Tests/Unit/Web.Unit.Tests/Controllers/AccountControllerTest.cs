@@ -186,6 +186,30 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
+		public async Task GIVEN_ValidSubmissionData_WHEN_ChangeEmailAddress_THEN_SavesEmailsAndPendingViewReturned()
+		{
+			// Arrange
+			var model = new ChangeEmailAddressViewModel(_testUserName, null, null);
+			model.NewUserName = "joe@bloggs.com";
+			_userIdentity.Expect(e => e.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+			_userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new LogonResult() { Success = true }));
+
+			// Act
+			var result = await _sut.ChangeEmailAddress(model);
+
+			// Assert
+			AssertViewResultReturned(result, "ChangeEmailAddressPending");
+			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+			_context.AssertWasCalled(a => a.SaveChanges());
+			var user = _context.User.Include("UserLogs").Where(a => a.Id == _testUserId).First();
+			Assert.IsFalse(string.IsNullOrEmpty(user.NewUserNameToken));
+			Assert.IsNotNull(user.NewUserNameRequestExpiryDate);
+			Assert.IsFalse(string.IsNullOrEmpty(user.NewUserName));
+
+		}
+
+		[TestMethod]
         public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
         {
             // Arrange
