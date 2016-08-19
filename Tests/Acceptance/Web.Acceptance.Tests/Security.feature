@@ -15,6 +15,44 @@ Scenario: The web application will return the correct security headers
 	| X-AspNet-Version    |
 	| X-AspNetMvc-Version |
 	| Server              |
-
  
-	
+Scenario: The application will prevent a brute force login attempt
+	Given I navigate to the website
+	And I wait 45 seconds
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt1@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt2@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt3@user.com |
+	| Password | rhubarb           |
+	And I click the login button
+	And I navigate to the website
+	And I am taken to the homepage
+	And I click login
+	And I am navigated to the 'login' page
+	And I enter the following login data:
+	| Field    | Value             |
+	| UserName | attempt4@user.com |
+	| Password | rhubarb           |
+	When I click the login button
+	Then an error message is shown 'You have performed this action more than 3 times in the last 60 seconds.'
+

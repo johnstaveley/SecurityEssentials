@@ -34,6 +34,16 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(accountLogPage.IsCurrentPage);
 					ScenarioContext.Current.Set(accountLogPage);
 					break;
+				case "change email address":
+					var changeEmailAddressPage = new ChangeEmailAddressPage(webDriver, uri);
+					Assert.IsTrue(changeEmailAddressPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changeEmailAddressPage);
+					break;
+				case "change email address pending":
+					var changeEmailAddressPendingPage = new ChangeEmailAddressPendingPage(webDriver, uri);
+					Assert.IsTrue(changeEmailAddressPendingPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changeEmailAddressPendingPage);
+					break;
 				case "change password":
 					var changePasswordPage = new ChangePasswordPage(webDriver, uri);
 					Assert.IsTrue(changePasswordPage.IsCurrentPage);

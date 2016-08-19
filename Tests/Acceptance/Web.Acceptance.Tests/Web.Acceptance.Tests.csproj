@@ -96,6 +96,8 @@
     <Compile Include="Menus\TabTitles.cs" />
     <Compile Include="Model\HttpHeader.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Pages\ChangeEmailAddressPage.cs" />
+    <Compile Include="Pages\ChangeEmailAddressPendingPage.cs" />
     <Compile Include="Pages\UserIndexPage.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\AccountLogPage.cs" />
@@ -121,6 +123,7 @@
     </Compile>
     <Compile Include="Steps\BasePageSteps.cs" />
     <Compile Include="Steps\AccountLogSteps.cs" />
+    <Compile Include="Steps\ChangeEmailAddressSteps.cs" />
     <Compile Include="Steps\ChangeSecurityInformationSteps.cs" />
     <Compile Include="Steps\HttpSteps.cs" />
     <Compile Include="Steps\LandingPageSteps.cs" />
