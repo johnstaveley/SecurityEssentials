@@ -252,12 +252,12 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
+        public void WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
         {
             // Arrange
 
             // Act
-            var result = await _sut.ChangeSecurityInformation();
+            var result = _sut.ChangeSecurityInformation();
 
             // Assert
             var model = AssertViewResultReturnsType<ChangeSecurityInformationViewModel>(result);
@@ -321,12 +321,12 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task WHEN_RegisterGet_THEN_ViewReturned()
+        public void WHEN_RegisterGet_THEN_ViewReturned()
         {
             // Arrange
 
             // Act
-            var result = await _sut.Register();
+            var result = _sut.Register();
 
             // Assert
             var model = AssertViewResultReturnsType<RegisterViewModel>(result);
@@ -349,7 +349,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             AssertViewResultReturned(result, "RecoverSuccess");
             _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
-            _context.AssertWasCalled(a => a.SaveChanges());           
+            _context.AssertWasCalled(a => a.SaveChangesAsync());           
 
         }
 
@@ -399,7 +399,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-        public async Task GIVEN_ValidSubmissionData_WHEN_RecoverPasswordGet_THEN_ViewShown()
+        public void GIVEN_ValidSubmissionData_WHEN_RecoverPasswordGet_THEN_ViewShown()
         {
             // Arrange
             var requestItems = new NameValueCollection();
@@ -411,7 +411,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
 
             // Act
-            var result = await _sut.RecoverPassword();
+            var result = _sut.RecoverPassword();
 
             // Assert
             var model = AssertViewResultReturnsType<RecoverPasswordViewModel>(result);

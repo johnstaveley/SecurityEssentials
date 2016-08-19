@@ -194,6 +194,15 @@ Scenario: I can change my email address
 	# And an email is sent
 	# And a log entry is made
 
+@Ignore
+@PAT
+Scenario: When I click on a valid change email address link, I change my email address to a new one
+	When I navigate to the change email address link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
+	Then I am navigated to the 'Change Email Address Success' page
+	#And I receive an email notifying me of the email address change
+	#And the change email address token is removed from the database
+	#And a log is made of the activity
+
 @PAT
 Scenario: I can change my security information
 	Given I navigate to the website

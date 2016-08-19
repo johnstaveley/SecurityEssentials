@@ -611,6 +611,31 @@ this.FeatureBackground();
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("When I click on a valid change email address link, I change my email address to a" +
+            " new one")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
+        public virtual void WhenIClickOnAValidChangeEmailAddressLinkIChangeMyEmailAddressToANewOne()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid change email address link, I change my email address to a" +
+                    " new one", new string[] {
+                        "Ignore",
+                        "PAT"});
+#line 199
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 200
+ testRunner.When("I navigate to the change email address link with token \'83ababb4-a0c1-4f2c-8593-3" +
+                    "2dd40b920d2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 201
+ testRunner.Then("I am navigated to the \'Change Email Address Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
         [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("I can change my security information")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
@@ -618,15 +643,15 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my security information", new string[] {
                         "PAT"});
-#line 198
+#line 207
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 199
+#line 208
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 200
+#line 209
  testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 201
+#line 210
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
@@ -638,15 +663,15 @@ this.FeatureBackground();
             table15.AddRow(new string[] {
                         "Password",
                         "x12a;pP02icdjshER"});
-#line 202
+#line 211
  testRunner.And("I enter the following login data:", ((string)(null)), table15, "And ");
-#line 206
+#line 215
  testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 207
+#line 216
  testRunner.And("I am navigated to the \'Landing\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 208
+#line 217
  testRunner.And("I select Admin -> Change Security Information from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 209
+#line 218
  testRunner.And("I am navigated to the \'Change security Information\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
@@ -664,11 +689,11 @@ this.FeatureBackground();
             table16.AddRow(new string[] {
                         "SecurityAnswerConfirm",
                         "Adelweiss"});
-#line 210
+#line 219
  testRunner.And("I enter the following change security information data:", ((string)(null)), table16, "And ");
-#line 216
+#line 225
  testRunner.When("I submit the change security information form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 217
+#line 226
  testRunner.Then("I am navigated to the \'Change Security Information Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -682,17 +707,17 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can view my user activity log information", new string[] {
                         "PAT"});
-#line 222
+#line 231
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 223
+#line 232
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 224
+#line 233
  testRunner.And("I wait 15 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 226
+#line 235
  testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 227
+#line 236
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
@@ -704,17 +729,17 @@ this.FeatureBackground();
             table17.AddRow(new string[] {
                         "Password",
                         "x12a;pP02icdjshER"});
-#line 228
+#line 237
  testRunner.And("I enter the following login data:", ((string)(null)), table17, "And ");
-#line 232
+#line 241
  testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 233
+#line 242
  testRunner.And("I am navigated to the \'Landing\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 234
+#line 243
  testRunner.When("I select Admin -> Account Log from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 235
+#line 244
  testRunner.Then("I am navigated to the \'Account Log\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 236
+#line 245
  testRunner.And("I am shown the message \'Viewing ten most recent log entries for user3@user.com\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -728,15 +753,15 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("As an admin I can manage my users", new string[] {
                         "PAT"});
-#line 239
+#line 248
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 240
+#line 249
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 241
+#line 250
  testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 242
+#line 251
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
@@ -748,19 +773,19 @@ this.FeatureBackground();
             table18.AddRow(new string[] {
                         "Password",
                         "xsHDjxshdjkKK917&"});
-#line 243
- testRunner.And("I enter the following login data:", ((string)(null)), table18, "And ");
-#line 247
- testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 248
- testRunner.And("I am navigated to the \'Landing\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 249
- testRunner.And("I select Admin -> Manage Users from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 250
- testRunner.And("I am navigated to the \'Manage Users\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 251
- testRunner.When("I click on user 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 252
+ testRunner.And("I enter the following login data:", ((string)(null)), table18, "And ");
+#line 256
+ testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 257
+ testRunner.And("I am navigated to the \'Landing\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 258
+ testRunner.And("I select Admin -> Manage Users from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 259
+ testRunner.And("I am navigated to the \'Manage Users\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 260
+ testRunner.When("I click on user 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 261
  testRunner.Then("I am navigated to the \'User Edit\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
@@ -790,7 +815,7 @@ this.FeatureBackground();
             table19.AddRow(new string[] {
                         "Enabled",
                         "true"});
-#line 253
+#line 262
  testRunner.And("The following user edit information is displayed:", ((string)(null)), table19, "And ");
 #line hidden
             this.ScenarioCleanup();

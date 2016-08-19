@@ -174,7 +174,7 @@ namespace SecurityEssentials.Controllers
 			user.NewUserName = null;
 			user.NewUserNameRequestExpiryDate = null;
 			user.NewUserNameToken = null;
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 			_userManager.SignOut();
 			return View("NewUserNameSuccess");
 		}
@@ -291,7 +291,7 @@ namespace SecurityEssentials.Controllers
                     string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
                     _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                     user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
             }
             return View("RecoverSuccess");
@@ -299,7 +299,7 @@ namespace SecurityEssentials.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> RecoverPassword()
+        public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
             var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow).FirstOrDefault();
@@ -384,7 +384,7 @@ namespace SecurityEssentials.Controllers
         }
 
         [Authorize]
-        public async Task<ActionResult> ChangeSecurityInformation()
+        public ActionResult ChangeSecurityInformation()
         {
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel("", _configuration.HasRecaptcha, securityQuestions);
@@ -445,7 +445,7 @@ namespace SecurityEssentials.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Register()
+        public ActionResult Register()
         {
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var registerViewModel = new RegisterViewModel("", _configuration.HasRecaptcha, "", new User(), securityQuestions);

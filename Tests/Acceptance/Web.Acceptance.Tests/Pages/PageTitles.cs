@@ -6,6 +6,7 @@
 		public const string ACCOUNT_LOG = "Account Log" + TITLE_ROOT;
 		public const string CHANGE_EMAIL_ADDRESS = "Change Email Address" + TITLE_ROOT;
 		public const string CHANGE_EMAIL_ADDRESS_PENDING = "Change Email Address Pending" + TITLE_ROOT;
+		public const string CHANGE_EMAIL_ADDRESS_SUCCESS = "Change Email Address Success" + TITLE_ROOT;
 		public const string CHANGE_PASSWORD = "Change Password" + TITLE_ROOT;
 		public const string CHANGE_SECURITY_INFORMATION = "Change Security Information" + TITLE_ROOT;
 		public const string CHANGE_SECURITY_INFORMATION_SUCCESS = "Change Security Information Success" + TITLE_ROOT;

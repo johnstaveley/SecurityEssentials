@@ -8,6 +8,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	public class ChangeEmailAddressSteps
 	{
 
+		[When(@"I navigate to the change email address link with token '(.*)'")]
+		public void WhenINavigateToTheChangeEmailAddressLinkWithToken(string newUserNameToken)
+		{
+			var changeEmailAddressConfirmPage = ChangeEmailAddressConfirmPage.NavigateToPage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri(), newUserNameToken);
+		}
+
+
 		[Given(@"I enter the following change email address data:")]
 		public void GivenIEnterTheFollowingChangeEmailAddressData(Table table)
 		{
