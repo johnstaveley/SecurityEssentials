@@ -191,7 +191,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		public string GetUserName()
 		{
-			return this.UserName.GetAttribute("value");
+			return this.UserName.Text;
 		}
 
 		public void ClickSubmit()

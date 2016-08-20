@@ -16,7 +16,7 @@ namespace SecurityEssentials.Model
 
 		public int Id { get; set; }
 		/// <summary>
-		/// The email address of the user and username used to login to the application
+		/// The email address of the user and used as the username to login to the application
 		/// </summary>
 		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage="This does not appear to be a valid email address")]
 		public string UserName { get; set; }
@@ -111,16 +111,16 @@ namespace SecurityEssentials.Model
 		/// Any new email address change request 
 		/// </summary>
 		[MaxLength(200), MinLength(7), Display(Name = "New Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "This does not appear to be a valid email address")]
-		public string NewUserName { get; set; }
+		public string NewEmailAddress { get; set; }
 		/// <summary>
 		/// A token which can be used to change the email address/user name which is emailed to the user
 		/// </summary>
 		[MaxLength(500)]
-		public string NewUserNameToken { get; set; }
+		public string NewEmailAddressToken { get; set; }
 		/// <summary>
-		/// The expiry date and time for the token to reset the password (UTC)
+		/// The expiry date and time for the token to change the email address (UTC)
 		/// </summary>
-		public DateTime? NewUserNameRequestExpiryDate { get; set; }
+		public DateTime? NewEmailAddressRequestExpiryDate { get; set; }
 
 		// Foreign Key
 		public virtual LookupItem SecurityQuestionLookupItem { get; set; }

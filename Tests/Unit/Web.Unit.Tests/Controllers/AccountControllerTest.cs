@@ -203,10 +203,41 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
 			_context.AssertWasCalled(a => a.SaveChanges());
 			var user = _context.User.Include("UserLogs").Where(a => a.Id == _testUserId).First();
-			Assert.IsFalse(string.IsNullOrEmpty(user.NewUserNameToken));
-			Assert.IsNotNull(user.NewUserNameRequestExpiryDate);
-			Assert.IsFalse(string.IsNullOrEmpty(user.NewUserName));
+			Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddressToken));
+			Assert.IsNotNull(user.NewEmailAddressRequestExpiryDate);
+			Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddress));
 
+		}
+
+		[TestMethod]
+		public async Task GIVEN_ValidChangeEmailAddressToken_WHEN_ChangeEmailAddressConfirmGet_THEN_SuccessViewShown()
+		{
+			// Arrange
+			var requestItems = new NameValueCollection();
+			var newEmaiLAddress = "samuel@pepys.com";
+			var changeEmailAddressToken = "testchangetoken1";
+			requestItems.Add("NewEmailAddressToken", changeEmailAddressToken);
+			_httpRequest.Stub(a => a.QueryString).Return(requestItems);
+			var user = _context.User.Where(u => u.Id == _testUserId).First();
+			user.NewEmailAddressToken = changeEmailAddressToken;
+			user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
+			user.NewEmailAddress = newEmaiLAddress;
+
+			// Act
+			var result = await _sut.ChangeEmailAddressConfirm();
+
+			// Assert
+			AssertViewResultReturned(result, "ChangeEmailAddressSuccess");
+			Assert.IsNull(user.NewEmailAddressRequestExpiryDate);
+			Assert.IsNull(user.NewEmailAddress);
+			Assert.IsNull(user.NewEmailAddressToken);
+			Assert.AreEqual(newEmaiLAddress, user.UserName);
+			Assert.AreEqual(3, user.UserLogs.Count, "Account activity was not logged");
+			Assert.IsTrue(user.UserLogs.Any(a => a.Description.Contains(user.UserName)));
+			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything), options => options.Repeat.Times(2));
+			_userManager.AssertWasCalled(a => a.SignOut());
+			_context.AssertWasCalled(a => a.SaveChangesAsync());
 		}
 
 		[TestMethod]

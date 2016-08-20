@@ -114,7 +114,7 @@ namespace SecurityEssentials.Controllers
 			var user = users.FirstOrDefault();
 			// SECURE: Check user should have access to this account
 			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
+			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
 		}
 
 
@@ -133,15 +133,15 @@ namespace SecurityEssentials.Controllers
 
 					if (user != null)
 						{
-						user.NewUserNameToken = Guid.NewGuid().ToString().Replace("-", "");
-						user.NewUserNameRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
-						user.NewUserName = model.NewUserName;
+						user.NewEmailAddressToken = Guid.NewGuid().ToString().Replace("-", "");
+						user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
+						user.NewEmailAddress = model.NewUserName;
 						// Send change username with link to recover password form
-						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/NewUserNameConfirm?NewUserNameToken={2}'>{1}Account/NewUserNameConfirm?NewUserNameToken={2}</a>. If you did not request this then you can ignore this email.",
-							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewUserNameToken);
+						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/ChangeEmailAddresConfirm?NewEmailAddressToken={2}'>{1}Account/ChangeEmailAddresConfirm?NewEmailAddressToken={2}</a>. If you did not request this then you can ignore this email.",
+							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
 						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
 						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-						user.UserLogs.Add(new UserLog() { Description = "Change username/email address link generated and sent" });
+						user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request started to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
 						_context.SaveChanges();
 						return View("ChangeEmailAddressPending");
 					}
@@ -151,32 +151,40 @@ namespace SecurityEssentials.Controllers
 					ModelState.AddModelError("Password", "The password is not correct");
 				}
 			}
-			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewUserName, user.NewUserNameRequestExpiryDate));
+			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
 
 		}
 
 		[AllowAnonymous]
-		public async Task<ActionResult> NewUserNameConfirm()
+		public async Task<ActionResult> ChangeEmailAddressConfirm()
 		{
-			var newUserNameToken = Request.QueryString["NewUserNameToken"] ?? "";
-			var user = _context.User.Where(u => u.NewUserNameToken == newUserNameToken && u.NewUserNameRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
+			var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
+			var user = _context.User.Where(u => u.NewEmailAddressToken == newEmaiLAddressToken && u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
 			if (user == null)
 			{
-				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "NewUserNameConfirm");
+				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "NewEmailAddressConfirm");
 				return View("Error", error);
 			}
 			if (user.Enabled == false)
 			{
-				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "NewUserNameConfirm");
+				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "NewEmailAddressConfirm");
 				return View("Error", error);
 			}
-			user.UserName = user.NewUserName;
-			user.NewUserName = null;
-			user.NewUserNameRequestExpiryDate = null;
-			user.NewUserNameToken = null;
+			user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request confirmed to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
+			string emailSubject = string.Format("{0} - Change email address process completed", _configuration.ApplicationName);
+			string emailBody = string.Format("A request has been completed to change your {0} username/email address from {1} to {2}. This email address can no longer be used to sign into the account. If you did not request this then please contact the website administration asap.",
+				_configuration.ApplicationName, user.UserName, user.NewEmailAddressToken);
+			_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
+			user.UserName = user.NewEmailAddress;
+			user.NewEmailAddress = null;
+			user.NewEmailAddressRequestExpiryDate = null;
+			user.NewEmailAddressToken = null;
+			emailBody = string.Format("A request has been completed to change your {0} username/email address to {1}. This email address can now be used to log into the application.",
+				_configuration.ApplicationName, user.UserName);
+			_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 			await _context.SaveChangesAsync();
 			_userManager.SignOut();
-			return View("NewUserNameSuccess");
+			return View("ChangeEmailAddressSuccess");
 		}
 
 
@@ -248,7 +256,7 @@ namespace SecurityEssentials.Controllers
             }
             user.EmailVerified = true;
             user.EmailConfirmationToken = null;
-            user.UserLogs.Add(new UserLog() { Description = "User Confirmed Email Address" });
+            user.UserLogs.Add(new UserLog() { Description = "User Verified Email Address" });
             await _context.SaveChangesAsync();
             return View("EmailVerificationSuccess");
         }

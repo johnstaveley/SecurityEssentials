@@ -1074,7 +1074,7 @@
     <Content Include="Views\Account\ChangeSecurityInformation.cshtml" />
     <Compile Include="ViewModel\RecoverPasswordViewModel.cs" />
     <Content Include="Views\Account\ChangeEmailAddressPending.cshtml" />
-    <Content Include="Views\Account\NewUserNameSuccess.cshtml" />
+    <Content Include="Views\Account\ChangeEmailAddressSuccess.cshtml" />
     <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

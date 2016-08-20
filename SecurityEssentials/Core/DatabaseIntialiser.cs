@@ -100,7 +100,27 @@ namespace SecurityEssentials.Core
 				Title = "Mrs",
 				UserName = "user3@user.com"
 			});
-            encryptor.Dispose();
+			context.User.Add(new User()
+			{
+				Id = 5,
+				Approved = true,
+				DateCreated = DateTime.UtcNow,
+				EmailVerified = true,
+				Enabled = true,
+				FirstName = "Standard",
+				LastName = "User",
+				TelNoMobile = "07881231234",
+				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				Salt = salt, // Password x12a;pP02icdjshER
+				SecurityAnswer = encryptedSecurityAnswer,
+				SecurityQuestionLookupItemId = 271,
+				Title = "Mr",
+				UserName = "user4@user.com",
+				NewEmailAddress = "samuel@pepys.org",
+				NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddDays(1),
+				NewEmailAddressToken = "B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F"
+			});
+			encryptor.Dispose();
 
 			// Lookup Types
 			context.LookupType.Add(new LookupType() { Id = 1, Description = "Bad passwords" }); // SECURE: I've only included passwords which comply with the password policy (ignorning case)

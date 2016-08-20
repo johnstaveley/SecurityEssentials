@@ -6,10 +6,11 @@
 Background: 
 	Given I delete all cookies from the cache 
 	#Given the following users are setup in the database:
-	#| # | UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry |
-	#| # | user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
-	#| # | user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |
-	#| # | user3@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |
+	#| UserName       | FirstName | LastName | Password          | LastLoginAttempt | SecurityQuestion                    | SecurityAnswer | PasswordResetToken                   | PasswordResetExpiry | NewEmailAddress  | NewEmailAddressToken                 | NewEmailAddressRequestExpiryDate |
+	#| user@user.com  | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |                  |                                      |                                  |
+	#| user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |                  |                                      |                                  |
+	#| user3@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |                  |                                      |                                  |
+	#| user4@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     | samuel@pepys.org | B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F | [One day from now]               |
 
 Scenario: Home Page Loads 
 	Given I navigate to the website
@@ -179,7 +180,7 @@ Scenario: I can change my email address
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
-	| UserName | user3@user.com    |
+	| UserName | user4@user.com    |
 	| Password | x12a;pP02icdjshER |
 	And I click the login button
 	And I am navigated to the 'Landing' page
@@ -194,12 +195,12 @@ Scenario: I can change my email address
 	# And an email is sent
 	# And a log entry is made
 
-@Ignore
 @PAT
 Scenario: When I click on a valid change email address link, I change my email address to a new one
-	When I navigate to the change email address link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
+	When I navigate to the change email address link with token 'B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F'
 	Then I am navigated to the 'Change Email Address Success' page
 	#And I receive an email notifying me of the email address change
+	#And The new email address receives an email notifying of the change
 	#And the change email address token is removed from the database
 	#And a log is made of the activity
 
