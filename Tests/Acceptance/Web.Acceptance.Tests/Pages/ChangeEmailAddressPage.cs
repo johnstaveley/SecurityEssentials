@@ -17,7 +17,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		
 		private IWebElement NewUserName
 		{
-			get { return this.GetVisibleWebElement(By.Id("NewUserName")); }
+			get { return this.GetVisibleWebElement(By.Id("NewEmailAddress")); }
 		}
 
 		private IWebElement ChangeButton

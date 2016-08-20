@@ -11,6 +11,7 @@ Background:
 	#| user2@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     | 83ababb4-a0c1-4f2c-8593-32dd40b920d2 | [One day from now]  |                  |                                      |                                  |
 	#| user3@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |                  |                                      |                                  |
 	#| user4@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     | samuel@pepys.org | B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F | [One day from now]               |
+	#| user5@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |                  |                                      |                                  |
 
 Scenario: Home Page Loads 
 	Given I navigate to the website
@@ -172,7 +173,6 @@ Scenario: I can change my password
 	# And an email is sent
 	# And a log entry is made
 
-@Ignore
 @PAT
 Scenario: I can change my email address
 	Given I navigate to the website
@@ -180,7 +180,7 @@ Scenario: I can change my email address
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
-	| UserName | user4@user.com    |
+	| UserName | user5@user.com    |
 	| Password | x12a;pP02icdjshER |
 	And I click the login button
 	And I am navigated to the 'Landing' page
@@ -189,7 +189,7 @@ Scenario: I can change my email address
 	And I enter the following change email address data:
 	| Field           | Value             |
 	| Password        | x12a;pP02icdjshER |
-	| NewEmailAddress | user4@user.com    |
+	| NewEmailAddress | joe@bloggs.com    |
 	When I submit the change security information form
 	Then I am navigated to the 'Change Email Address Pending' page
 	# And an email is sent
@@ -258,17 +258,17 @@ Scenario: As an admin I can manage my users
 	And I am navigated to the 'Landing' page
 	And I select Admin -> Manage Users from the menu
 	And I am navigated to the 'Manage Users' page
-	When I click on user 3
+	When I click on user 1
 	Then I am navigated to the 'User Edit' page
 	And The following user edit information is displayed:
-	| Field                 | Value          |
-	| UserName              | user3@user.com |
-	| Title                 | Mrs            |
-	| FirstName             | Standard       |
-	| Surname               | User3          |
-	| MobileTelephoneNumber | 07881231234    |
-	| Approved              | true           |
-	| EmailVerified         | true           |
-	| Enabled               | true           |
+	| Field                 | Value           |
+	| UserName              | admin@admin.com |
+	| Title                 | Mrs             |
+	| FirstName             | Admin           |
+	| Surname               | User            |
+	| MobileTelephoneNumber | 07740101235     |
+	| Approved              | true            |
+	| EmailVerified         | true            |
+	| Enabled               | true            |
 
 

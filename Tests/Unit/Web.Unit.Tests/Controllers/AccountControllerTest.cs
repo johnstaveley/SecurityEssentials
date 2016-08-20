@@ -180,7 +180,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var viewModel = AssertViewResultReturnsType<ChangeEmailAddressViewModel>(result);
-			Assert.AreEqual(_testUserName, viewModel.UserName);
+			Assert.AreEqual(_testUserName, viewModel.EmailAddress);
 			Assert.IsFalse(viewModel.IsFormLocked);
 
 		}
@@ -190,7 +190,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			// Arrange
 			var model = new ChangeEmailAddressViewModel(_testUserName, null, null);
-			model.NewUserName = "joe@bloggs.com";
+			model.NewEmailAddress = "joe@bloggs.com";
 			_userIdentity.Expect(e => e.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
 			_userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new LogonResult() { Success = true }));
 
