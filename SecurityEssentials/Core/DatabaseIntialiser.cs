@@ -120,6 +120,23 @@ namespace SecurityEssentials.Core
 				NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddDays(1),
 				NewEmailAddressToken = "B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F"
 			});
+			context.User.Add(new User()
+			{
+				Id = 6,
+				Approved = true,
+				DateCreated = DateTime.UtcNow,
+				EmailVerified = true,
+				Enabled = true,
+				FirstName = "Standard",
+				LastName = "User",
+				TelNoMobile = "07881231234",
+				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				Salt = salt, // Password x12a;pP02icdjshER
+				SecurityAnswer = encryptedSecurityAnswer,
+				SecurityQuestionLookupItemId = 271,
+				Title = "Mr",
+				UserName = "user5@user.com"
+			});
 			encryptor.Dispose();
 
 			// Lookup Types

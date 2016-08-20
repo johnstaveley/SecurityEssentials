@@ -12,25 +12,25 @@ namespace SecurityEssentials.ViewModel
     {
 
 		[Display(Name ="Current Email Address")]
-		public string UserName { get; set; }
+		public string EmailAddress { get; set; }
 
 		[Display(Name = "Enter New Email Address")]
-		public string NewUserName { get; set; }
+		public string NewEmailAddress { get; set; }
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
 		[Display(Name = "Re-Enter Password")]
 		public string Password { get; set; }
 
-		public DateTime? NewUserNameRequestExpiryDate { get; set; }
+		public DateTime? NewEmailAddressRequestExpiryDate { get; set; }
 
 		public bool IsFormLocked { get; set; }
 
-		public ChangeEmailAddressViewModel(string userName, string newUserName, DateTime? newUserNameRequestExpiryDate)
+		public ChangeEmailAddressViewModel(string emailAddress, string newEmailAddress, DateTime? newUserNameRequestExpiryDate)
         {
-            UserName = userName;
-			NewUserName = newUserName;
-			NewUserNameRequestExpiryDate = newUserNameRequestExpiryDate.HasValue ? (DateTime?) newUserNameRequestExpiryDate.Value.ToLocalTime() : null;
+            EmailAddress = emailAddress;
+			NewEmailAddress = newEmailAddress;
+			NewEmailAddressRequestExpiryDate = newUserNameRequestExpiryDate.HasValue ? (DateTime?) newUserNameRequestExpiryDate.Value.ToLocalTime() : null;
 			IsFormLocked = newUserNameRequestExpiryDate.HasValue ? newUserNameRequestExpiryDate.Value > DateTime.UtcNow : false;
 
 		}

@@ -12,9 +12,6 @@
     <hr />
     @Html.ValidationSummary()
     <div class="row">
-        TODO: This is work in progress!
-    </div>
-    <div class="row">
         To change your email address, please enter your password and the new email address, an email confirmation link will be then sent to your own address to confirm the change. At this point your new email address will become active. All changes will be logged.
         This page should show any pending email change requests. The Administrator can always change email addresses from the user list page.
     </div>
@@ -22,13 +19,13 @@
     if (Model.IsFormLocked)
     {
         <div class="jumbotron">
-            There is an outstanding request to change the email address from @Model.UserName to @Model.NewUserName Until this request expires at @Model.NewUserNameRequestExpiryDate.Value.ToString("dd/MM/yyyy HH:mm") a new change request cannot be issued.
+            There is an outstanding request to change the email address from @Model.EmailAddress to @Model.NewEmailAddress Until this request expires at @Model.NewEmailAddressRequestExpiryDate.Value.ToString("dd/MM/yyyy HH:mm") a new change request cannot be issued.
         </div>
     }
     else {
         <div class="row">
-            @Html.LabelFor(model => model.UserName, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">@Html.DisplayTextFor(model => model.UserName)</div>
+            @Html.LabelFor(model => model.EmailAddress, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">@Html.DisplayTextFor(model => model.EmailAddress)</div>
         </div>
         <div class="row">
             @Html.LabelFor(model => model.Password, new { @class = "col-md-4 control-label" })
@@ -38,10 +35,10 @@
             </div>
         </div>
         <div class="row">
-            @Html.LabelFor(model => model.NewUserName, new { @class = "col-md-4 control-label" })
+            @Html.LabelFor(model => model.NewEmailAddress, new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
-                @Html.TextBoxFor(model => model.NewUserName, new { @class = "form-control", autocomplete = "off" })
-                @Html.ValidationMessageFor(model => model.NewUserName)
+                @Html.TextBoxFor(model => model.NewEmailAddress, new { @class = "form-control", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.NewEmailAddress)
             </div>
         </div>
         <div class="row">
