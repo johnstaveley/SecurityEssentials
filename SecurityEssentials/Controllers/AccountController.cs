@@ -101,11 +101,6 @@ namespace SecurityEssentials.Controllers
             return View(model);
         }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="id">Unique identifier for the user</param>
-		/// <returns></returns>
 		public ActionResult ChangeEmailAddress()
 		{
 			var userId = _userIdentity.GetUserId(this);
@@ -117,14 +112,14 @@ namespace SecurityEssentials.Controllers
 			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
 		}
 
-
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
 		[AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
 		public async Task<ActionResult> ChangeEmailAddress(ChangeEmailAddressViewModel model)
 		{
-			var user = _context.User.Where(u => u.Id == _userIdentity.GetUserId(this) && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
+			var userId = _userIdentity.GetUserId(this);
+			var user = _context.User.Where(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
 			if (ModelState.IsValid)
 			{
 				var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);

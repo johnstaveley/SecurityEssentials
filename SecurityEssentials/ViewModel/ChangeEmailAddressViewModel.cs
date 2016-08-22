@@ -34,6 +34,10 @@ namespace SecurityEssentials.ViewModel
 			IsFormLocked = newUserNameRequestExpiryDate.HasValue ? newUserNameRequestExpiryDate.Value > DateTime.UtcNow : false;
 
 		}
-		
+
+		public ChangeEmailAddressViewModel()
+		{
+
+		}
     }
 }
