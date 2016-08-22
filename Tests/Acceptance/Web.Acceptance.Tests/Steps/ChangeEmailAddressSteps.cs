@@ -8,6 +8,13 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	public class ChangeEmailAddressSteps
 	{
 
+		[When(@"I submit the change email address form")]
+		public void WhenISubmitTheChangeEmailAddressForm()
+		{
+			var changeEmailAddressPage = ScenarioContext.Current.GetPage<ChangeEmailAddressPage>();
+			changeEmailAddressPage.ClickSubmit();
+		}
+
 		[When(@"I navigate to the change email address link with token '(.*)'")]
 		public void WhenINavigateToTheChangeEmailAddressLinkWithToken(string newUserNameToken)
 		{

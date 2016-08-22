@@ -190,7 +190,7 @@ Scenario: I can change my email address
 	| Field           | Value             |
 	| Password        | x12a;pP02icdjshER |
 	| NewEmailAddress | joe@bloggs.com    |
-	When I submit the change security information form
+	When I submit the change email address form
 	Then I am navigated to the 'Change Email Address Pending' page
 	# And an email is sent
 	# And a log entry is made

@@ -18,7 +18,7 @@ namespace SecurityEssentials.Model
 		/// <summary>
 		/// The email address of the user and used as the username to login to the application
 		/// </summary>
-		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage="This does not appear to be a valid email address")]
+		[MaxLength(200), Required, MinLength(7), Display(Name="Email Address"), RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage="This does not appear to be a valid email address"), Index(IsUnique = true)]
 		public string UserName { get; set; }
         /// <summary>
         /// An enryption salt which is used to encrypt the password

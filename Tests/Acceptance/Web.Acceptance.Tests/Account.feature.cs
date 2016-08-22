@@ -601,7 +601,7 @@ this.FeatureBackground();
 #line 189
  testRunner.And("I enter the following change email address data:", ((string)(null)), table14, "And ");
 #line 193
- testRunner.When("I submit the change security information form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I submit the change email address form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 194
  testRunner.Then("I am navigated to the \'Change Email Address Pending\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

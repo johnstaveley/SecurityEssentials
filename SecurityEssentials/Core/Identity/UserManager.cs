@@ -23,7 +23,7 @@ namespace SecurityEssentials.Core.Identity
         private readonly ISEContext _context;
         private readonly IAppConfiguration _configuration;
 		private readonly IEncryption _encryption;
-        private readonly string _passwordValidityRegex = @"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
+        private readonly string _passwordValidityRegex = @"^.*(?=.{8,100})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string _passwordInvalidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
         #endregion
