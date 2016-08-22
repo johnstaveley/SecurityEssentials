@@ -168,6 +168,7 @@
     <Compile Include="Controllers\UserControllerTest.cs" />
     <Compile Include="Controllers\ValidateAntiForgeryTokenTest.cs" />
     <Compile Include="Controllers\AuthorizeTest.cs" />
+    <Compile Include="Core\Identity\UserStoreTests.cs" />
     <Compile Include="Core\Identity\UserManagerTests.cs" />
     <Compile Include="Core\Security\EncryptionTests.cs" />
     <Compile Include="Core\Security\SecuredPasswordTests.cs" />

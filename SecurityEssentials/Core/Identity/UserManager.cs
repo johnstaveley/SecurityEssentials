@@ -145,7 +145,7 @@ namespace SecurityEssentials.Core.Identity
 
         #region Find
 
-        public async Task<User> FindById(int userId)
+        public async Task<User> FindByIdAsync(int userId)
         {
             return await _userStore.FindByIdAsync(userId).ConfigureAwait(false);
         }
@@ -189,7 +189,7 @@ namespace SecurityEssentials.Core.Identity
 
 		public async Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
 		{
-			var user = await FindById(userId);
+			var user = await FindByIdAsync(userId);
 			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{
@@ -205,7 +205,7 @@ namespace SecurityEssentials.Core.Identity
 
 		public async Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
 		{
-			var user = await FindById(userId);
+			var user = await FindByIdAsync(userId);
 			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{

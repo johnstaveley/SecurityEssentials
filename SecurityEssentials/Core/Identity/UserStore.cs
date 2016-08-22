@@ -5,18 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Security;
 
 namespace SecurityEssentials.Core.Identity
 {
 
-    public class UserStore<TUser> : IUserStore<User, int>, IUserPasswordStore<User, int>, IDisposable
+	public class UserStore<TUser> : IUserStore<User, int>, IUserPasswordStore<User, int>, IDisposable
     {
 
         #region Declarations
@@ -49,8 +44,10 @@ namespace SecurityEssentials.Core.Identity
             _context.User.Add(user);
 			_context.SetConfigurationValidateOnSaveEnabled(false);
 
-            if (await this._context.SaveChangesAsync().ConfigureAwait(false) == 0)
-                throw new Exception("Error creating new user");
+			if (await this._context.SaveChangesAsync().ConfigureAwait(false) == 0)
+			{
+				throw new Exception("Error creating new user");
+			}
 
         }
 
@@ -210,7 +207,7 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordResetExpiry = null;
                 user.PasswordResetToken = null;
                 user.FailedLogonAttemptCount = 0;
-				user.UserLogs.Add(new UserLog() { Description = "Password reset using token" });
+				user.UserLogs.Add(new UserLog() { Description = "Password changed using token" });
             }
             await this._context.SaveChangesAsync().ConfigureAwait(false);
             return new IdentityResult();
@@ -224,9 +221,12 @@ namespace SecurityEssentials.Core.Identity
             {
                 user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
                 user.Salt = Convert.ToBase64String(securedPassword.Salt);
-            }
-			user.UserLogs.Add(new UserLog() { Description = "Password changed" });
-            return await this._context.SaveChangesAsync().ConfigureAwait(false);
+				user.PasswordResetExpiry = null;
+				user.PasswordResetToken = null;
+				user.FailedLogonAttemptCount = 0;
+				user.UserLogs.Add(new UserLog() { Description = "Password changed" });
+			}
+			return await this._context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion
