@@ -365,7 +365,7 @@ namespace SecurityEssentials.Controllers
             }
             if (ModelState.IsValid && recaptchaSuccess)
             {
-                var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
+                var result = await _userManager.ChangePasswordAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
                 if (result.Succeeded)
                 {
                     _context.SaveChanges();

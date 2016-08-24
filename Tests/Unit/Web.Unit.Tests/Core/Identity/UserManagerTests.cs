@@ -6,18 +6,16 @@ using SecurityEssentials.Model;
 using System.Collections.Generic;
 using Rhino.Mocks;
 using SecurityEssentials.Unit.Tests.TestDbSet;
-using Microsoft.AspNet.Identity;
-using System;
 using System.Threading.Tasks;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
 
-    [TestClass]
+	[TestClass]
     public class UserManagerTests
     {
 
-        IUserManager _sut;
+        AppUserManager _sut;
         IAppConfiguration _configuration;
 		IEncryption _encryption;
         ISEContext _context;
@@ -45,7 +43,43 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_encryption.VerifyAllExpectations();
 			_userStore.VerifyAllExpectations();
         }
-        
+
+		[TestMethod]
+		public async Task GIVEN_ValidDetails_WHEN_ChangePassword_THEN_PasswordChanged()
+		{
+			// Arrange
+			var userId = 1;
+			var oldPassword = "oldPassword910";
+			var newPassword = "newPassword345";
+			_userStore.Expect(a => a.ChangePasswordAsync(userId, oldPassword, newPassword)).Return(Task.FromResult(0));
+			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User() { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "blah" }));
+
+			// Act
+			var result = await _sut.ChangePasswordAsync(userId, oldPassword, newPassword);
+
+			// Assert
+			Assert.IsTrue(result.Succeeded);
+
+		}
+
+		[TestMethod]
+		public async Task GIVEN_PersonalInformationUsed_WHEN_ChangePassword_THEN_PasswordNotChanged()
+		{
+			// Arrange
+			var userId = 1;
+			var oldPassword = "oldPassword910";
+			var newPassword = "Joseph345";
+			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User() { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "blah" }));
+
+			// Act
+			var result = await _sut.ChangePasswordAsync(userId, oldPassword, newPassword);
+
+			// Assert
+			Assert.IsFalse(result.Succeeded);
+			_userStore.AssertWasNotCalled(a => a.ChangePasswordAsync(userId, oldPassword, newPassword));
+
+		}
+
 		[TestMethod]
 		public async Task GIVEN_ValidDetails_WHEN_CreateUser_THEN_UserCreatedSuccess()
 		{

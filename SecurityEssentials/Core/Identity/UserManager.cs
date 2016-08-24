@@ -204,21 +204,6 @@ namespace SecurityEssentials.Core.Identity
 
 		}
 
-		public async Task<SEIdentityResult> ChangePasswordFromTokenAsync(int userId, string oldPassword, string newPassword)
-		{
-			var user = await FindByIdAsync(userId);
-			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
-			if (result.Succeeded)
-			{
-				await _userStore.ChangePasswordFromTokenAsync(userId, oldPassword, newPassword);
-				return new SEIdentityResult();
-			}
-			else
-			{
-				return result;
-			}
-		}
-
         #endregion
 
 		/// <summary>
