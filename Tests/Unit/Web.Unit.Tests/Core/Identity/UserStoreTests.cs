@@ -43,7 +43,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			// Arrange
 
 			// Act
-			var result = await _sut.FindAndCheckLogonAsync(_testUser.UserName, "xsHDjxshdjkKK917&");
+			var result = await _sut.TryLogOnAsync(_testUser.UserName, "xsHDjxshdjkKK917&");
 
 			// Assert
 			Assert.IsTrue(result.Success);
@@ -58,7 +58,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			// Arrange
 
 			// Act
-			var result = await _sut.FindAndCheckLogonAsync(_testUser.UserName, "rubbish");
+			var result = await _sut.TryLogOnAsync(_testUser.UserName, "rubbish");
 
 			// Assert
 			Assert.IsFalse(result.Success);

@@ -4,17 +4,14 @@ using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Text.RegularExpressions;
-using System.Configuration;
-using System.Web.Security;
 
 namespace SecurityEssentials.Core.Identity
 {
 
-    public class AppUserManager : IUserManager, IDisposable
+	public class AppUserManager : IUserManager, IDisposable
     {
 
         #region Declarations
@@ -146,19 +143,19 @@ namespace SecurityEssentials.Core.Identity
 
         #region Find
 
-        public async Task<User> FindByIdAsync(int userId)
+        public async Task<User> FindUserByIdAsync(int userId)
         {
             return await _userStore.FindByIdAsync(userId).ConfigureAwait(false);
         }
 
-		public async Task<LogonResult> TrySignInAsync(string userName, string password)
+		public async Task<LogonResult> TryLogOnAsync(string userName, string password)
         {
-            return await _userStore.FindAndCheckLogonAsync(userName, password).ConfigureAwait(false);
+            return await _userStore.TryLogOnAsync(userName, password).ConfigureAwait(false);
         }
 
 		#endregion
 
-        public async Task SignInAsync(string userName, bool isPersistent)
+        public async Task LogOnAsync(string userName, bool isPersistent)
         {
             var user = await _userStore.FindByNameAsync(userName);
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
@@ -190,7 +187,7 @@ namespace SecurityEssentials.Core.Identity
 
 		public async Task<SEIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
 		{
-			var user = await FindByIdAsync(userId);
+			var user = await FindUserByIdAsync(userId);
 			var result = ValidatePassword(newPassword, new List<string>() { user.FirstName, user.LastName, user.SecurityAnswer });
 			if (result.Succeeded)
 			{

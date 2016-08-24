@@ -133,7 +133,7 @@ namespace SecurityEssentials.Core.Identity
 		/// <param name="userName"></param>
 		/// <param name="password"></param>
 		/// <returns></returns>
-		public async Task<LogonResult> FindAndCheckLogonAsync(string userName, string password)
+		public async Task<LogonResult> TryLogOnAsync(string userName, string password)
         {
 
             var user = await this._context.User.SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved && u.EmailVerified).ConfigureAwait(false);

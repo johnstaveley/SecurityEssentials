@@ -83,10 +83,10 @@ namespace SecurityEssentials.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.TrySignInAsync(model.UserName, model.Password);
+                var user = await _userManager.TryLogOnAsync(model.UserName, model.Password);
                 if (user.Success)
                 {
-                    await _userManager.SignInAsync(user.UserName, model.RememberMe);
+                    await _userManager.LogOnAsync(user.UserName, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -122,7 +122,7 @@ namespace SecurityEssentials.Controllers
 			var user = _context.User.Where(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
 			if (ModelState.IsValid)
 			{
-				var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
+				var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
 				if (logonResult.Success)
 				{
 
@@ -369,7 +369,7 @@ namespace SecurityEssentials.Controllers
                 if (result.Succeeded)
                 {
                     _context.SaveChanges();
-                    await _userManager.SignInAsync(user.UserName, false);
+                    await _userManager.LogOnAsync(user.UserName, false);
                     return View("RecoverPasswordSuccess");
                 }
                 else
@@ -409,7 +409,7 @@ namespace SecurityEssentials.Controllers
                 {
                     _recaptcha.ValidateRecaptcha(this);
                 }
-                var logonResult = await _userManager.TrySignInAsync(_userIdentity.GetUserName(this), model.Password);
+                var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
                 if (recaptchaSuccess && logonResult.Success)
                 {
                     if (model.SecurityAnswer == model.SecurityAnswerConfirm)

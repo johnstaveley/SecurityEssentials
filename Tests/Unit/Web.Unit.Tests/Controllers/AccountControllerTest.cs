@@ -92,7 +92,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
             UserManagerAttemptsLoginWithResult(true);
-            _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
+            _userManager.Expect(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return(Task.FromResult(0));
 
             // Act
@@ -113,7 +113,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
 			_returnUrl = "http://www.ebay.co.uk/";
 			UserManagerAttemptsLoginWithResult(true);
-			_userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
+			_userManager.Expect(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
 				.Return(Task.FromResult(0));
 
 			// Act
@@ -136,7 +136,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             AssertViewResultWithError(result, "Invalid credentials or the account is locked");
-            _userManager.AssertWasNotCalled(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+            _userManager.AssertWasNotCalled(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
             _services.AssertWasCalled(a => a.Wait(Arg<int>.Matches(b => b >= 500)));
         }
 
@@ -192,7 +192,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			var model = new ChangeEmailAddressViewModel(_testUserName, null, null);
 			model.NewEmailAddress = "joe@bloggs.com";
 			_userIdentity.Expect(e => e.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
-			_userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new LogonResult() { Success = true }));
+			_userManager.Expect(a => a.TryLogOnAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new LogonResult() { Success = true }));
 
 			// Act
 			var result = await _sut.ChangeEmailAddress(model);
@@ -304,7 +304,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 SecurityAnswer = "a",
                 SecurityAnswerConfirm = "a"
             };
-            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+            _userManager.Expect(a => a.TryLogOnAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(Task.FromResult(new LogonResult() {  Success = true, UserName = _testUserName }));
             _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
 
@@ -394,7 +394,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             };
             _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
             _userManager.Expect(a => a.ChangePasswordAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(Task.FromResult(new SEIdentityResult()));
-            _userManager.Expect(a => a.SignInAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return(Task.FromResult(0));
+            _userManager.Expect(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return(Task.FromResult(0));
 
             // Act
             var result = await _sut.RecoverPassword(model);
@@ -471,7 +471,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         private void UserManagerAttemptsLoginWithResult(bool isSuccess)
         {
 
-            _userManager.Expect(a => a.TrySignInAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+            _userManager.Expect(a => a.TryLogOnAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(Task.FromResult<LogonResult>(new LogonResult() { Success = isSuccess }));
         }
 

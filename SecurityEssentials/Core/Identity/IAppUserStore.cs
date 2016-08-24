@@ -11,7 +11,7 @@ namespace SecurityEssentials.Core.Identity
 
 		Task<int> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
 
-		Task<LogonResult> FindAndCheckLogonAsync(string userName, string password);
+		Task<LogonResult> TryLogOnAsync(string userName, string password);
 
 		Task<ClaimsIdentity> CreateIdentityAsync(User user, string authenticationType);
 
