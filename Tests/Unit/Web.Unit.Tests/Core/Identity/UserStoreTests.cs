@@ -49,8 +49,24 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			Assert.IsTrue(result.Success);
 			Assert.AreEqual(0, _testUser.FailedLogonAttemptCount);
 			Assert.AreEqual(_testUser.UserName, result.UserName);
+			_context.AssertWasCalled(a => a.SaveChangesAsync());
 		}
 
+		[TestMethod]
+		public async Task GIVEN_UserExistsButPasswordIncorrect_WHEN_FindAndCheckLogonAsync_THEN_UserIsNotLoggedOn()
+		{
+			// Arrange
+
+			// Act
+			var result = await _sut.FindAndCheckLogonAsync(_testUser.UserName, "rubbish");
+
+			// Assert
+			Assert.IsFalse(result.Success);
+			Assert.AreEqual(2, _testUser.FailedLogonAttemptCount);
+			Assert.AreNotEqual(_testUser.UserName, result.UserName);
+			Assert.IsTrue(_testUser.UserLogs.Any(b => b.Description.Contains("Failed Logon")));
+			_context.AssertWasCalled(a => a.SaveChangesAsync());
+		}
 
 		[TestMethod]
 		public async Task GIVEN_UserExists_WHEN_CreateIdentityAsync_THEN_ReturnsClaims()
