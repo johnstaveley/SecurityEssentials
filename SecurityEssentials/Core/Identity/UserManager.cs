@@ -57,7 +57,7 @@ namespace SecurityEssentials.Core.Identity
 
         }
 
-        public AppUserManager() : this (new AppConfiguration(), new SEContext(), new Encryption(), new UserStore<User>(new SEContext()))
+        public AppUserManager() : this (new AppConfiguration(), new SEContext(), new Encryption(), new UserStore<User>(new SEContext(), new AppConfiguration()))
         {
         }
 

@@ -14,7 +14,9 @@ namespace SecurityEssentials.Core
     public class AppConfiguration : IAppConfiguration
     {
 
-        public bool AccountManagementRegisterAutoApprove { get; private set; }
+		public bool AccountManagementCheckFailedLogonAttempts { get; private set; }
+		public int AccountManagementMaximumFailedLogonAttempts { get; private set; }
+		public bool AccountManagementRegisterAutoApprove { get; private set; }
         public string ApplicationName { get; private set; }
         public string DefaultFromEmailAddress { get; private set; }
         public string EncryptionPassword { get; private set; }
@@ -26,7 +28,9 @@ namespace SecurityEssentials.Core
 
         public AppConfiguration()
         {
-            AccountManagementRegisterAutoApprove = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"]);
+			AccountManagementCheckFailedLogonAttempts = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementCheckFailedLogonAttempts"].ToString());
+			AccountManagementMaximumFailedLogonAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["AccountManagementMaximumFailedLogonAttempts"].ToString());
+			AccountManagementRegisterAutoApprove = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"]);
             ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
             DefaultFromEmailAddress = ConfigurationManager.AppSettings["DefaultFromEmailAddress"];
             EncryptionPassword = ConfigurationManager.AppSettings["EncryptionPassword"];

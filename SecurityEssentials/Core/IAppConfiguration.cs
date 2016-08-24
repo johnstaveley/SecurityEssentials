@@ -2,7 +2,9 @@
 {
     public interface IAppConfiguration
     {
-        bool AccountManagementRegisterAutoApprove { get; }
+		bool AccountManagementCheckFailedLogonAttempts { get; }
+		int AccountManagementMaximumFailedLogonAttempts { get; }
+		bool AccountManagementRegisterAutoApprove { get; }
         string ApplicationName { get; }
         string DefaultFromEmailAddress { get; }
         int EncryptionIterationCount { get; }

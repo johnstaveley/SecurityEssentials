@@ -20,16 +20,19 @@ namespace SecurityEssentials.Core.Identity
         public IIdentityValidator<string> PasswordValidator { get; set; }
         protected UserStore<IdentityUser> Store { get; private set; }
         private ISEContext _context { get; set; }
+		private IAppConfiguration _configuration { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public UserStore(ISEContext context)
+        public UserStore(ISEContext context, IAppConfiguration configuration)
         {
+			if (configuration == null) throw new ArgumentNullException("configuration");
 			if (context == null) throw new ArgumentNullException("context");
 
-            _context = context;
+			_configuration = configuration;
+			_context = context;
         }
 
         #endregion
@@ -139,14 +142,12 @@ namespace SecurityEssentials.Core.Identity
             if (user != null)
             {
                 var securedPassword = new SecuredPassword(Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt));
-				bool checkFailedLogonAttemptCount = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementCheckFailedLogonAttemptCount"].ToString());
-				int maximumFailedLogonAttemptCount = Convert.ToInt32(ConfigurationManager.AppSettings["AccountManagementMaximumFailedLogonAttemptCount"].ToString());
-				if (checkFailedLogonAttemptCount == false || user.FailedLogonAttemptCount < maximumFailedLogonAttemptCount)
+				if (_configuration.AccountManagementCheckFailedLogonAttempts == false || user.FailedLogonAttemptCount < _configuration.AccountManagementMaximumFailedLogonAttempts)
                 {
                     if (securedPassword.Verify(password))
                     {
                         user.FailedLogonAttemptCount = 0;
-                        this._context.SaveChanges();
+                        await _context.SaveChangesAsync();
 						logonResult.Success = true;
 						logonResult.UserName = user.UserName;
 						return logonResult;
@@ -156,7 +157,7 @@ namespace SecurityEssentials.Core.Identity
                         user.FailedLogonAttemptCount += 1;
 						logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
 						user.UserLogs.Add(new UserLog() { Description = "Failed Logon attempt" });
-                        this._context.SaveChanges();
+                        await _context.SaveChangesAsync();
                     }
                 }
             }

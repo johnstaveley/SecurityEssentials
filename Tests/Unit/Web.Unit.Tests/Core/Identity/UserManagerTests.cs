@@ -30,7 +30,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "LetMeIn123" });
 			_configuration = MockRepository.GenerateStub<IAppConfiguration>();
 			_encryption = MockRepository.GenerateMock<IEncryption>();
-			_userStore = new UserStore<User>(_context);
+			_userStore = new UserStore<User>(_context, _configuration);
 			_bannedWords = new List<string>() { "First Name", "SurName", "My Town", "My PostCode" };
             _sut = new AppUserManager(_configuration, _context, _encryption, _userStore);
         }
