@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using SecurityEssentials.Unit.Tests.TestDbSet;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Threading.Tasks;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
@@ -41,8 +42,24 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void MyTestCleanup()
         {
 			_encryption.VerifyAllExpectations();
+			_userStore.VerifyAllExpectations();
         }
         
+		[TestMethod]
+		public async Task GIVEN_ValidDetails_WHEN_CreateUser_THEN_UserCreatedSuccess()
+		{
+			var userName = "bob@bob.net";
+			_userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
+			_userStore.Expect(a => a.CreateAsync(Arg<User>.Is.Anything)).Return(Task.FromResult(0));
+
+			// Act
+			var result = await _sut.CreateAsync(userName, "bob", "the bod", "unsecure1H", "unsecure1H", 142, "Jo was my mother");
+
+			// Assert
+			Assert.IsTrue(result.Succeeded);
+			// TODO: Expand test criteria
+		}
+
 		[TestMethod]
 		public void GIVEN_ValidPassword_WHEN_ValidatePassword_THEN_Success()
 		{
