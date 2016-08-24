@@ -6,6 +6,8 @@ using SecurityEssentials.Model;
 using System.Collections.Generic;
 using Rhino.Mocks;
 using SecurityEssentials.Unit.Tests.TestDbSet;
+using Microsoft.AspNet.Identity;
+using System;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
@@ -18,7 +20,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         IAppConfiguration _configuration;
 		IEncryption _encryption;
         ISEContext _context;
-        UserStore<User> _userStore;
+        IAppUserStore<User> _userStore;
 		List<string> _bannedWords;
        
         [TestInitialize]
@@ -30,7 +32,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "LetMeIn123" });
 			_configuration = MockRepository.GenerateStub<IAppConfiguration>();
 			_encryption = MockRepository.GenerateMock<IEncryption>();
-			_userStore = new UserStore<User>(_context, _configuration);
+			_userStore = MockRepository.GenerateMock<IAppUserStore<User>>(); 
 			_bannedWords = new List<string>() { "First Name", "SurName", "My Town", "My PostCode" };
             _sut = new AppUserManager(_configuration, _context, _encryption, _userStore);
         }

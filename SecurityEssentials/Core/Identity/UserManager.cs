@@ -19,7 +19,7 @@ namespace SecurityEssentials.Core.Identity
 
         #region Declarations
 
-        private readonly UserStore<User> _userStore;
+        private readonly IAppUserStore<User> _userStore;
         private readonly ISEContext _context;
         private readonly IAppConfiguration _configuration;
 		private readonly IEncryption _encryption;
@@ -42,7 +42,7 @@ namespace SecurityEssentials.Core.Identity
 
         #region Constructor
 
-        public AppUserManager(IAppConfiguration configuration, ISEContext context, IEncryption encryption, UserStore<User> userStore)
+        public AppUserManager(IAppConfiguration configuration, ISEContext context, IEncryption encryption, IAppUserStore<User> userStore)
         {
 
             if (configuration == null) throw new ArgumentNullException("configuration");
@@ -59,6 +59,7 @@ namespace SecurityEssentials.Core.Identity
 
         public AppUserManager() : this (new AppConfiguration(), new SEContext(), new Encryption(), new UserStore<User>(new SEContext(), new AppConfiguration()))
         {
+			// TODO: Put in IoC container
         }
 
         #endregion

@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 namespace SecurityEssentials.Core.Identity
 {
 
-	public class UserStore<TUser> : IUserStore<User, int>, IUserPasswordStore<User, int>, IDisposable
+	public class UserStore<TUser> : IAppUserStore<User>
     {
 
         #region Declarations
