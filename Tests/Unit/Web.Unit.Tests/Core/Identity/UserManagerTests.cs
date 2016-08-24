@@ -28,6 +28,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Setup()
         {
 			_context = MockRepository.GenerateStub<ISEContext>();
+			_context.User = new TestDbSet<User>();
 			_context.LookupItem = new TestDbSet<LookupItem>();
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "Password1" });
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "LetMeIn123" });
@@ -57,7 +58,20 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 
 			// Assert
 			Assert.IsTrue(result.Succeeded);
-			// TODO: Expand test criteria
+			_userStore.AssertWasCalled(u => u.CreateAsync(Arg<User>.Matches(c => 
+				!string.IsNullOrEmpty(c.EmailConfirmationToken) &&
+				c.Approved == _configuration.AccountManagementRegisterAutoApprove &&
+				c.EmailVerified == false &&
+				c.Enabled == true &&
+				c.FirstName == "bob" &&
+				c.LastName == "the bod" &&
+				!string.IsNullOrEmpty(c.PasswordHash) &&
+				!string.IsNullOrEmpty(c.Salt) &&
+				c.SecurityQuestionLookupItemId == 142 &&
+				c.SecurityAnswer != "Jo was my mother" &&
+				c.UserLogs.Any(a => a.Description == "Account Created")
+			)));
+						
 		}
 
 		[TestMethod]
