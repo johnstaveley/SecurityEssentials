@@ -1071,11 +1071,12 @@
     <Content Include="Views\Shared\_Recaptcha.cshtml" />
     <Content Include="Views\Account\RecoverSuccess.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
-    <Content Include="Views\Account\ChangeSecurityInformationSuccess.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\ChangeSecurityInformation.cshtml" />
     <Compile Include="ViewModel\RecoverPasswordViewModel.cs" />
     <Content Include="Views\Account\ChangeEmailAddressPending.cshtml" />
     <Content Include="Views\Account\ChangeEmailAddressSuccess.cshtml" />
+    <Content Include="Views\Account\ChangeSecurityInformationSuccess - Copy.cshtml" />
     <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

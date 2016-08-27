@@ -169,7 +169,8 @@ Scenario: I can change my password
 	| NewPassword        | NewPassword45678  |
 	| ConfirmNewPassword | NewPassword45678  |
 	When I submit the change password form
-	Then A confirmation message 'Your password has been changed.' is shown
+	Then I am navigated to the 'Change Password Success' page
+	# And I am logged off
 	# And an email is sent
 	# And a log entry is made
 

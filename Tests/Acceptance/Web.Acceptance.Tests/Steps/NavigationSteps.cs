@@ -54,6 +54,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 					Assert.IsTrue(changePasswordPage.IsCurrentPage);
 					ScenarioContext.Current.Set(changePasswordPage);
 					break;
+				case "change password success":
+					var changePasswordSuccessPage = new ChangePasswordSuccessPage(webDriver, uri);
+					Assert.IsTrue(changePasswordSuccessPage.IsCurrentPage);
+					ScenarioContext.Current.Set(changePasswordSuccessPage);
+					break;
 				case "change security information":
 					var changeSecurityInformationPage = new ChangeSecurityInformationPage(webDriver, uri);
 					Assert.IsTrue(changeSecurityInformationPage.IsCurrentPage);

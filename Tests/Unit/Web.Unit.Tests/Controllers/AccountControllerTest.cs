@@ -238,24 +238,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything), options => options.Repeat.Times(2));
 			_userManager.AssertWasCalled(a => a.SignOut());
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
-		}
-
-		[TestMethod]
-        public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
-        {
-            // Arrange
-            var message = AccountController.ManageMessageId.ChangePasswordSuccess;
-
-            // Act
-            var result = _sut.ChangePassword(message);
-
-            // Assert
-            var model = AssertViewResultReturnsType<ChangePasswordViewModel>(result);
-            Assert.IsTrue(model.HasRecaptcha);
-            var viewResult = (ViewResult) result;
-            Assert.AreEqual("Your password has been changed.", viewResult.ViewBag.StatusMessage);
-
-        }
+		}	
 
         [TestMethod]
         public async Task GIVEN_CorrectInformationProvided_WHEN_ChangePassword_THEN_SavesRedirectsAndEmails()
@@ -275,14 +258,31 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = await _sut.ChangePassword(model);
 
             // Assert
-            AssertRedirectToActionReturned(result, SecurityEssentials.Controllers.AccountController.ManageMessageId.ChangePasswordSuccess, "ChangePassword");
+			AssertViewResultReturned(result, "ChangePasswordSuccess");
             _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, 
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
+			_formsAuth.AssertWasCalled(a => a.SignOut());
             _context.AssertWasCalled(a => a.SaveChanges());
 
         }
 
-        [TestMethod]
+		[TestMethod]
+		public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
+		{
+			// Arrange
+
+			// Act
+			var result = _sut.ChangePassword();
+
+			// Assert
+			var model = AssertViewResultReturnsType<ChangePasswordViewModel>(result);
+			Assert.IsTrue(model.HasRecaptcha);
+			var viewResult = (ViewResult)result;
+
+		}
+
+
+		[TestMethod]
         public void WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
         {
             // Arrange

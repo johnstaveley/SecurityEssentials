@@ -183,19 +183,26 @@ namespace SecurityEssentials.Controllers
 		}
 
 
-		public ActionResult ChangePassword(ManageMessageId? message)
+		[AllowAnonymous]
+		public ActionResult ChangePasswordSuccess()
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
-            ViewBag.ReturnUrl = Url.Action("ChangePassword");
+			ViewBag.ReturnUrl = Url.Action("ChangePassword");
             var model = new ChangePasswordViewModel()
             {
                 HasRecaptcha = _configuration.HasRecaptcha
             };
             return View(model);
         }
+
+		[Authorize]
+		public ActionResult ChangePassword()
+		{
+			var model = new ChangePasswordViewModel()
+			{
+				HasRecaptcha = _configuration.HasRecaptcha
+			};
+			return View(model);
+		}
 
 		[HttpPost]
         [Authorize]
@@ -223,7 +230,8 @@ namespace SecurityEssentials.Controllers
                         string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                         _context.SaveChanges();
-                        return RedirectToAction("ChangePassword", new { Message = ManageMessageId.ChangePasswordSuccess });
+						_formsAuth.SignOut();
+                        return View("ChangePasswordSuccess");
                     }
                     else
                     {
@@ -551,13 +559,7 @@ namespace SecurityEssentials.Controllers
                 return RedirectToAction("Landing", "Account");
             }
         }
-
-        public enum ManageMessageId
-        {
-            ChangePasswordSuccess,
-            Error
-        }
-
+		
         #endregion
 
     }

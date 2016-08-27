@@ -98,6 +98,7 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Pages\ChangeEmailAddressPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressPendingPage.cs" />
+    <Compile Include="Pages\ChangePasswordSuccessPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressSuccessPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressConfirmPage.cs" />
     <Compile Include="Pages\UserIndexPage.cs" />

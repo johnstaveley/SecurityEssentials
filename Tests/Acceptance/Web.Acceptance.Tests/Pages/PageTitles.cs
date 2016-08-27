@@ -8,6 +8,7 @@
 		public const string CHANGE_EMAIL_ADDRESS_PENDING = "Change Email Address Pending" + TITLE_ROOT;
 		public const string CHANGE_EMAIL_ADDRESS_SUCCESS = "Change Email Address Success" + TITLE_ROOT;
 		public const string CHANGE_PASSWORD = "Change Password" + TITLE_ROOT;
+		public const string CHANGE_PASSWORD_SUCCESS = "Change Password Success" + TITLE_ROOT;
 		public const string CHANGE_SECURITY_INFORMATION = "Change Security Information" + TITLE_ROOT;
 		public const string CHANGE_SECURITY_INFORMATION_SUCCESS = "Change Security Information Success" + TITLE_ROOT;
 		public const string HOME = "Home Page" + TITLE_ROOT;
