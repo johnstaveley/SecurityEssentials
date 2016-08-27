@@ -38,8 +38,8 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     <ul class="nav nav-pills">
-                                        <li>Logged on as @User.Identity.Name</li>
-                                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                                        <li role="presentation">Logged on as @User.Identity.Name</li>
+                                        <li role="presentation"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                                     </ul>
                                 }
                             }

@@ -8,29 +8,39 @@
 @using (Html.BeginForm("Logon", "Account", new { returnUrl = ViewBag.ReturnUrl, isBackOffice = ViewBag.IsBackOffice }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div>
         <div id="login-box" class="well">
             <a href="#" class="logo"></a>
-@if (ViewBag.Unauthorised == true) {
-    <text><div class="alert alert-danger">You are not logged in, please log in to access the requested content</div></text>
+            @if (ViewBag.Unauthorised == true)
+            {
+                <text><div class="alert alert-danger">You are not logged in, please log in to access the requested content</div></text>
 }
             @Html.ValidationSummary(true)
 
-                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username", @class="form-control", autocomplete="OFF" })
-                    
-                @Html.ValidationMessageFor(m => m.UserName)&nbsp;
-                    
-                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class="form-control", autocomplete = "OFF" })
-                    
-                @Html.ValidationMessageFor(m => m.Password)&nbsp;
-
-                <a href="Recover" id="Recover" class="btn btn-link pull-right">Forgot?</a>  
-  
-                <input type="submit" value="Log in" class="btn btn-primary btn-block" id="Login" />
-                    
+            <div class="row">
+                <div class="col-md-4">@Html.LabelFor(m => m.UserName)</div>
+                <div class="col-md-4">@Html.TextBoxFor(m => m.UserName, new { placeholder = "Username", @class = "form-control", autocomplete = "OFF" })</div>
+                <div class="col-md-4">@Html.ValidationMessageFor(m => m.UserName)&nbsp;</div>
             </div>
+
+            <div class="row">
+                <div class="col-md-4">@Html.LabelFor(m => m.Password)</div>
+                <div class="col-md-4">@Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "form-control", autocomplete = "OFF" })</div>
+                <div class="col-md-4">@Html.ValidationMessageFor(m => m.Password)&nbsp;</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">&nbsp;</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">&nbsp;</div>
+                <div class="col-md-2"><input type="submit" value="Log in" class="btn btn-primary btn-block" id="Login" /></div>
+                <div class="col-md-2"><a href="Recover" id="Recover" class="btn btn-link pull-right">Forgot?</a></div>
+            </div>
+
         </div>
+    </div>
 }
 
 @section Scripts {
