@@ -244,6 +244,8 @@
     <Compile Include="Core\AppConfiguration.cs" />
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
+    <Compile Include="Core\Identity\Consts.cs" />
+    <Compile Include="Core\Identity\HashStrategyKind.cs" />
     <Compile Include="Core\Identity\IAppUserStore.cs" />
     <Compile Include="Core\Services.cs" />
     <Compile Include="Core\Encryption.cs" />
@@ -263,7 +265,7 @@
     <Compile Include="Core\IServices.cs" />
     <Compile Include="Core\OrderByExtensions.cs" />
     <Compile Include="Core\Recaptcha.cs" />
-    <Compile Include="Core\SecuredPassword.cs" />
+    <Compile Include="Core\Identity\SecuredPassword.cs" />
     <Compile Include="Core\ThrottleAttribute.cs" />
     <Compile Include="Core\ValidateHttpAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -1076,7 +1078,7 @@
     <Compile Include="ViewModel\RecoverPasswordViewModel.cs" />
     <Content Include="Views\Account\ChangeEmailAddressPending.cshtml" />
     <Content Include="Views\Account\ChangeEmailAddressSuccess.cshtml" />
-    <Content Include="Views\Account\ChangeSecurityInformationSuccess - Copy.cshtml" />
+    <Content Include="Views\Account\ChangeSecurityInformationSuccess.cshtml" />
     <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -140,10 +140,10 @@ namespace SecurityEssentials.Core.Identity
 			var logonResult = new LogonResult();
             if (user != null)
             {
-                var securedPassword = new SecuredPassword(Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt));
+                var securePassword = new SecuredPassword(password, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt), user.HashStrategy);
 				if (_configuration.AccountManagementCheckFailedLogonAttempts == false || user.FailedLogonAttemptCount < _configuration.AccountManagementMaximumFailedLogonAttempts)
                 {
-                    if (securedPassword.Verify(password))
+                    if (securePassword.IsValid)
                     {
                         user.FailedLogonAttemptCount = 0;
                         await _context.SaveChangesAsync();
@@ -199,16 +199,15 @@ namespace SecurityEssentials.Core.Identity
             {
                 return new IdentityResult("Your password reset token has expired or does not exist");
             }
-            var securedPassword = new SecuredPassword(newPassword);
-            if (securedPassword.Verify(newPassword))
-            {
-                user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
-                user.Salt = Convert.ToBase64String(securedPassword.Salt);
-                user.PasswordResetExpiry = null;
-                user.PasswordResetToken = null;
-                user.FailedLogonAttemptCount = 0;
-				user.UserLogs.Add(new UserLog() { Description = "Password changed using token" });
-            }
+            var securedPassword = new SecuredPassword(newPassword, Consts.DEFAULT_HASH_STRATEGY);
+			user.HashStrategy = securedPassword.HashStrategy;
+			user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
+            user.Salt = Convert.ToBase64String(securedPassword.Salt);
+            user.PasswordResetExpiry = null;
+            user.PasswordResetToken = null;
+            user.FailedLogonAttemptCount = 0;
+			user.UserLogs.Add(new UserLog() { Description = "Password changed using token" });
+
             await this._context.SaveChangesAsync().ConfigureAwait(false);
             return new IdentityResult();
         }
@@ -216,11 +215,13 @@ namespace SecurityEssentials.Core.Identity
         public async Task<int> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
         {
             var user = await this.FindByIdAsync(userId).ConfigureAwait(false);
-            var securedPassword = new SecuredPassword(currentPassword);
-            if (securedPassword.Verify(currentPassword))
+			var securePassword = new SecuredPassword(currentPassword, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt), user.HashStrategy);
+            if (securePassword.IsValid)
             {
-                user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
-                user.Salt = Convert.ToBase64String(securedPassword.Salt);
+				var newPasswordHash = new SecuredPassword(currentPassword, Consts.DEFAULT_HASH_STRATEGY);
+                user.PasswordHash = Convert.ToBase64String(newPasswordHash.Hash);
+                user.Salt = Convert.ToBase64String(newPasswordHash.Salt);
+				user.HashStrategy = newPasswordHash.HashStrategy;
 				user.PasswordResetExpiry = null;
 				user.PasswordResetToken = null;
 				user.FailedLogonAttemptCount = 0;

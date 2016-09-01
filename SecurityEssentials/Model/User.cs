@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Model
 {
@@ -26,6 +27,10 @@ namespace SecurityEssentials.Model
         /// </summary>
 		[MaxLength(500)]
 		public string PasswordHash { get; set; }
+		/// <summary>
+		/// The algorithm to use to create the hash
+		/// </summary>
+		public HashStrategyKind HashStrategy { get; set; }
         /// <summary>
         /// The date the user was created (UTC)
         /// </summary> 

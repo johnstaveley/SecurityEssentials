@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Core;
+using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Unit.Tests.Core.Security
 {
-    [TestClass]
+	[TestClass]
     public class When_PasswordHash
     {
 
@@ -12,35 +12,30 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_PasswordHashAndSalt_Then_NewPasswordIsHashedAsExpected()
         {
-            int iterations = 4652;
             string password = "password1*SASDes";
-            var securedPassword = new SecuredPassword(password, iterations);
+            var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);
 
-            var securedPassword2 = new SecuredPassword(Convert.FromBase64String(storedHash), Convert.FromBase64String(storedSalt), iterations);
-            Assert.IsTrue(securedPassword2.Verify(password));
+            var securedPassword2 = new SecuredPassword(password, Convert.FromBase64String(storedHash), 
+				Convert.FromBase64String(storedSalt), HashStrategyKind.PBKDF2_5009Iterations);
+            Assert.IsTrue(securedPassword2.Equals(securedPassword));
         }
 
         [TestMethod]
-        public void Given_PasswordHashAndSaltWithIterationsChanged_Then_NewPasswordDoesNotMatch()
+        public void Given_PasswordHashWithIterationsChanged_Then_PasswordHashesDoNotMatch()
         {
-            int iterations = 4652;
             string password = "password1*SASDes";
-            var securedPassword = new SecuredPassword(password, iterations);
-            var storedSalt = Convert.ToBase64String(securedPassword.Salt);
-            var storedHash = Convert.ToBase64String(securedPassword.Hash);
-
-            iterations = 4653;
-            var securedPassword2 = new SecuredPassword(Convert.FromBase64String(storedHash), Convert.FromBase64String(storedSalt), iterations);
-            Assert.IsFalse(securedPassword2.Verify(password));
+            var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
+            var securedPassword2 = new SecuredPassword(password, HashStrategyKind.PBKDF2_8000Iterations);
+            Assert.IsFalse(securedPassword2.Equals(securedPassword));
         }
 
 
         [TestMethod]
         public void Given_PasswordString_Then_HashedAsExpected()
         {
-            var securedPassword = new SecuredPassword("password");
+            var securedPassword = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
 
             Assert.AreNotEqual("password", securedPassword.Hash);
             Assert.AreEqual(256, securedPassword.Hash.Length);
@@ -49,8 +44,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_TwoIdenticalPasswords_Then_SaltsGeneratedAreUnique()
         {
-            var securedPassword = new SecuredPassword("password");
-            var securedPassword2 = new SecuredPassword("password");
+            var securedPassword = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
+            var securedPassword2 = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
 
             Assert.IsNotNull(securedPassword.Salt);
             Assert.IsNotNull(securedPassword2.Salt);
@@ -61,8 +56,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_TwoIdenticalPasswords_Then_HashsGeneratedAreUnique()
         {
-            var securedPassword = new SecuredPassword("password");
-            var securedPassword2 = new SecuredPassword("password");
+            var securedPassword = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
+            var securedPassword2 = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
 
             Assert.IsNotNull(securedPassword.Hash);
             Assert.IsNotNull(securedPassword2.Hash);
@@ -70,34 +65,39 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         }
 
         [TestMethod]
-        public void Given_SecuredPasswordGenerated_Then_VerifiesOk()
+        public void Given_SecuredPasswordGenerated_Then_MatchesAnIdenticalHash()
         {
-            var securedPassword = new SecuredPassword("password");
-            var result = securedPassword.Verify("password");
-            Assert.IsTrue(result);
+            var securedPassword = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
+			var securedPassword2 = new SecuredPassword("password", securedPassword.Hash, securedPassword.Salt, HashStrategyKind.PBKDF2_5009Iterations);
+			Assert.IsTrue(securedPassword2.IsValid);
+			Assert.AreEqual(securedPassword.HashStrategy, securedPassword2.HashStrategy);
+			Assert.AreEqual(securedPassword.Iterations, securedPassword2.Iterations);
         }
 
         [TestMethod]
         public void Given_SecuredPasswordIsDifferentToGiven_Then_VerifiesFalse()
         {
-            var securedPassword = new SecuredPassword("password");
-            var result = securedPassword.Verify("Password");
+            var securedPassword = new SecuredPassword("password", HashStrategyKind.PBKDF2_5009Iterations);
+			var securedPassword2 = new SecuredPassword("Password2", HashStrategyKind.PBKDF2_5009Iterations);
+			var result = securedPassword.Equals(securedPassword2);
             Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void Given_WhenRehydratedAndMatching_Then_ReturnsTrue()
         {
-            var securedPassword = new SecuredPassword("password123");
-            var rehydrated = new SecuredPassword(securedPassword.Hash, securedPassword.Salt);
-            var result = rehydrated.Verify("password123");
-            Assert.IsTrue(result);
+			var password = "password123";
+			var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
+            var rehydrated = new SecuredPassword(password, securedPassword.Hash, securedPassword.Salt, HashStrategyKind.PBKDF2_5009Iterations);
+			Assert.IsTrue(securedPassword.Equals(rehydrated));
+			Assert.IsTrue(rehydrated.IsValid);
         }
 
         [TestMethod]
-        public void Given_PasswordVerifiesIsNull_Then_VerifiesFalse()
+		[ExpectedException(typeof(ArgumentNullException))]
+        public void Given_PasswordVerifiesIsNull_Then_ThrowsException()
         {
-            Assert.IsFalse(new SecuredPassword("password").Verify(null));
+            var result = new SecuredPassword(null, HashStrategyKind.PBKDF2_5009Iterations);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         {
 
             string password = "x12a;pP02icdjshER";
-            var securedPassword = new SecuredPassword(password);
+            var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);
             System.Diagnostics.Debug.WriteLine(string.Format("salt for password {0} is {1}", password, storedSalt));

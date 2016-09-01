@@ -23,9 +23,9 @@ namespace SecurityEssentials.Core.Identity
         private readonly string _passwordValidityRegex = @"^.*(?=.{8,100})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string _passwordInvalidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
 		private static IAuthenticationManager AuthenticationManager
 		{
@@ -75,7 +75,7 @@ namespace SecurityEssentials.Core.Identity
 				{
 					user = new User();
 					user.UserName = userName;
-					var securedPassword = new SecuredPassword(password);
+					var securedPassword = new SecuredPassword(password, Consts.DEFAULT_HASH_STRATEGY);
 					try
 					{
 						user.Approved = _configuration.AccountManagementRegisterAutoApprove;
