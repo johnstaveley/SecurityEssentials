@@ -10,14 +10,14 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 27/08/2016</h4>
+                <h4>Created by John Staveley - Last updated 03/09/2016</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
                     <li>Weak account management: 
                         <ul>
                             <li>Uses claims based auth</li>
-                            <li>Uses the strong hash PBKDF2 with an adaptable number of iterations</li>
+                            <li>Uses the strong hash PBKDF2 with an adaptable number of iterations, the code is flexible and can have new hashing algorithms added as beetter ones are identified or existing ones have weaknesses identified in them</li>
                             <li>Enforces a strong password - Bans weak passwords, enforces minimum password strength and allows special characters</li>
                             <li>Has a water tight account management process</li>
                             <li>Prevents anti-enumeration through well designed messages</li>

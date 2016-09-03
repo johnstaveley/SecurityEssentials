@@ -1,4 +1,6 @@
-﻿namespace SecurityEssentials.Core
+﻿using SecurityEssentials.Core.Identity;
+
+namespace SecurityEssentials.Core
 {
     public interface IAppConfiguration
     {
@@ -12,5 +14,6 @@
 		bool HasEmailConfigured { get; }
         bool HasRecaptcha { get; }
         string WebsiteBaseUrl { get; }
-    }
+		HashStrategyKind DefaultHashStrategy { get; }
+	}
 }

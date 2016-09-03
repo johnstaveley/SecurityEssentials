@@ -75,7 +75,7 @@ namespace SecurityEssentials.Core.Identity
 				{
 					user = new User();
 					user.UserName = userName;
-					var securedPassword = new SecuredPassword(password, Consts.DEFAULT_HASH_STRATEGY);
+					var securedPassword = new SecuredPassword(password, _configuration.DefaultHashStrategy);
 					try
 					{
 						user.Approved = _configuration.AccountManagementRegisterAutoApprove;

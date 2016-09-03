@@ -199,7 +199,7 @@ namespace SecurityEssentials.Core.Identity
             {
                 return new IdentityResult("Your password reset token has expired or does not exist");
             }
-            var securedPassword = new SecuredPassword(newPassword, Consts.DEFAULT_HASH_STRATEGY);
+            var securedPassword = new SecuredPassword(newPassword, _configuration.DefaultHashStrategy);
 			user.HashStrategy = securedPassword.HashStrategy;
 			user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
             user.Salt = Convert.ToBase64String(securedPassword.Salt);
@@ -218,7 +218,7 @@ namespace SecurityEssentials.Core.Identity
 			var securePassword = new SecuredPassword(currentPassword, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.Salt), user.HashStrategy);
             if (securePassword.IsValid)
             {
-				var newPasswordHash = new SecuredPassword(currentPassword, Consts.DEFAULT_HASH_STRATEGY);
+				var newPasswordHash = new SecuredPassword(currentPassword, _configuration.DefaultHashStrategy);
                 user.PasswordHash = Convert.ToBase64String(newPasswordHash.Hash);
                 user.Salt = Convert.ToBase64String(newPasswordHash.Salt);
 				user.HashStrategy = newPasswordHash.HashStrategy;

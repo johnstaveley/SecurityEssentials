@@ -244,7 +244,6 @@
     <Compile Include="Core\AppConfiguration.cs" />
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
-    <Compile Include="Core\Identity\Consts.cs" />
     <Compile Include="Core\Identity\HashStrategyKind.cs" />
     <Compile Include="Core\Identity\IAppUserStore.cs" />
     <Compile Include="Core\Services.cs" />

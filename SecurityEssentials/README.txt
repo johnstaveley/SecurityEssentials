@@ -12,4 +12,4 @@
 
 5) Set in web.config HasEmailConfigured = true
 
-6) if you deploy this into production make sure you remove the two test users from the databaseInitializer
+6) if you deploy this into production make sure you remove the test users from the databaseInitializer

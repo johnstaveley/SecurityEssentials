@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityEssentials.Core.Identity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace SecurityEssentials.Core
         public int EncryptionIterationCount { get; private set; }
 		public bool HasEmailConfigured { get; private set; }
         public bool HasRecaptcha { get; private set; }
-        public string WebsiteBaseUrl { get; private set; }
-		
+        public string WebsiteBaseUrl { get; private set; }		
+		public HashStrategyKind DefaultHashStrategy { get; private set; }
 
         public AppConfiguration()
         {
@@ -33,7 +34,8 @@ namespace SecurityEssentials.Core
 			AccountManagementRegisterAutoApprove = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"]);
             ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
             DefaultFromEmailAddress = ConfigurationManager.AppSettings["DefaultFromEmailAddress"];
-            EncryptionPassword = ConfigurationManager.AppSettings["EncryptionPassword"];
+			DefaultHashStrategy = (HashStrategyKind) Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
+			EncryptionPassword = ConfigurationManager.AppSettings["EncryptionPassword"];
             EncryptionIterationCount = Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]);
             HasRecaptcha = Convert.ToBoolean(ConfigurationManager.AppSettings["HasRecaptcha"]);
 			HasEmailConfigured = Convert.ToBoolean(ConfigurationManager.AppSettings["HasEmailConfigured"]);
