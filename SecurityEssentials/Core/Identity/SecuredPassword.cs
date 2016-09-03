@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Liphsoft.Crypto.Argon2;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -15,7 +14,7 @@ namespace SecurityEssentials.Core.Identity
 	{
 
 		private int _saltSize = 256;
-		private int _iterations = 5000;
+		private uint _hashingParameter = 5000;
 		private bool _isValid = false;
 		private readonly byte[] _hash;
 		private readonly byte[] _salt;
@@ -31,9 +30,12 @@ namespace SecurityEssentials.Core.Identity
 			get { return _hashStrategy; }
 		}
 
-		public int Iterations
+		/// <summary>
+		/// Number of iterations, work cost etc
+		/// </summary>
+		public uint HashingParameter
 		{
-			get { return _iterations; }
+			get { return _hashingParameter; }
 		}
 
 		public byte[] Salt
@@ -58,11 +60,16 @@ namespace SecurityEssentials.Core.Identity
 			{
 				case HashStrategyKind.PBKDF2_5009Iterations:
 				case HashStrategyKind.PBKDF2_8000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, _iterations))
+					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, (int) _hashingParameter))
 					{
 						_salt = deriveBytes.Salt;
 						_hash = deriveBytes.GetBytes(_saltSize);
 					}
+					break;
+				case HashStrategyKind.Argon2_48kWorkCost:
+					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
+					_salt = argon2Hasher.GenerateSalt();
+					_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
 					break;
 			}
 			_isValid = true;
@@ -73,15 +80,21 @@ namespace SecurityEssentials.Core.Identity
 			_hash = hash;
 			_salt = salt;
 			SetHashStrategy(hashStrategy);
+			byte[] newKey = null;
 			switch (hashStrategy)
 			{
 				case HashStrategyKind.PBKDF2_5009Iterations:
 				case HashStrategyKind.PBKDF2_8000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, _iterations))
+					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, (int) _hashingParameter))
 					{
-						byte[] newKey = deriveBytes.GetBytes(_saltSize);
+						newKey = deriveBytes.GetBytes(_saltSize);
 						_isValid = newKey.SequenceEqual(hash);
 					}
+					break;
+				case HashStrategyKind.Argon2_48kWorkCost:
+					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
+					newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
+					_isValid = newKey.SequenceEqual(hash);
 					break;
 			}
 			
@@ -94,12 +107,16 @@ namespace SecurityEssentials.Core.Identity
 			switch (hashStrategy)
 			{
 				case HashStrategyKind.PBKDF2_5009Iterations:
-					_iterations = 5009;
+					_hashingParameter = 5009;
 					_saltSize = 256;
 					break;
 				case HashStrategyKind.PBKDF2_8000Iterations:
-					_iterations = 8000;
+					_hashingParameter = 8000;
 					_saltSize = 256;
+					break;
+				case HashStrategyKind.Argon2_48kWorkCost:
+					_hashingParameter = 48000;
+					_saltSize = 0;
 					break;
 				default:
 					throw new ArgumentException(string.Format("hashStrategy {0} is not defined", hashStrategy.ToString()));

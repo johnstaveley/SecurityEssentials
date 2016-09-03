@@ -5,7 +5,7 @@ using SecurityEssentials.Core.Identity;
 namespace SecurityEssentials.Unit.Tests.Core.Security
 {
 	[TestClass]
-    public class When_PasswordHash
+    public class PBKDF2SecuredPasswordTests
     {
 
 
@@ -71,7 +71,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 			var securedPassword2 = new SecuredPassword("password", securedPassword.Hash, securedPassword.Salt, HashStrategyKind.PBKDF2_5009Iterations);
 			Assert.IsTrue(securedPassword2.IsValid);
 			Assert.AreEqual(securedPassword.HashStrategy, securedPassword2.HashStrategy);
-			Assert.AreEqual(securedPassword.Iterations, securedPassword2.Iterations);
+			Assert.AreEqual(securedPassword.HashingParameter, securedPassword2.HashingParameter);
         }
 
         [TestMethod]

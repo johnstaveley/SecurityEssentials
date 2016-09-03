@@ -14,7 +14,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <NuGetPackageImportStamp>324b73cf</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -59,6 +60,10 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Liphsoft.Crypto.Argon2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Liphsoft.Crypto.Argon2.1.0.3\lib\net35\x86\Liphsoft.Crypto.Argon2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -171,7 +176,8 @@
     <Compile Include="Core\Identity\UserStoreTests.cs" />
     <Compile Include="Core\Identity\UserManagerTests.cs" />
     <Compile Include="Core\Security\EncryptionTests.cs" />
-    <Compile Include="Core\Security\SecuredPasswordTests.cs" />
+    <Compile Include="Core\Security\Argon2SecuredPasswordTests.cs" />
+    <Compile Include="Core\Security\PBKDF2SecuredPasswordTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestDbSet\TestDbSet.cs" />
   </ItemGroup>
@@ -199,7 +205,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Liphsoft.Crypto.Argon2.1.0.3\build\Liphsoft.Crypto.Argon2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Liphsoft.Crypto.Argon2.1.0.3\build\Liphsoft.Crypto.Argon2.targets'))" />
   </Target>
+  <Import Project="..\..\..\packages\Liphsoft.Crypto.Argon2.1.0.3\build\Liphsoft.Crypto.Argon2.targets" Condition="Exists('..\..\..\packages\Liphsoft.Crypto.Argon2.1.0.3\build\Liphsoft.Crypto.Argon2.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
