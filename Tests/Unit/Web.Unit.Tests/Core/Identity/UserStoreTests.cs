@@ -38,7 +38,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         }
 
 		[TestMethod]
-		public async Task GIVEN_UserExists_WHEN_FindAndCheckLogonAsync_THEN_UserIsLoggedOn()
+		public async Task Given_UserExists_When_FindAndCheckLogonAsync_Then_UserIsLoggedOn()
 		{
 			// Arrange
 
@@ -53,7 +53,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_UserExistsButPasswordIncorrect_WHEN_FindAndCheckLogonAsync_THEN_UserIsNotLoggedOn()
+		public async Task Given_UserExistsButPasswordIncorrect_When_FindAndCheckLogonAsync_Then_UserIsNotLoggedOn()
 		{
 			// Arrange
 
@@ -69,7 +69,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_UserExists_WHEN_CreateIdentityAsync_THEN_ReturnsClaims()
+		public async Task Given_UserExists_When_CreateIdentityAsync_Then_ReturnsClaims()
 		{
 			// Arrange
 			var authenticationType = "Forms";
@@ -88,7 +88,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_ValidResetToken_WHEN_ChangePasswordFromTokenAsync_THEN_Success()
+		public async Task Given_ValidResetToken_When_ChangePasswordFromTokenAsync_Then_Success()
 		{
 
 			// Arrange
@@ -116,7 +116,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_OldPasswordCorrect_WHEN_ChangePasswordAsync_THEN_Success()
+		public async Task Given_OldPasswordCorrect_When_ChangePasswordAsync_Then_Success()
 		{
 
 			// Arrange

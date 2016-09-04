@@ -57,7 +57,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 			
 		[TestMethod]
-		public void LogOnPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void LogOnPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -68,7 +68,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void ChangeEmailAddressPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void ChangeEmailAddressPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -79,7 +79,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void ChangePasswordPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void ChangePasswordPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -90,7 +90,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void EmailVerifyGet_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void EmailVerifyGet_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -101,7 +101,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void RecoverPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void RecoverPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -112,7 +112,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void RecoverPasswordPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void RecoverPasswordPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -123,7 +123,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void ChangeSecurityInformationPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void ChangeSecurityInformationPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();
@@ -134,7 +134,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void RegisterPost_THEN_IsDecoratedAntiThrottlingAttribute()
+		public void RegisterPost_Then_IsDecoratedAntiThrottlingAttribute()
 		{
 			// Act
 			var type = _sut.GetType();

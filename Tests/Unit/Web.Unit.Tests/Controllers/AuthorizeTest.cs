@@ -36,7 +36,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
 		[TestMethod]
-		public void Controller_THEN_IsDecoratedWithAuthorize()
+		public void Controller_Then_IsDecoratedWithAuthorize()
 		{
 			var type = _sut.GetType();
 			var attributes = type.GetCustomAttributes(typeof(AuthorizeAttribute), true);
@@ -44,7 +44,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void DisableGet_THEN_IsDecoratedWithAuthorizeAndAdminRole()
+		public void DisableGet_Then_IsDecoratedWithAuthorizeAndAdminRole()
 		{
 			var type = _sut.GetType();
 			var methodInfo = type.GetMethod("Disable", new Type[] { typeof(int) });
@@ -54,7 +54,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public void DisablePost_THEN_IsDecoratedWithAuthorizeAndAdminRole()
+		public void DisablePost_Then_IsDecoratedWithAuthorizeAndAdminRole()
 		{
 			var type = _sut.GetType();
 			var methodInfo = type.GetMethod("Disable", new Type[] { typeof(int), typeof(FormCollection) });

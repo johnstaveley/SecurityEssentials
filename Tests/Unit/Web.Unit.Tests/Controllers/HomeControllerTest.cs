@@ -39,7 +39,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_About_THEN_ViewReturned()
+        public void When_About_Then_ViewReturned()
         {
 
             // Arrange
@@ -52,7 +52,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_Contact_THEN_ViewReturned()
+        public void When_Contact_Then_ViewReturned()
         {
 
             // Arrange
@@ -67,7 +67,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_Index_THEN_ViewReturned()
+        public void When_Index_Then_ViewReturned()
         {
 
             // Arrange

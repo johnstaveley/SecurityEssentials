@@ -45,7 +45,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         }
 
 		[TestMethod]
-		public async Task GIVEN_ValidDetails_WHEN_ChangePassword_THEN_PasswordChanged()
+		public async Task Given_ValidDetails_When_ChangePassword_Then_PasswordChanged()
 		{
 			// Arrange
 			var userId = 1;
@@ -63,7 +63,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_PersonalInformationUsed_WHEN_ChangePassword_THEN_PasswordNotChanged()
+		public async Task Given_PersonalInformationUsed_When_ChangePassword_Then_PasswordNotChanged()
 		{
 			// Arrange
 			var userId = 1;
@@ -81,7 +81,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public async Task GIVEN_ValidDetails_WHEN_CreateUser_THEN_UserCreatedSuccess()
+		public async Task Given_ValidDetails_When_CreateUser_Then_UserCreatedSuccess()
 		{
 			var userName = "bob@bob.net";
 			_userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
@@ -109,7 +109,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public void GIVEN_ValidPassword_WHEN_ValidatePassword_THEN_Success()
+		public void Given_ValidPassword_When_ValidatePassword_Then_Success()
 		{
 
 			// Arrange
@@ -125,7 +125,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public void GIVEN_PasswordContainsUserInformation_WHEN_ValidatePassword_THEN_Fails()
+		public void Given_PasswordContainsUserInformation_When_ValidatePassword_Then_Fails()
 		{
 
 			// Arrange
@@ -140,7 +140,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public void GIVEN_PasswordIsKnownBadPassword_WHEN_ValidatePassword_THEN_Fails()
+		public void Given_PasswordIsKnownBadPassword_When_ValidatePassword_Then_Fails()
 		{
 
 			// Arrange
@@ -154,7 +154,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
-		public void GIVEN_PasswordDoesNotMeetMinimumComplexity_WHEN_ValidatePassword_THEN_Fails()
+		public void Given_PasswordDoesNotMeetMinimumComplexity_When_ValidatePassword_Then_Fails()
 		{
 
 			// Arrange

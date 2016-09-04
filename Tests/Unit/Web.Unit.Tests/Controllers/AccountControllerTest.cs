@@ -56,7 +56,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_PreviousUserActivity_WHEN_UserLands_THEN_LastActivityDisplayed()
+        public void Given_PreviousUserActivity_When_UserLands_Then_LastActivityDisplayed()
         {
             // Arrange
             _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(5);
@@ -72,7 +72,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_AccountNotFound_WHEN_UserLands_THEN_HttpNotFound()
+        public void Given_AccountNotFound_When_UserLands_Then_HttpNotFound()
         {
             // Arrange
             _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
@@ -87,7 +87,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GIVEN_CredentialsCorrect_WHEN_Logon_THEN_RedirectsToLandingPage()
+        public async Task Given_CredentialsCorrect_When_Logon_Then_RedirectsToLandingPage()
         {
             // Arrange
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
@@ -107,7 +107,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[TestMethod]
-		public async Task GIVEN_CredentialsCorrectAndExternalReturnUrlProvided_WHEN_Logon_THEN_RedirectsToLandingPage()
+		public async Task Given_CredentialsCorrectAndExternalReturnUrlProvided_When_Logon_Then_RedirectsToLandingPage()
 		{
 			// Arrange
 			LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
@@ -124,7 +124,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-        public async Task GIVEN_CredentialsIncorrect_WHEN_Logon_THEN_ErrorViewReturned()
+        public async Task Given_CredentialsIncorrect_When_Logon_Then_ErrorViewReturned()
         {
             // Arrange
             LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password1", RememberMe = false };
@@ -141,7 +141,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserAuthenticated_WHEN_LogonViewRequested_THEN_RedirectToLandingPage()
+        public void Given_UserAuthenticated_When_LogonViewRequested_Then_RedirectToLandingPage()
         {
             // Arrange
             _httpRequest.Stub(x => x.IsAuthenticated).Return(true);
@@ -155,7 +155,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserIsNotAuthenticated_WHEN_LogonViewRequested_THEN_ShowsView()
+        public void Given_UserIsNotAuthenticated_When_LogonViewRequested_Then_ShowsView()
         {
             // Arrange
 
@@ -169,7 +169,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 
 		[TestMethod]
-		public void GIVEN_UserExists_WHEN_ChangeEmailAddressGet_THEN_ViewReturned()
+		public void Given_UserExists_When_ChangeEmailAddressGet_Then_ViewReturned()
 		{
 
 			// Arrange
@@ -186,7 +186,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public async Task GIVEN_ValidSubmissionData_WHEN_ChangeEmailAddress_THEN_SavesEmailsAndPendingViewReturned()
+		public async Task Given_ValidSubmissionData_When_ChangeEmailAddress_Then_SavesEmailsAndPendingViewReturned()
 		{
 			// Arrange
 			var model = new ChangeEmailAddressViewModel(_testUserName, null, null);
@@ -210,7 +210,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-		public async Task GIVEN_ValidChangeEmailAddressToken_WHEN_ChangeEmailAddressConfirmGet_THEN_SuccessViewShown()
+		public async Task Given_ValidChangeEmailAddressToken_When_ChangeEmailAddressConfirmGet_Then_SuccessViewShown()
 		{
 			// Arrange
 			var requestItems = new NameValueCollection();
@@ -241,7 +241,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}	
 
         [TestMethod]
-        public async Task GIVEN_CorrectInformationProvided_WHEN_ChangePassword_THEN_SavesRedirectsAndEmails()
+        public async Task Given_CorrectInformationProvided_When_ChangePassword_Then_SavesRedirectsAndEmails()
         {
             // Arrange
             var model = new ViewModel.ChangePasswordViewModel()
@@ -267,7 +267,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
 		[TestMethod]
-		public void GIVEN_SuccessCodeProvided_WHEN_ChangePassword_THEN_ShowsViewWithMessage()
+		public void Given_SuccessCodeProvided_When_ChangePassword_Then_ShowsViewWithMessage()
 		{
 			// Arrange
 
@@ -283,7 +283,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 
 		[TestMethod]
-        public void WHEN_ChangeSecurityInformationGet_THEN_ViewReturned()
+        public void When_ChangeSecurityInformationGet_Then_ViewReturned()
         {
             // Arrange
 
@@ -296,7 +296,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task WHEN_ChangeSecurityInformation_THEN_ViewReturned()
+        public async Task When_ChangeSecurityInformation_Then_ViewReturned()
         {
             // Arrange
             var model = new ChangeSecurityInformationViewModel()
@@ -321,7 +321,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GIVEN_RequestVerificationToken_WHEN_EmailVerify_THEN_UserStatusUpdated()
+        public async Task Given_RequestVerificationToken_When_EmailVerify_Then_UserStatusUpdated()
         {
             // Arrange
             var requestItems = new NameValueCollection();
@@ -338,7 +338,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_RecoverGet_THEN_ViewReturned()
+        public void When_RecoverGet_Then_ViewReturned()
         {
             // Arrange
 
@@ -352,7 +352,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_RegisterGet_THEN_ViewReturned()
+        public void When_RegisterGet_Then_ViewReturned()
         {
             // Arrange
 
@@ -365,7 +365,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GIVEN_ValidSubmissionData_WHEN_Recover_THEN_SavesEmailsAndSuccessViewReturned()
+        public async Task Given_ValidSubmissionData_When_Recover_Then_SavesEmailsAndSuccessViewReturned()
         {
             // Arrange
             RecoverViewModel model = new RecoverViewModel()
@@ -385,7 +385,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GIVEN_ValidSubmissionData_WHEN_RecoverPassword_THEN_SavesEmailsAndSuccessViewReturned()
+        public async Task Given_ValidSubmissionData_When_RecoverPassword_Then_SavesEmailsAndSuccessViewReturned()
         {
             // Arrange
             var model = new RecoverPasswordViewModel()
@@ -406,7 +406,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
 		[TestMethod]
-		public async Task GIVEN_ValidSubmissionData_WHEN_Register_THEN_UserIsEmailedConfirmation()
+		public async Task Given_ValidSubmissionData_When_Register_Then_UserIsEmailedConfirmation()
 		{
 			// Arrange
 			var collection = new NameValueCollection();
@@ -430,7 +430,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		}
 
 		[TestMethod]
-        public void GIVEN_ValidSubmissionData_WHEN_RecoverPasswordGet_THEN_ViewShown()
+        public void Given_ValidSubmissionData_When_RecoverPasswordGet_Then_ViewShown()
         {
             // Arrange
             var requestItems = new NameValueCollection();
@@ -454,7 +454,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_LogOff_THEN_SessionAbandoned()
+        public void When_LogOff_Then_SessionAbandoned()
         {
 
             // Arrange

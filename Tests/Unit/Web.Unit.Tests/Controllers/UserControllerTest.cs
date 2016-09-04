@@ -33,7 +33,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserExists_WHEN_DisableGet_THEN_PartialViewReturned()
+        public void Given_UserExists_When_DisableGet_Then_PartialViewReturned()
         {
 
             // Arrange
@@ -47,7 +47,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserExistsAndCurrentUser_WHEN_DisablePost_THEN_UserDisabledAndSuccessJsonReturned()
+        public void Given_UserExistsAndCurrentUser_When_DisablePost_Then_UserDisabledAndSuccessJsonReturned()
         {
 
             // Arrange
@@ -67,7 +67,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserExists_WHEN_EditGet_THEN_ViewReturned()
+        public void Given_UserExists_When_EditGet_Then_ViewReturned()
         {
 
             // Arrange
@@ -85,7 +85,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_SubmissionCorrect_WHEN_EditPost_THEN_ViewReturned()
+        public void Given_SubmissionCorrect_When_EditPost_Then_ViewReturned()
         {
 
             // Arrange
@@ -106,7 +106,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void WHEN_Index_THEN_ViewReturned()
+        public void When_Index_Then_ViewReturned()
         {
 
             // Arrange
@@ -120,7 +120,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_UserExists_WHEN_LogGet_THEN_ViewReturned()
+        public void Given_UserExists_When_LogGet_Then_ViewReturned()
         {
 
             // Arrange
@@ -135,7 +135,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         }
 
         [TestMethod]
-        public void GIVEN_DataExists_WHEN_Read_THEN_JsonReturned()
+        public void Given_DataExists_When_Read_Then_JsonReturned()
         {
 
             // Arrange
