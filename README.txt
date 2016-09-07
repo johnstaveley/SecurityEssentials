@@ -6,7 +6,7 @@ o) SQL Injection: It uses Entity Framework ORM
 o) Weak account management: 
 	+ Uses claims based auth
 	+ Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified
-	+ Enforces a strong password - Bans weak passwords, enforces minimum password strength and allows special characters
+	+ Enforces a strong password - Bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters
 	+ Has a water tight account management process
 	+ Prevents anti-enumeration through well designed messages
 	+ Logs account activity which can be checked by the user to see if there is any illicit activity

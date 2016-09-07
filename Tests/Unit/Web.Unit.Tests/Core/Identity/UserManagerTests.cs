@@ -125,6 +125,21 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
+		public void Given_PasswordContainsSpecialCharacters_When_ValidatePassword_Then_Succeeds()
+		{
+
+			// Arrange
+			var password = "*&^%$£\"!aAb2";
+
+			// Act
+			var result = _sut.ValidatePassword(password, _bannedWords);
+
+			// Assert
+			Assert.IsTrue(result.Succeeded);
+			Assert.AreEqual(0, result.Errors.Count());
+		}
+
+		[TestMethod]
 		public void Given_PasswordContainsUserInformation_When_ValidatePassword_Then_Fails()
 		{
 
@@ -135,7 +150,22 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = _sut.ValidatePassword(password, _bannedWords);
 
 			// Assert
-			AssertValidationResultFailed(result);
+			AssertValidationResultFailed(result, "personal information");
+
+		}
+
+		[TestMethod]
+		public void Given_PasswordContainsConsecutivelyRepeatedCharacters_When_ValidatePassword_Then_Fails()
+		{
+
+			// Arrange
+			var password = "L7s8xvdooo123O";
+
+			// Act
+			var result = _sut.ValidatePassword(password, _bannedWords);
+
+			// Assert
+			AssertValidationResultFailed(result, "repeat the same character or digit more than 3 times consecutively");
 
 		}
 
@@ -150,7 +180,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = _sut.ValidatePassword(password, _bannedWords);
 
 			// Assert
-			AssertValidationResultFailed(result);
+			AssertValidationResultFailed(result, "password is on a list of easy to guess passwords");
 		}
 
 		[TestMethod]
@@ -164,13 +194,14 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = _sut.ValidatePassword(password, _bannedWords);
 
 			// Assert
-			AssertValidationResultFailed(result);
+			AssertValidationResultFailed(result, "password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value");
 		}
 
-		private void AssertValidationResultFailed(SEIdentityResult result)
+		private void AssertValidationResultFailed(SEIdentityResult result, string errorMessageContains)
 		{
 			Assert.IsFalse(result.Succeeded);
 			Assert.AreEqual(1, result.Errors.Count());
+			Assert.IsTrue(result.Errors.All(a => a.Contains(errorMessageContains)));
 		}
 
     }

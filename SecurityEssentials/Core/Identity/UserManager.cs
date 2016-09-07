@@ -22,6 +22,7 @@ namespace SecurityEssentials.Core.Identity
 		private readonly IEncryption _encryption;
         private readonly string _passwordValidityRegex = @"^.*(?=.{8,100})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
         private readonly string _passwordInvalidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
+		private readonly string _passwordGoodEntropyRegex = @"^(?!.*(.)\1{2})(.*?){3,29}$";
 
 		#endregion
 
@@ -214,6 +215,11 @@ namespace SecurityEssentials.Core.Identity
 			if (string.IsNullOrEmpty(password) || Regex.Matches(password, _passwordValidityRegex).Count == 0)
 			{
 				return new SEIdentityResult(_passwordInvalidityMessage);
+			}
+
+			if (Regex.Matches(password, _passwordGoodEntropyRegex).Count == 0)
+			{
+				return new SEIdentityResult("Your password cannot repeat the same character or digit more than 3 times consecutively, please choose another");
 			}
 
 			var badPassword = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword && l.Description.ToLower() == password.ToLower()).FirstOrDefault();
