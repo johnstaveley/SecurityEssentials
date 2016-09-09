@@ -33,10 +33,12 @@ namespace SecurityEssentials.Core
 				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
-				FirstName = "Admin", 
+				FirstName = "Admin",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User",
 				TelNoMobile = "07740101235",
 				PasswordHash = "BpC/5HcMA4pnktXCPGY6HeNY9fPPk24JvvN2YyR3JFcd2j6Nen0sZHrf1mucLSMuuxp3CfHWaPIct8jp11YYyUXgihhS+9VA4OUJVz7Ak1uvuT6M+qItK1+tdlsihrpk3PkiuWafte0lcStImz2sCJroxtoGzOxOGSnpFehPIgd5TZBvmI3Crphdxq/dJhRwHIVQrnrXzwA+Aapy3bcXvutFmxS9F3/31BU4F5dJcYWHu+KbPydUlFl7RnM6A7DsnNKVcoDnk1CJZiJCz7WWNos+m+iv0CBE4ENDuP20sLW6x51S/ktcz3mdbn9wT38JM5CoLbS1UdVxdYC+Dkv+kQ==", // Password xsHDjxshdjkKK917&
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password xsHDjxshdjkKK917&
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,
@@ -54,10 +56,12 @@ namespace SecurityEssentials.Core
 				DateCreated = DateTime.UtcNow,
 				EmailVerified = true,
 				Enabled = true,
-				FirstName = "Standard", 
+				FirstName = "Standard",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User",
 				TelNoMobile = "07881231234",
 				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password x12a;pP02icdjshER
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,
@@ -72,9 +76,11 @@ namespace SecurityEssentials.Core
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User2",
 				TelNoMobile = "07881231234",
 				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password x12a;pP02icdjshER
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,
@@ -91,9 +97,11 @@ namespace SecurityEssentials.Core
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User3",
 				TelNoMobile = "07881231234",
 				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password x12a;pP02icdjshER
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,
@@ -108,9 +116,11 @@ namespace SecurityEssentials.Core
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User",
 				TelNoMobile = "07881231234",
 				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password x12a;pP02icdjshER
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,
@@ -128,9 +138,11 @@ namespace SecurityEssentials.Core
 				EmailVerified = true,
 				Enabled = true,
 				FirstName = "Standard",
+				HashStrategy = Identity.HashStrategyKind.PBKDF2_5009Iterations,
 				LastName = "User",
 				TelNoMobile = "07881231234",
 				PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
+				PasswordLastChangedDate = DateTime.UtcNow,
 				Salt = salt, // Password x12a;pP02icdjshER
 				SecurityAnswer = encryptedSecurityAnswer,
 				SecurityQuestionLookupItemId = 271,

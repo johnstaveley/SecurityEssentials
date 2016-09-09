@@ -17,12 +17,12 @@
                             @Html.HiddenFor(model => model.User.Id)
                             @Html.HiddenFor(model => model.IsOwnProfile)
                             @Html.HiddenFor(model => model.IsAdministrator)
-                            if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                             {
                                 <div class="form-group">
                                     <div class="alert alert-info" id="statusMessage">@ViewBag.StatusMessage</div>
                                 </div>
-                            }
+}
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.UserName)
@@ -72,8 +72,7 @@
                                 @Html.LabelFor(model => model.User.SkypeName)
                                 @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.User.SkypeName)
-                            </div>
-                            if (User.IsInRole("Admin"))
+                            </div>if (User.IsInRole("Admin"))
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.EmailVerified)
@@ -87,7 +86,7 @@
                                     @Html.LabelFor(model => model.User.Enabled)
                                     @Html.CheckBoxFor(model => model.User.Enabled)
                                 </div>
-                            }
+}
                             else
                             {
                                 <div class="form-group">
@@ -96,6 +95,10 @@
                                 </div>
 }
                             <div class="form-group">
+                                @Html.LabelFor(model => model.User.PasswordLastChangedDate)
+                                @Model.User.PasswordLastChangedDate.ToLocalTime()
+                            </div>
+                            <div class="form-group">
                                 @Html.LabelFor(model => model.User.DateCreated)
                                 @Model.User.DateCreated.ToLocalTime()
                             </div>
@@ -103,7 +106,7 @@
                                 <div class="col-md-8">&nbsp;</div>
                                 <div class="col-md-2">@Html.ActionLink("Cancel", "Index", "User")</div>
                                 <div class="col-md-2"><input id="submit" type="submit" value="Save" class="btn btn-primary btn-block" /></div>
-                                </div>
+                            </div>
                                 @Html.AntiForgeryToken()
 }
                     </div>

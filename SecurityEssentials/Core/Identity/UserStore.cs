@@ -202,7 +202,8 @@ namespace SecurityEssentials.Core.Identity
             var securedPassword = new SecuredPassword(newPassword, _configuration.DefaultHashStrategy);
 			user.HashStrategy = securedPassword.HashStrategy;
 			user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
-            user.Salt = Convert.ToBase64String(securedPassword.Salt);
+			user.PasswordLastChangedDate = DateTime.UtcNow;
+			user.Salt = Convert.ToBase64String(securedPassword.Salt);
             user.PasswordResetExpiry = null;
             user.PasswordResetToken = null;
             user.FailedLogonAttemptCount = 0;
@@ -220,7 +221,8 @@ namespace SecurityEssentials.Core.Identity
             {
 				var newPasswordHash = new SecuredPassword(currentPassword, _configuration.DefaultHashStrategy);
                 user.PasswordHash = Convert.ToBase64String(newPasswordHash.Hash);
-                user.Salt = Convert.ToBase64String(newPasswordHash.Salt);
+				user.PasswordLastChangedDate = DateTime.UtcNow;
+				user.Salt = Convert.ToBase64String(newPasswordHash.Salt);
 				user.HashStrategy = newPasswordHash.HashStrategy;
 				user.PasswordResetExpiry = null;
 				user.PasswordResetToken = null;

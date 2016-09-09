@@ -85,6 +85,7 @@ namespace SecurityEssentials.Core.Identity
 						user.Enabled = true;
 						user.FirstName = firstName;
 						user.LastName = lastName;
+						user.PasswordLastChangedDate = DateTime.UtcNow;
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
 						user.Salt = Convert.ToBase64String(securedPassword.Salt);
 						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;

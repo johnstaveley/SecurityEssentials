@@ -65,7 +65,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			Assert.AreEqual(2, _testUser.FailedLogonAttemptCount);
 			Assert.AreNotEqual(_testUser.UserName, result.UserName);
 			Assert.IsTrue(_testUser.UserLogs.Any(b => b.Description.Contains("Failed Logon")));
+			Assert.IsFalse(_testUser.PasswordLastChangedDate > DateTime.UtcNow.AddMinutes(-5));
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
+
 		}
 
 		[TestMethod]
@@ -112,6 +114,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			Assert.IsTrue(_testUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
 			Assert.IsNotNull(_testUser.PasswordHash);
 			Assert.IsNotNull(_testUser.Salt);
+			Assert.IsTrue(_testUser.PasswordLastChangedDate > DateTime.UtcNow.AddMinutes(-5));
 
 		}
 
@@ -135,6 +138,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			Assert.IsTrue(_testUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
 			Assert.AreNotEqual(oldPasswordHash, _testUser.PasswordHash);
 			Assert.AreNotEqual(oldSalt, _testUser.Salt);
+			Assert.IsTrue(_testUser.PasswordLastChangedDate > DateTime.UtcNow.AddMinutes(-5));
 
 		}
 

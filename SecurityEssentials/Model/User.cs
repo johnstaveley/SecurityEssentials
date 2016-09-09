@@ -31,6 +31,10 @@ namespace SecurityEssentials.Model
 		/// The algorithm to use to create the hash
 		/// </summary>
 		public HashStrategyKind HashStrategy { get; set; }
+		/// <summary>
+		/// The date the password was last changed (UTC)
+		/// </summary>
+		public DateTime PasswordLastChangedDate { get; set; }
         /// <summary>
         /// The date the user was created (UTC)
         /// </summary> 

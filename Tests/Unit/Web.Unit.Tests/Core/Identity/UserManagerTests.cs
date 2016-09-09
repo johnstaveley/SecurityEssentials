@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Rhino.Mocks;
 using SecurityEssentials.Unit.Tests.TestDbSet;
 using System.Threading.Tasks;
+using System;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
@@ -99,6 +100,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 				c.Enabled == true &&
 				c.FirstName == "bob" &&
 				c.LastName == "the bod" &&
+				c.PasswordLastChangedDate > DateTime.UtcNow.AddMinutes(-5) &&
 				!string.IsNullOrEmpty(c.PasswordHash) &&
 				!string.IsNullOrEmpty(c.Salt) &&
 				c.SecurityQuestionLookupItemId == 142 &&
