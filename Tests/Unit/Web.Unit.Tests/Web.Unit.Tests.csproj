@@ -175,6 +175,7 @@
     <Compile Include="Controllers\AuthorizeTest.cs" />
     <Compile Include="Core\Identity\UserStoreTests.cs" />
     <Compile Include="Core\Identity\UserManagerTests.cs" />
+    <Compile Include="Core\EmailTemplatesTests.cs" />
     <Compile Include="Core\Security\EncryptionTests.cs" />
     <Compile Include="Core\Security\Argon2SecuredPasswordTests.cs" />
     <Compile Include="Core\Security\PBKDF2SecuredPasswordTests.cs" />

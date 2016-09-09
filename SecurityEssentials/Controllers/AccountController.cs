@@ -132,8 +132,7 @@ namespace SecurityEssentials.Controllers
 						user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
 						user.NewEmailAddress = model.NewEmailAddress;
 						// Send change username with link to recover password form
-						string emailBody = string.Format("A request has been received to change your {0} username/email address. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/ChangeEmailAddresConfirm?NewEmailAddressToken={2}'>{1}Account/ChangeEmailAddresConfirm?NewEmailAddressToken={2}</a>. If you did not request this then you can ignore this email.",
-							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
+						string emailBody = EmailTemplates.ChangeEmailAddressBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
 						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
 						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 						user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request started to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
