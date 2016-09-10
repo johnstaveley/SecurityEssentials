@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -9,12 +8,10 @@ using SecurityEssentials.Model;
 using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
-using System.Configuration;
-using System.Web.Security;
 
 namespace SecurityEssentials.Controllers
 {
-    public class AccountController : AntiForgeryControllerBase
+	public class AccountController : AntiForgeryControllerBase
     {
 
         private IAppConfiguration _configuration;
@@ -494,12 +491,12 @@ namespace SecurityEssentials.Controllers
                             if (result.Succeeded)
                             {
                                 emailSubject = string.Format("{0} - Complete your registration", _configuration.ApplicationName);
-                                emailBody = string.Format("Welcome to {0}, to complete your registration we just need to confirm your email address by clicking <a href='{1}Account/EmailVerify?EmailVerficationToken={2}'>{1}Account/EmailVerify?EmailVerficationToken={2}</a>. If you did not request this registration then you can ignore this email and do not need to take any further action", _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.EmailConfirmationToken);
+                                emailBody = EmailTemplates.RegistrationPendingBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.EmailConfirmationToken);
                             }
                             else
                             {
                                 emailSubject = string.Format("{0} - Duplicate Registration", _configuration.ApplicationName);
-                                emailBody = string.Format("You already have an account on {0}. You (or possibly someone else) just attempted to register on {0} with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='{1}Account/LogOn'>{1}Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='{1}Account/LogOn'>{1}Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email", _configuration.ApplicationName, _configuration.WebsiteBaseUrl);
+                                emailBody = EmailTemplates.RegistrationDuplicatedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl);
                             }
 
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);

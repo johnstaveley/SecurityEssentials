@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace SecurityEssentials.Core
+﻿namespace SecurityEssentials.Core
 {
 	public static class EmailTemplates
 	{
+
+		public static string RegistrationPendingBodyText(string firstName, string lastName, string applicationName, string url, string emailVerificationToken)
+		{
+			return string.Format("{0}Welcome to {1}, to complete your registration we just need to confirm your email address by clicking <a href='{2}Account/EmailVerify?EmailVerficationToken={3}'>{2}Account/EmailVerify?EmailVerficationToken={3}</a>. If you did not request this registration then you can ignore this email and do not need to take any further action{4}", GetGreeting(firstName, lastName), applicationName, url, emailVerificationToken, NotSpoofText(applicationName));
+		}
+
+		public static string RegistrationDuplicatedBodyText(string firstName, string lastName, string applicationName, string url)
+		{
+			return string.Format("{0}You already have an account on {1}. You (or possibly someone else) just attempted to register on {1} with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='{2}Account/LogOn'>{2}Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='{2}Account/LogOn'>{2}Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email{3}", GetGreeting(firstName, lastName), applicationName, url, NotSpoofText(applicationName));
+		}
 
 		public static string ChangePasswordPendingBodyText(string firstName, string lastName, string applicationName, string url, string passwordResetToken)
 		{

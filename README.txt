@@ -10,8 +10,9 @@ o) Weak account management:
 	+ Has a water tight account management process
 	+ Prevents anti-enumeration through well designed messages
 	+ Logs account activity which can be checked by the user to see if there is any illicit activity
-	+ Emails on key account events
+	+ Emails on key account events and gives anti-phishing advice
 	+ Verifies email by sending an email to the specified address
+	+ Re-verifies email when requesting a change of email
 	+ Prevents brute force of logon
 	+ Prevents brute force of registration or password reset through anti-throttling and CAPTCHA
 	+ Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm

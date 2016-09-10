@@ -13,7 +13,29 @@ namespace SecurityEssentials.Unit.Tests.Core
 		private string _url = "http://localhost:4986/";
 		private string _token = "c4f32838-9ab4-46d8-bc49-d080264bd13e";
 		private string _oldEmailAddress = "old@old.com";
-		private string _newEmailAddress = "new@new.com";		
+		private string _newEmailAddress = "new@new.com";
+
+		[TestMethod]
+		public void When_GetRegistrationPendingBodyText_Then_CorrectEmailIsReturned()
+		{
+
+			// Act
+			var emailText = EmailTemplates.RegistrationPendingBodyText(_firstName, _lastName, _applicationName, _url, _token);
+
+			Assert.AreEqual("Dear John Staveley,<br /><br />Welcome to Security Essentials, to complete your registration we just need to confirm your email address by clicking <a href='http://localhost:4986/Account/EmailVerify?EmailVerficationToken=c4f32838-9ab4-46d8-bc49-d080264bd13e'>http://localhost:4986/Account/EmailVerify?EmailVerficationToken=c4f32838-9ab4-46d8-bc49-d080264bd13e</a>. If you did not request this registration then you can ignore this email and do not need to take any further action<br />How do I know this is not a Spoof email? Spoof or ‘phishing’ emails tend to have generic greetings such as \"Dear Security Essentials member\". Emails from Security Essentials will always contain your full name.<br />", emailText);
+
+		}
+
+		[TestMethod]
+		public void When_GetRegistrationDuplicatedBodyText_Then_CorrectEmailIsReturned()
+		{
+
+			// Act
+			var emailText = EmailTemplates.RegistrationDuplicatedBodyText(_firstName, _lastName, _applicationName, _url);
+
+			Assert.AreEqual("Dear John Staveley,<br /><br />You already have an account on Security Essentials. You (or possibly someone else) just attempted to register on Security Essentials with this email address. However you are registered and cannot re-register with the same address. If you'd like to login you can do so by clicking here: <a href='http://localhost:4986/Account/LogOn'>http://localhost:4986/Account/LogOn</a>. If you have forgotten your password you can answer some security questions here to reset your password:<a href='http://localhost:4986/Account/LogOn'>http://localhost:4986/Account/Recover</a>. If it wasn't you who attempted to register with this email address or you did it by mistake, you can safely ignore this email<br />How do I know this is not a Spoof email? Spoof or ‘phishing’ emails tend to have generic greetings such as \"Dear Security Essentials member\". Emails from Security Essentials will always contain your full name.<br />", emailText);
+
+		}
 
 		[TestMethod]
         public void When_GetChangeEmailPendingBodyText_Then_CorrectEmailIsReturned()
