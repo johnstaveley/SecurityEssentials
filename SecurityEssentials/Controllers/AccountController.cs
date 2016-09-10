@@ -132,7 +132,7 @@ namespace SecurityEssentials.Controllers
 						user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
 						user.NewEmailAddress = model.NewEmailAddress;
 						// Send change username with link to recover password form
-						string emailBody = EmailTemplates.ChangeEmailAddressBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
+						string emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
 						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
 						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 						user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request started to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
@@ -166,8 +166,7 @@ namespace SecurityEssentials.Controllers
 			}
 			user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request confirmed to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
 			string emailSubject = string.Format("{0} - Change email address process completed", _configuration.ApplicationName);
-			string emailBody = string.Format("A request has been completed to change your {0} username/email address from {1} to {2}. This email address can no longer be used to sign into the account. If you did not request this then please contact the website administration asap.",
-				_configuration.ApplicationName, user.UserName, user.NewEmailAddressToken);
+			string emailBody = EmailTemplates.ChangeEmailAddressCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, user.UserName, user.NewEmailAddressToken);
 			_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
 			user.UserName = user.NewEmailAddress;
 			user.NewEmailAddress = null;
@@ -225,7 +224,7 @@ namespace SecurityEssentials.Controllers
                     if (result.Succeeded)
                     {
                         // Email recipient with password change acknowledgement
-                        string emailBody = string.Format("Just a little note from {0} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap", _configuration.ApplicationName);
+                        string emailBody = EmailTemplates.ChangePasswordCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
                         string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                         _context.SaveChanges();
@@ -296,8 +295,7 @@ namespace SecurityEssentials.Controllers
                     user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                     user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
                     // Send recovery email with link to recover password form
-                    string emailBody = string.Format("A request has been received to reset your {0} password. You can complete this process any time within the next 15 minutes by clicking <a href='{1}Account/RecoverPassword?PasswordResetToken={2}'>{1}Account/RecoverPassword?PasswordResetToken={2}</a>. If you did not request this then you can ignore this email.",
-                        _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
+                    string emailBody = EmailTemplates.ChangePasswordPendingBodyText(user.FirstName, user.LastName,  _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
                     string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
                     _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
                     user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
@@ -431,10 +429,8 @@ namespace SecurityEssentials.Controllers
                         await _context.SaveChangesAsync();
 
                         // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                        string emailBody = "";
-                        string emailSubject = "";
-                        emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName);
-                        emailBody = string.Format("Hello {0}, please be advised that the security information on your account for {1} been changed. If you did not initiate this action then please contact the site administrator as soon as possible", user.FullName, _configuration.ApplicationName);
+                        string emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName);
+                        string emailBody = EmailTemplates.ChangeSecurityInformationCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { logonResult.UserName }, null, null, emailSubject, emailBody, true);
                         return View("ChangeSecurityInformationSuccess");
                     }
