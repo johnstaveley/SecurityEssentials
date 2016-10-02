@@ -15,13 +15,6 @@ namespace SecurityEssentials
 	public class MvcApplication : System.Web.HttpApplication
 	{
 
-		protected void Application_PreSendRequestHeaders()
-		{
-            // SECURE: Remove server information disclosure
-			Response.Headers.Remove("X-AspNet-Version");
-			Response.Headers.Remove("X-AspNetMvc-Version");
-		}
-
 		protected void Application_Start()
 		{
 			AreaRegistration.RegisterAllAreas();
@@ -33,6 +26,10 @@ namespace SecurityEssentials
 			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
 			//SECURE: Remove automatic XFrame option header so we can add it in filters to entire site
 			System.Web.Helpers.AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
+
+			// SECURE: Remove server information disclosure
+			MvcHandler.DisableMvcResponseHeader = true;
+
 			using (var context = new SEContext())
 			{
 				context.Database.Initialize(true);
