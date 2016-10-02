@@ -17,9 +17,7 @@ namespace SecurityEssentials.App_Start
 				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
 				LoginPath = new PathString("/Account/Logon"),
 				CookieName = "SecureAuth",
-#if !DEBUG
-                CookieSecure = CookieSecureOption.Always,
-#endif
+				CookieSecure = CookieSecureOption.SameAsRequest,
 				CookieHttpOnly = true,
 				Provider = new CookieAuthenticationProvider
 				{
