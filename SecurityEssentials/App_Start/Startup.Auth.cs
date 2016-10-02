@@ -19,6 +19,7 @@ namespace SecurityEssentials.App_Start
 #if !DEBUG
                 CookieSecure = CookieSecureOption.Always,
 #endif
+				CookieHttpOnly = true,
 				Provider = new CookieAuthenticationProvider
 				{
 					OnApplyRedirect = ctx =>
