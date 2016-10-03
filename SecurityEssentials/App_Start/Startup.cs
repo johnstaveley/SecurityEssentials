@@ -8,7 +8,7 @@ namespace SecurityEssentials.App_Start
     {
         public static void Configuration(IAppBuilder app)
         {
-            ConfigureAuthorisation(app);
+            ConfigureAuthentication(app);
         }
     }
 }
