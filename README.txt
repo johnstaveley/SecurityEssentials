@@ -1,4 +1,4 @@
-Created by John Staveley - Last updated 04/09/2016
+Created by John Staveley - Last updated 13/10/2016
 
 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
