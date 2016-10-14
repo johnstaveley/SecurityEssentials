@@ -39,7 +39,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
             var securedPassword = new SecuredPassword("password", HashStrategyKind.Argon2_48kWorkCost);
 
             Assert.AreNotEqual("password", securedPassword.Hash);
-            Assert.AreEqual(96, securedPassword.Hash.Length);
+            Assert.AreEqual(416, securedPassword.Hash.Length);
         }
 
         [TestMethod]

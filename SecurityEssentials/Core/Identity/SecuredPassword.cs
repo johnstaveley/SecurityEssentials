@@ -68,7 +68,7 @@ namespace SecurityEssentials.Core.Identity
 					break;
 				case HashStrategyKind.Argon2_48kWorkCost:
 					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					_salt = argon2Hasher.GenerateSalt();
+					_salt = PasswordHasher.GenerateSalt((uint) 256);
 					_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
 					break;
 			}
