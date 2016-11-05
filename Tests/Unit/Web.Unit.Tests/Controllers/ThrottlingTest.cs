@@ -7,7 +7,6 @@ using SecurityEssentials.Core;
 using Rhino.Mocks;
 using SecurityEssentials.Core.Identity;
 using System.Web.Routing;
-using SecurityEssentials.Model;
 using System.Reflection;
 using SecurityEssentials.ViewModel;
 
@@ -61,7 +60,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			// Act
 			var type = _sut.GetType();
-			var methodInfo = type.GetMethod("LogOn", new Type[] { typeof(LogOn), typeof(string) } );
+			var methodInfo = type.GetMethod("LogOn", new Type[] { typeof(LogOnViewModel), typeof(string) } );
 
 			//Assert
 			AssertMethodIsDecoratedWithAntiThrottlingAttribute(methodInfo);

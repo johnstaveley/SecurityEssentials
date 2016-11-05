@@ -6,6 +6,8 @@ using System.Security.Claims;
 using SecurityEssentials.Core;
 using System.Web.Helpers;
 using System.Globalization;
+using Serilog;
+using System.Configuration;
 
 namespace SecurityEssentials
 {
@@ -34,6 +36,11 @@ namespace SecurityEssentials
 			{
 				context.Database.Initialize(true);
 			}
+			Log.Logger = new LoggerConfiguration()
+				.WriteTo.MSSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString(), "Logs")
+				.MinimumLevel.Debug()
+				.CreateLogger();
+			Log.Information("Application started");
 		}
 
 

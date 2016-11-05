@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Model
+namespace SecurityEssentials.ViewModel
 {
-    public class LocalPassword
+    public class LocalPasswordViewModel
     {
         [Required]
         [DataType(DataType.Password)]

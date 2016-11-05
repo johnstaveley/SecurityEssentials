@@ -1,7 +1,7 @@
 ﻿
 namespace SecurityEssentials.Model
 {
-    public class ExternalLogOn
+    public class ExternalLogOnViewModel
     {
         public string Provider { get; set; }
         public string ProviderDisplayName { get; set; }

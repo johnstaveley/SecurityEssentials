@@ -57,14 +57,16 @@ namespace SecurityEssentials.Controllers
         {
             _formsAuth.SignOut();
             _userManager.SignOut();
-            Session.Abandon();
+			Logger.Debug("Entered Post Account.Logoff");
+			Session.Abandon();
             return RedirectToAction("LogOn", "Account");
         }
 
         [AllowAnonymous]
         public ActionResult LogOn(string returnUrl)
         {
-            if (Request.IsAuthenticated)
+			Logger.Debug("Entered Get Account.LogOn");
+			if (Request.IsAuthenticated)
             {
                 return RedirectToAction("Landing", "Account");
             }
@@ -76,9 +78,10 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
-        public async Task<ActionResult> LogOn(LogOn model, string returnUrl)
+        public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
-            if (ModelState.IsValid)
+			Logger.Debug("Entered Post Account.LogOn");
+			if (ModelState.IsValid)
             {
                 var user = await _userManager.TryLogOnAsync(model.UserName, model.Password);
                 if (user.Success)

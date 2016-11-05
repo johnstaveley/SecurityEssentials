@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Serilog;
+using Serilog.Core;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -11,6 +13,7 @@ namespace SecurityEssentials.Controllers
 
         private readonly ValidateAntiForgeryTokenAttribute _validator;
         private readonly AcceptVerbsAttribute _verbs;
+		public ILogger Logger;
 
         #endregion
 
@@ -24,6 +27,7 @@ namespace SecurityEssentials.Controllers
         {
             _verbs = new AcceptVerbsAttribute(verbs);
             _validator = new ValidateAntiForgeryTokenAttribute();
+			Logger = Log.Logger;
         }
 
         #endregion

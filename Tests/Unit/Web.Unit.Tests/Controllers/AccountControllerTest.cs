@@ -90,7 +90,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_CredentialsCorrect_When_Logon_Then_RedirectsToLandingPage()
         {
             // Arrange
-            LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
+            var logon = new LogOnViewModel() { UserName = "joeblogs", Password = "password", RememberMe = false };
             UserManagerAttemptsLoginWithResult(true);
             _userManager.Expect(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return(Task.FromResult(0));
@@ -110,7 +110,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		public async Task Given_CredentialsCorrectAndExternalReturnUrlProvided_When_Logon_Then_RedirectsToLandingPage()
 		{
 			// Arrange
-			LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password", RememberMe = false };
+			var logon = new LogOnViewModel() { UserName = "joeblogs", Password = "password", RememberMe = false };
 			_returnUrl = "http://www.ebay.co.uk/";
 			UserManagerAttemptsLoginWithResult(true);
 			_userManager.Expect(a => a.LogOnAsync(Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
@@ -127,7 +127,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_CredentialsIncorrect_When_Logon_Then_ErrorViewReturned()
         {
             // Arrange
-            LogOn logon = new LogOn() { UserName = "joeblogs", Password = "password1", RememberMe = false };
+            var logon = new LogOnViewModel() { UserName = "joeblogs", Password = "password1", RememberMe = false };
             UserManagerAttemptsLoginWithResult(false);
             _services.Expect(a => a.Wait(Arg<int>.Is.Anything));
 

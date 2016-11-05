@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SecurityEssentials.Model
+namespace SecurityEssentials.ViewModel
 {
-    public class LogOn
+    public class LogOnViewModel
     {
         [Required]
         [Display(Name = "User name")]

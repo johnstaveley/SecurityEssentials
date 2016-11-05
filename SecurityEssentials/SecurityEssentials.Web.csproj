@@ -143,6 +143,18 @@
       <HintPath>..\packages\RecaptchaNet.2.1.0\lib\net451\Recaptcha.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.MSSqlServer, Version=4.1.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.MSSqlServer.4.1.1\lib\net45\Serilog.Sinks.MSSqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.PeriodicBatching, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.PeriodicBatching.2.0.0\lib\net45\Serilog.Sinks.PeriodicBatching.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -277,13 +289,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Core\SEContext.cs" />
+    <Compile Include="Model\Log.cs" />
     <Compile Include="ViewModel\RecoverViewModels.cs" />
-    <Compile Include="Model\ExternalLogOn.cs" />
-    <Compile Include="Model\LocalPassword.cs" />
-    <Compile Include="Model\LogOn.cs" />
+    <Compile Include="ViewModel\ExternalLogOnViewModel.cs" />
+    <Compile Include="ViewModel\LocalPasswordViewModel.cs" />
+    <Compile Include="ViewModel\LogOnViewModel.cs" />
     <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Model\LookupType.cs" />
-    <Compile Include="Model\RegisterExternalLogOn.cs" />
+    <Compile Include="ViewModel\RegisterExternalLogOnViewModel.cs" />
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\SeIdentityResult.cs" />
     <Compile Include="Model\UserLog.cs" />
