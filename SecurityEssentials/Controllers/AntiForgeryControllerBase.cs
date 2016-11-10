@@ -1,11 +1,12 @@
-﻿using Serilog;
-using Serilog.Core;
+﻿using SecurityEssentials.Core.Attributes;
+using Serilog;
 using System;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
+	[ExceptionHandler]
     public abstract class AntiForgeryControllerBase : Controller
     {
 

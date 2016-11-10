@@ -261,6 +261,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Core\AppConfiguration.cs" />
     <Compile Include="Core\Attributes\AuthorizeAttribute.cs" />
+    <Compile Include="Core\Attributes\ExceptionHandlerAttribute.cs" />
     <Compile Include="Core\Constants\AppSensorDetectionPointKind.cs" />
     <Compile Include="Core\Consts.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />

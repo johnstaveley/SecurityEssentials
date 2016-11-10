@@ -80,7 +80,7 @@ namespace SecurityEssentials
 
 		void Session_Start(object sender, EventArgs e)
 		{
-			// Adding a variable to session keeps the session id constant between requests
+			// SECURE: Adding a variable to session keeps the session id constant between requests which is useful for logging and identifying a user between requests
 			HttpContext.Current.Session.Add("__MyAppSession", string.Empty);
 		}
 
