@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using SecurityEssentials.Core.Identity;
 using System.Web;
 using System.Web.Routing;
+using SecurityEssentials.Core.Attributes;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
@@ -39,7 +40,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		public void Controller_Then_IsDecoratedWithAuthorize()
 		{
 			var type = _sut.GetType();
-			var attributes = type.GetCustomAttributes(typeof(AuthorizeAttribute), true);
+			var attributes = type.GetCustomAttributes(typeof(SEAuthorizeAttribute), true);
 			Assert.IsTrue(attributes.Any(), "No Authorize Attribute found");
 		}
 
@@ -48,9 +49,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			var type = _sut.GetType();
 			var methodInfo = type.GetMethod("Disable", new Type[] { typeof(int) });
-			var attributes = methodInfo.GetCustomAttributes(typeof(AuthorizeAttribute), true);
+			var attributes = methodInfo.GetCustomAttributes(typeof(SEAuthorizeAttribute), true);
 			Assert.IsTrue(attributes.Any(), "No Authorize Attribute found");
-			Assert.IsTrue(((AuthorizeAttribute) attributes.First()).Roles.Contains("Admin"), "No Admin attribute is found");
+			Assert.IsTrue(((SEAuthorizeAttribute) attributes.First()).Roles.Contains("Admin"), "No Admin role found on attribute");
 		}
 
 		[TestMethod]
@@ -58,9 +59,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			var type = _sut.GetType();
 			var methodInfo = type.GetMethod("Disable", new Type[] { typeof(int), typeof(FormCollection) });
-			var attributes = methodInfo.GetCustomAttributes(typeof(AuthorizeAttribute), true);
+			var attributes = methodInfo.GetCustomAttributes(typeof(SEAuthorizeAttribute), true);
 			Assert.IsTrue(attributes.Any(), "No Authorize Attribute found");
-			Assert.IsTrue(((AuthorizeAttribute)attributes.First()).Roles.Contains("Admin"), "No Admin attribute is found");
+			Assert.IsTrue(((SEAuthorizeAttribute)attributes.First()).Roles.Contains("Admin"), "No Admin role found on attribute");
 		}
 
 

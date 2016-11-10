@@ -24,7 +24,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public static T GetPage<T>(this ScenarioContext scenarioContext) where T : BasePage
 		{
 			T page = scenarioContext.Get<T>();
-			Assert.IsTrue(page.IsCurrentPage);
+			Assert.IsTrue(page.IsCurrentPage, "Unable to load page");
 			return page;
 		}
 

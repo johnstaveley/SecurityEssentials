@@ -53,6 +53,35 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
+		public async Task Given_UserIsInAListOfCommonlyUsedNames_When_FindAndCheckLogonAsync_Then_EmptyResultWithFlagSet()
+		{
+			// Arrange
+
+			// Act
+			var result = await _sut.TryLogOnAsync("test", "AnythingYouWant");
+
+			// Assert
+			Assert.IsFalse(result.Success);
+			Assert.IsTrue(result.IsCommonUserName, "Common User name flag not set");
+			_context.AssertWasNotCalled(a => a.SaveChangesAsync());
+		}
+
+		[TestMethod]
+		public async Task Given_UserIsInAListOfCommonlyUsedNamesAndTheUserNameIsActuallyInUse_When_FindAndCheckLogonAsync_Then_UserIsNotLoggedOn()
+		{
+			// Arrange
+			_context.User.Add(new User() { UserName = "test" });
+
+			// Act
+			var result = await _sut.TryLogOnAsync("test", "ThisIsAnIncorrectPassword");
+
+			// Assert
+			Assert.IsFalse(result.Success);
+			Assert.IsFalse(result.IsCommonUserName, "Common User name flag was set");
+			_context.AssertWasNotCalled(a => a.SaveChangesAsync());
+		}
+
+		[TestMethod]
 		public async Task Given_UserExistsButPasswordIncorrect_When_FindAndCheckLogonAsync_Then_UserIsNotLoggedOn()
 		{
 			// Arrange

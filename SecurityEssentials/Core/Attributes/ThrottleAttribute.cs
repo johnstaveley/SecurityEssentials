@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Caching;
@@ -8,16 +6,16 @@ using System.Net;
 using System.Web.Routing;
 using System.Globalization;
 
-namespace SecurityEssentials.Core
+namespace SecurityEssentials.Core.Attributes
 {
 
-    /// <summary>
-    /// Decorates any MVC route that needs to have client requests limited by time.
-    /// </summary>
-    /// <remarks>
-    /// Uses the current System.Web.Caching.Cache to store each client request to the decorated route.
-    /// </remarks>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+	/// <summary>
+	/// Decorates any MVC route that needs to have client requests limited by time.
+	/// </summary>
+	/// <remarks>
+	/// Uses the current System.Web.Caching.Cache to store each client request to the decorated route.
+	/// </remarks>
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class AllowXRequestsEveryXSecondsAttribute : ActionFilterAttribute
     {
         /// <summary>

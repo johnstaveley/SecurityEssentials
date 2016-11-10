@@ -6,22 +6,18 @@ using SecurityEssentials.Model;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using SecurityEssentials.Core.Identity;
+using SecurityEssentials.Core.Attributes;
 
 namespace SecurityEssentials.Controllers
 {
 
-	[Authorize]
+	[SEAuthorize]
 	public class UserController : AntiForgeryControllerBase
 	{
 
-		#region Declarations
 
 		private ISEContext _context { get; set; }
 		private IUserIdentity _userIdentity { get; set; }
-
-		#endregion
-
-		#region Constructor
 
 		public UserController()
 			: this(new SEContext(), new UserIdentity())
@@ -38,21 +34,22 @@ namespace SecurityEssentials.Controllers
 			_userIdentity = userIdentity;
 		}
 
-		#endregion
-
-		#region Disable
-
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
 		/// <param name="id">The unique identifier for the user</param>
 		/// <remarks>GET: /User/Disable/5</remarks>
-		[Authorize(Roles = "Admin")]
+		[SEAuthorize(Roles = "Admin")]
+		[HttpGet]
 		public ActionResult Disable(int id)
 		{
 			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
-			if (user == null) return new HttpNotFoundResult();
+			if (user == null)
+			{
+				Logger.Information("Failed User Disable, user did not exist by requester {@requester}", _userIdentity.GetRequester(this, null));
+				return new HttpNotFoundResult();
+			}
 			return PartialView("_Disable", user);
 		}
 
@@ -62,35 +59,40 @@ namespace SecurityEssentials.Controllers
 		/// <returns></returns>
 		/// <param name="id">The unique identifier of the User to disable</param>
 		/// <remarks>POST: /User/Disable/5</remarks>
-		[HttpPost, Authorize(Roles = "Admin")]
+		[HttpPost, SEAuthorize(Roles = "Admin")]
 		[ValidateAntiForgeryToken]
 		public JsonResult Disable(int id, FormCollection collection)
 		{
 			if (id == 0) return Json(new { success = false, message = "unable to locate user id" });
 			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
-			if (user == null) return Json(new { success = false, message = "unable to locate user" });
+			if (user == null)
+			{
+				Logger.Information("Failed User Disable Post, user did not exist by requester {@requester}", _userIdentity.GetRequester(this, null));
+				return Json(new { success = false, message = "unable to locate user" });
+			}
 			if (user.Id == _userIdentity.GetUserId(this)) return Json(new { success = false, message = "You cannot disable your own account" });
 			user.Enabled = false;
 			_context.SaveChanges();
 			return Json(new { success = true, message = "" });
 		}
 
-		#endregion
-
-		#region Edit
-
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="id">Unique identifier for the user</param>
 		/// <returns></returns>
+		[HttpGet]
 		public ActionResult Edit(int id)
 		{
 			var users = _context.User.Where(u => u.Id == id);
 			if (users.ToList().Count == 0) return new HttpNotFoundResult();
 			var user = users.FirstOrDefault();
 			// SECURE: Check user should have access to this account
-			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id)
+			{
+				Logger.Information("Failed User Edit Get, user modification was not permitted for access rights by requester {@requester}", _userIdentity.GetRequester(this, null));
+				return new HttpNotFoundResult();
+			}
 			return View(new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 		}
 
@@ -105,7 +107,11 @@ namespace SecurityEssentials.Controllers
 			var isOwnProfile = user.Id == _userIdentity.GetUserId(this);
 			ViewBag.StatusMessage = "";
 			// SECURE: Check user should have access to this account
-			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id)
+			{
+				Logger.Information("Failed User Edit Post, user modification was not permitted for access rights by requester {@requester}", _userIdentity.GetRequester(this, null));
+				return new HttpNotFoundResult();
+			}
 
 			var propertiesToUpdate = new List<string>()
                 {
@@ -123,6 +129,7 @@ namespace SecurityEssentials.Controllers
 			{
 				if (isOwnProfile && (user.Enabled == false || user.EmailVerified == false))
 				{
+					Logger.Information("Failed User Edit Post, account state change prohibited by requester {@requester}", _userIdentity.GetRequester(this, null));
 					ModelState.AddModelError("", "You cannot disable or mark as email unverified, your own user account");
 				}
 				else
@@ -138,47 +145,46 @@ namespace SecurityEssentials.Controllers
 					}
 				}
 			}
+			else
+			{
+				Logger.Information("Failed User Edit Post, model state invalid by requester {@requester}", _userIdentity.GetRequester(this, null));
+			}
 
 			return View("Edit", new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
 
 		}
-
-		#endregion
-
-		#region Index
-
-		[Authorize(Roles = "Admin")]
+		
+		[SEAuthorize(Roles = "Admin")]
+		[HttpGet]
 		public ActionResult Index(int page = 1)
 		{
 			return View(new UsersViewModel(_userIdentity.GetUserId(this)));
 		}
-
-		#endregion
-
-		#region Log
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="id">Unique identifier for the user</param>
 		/// <returns></returns>
+		[HttpGet]
 		public ActionResult Log(int id)
 		{
 			var users = _context.User.Where(u => u.Id == id);
 			if (users.ToList().Count == 0) return new HttpNotFoundResult();
 			var user = users.FirstOrDefault();
 			// SECURE: Check user should have access to this account
-			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id)
+			{
+				Logger.Information("Failed User Log Get, access not permitted by requester {@requester}", _userIdentity.GetRequester(this, null));
+				return new HttpNotFoundResult();
+			}
 			ViewBag.UserName = user.UserName;
 			return View(user.UserLogs.OrderByDescending(ul => ul.DateCreated).Take(10).ToList());
 
 		}
 
-		#endregion
-
-		#region Read
-
-		[Authorize(Roles = "Admin")]
+		[SEAuthorize(Roles = "Admin")]
+		[HttpGet]
 		public JsonResult Read(int page = 0, int pageSize = 20, string searchText = "")
 		{
 			string sortDirection = Request["sort[0][dir]"];
@@ -223,7 +229,6 @@ namespace SecurityEssentials.Controllers
 
 		}
 
-		#endregion
 
 	}
 }

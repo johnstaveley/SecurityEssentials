@@ -9,6 +9,7 @@ using SecurityEssentials.Core.Identity;
 using System.Web.Routing;
 using System.Reflection;
 using SecurityEssentials.ViewModel;
+using SecurityEssentials.Core.Attributes;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {

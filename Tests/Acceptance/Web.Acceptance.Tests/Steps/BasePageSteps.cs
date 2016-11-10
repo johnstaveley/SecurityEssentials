@@ -13,10 +13,10 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	{
 
 		[Then(@"an error message is shown '(.*)'")]
-		public void ThenAnErrorMessageIsShown(string message)
+		public void ThenAnErrorMessageIsShown(string errorMessage)
 		{
 			var driver = FeatureContext.Current.GetWebDriver();
-			Assert.IsTrue(driver.PageSource.Contains(message));
+			Assert.IsTrue(driver.PageSource.Contains(errorMessage), string.Format("Page should have contained error message '{0}'", errorMessage));
 		}
 
 	}

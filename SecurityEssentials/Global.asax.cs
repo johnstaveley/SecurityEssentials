@@ -5,9 +5,11 @@ using System.Web.Routing;
 using System.Security.Claims;
 using SecurityEssentials.Core;
 using System.Web.Helpers;
-using System.Globalization;
 using Serilog;
 using System.Configuration;
+using SecurityEssentials.Controllers;
+using System.Web;
+using System;
 
 namespace SecurityEssentials
 {
@@ -26,7 +28,7 @@ namespace SecurityEssentials
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 			AuthConfig.RegisterAuth();
 			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
-			//SECURE: Remove automatic XFrame option header so we can add it in filters to entire site
+			// SECURE: Remove automatic XFrame option header so we can add it in filters to entire site
 			System.Web.Helpers.AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
 
 			// SECURE: Remove server information disclosure
@@ -43,6 +45,10 @@ namespace SecurityEssentials
 			Log.Information("Application started");
 		}
 
+		protected void Application_End()
+		{
+			Log.Information("Application finished");
+		}
 
 		protected void Application_BeginRequest()
 		{
@@ -54,5 +60,29 @@ namespace SecurityEssentials
             }
 #endif
 		}
+
+
+		protected void Application_EndRequest()
+		{
+			// Divert user to custom 404 page
+			if (Context.Response.StatusCode == 404)
+			{
+				Response.Clear();
+
+				var rd = new RouteData();
+				rd.Values["controller"] = "Error";
+				rd.Values["action"] = "NotFound";
+
+				IController c = new ErrorController();
+				c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+			}
+		}
+
+		void Session_Start(object sender, EventArgs e)
+		{
+			// Adding a variable to session keeps the session id constant between requests
+			HttpContext.Current.Session.Add("__MyAppSession", string.Empty);
+		}
+
 	}
 }

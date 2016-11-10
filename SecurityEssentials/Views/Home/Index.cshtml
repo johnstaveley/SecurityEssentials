@@ -55,6 +55,7 @@
                     <li>Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame</li>
                     <li>Form overposting: Example given of how to avoid this</li>
                     <li>Acceptance tests for key functionality</li>
+                    <li>Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker</li>
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information</p>
@@ -76,6 +77,7 @@
 	                <li>Run the build process detailed below</li>
 	                <li>Patch the server!</li>
 	                <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
+                    <li>Check the logs for repeated security violation attempts and block users if required</li>
                 </ul>
             </p>
             <p><h2>How your build process can ensure you remain secure over time</h2>

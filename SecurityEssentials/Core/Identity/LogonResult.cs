@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace SecurityEssentials.Core.Identity
+﻿namespace SecurityEssentials.Core.Identity
 {
 	public class LogonResult
 	{
@@ -13,6 +8,11 @@ namespace SecurityEssentials.Core.Identity
 		public bool Success { get; set; }
 
 		public int FailedLogonAttemptCount { get; set; }
+
+		/// <summary>
+		/// Used by AppSensor to indicate if one of a batch of common usernames has been used
+		/// </summary>
+		public bool IsCommonUserName { get; set; }
 
 	}
 }
