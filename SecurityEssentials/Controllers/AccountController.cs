@@ -67,7 +67,6 @@ namespace SecurityEssentials.Controllers
 		[HttpGet]
         public ActionResult LogOn(string returnUrl)
         {
-			Logger.Debug("Entered Get Account.LogOn");
 			if (Request.IsAuthenticated)
             {
                 return RedirectToAction("Landing", "Account");
@@ -83,25 +82,26 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
 
+			Requester requester = _userIdentity.GetRequester(this, Core.Constants.AppSensorDetectionPointKind.AE1);
 			if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
                 if (logonResult.Success)
                 {
                     await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+					Logger.Information("Successful Logon Post for username {model.UserName) by user {@requester}", model.UserName, requester);
+					return RedirectToLocal(returnUrl);
                 }
                 else
                 {
                     // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
                     _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or the account is locked");
-					Requester requester = _userIdentity.GetRequester(this, Core.Constants.AppSensorDetectionPointKind.AE1);
-					Logger.Information("Failed Logon Post for username {UserName) attempt by user {@requester}", model.UserName, requester);
+					Logger.Information("Failed Logon Post for username {model.UserName) attempt by user {@requester}", model.UserName, requester);
 					if (logonResult.IsCommonUserName)
 					{
 						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE12;
-						Logger.Information("Failed Logon Post Common username {UserName) attempt by user {@requester}", model.UserName, requester);
+						Logger.Information("Failed Logon Post Common username {model.UserName) attempt by user {@requester}", model.UserName, requester);
 					}
 
 				}
@@ -565,7 +565,8 @@ namespace SecurityEssentials.Controllers
                             }
 
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                            return View("RegisterSuccess");
+							Logger.Information("Successful Register Post for username {user.UserName) by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
+							return View("RegisterSuccess");
                         }
                         else
                         {
@@ -619,7 +620,10 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-				Logger.Information("Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}", returnUrl, _userIdentity.GetRequester(this, null));
+				if (!string.IsNullOrEmpty(returnUrl))
+				{
+					Logger.Information("Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}", returnUrl, _userIdentity.GetRequester(this, null));
+				}
 				return RedirectToAction("Landing", "Account");
             }
         }
