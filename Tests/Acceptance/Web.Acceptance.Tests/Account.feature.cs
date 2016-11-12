@@ -710,7 +710,7 @@ this.FeatureBackground();
 #line 234
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 235
- testRunner.And("I wait 15 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I wait 30 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 237
  testRunner.And("I click login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 238

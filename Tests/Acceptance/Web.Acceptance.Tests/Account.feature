@@ -232,8 +232,8 @@ Scenario: I can change my security information
 @PAT
 Scenario: I can view my user activity log information
 	Given I navigate to the website
-	And I wait 15 seconds
-	# ^ Seemd to help the CI build fail less frequently due to repeated logon attempts in the same time period
+	And I wait 30 seconds
+	# ^ Seems to help the CI build fail less frequently due to repeated logon attempts in the same time period
 	And I click login
 	And I am navigated to the 'Login' page
 	And I enter the following login data:

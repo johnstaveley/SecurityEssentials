@@ -73,7 +73,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
 
-
             // Act
             var result = _sut.Edit(_testUserId);
 

@@ -5,6 +5,8 @@ using System.Web;
 using System.Net;
 using System.Linq;
 using SecurityEssentials.Core.Constants;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -34,7 +36,7 @@ namespace SecurityEssentials.Core.Identity
 				LoggedOnUser = this.GetUserName(controller),
 				LoggedOnUserId = this.GetUserId(controller),
 				AppSensorDetectionPoint = appSensorDetectionPointKind,
-				SessionId = (controller.HttpContext.Session == null ? "" : controller.HttpContext.Session.SessionID)
+				SessionId = (controller.HttpContext.Session == null ? "" : GetHashSha256(controller.HttpContext.Session.SessionID))
 			};
 		}
 
@@ -89,6 +91,19 @@ namespace SecurityEssentials.Core.Identity
 
 			var isLinkLocalAddress = octets[0] == 169 && octets[1] == 254;
 			return isLinkLocalAddress;
+		}
+
+		public static string GetHashSha256(string textToHash)
+		{
+			byte[] bytes = Encoding.Unicode.GetBytes(textToHash);
+			SHA256Managed hashstring = new SHA256Managed();
+			byte[] hash = hashstring.ComputeHash(bytes);
+			string hashString = string.Empty;
+			foreach (byte x in hash)
+			{
+				hashString += String.Format("{0:x2}", x);
+			}
+			return hashString;
 		}
 	}
 }

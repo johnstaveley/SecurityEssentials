@@ -34,6 +34,7 @@ namespace SecurityEssentials.Model
 		/// <summary>
 		/// The date the password was last changed (UTC)
 		/// </summary>
+		[Display(Name ="Password Last Changed Date")]
 		public DateTime PasswordLastChangedDate { get; set; }
         /// <summary>
         /// The date the user was created (UTC)
