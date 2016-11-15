@@ -47,5 +47,28 @@ namespace SecurityEssentials.Controllers
 			Logger.Information("Unknown route {CurrentExecutionFilePath} accessed by user {@requestor}", Request.CurrentExecutionFilePath, requestor);
 			return result;
 		}
+
+		// GET: Error
+		public ActionResult Index()
+		{
+			ActionResult result;
+
+			object model = Request.Url.PathAndQuery;
+
+			if (!Request.IsAjaxRequest())
+			{
+				result = View(model);
+			}
+			else
+			{
+				result = PartialView("_Index", model);
+			}
+			Response.StatusCode = 500;
+			Response.TrySkipIisCustomErrors = true;
+			Requester requestor = _userIdentity.GetRequester(this, null);
+			Logger.Error(Server.GetLastError(), "Error occurred by user {@requestor}", requestor);
+			return result;
+		}
+
 	}
 }

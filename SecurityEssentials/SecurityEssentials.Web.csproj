@@ -1104,6 +1104,9 @@
     <Content Include="Views\Account\ChangeSecurityInformationSuccess.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\Unauthorized.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\_NotFound.cshtml" />
+    <Content Include="Views\Error\_Index.cshtml" />
     <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

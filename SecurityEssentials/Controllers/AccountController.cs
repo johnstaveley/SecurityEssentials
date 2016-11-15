@@ -82,14 +82,14 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
 
-			Requester requester = _userIdentity.GetRequester(this, Core.Constants.AppSensorDetectionPointKind.AE1);
+			Requester requester = _userIdentity.GetRequester(this, null);
 			if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
                 if (logonResult.Success)
                 {
                     await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);
-					Logger.Information("Successful Logon Post for username {model.UserName) by user {@requester}", model.UserName, requester);
+					Logger.Information("Successful Logon Post for username {model.UserName} by user {@requester}", model.UserName, requester);
 					return RedirectToLocal(returnUrl);
                 }
                 else
@@ -97,11 +97,12 @@ namespace SecurityEssentials.Controllers
                     // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
                     _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or the account is locked");
-					Logger.Information("Failed Logon Post for username {model.UserName) attempt by user {@requester}", model.UserName, requester);
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE1;
+					Logger.Information("Failed Logon Post for username {model.UserName} attempt by user {@requester}", model.UserName, requester);
 					if (logonResult.IsCommonUserName)
 					{
 						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE12;
-						Logger.Information("Failed Logon Post Common username {model.UserName) attempt by user {@requester}", model.UserName, requester);
+						Logger.Information("Failed Logon Post Common username {model.UserName} attempt by user {@requester}", model.UserName, requester);
 					}
 
 				}
@@ -565,7 +566,7 @@ namespace SecurityEssentials.Controllers
                             }
 
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-							Logger.Information("Successful Register Post for username {user.UserName) by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
+							Logger.Information("Successful Register Post for username {user.UserName} by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
 							return View("RegisterSuccess");
                         }
                         else

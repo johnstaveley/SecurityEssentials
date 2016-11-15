@@ -47,7 +47,7 @@ namespace SecurityEssentials.Controllers
 			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null)
 			{
-				Logger.Information("Failed User Disable, user did not exist by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed User Disable, user {id} did not exist by requester {@requester}", id, _userIdentity.GetRequester(this, null));
 				return new HttpNotFoundResult();
 			}
 			return PartialView("_Disable", user);
@@ -67,12 +67,13 @@ namespace SecurityEssentials.Controllers
 			User user = _context.User.Where(u => u.Id == id).FirstOrDefault();
 			if (user == null)
 			{
-				Logger.Information("Failed User Disable Post, user did not exist by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed User Disable Post for id {id}, user did not exist by requester {@requester}", id, _userIdentity.GetRequester(this, null));
 				return Json(new { success = false, message = "unable to locate user" });
 			}
 			if (user.Id == _userIdentity.GetUserId(this)) return Json(new { success = false, message = "You cannot disable your own account" });
 			user.Enabled = false;
 			_context.SaveChanges();
+			Logger.Information("User Disable Post for id {id} suceeded, by requester {@requester}", id, _userIdentity.GetRequester(this, null));
 			return Json(new { success = true, message = "" });
 		}
 

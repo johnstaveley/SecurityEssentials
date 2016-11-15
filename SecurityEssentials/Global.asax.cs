@@ -45,7 +45,58 @@ namespace SecurityEssentials
 			Log.Information("Application started");
 		}
 
-		protected void Application_End()
+		protected void Application_Error(object sender, EventArgs e)
+		{
+			var httpContext = ((MvcApplication)sender).Context;
+			var currentController = " ";
+			var currentAction = " ";
+			var currentRouteData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(httpContext));
+
+			if (currentRouteData != null)
+			{
+				if (currentRouteData.Values["controller"] != null && !String.IsNullOrEmpty(currentRouteData.Values["controller"].ToString()))
+				{
+					currentController = currentRouteData.Values["controller"].ToString();
+				}
+
+				if (currentRouteData.Values["action"] != null && !String.IsNullOrEmpty(currentRouteData.Values["action"].ToString()))
+				{
+					currentAction = currentRouteData.Values["action"].ToString();
+				}
+			}
+
+			var ex = Server.GetLastError();
+			var controller = new ErrorController();
+			var routeData = new RouteData();
+			var action = "Index";
+
+			if (ex is HttpException)
+			{
+				var httpEx = ex as HttpException;
+
+				switch (httpEx.GetHttpCode())
+				{
+					case 404:
+						action = "NotFound";
+						break;
+
+						// others if any
+				}
+			}
+
+			httpContext.ClearError();
+			httpContext.Response.Clear();
+			httpContext.Response.StatusCode = ex is HttpException ? ((HttpException)ex).GetHttpCode() : 500;
+			httpContext.Response.TrySkipIisCustomErrors = true;
+
+			routeData.Values["controller"] = "Error";
+			routeData.Values["action"] = action;
+
+			controller.ViewData.Model = new HandleErrorInfo(ex, currentController, currentAction);
+			((IController)controller).Execute(new RequestContext(new HttpContextWrapper(httpContext), routeData));
+		}
+
+		protected void Application_End(Object sender, EventArgs e)
 		{
 			Log.Information("Application finished");
 		}
@@ -61,22 +112,21 @@ namespace SecurityEssentials
 #endif
 		}
 
+		//protected void Application_EndRequest()
+		//{
+		//	// Divert user to custom 404 page
+		//	if (Context.Response.StatusCode == 404)
+		//	{
+		//		Response.Clear();
 
-		protected void Application_EndRequest()
-		{
-			// Divert user to custom 404 page
-			if (Context.Response.StatusCode == 404)
-			{
-				Response.Clear();
+		//		var rd = new RouteData();
+		//		rd.Values["controller"] = "Error";
+		//		rd.Values["action"] = "NotFound";
 
-				var rd = new RouteData();
-				rd.Values["controller"] = "Error";
-				rd.Values["action"] = "NotFound";
-
-				IController c = new ErrorController();
-				c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
-			}
-		}
+		//		IController c = new ErrorController();
+		//		c.Execute(new RequestContext(new HttpContextWrapper(Context), rd));
+		//	}
+		//}
 
 		void Session_Start(object sender, EventArgs e)
 		{
