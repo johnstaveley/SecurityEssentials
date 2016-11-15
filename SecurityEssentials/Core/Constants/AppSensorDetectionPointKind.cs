@@ -22,7 +22,9 @@ namespace SecurityEssentials.Core.Constants
 		RE3 = 3,
 		RE4 = 4,
 		RE5 = 5,
+		[Description("Data Missing from Request")]
 		RE6 = 6,
+		[Description("Unexpected Quantity of Characters in Parameter")]
 		RE7 = 7,
 		RE8 = 8,
 
@@ -39,9 +41,13 @@ namespace SecurityEssentials.Core.Constants
 		AE2 = 10,
 
 		AE3 = 11,
+		[Description("Unexpected Quantity of Characters in Username")]
 		AE4 = 12,
+		[Description("Unexpected Quantity of Characters in Password")]
 		AE5 = 13,
+		[Description("Providing Only the Username")]
 		AE6 = 14,
+		[Description("Providing Only the Password")]
 		AE7 = 15,
 		AE8 = 16,
 		AE9 = 17,

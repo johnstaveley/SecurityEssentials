@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using SecurityEssentials.Unit.Tests.TestDbSet;
 using System.Threading.Tasks;
 using System;
+using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {

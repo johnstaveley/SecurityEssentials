@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using SecurityEssentials.ViewModel;
 using System.Threading.Tasks;
 using System.Web.Routing;
+using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
@@ -129,6 +130,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var logon = new LogOnViewModel() { UserName = "joeblogs", Password = "password1", RememberMe = false };
             UserManagerAttemptsLoginWithResult(false);
+			_userIdentity.Expect(a => a.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything)).Return(new Requester());
             _services.Expect(a => a.Wait(Arg<int>.Is.Anything));
 
             // Act

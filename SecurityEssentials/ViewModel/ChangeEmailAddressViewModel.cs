@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Web.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using SecurityEssentials.Model;
 using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.ViewModel
 {
 
-    public class ChangeEmailAddressViewModel
+	public class ChangeEmailAddressViewModel
     {
 
 		[Display(Name ="Current Email Address")]
+		[StringLength(200, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 7)]
 		public string EmailAddress { get; set; }
 
 		[Display(Name = "Enter New Email Address")]
+		[StringLength(200, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 7)]
 		public string NewEmailAddress { get; set; }
 		[Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
 		[Display(Name = "Re-Enter Password")]
 		public string Password { get; set; }

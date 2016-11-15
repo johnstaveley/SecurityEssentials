@@ -9,6 +9,8 @@ using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using SecurityEssentials.Core.Attributes;
+using System.Text.RegularExpressions;
+using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Controllers
 {
@@ -98,19 +100,43 @@ namespace SecurityEssentials.Controllers
                     _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or the account is locked");
 					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE1;
-					Logger.Information("Failed Logon Post for username {model.UserName} attempt by user {@requester}", model.UserName, requester);
+					Logger.Information("Failed Account Logon Post for username {model.UserName} attempt by user {@requester}", model.UserName, requester);
 					if (logonResult.IsCommonUserName)
 					{
 						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE12;
-						Logger.Information("Failed Logon Post Common username {model.UserName} attempt by user {@requester}", model.UserName, requester);
+						Logger.Information("Failed Account Logon Post Common username {model.UserName} attempt by user {@requester}", model.UserName, requester);
 					}
-
 				}
 			}
+			else
+			{
+				LogModelError("Account Logon Post", ModelState);
+			}
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+			// If we got this far, something failed, redisplay form
+			return View(model);
         }
+
+		protected void LogModelError(string method, ModelStateDictionary modelState)
+		{
+			// Assumption is that javascript is turned on on the client
+			var allErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+			Requester requester = _userIdentity.GetRequester(this, null);
+			foreach (var error in allErrors)
+			{
+				requester.AppSensorDetectionPoint = null;
+				if (error.ErrorMessage.Contains("is required"))
+				{
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE6;
+				}
+				if (Regex.Match(error.ErrorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
+				{
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
+				}
+				var errorMessage = error.ErrorMessage;
+				Logger.Information("Failed {@method} validation bypass {errorMessage} attempted by user {@requester}", method, errorMessage, requester);
+			}
+		}
 
 		[HttpGet]
 		public ActionResult ChangeEmailAddress()
