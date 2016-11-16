@@ -33,5 +33,6 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			T page;
 			return scenarioContext.TryGetValue(out page);
 		}
+
 	}
 }

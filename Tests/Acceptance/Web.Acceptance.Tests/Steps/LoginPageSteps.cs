@@ -21,6 +21,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void GivenIClickTheLoginButton()
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
+			FeatureContext.Current.WaitForLoginAttempt();
+			loginPage.ClickSubmit();
+		}
+
+		[Given(@"I click the login button as quickly as possible")]
+		public void GivenIClickTheLoginButtonAsQuicklyAsPossible()
+		{
+			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
 			loginPage.ClickSubmit();
 		}
 

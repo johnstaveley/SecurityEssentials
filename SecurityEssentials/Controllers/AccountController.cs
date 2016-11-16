@@ -24,7 +24,6 @@ namespace SecurityEssentials.Controllers
         private IServices _services;
         private ISEContext _context;
         private IUserManager _userManager;
-        private IUserIdentity _userIdentity;
 
         public AccountController()
             : this(new AppConfiguration(), new Encryption(), new FormsAuth(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
@@ -110,33 +109,12 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				LogModelError("Account Logon Post", ModelState);
+				LogModelStateErrors("Account Logon Post", ModelState);
 			}
 
 			// If we got this far, something failed, redisplay form
 			return View(model);
         }
-
-		protected void LogModelError(string method, ModelStateDictionary modelState)
-		{
-			// Assumption is that javascript is turned on on the client
-			var allErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
-			Requester requester = _userIdentity.GetRequester(this, null);
-			foreach (var error in allErrors)
-			{
-				requester.AppSensorDetectionPoint = null;
-				if (error.ErrorMessage.Contains("is required"))
-				{
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE6;
-				}
-				if (Regex.Match(error.ErrorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
-				{
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
-				}
-				var errorMessage = error.ErrorMessage;
-				Logger.Information("Failed {@method} validation bypass {errorMessage} attempted by user {@requester}", method, errorMessage, requester);
-			}
-		}
 
 		[HttpGet]
 		public ActionResult ChangeEmailAddress()
@@ -183,6 +161,10 @@ namespace SecurityEssentials.Controllers
 					Logger.Information("Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}", _userIdentity.GetRequester(this, Core.Constants.AppSensorDetectionPointKind.AE1));
 					ModelState.AddModelError("Password", "The password is not correct");
 				}
+			}
+			else
+			{
+				LogModelStateErrors("Account ChangeEmailAddresss Post", ModelState);
 			}
 			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
 
@@ -362,7 +344,11 @@ namespace SecurityEssentials.Controllers
 					return View("RecoverSuccess");
 				}
 			}
-            return View("RecoverSuccess");
+			else
+			{
+				LogModelStateErrors("Account Recover Post", ModelState);
+			}
+			return View("RecoverSuccess");
 
         }
 
@@ -457,7 +443,7 @@ namespace SecurityEssentials.Controllers
 				else
 				{
 					ModelState.AddModelError("", "Password change was not successful");
-					Logger.Information("Failed Account RecoverPassword Post, change password model state invalid by requester {@requester}", _userIdentity.GetRequester(this, null));
+					LogModelStateErrors("Account RecoverPassword Post", ModelState);
 				}
 			}
 			else
@@ -529,7 +515,7 @@ namespace SecurityEssentials.Controllers
 				}
 				else
 				{
-					Logger.Information("Failed Account Change Security Information Post Recaptcha failed by requester {@requester}", _userIdentity.GetRequester(this, null));
+					LogModelStateErrors("Account ChangeSecurityInformation Post", ModelState);
 				}
 			}
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
@@ -607,7 +593,11 @@ namespace SecurityEssentials.Controllers
 					}
 				}
             }
-            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+			else
+			{
+				LogModelStateErrors("Account Register Post", ModelState);
+			}
+			var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var registerViewModel = new RegisterViewModel(confirmPassword, _configuration.HasRecaptcha, password, user, securityQuestions);
             return View(registerViewModel);
 

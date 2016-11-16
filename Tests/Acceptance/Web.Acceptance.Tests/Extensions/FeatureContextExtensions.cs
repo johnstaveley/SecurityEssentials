@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
+using System.Threading;
+using System.Diagnostics;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
 	public static class FeatureContextExtensions
 	{
+
+		public const string LOGIN_ATTEMPTS = "Login_Attempts";
 
 		public static void SetWebDriver(this FeatureContext fc, IWebDriver webDriver)
 		{
@@ -36,6 +38,36 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		{
 			return fc.Get<Uri>();
 		}
+
+		private static List<DateTime> GetLoginAttempts(this FeatureContext featureContext)
+		{
+			List<DateTime> loginAttempts = null;
+			if (!featureContext.TryGetValue<List<DateTime>>(LOGIN_ATTEMPTS, out loginAttempts))
+			{
+				SetLoginAttempts(featureContext, new List<DateTime>());
+			}
+			return featureContext.Get<List<DateTime>>(LOGIN_ATTEMPTS);
+		}
+
+		public static void WaitForLoginAttempt(this FeatureContext featureContext)
+		{
+			var loginAttempts = GetLoginAttempts(featureContext);
+			do
+			{
+				Thread.Sleep(5000);
+				loginAttempts = GetLoginAttempts(featureContext);
+				Trace.WriteLine("Waiting 5 seconds for logon attempt");
+			}
+			while (loginAttempts.Where(a => a > DateTime.UtcNow.AddSeconds(-62)).Count() >= 2);
+			loginAttempts.Add(DateTime.UtcNow);
+			SetLoginAttempts(featureContext, loginAttempts);
+		}
+
+		private static void SetLoginAttempts(this FeatureContext featureContext, List<DateTime> value)
+		{
+			featureContext.Set<List<DateTime>>(value, LOGIN_ATTEMPTS);
+		}
+
 	}
 
 }

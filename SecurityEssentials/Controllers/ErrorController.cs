@@ -8,8 +8,6 @@ namespace SecurityEssentials.Controllers
 	public class ErrorController : AntiForgeryControllerBase
     {
 
-		private IUserIdentity _userIdentity;
-
 		public ErrorController() : this(new UserIdentity())
 		{
 			// TODO: Replace with your DI Framework of choice

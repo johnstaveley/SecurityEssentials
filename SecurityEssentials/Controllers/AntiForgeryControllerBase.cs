@@ -1,7 +1,10 @@
-﻿using SecurityEssentials.Core.Attributes;
+﻿using SecurityEssentials.Core;
+using SecurityEssentials.Core.Attributes;
+using SecurityEssentials.Core.Identity;
 using Serilog;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
@@ -10,30 +13,24 @@ namespace SecurityEssentials.Controllers
     public abstract class AntiForgeryControllerBase : Controller
     {
 
-        #region AntiForgeryControllerBase
-
         private readonly ValidateAntiForgeryTokenAttribute _validator;
         private readonly AcceptVerbsAttribute _verbs;
 		public ILogger Logger;
+		public IUserIdentity _userIdentity;
 
-        #endregion
-
-        #region Constructor
-
-        protected AntiForgeryControllerBase() : this(HttpVerbs.Post)
+        protected AntiForgeryControllerBase() : this(HttpVerbs.Post, new UserIdentity())
         {
         }
 
-        protected AntiForgeryControllerBase(HttpVerbs verbs)
+        protected AntiForgeryControllerBase(HttpVerbs verbs, IUserIdentity userIdentity)
         {
+			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
             _verbs = new AcceptVerbsAttribute(verbs);
             _validator = new ValidateAntiForgeryTokenAttribute();
 			Logger = Log.Logger;
-        }
+			_userIdentity = userIdentity;
 
-        #endregion
-
-        #region OnAuthorization
+		}
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -47,7 +44,27 @@ namespace SecurityEssentials.Controllers
             }
         }
 
-        #endregion
+		protected void LogModelStateErrors(string method, ModelStateDictionary modelState)
+		{
+			// Assumption is that javascript is turned on on the client
+			var allErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+			Requester requester = _userIdentity.GetRequester(this, null);
+			foreach (var error in allErrors)
+			{
+				requester.AppSensorDetectionPoint = null;
+				if (error.ErrorMessage.Contains("is required"))
+				{
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE6;
+				}
+				if (Regex.Match(error.ErrorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
+				{
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
+				}
+				var errorMessage = error.ErrorMessage;
+				Logger.Information("Failed {@method} validation bypass {errorMessage} attempted by user {@requester}", method, errorMessage, requester);
+			}
+		}
 
-    }
+
+	}
 }

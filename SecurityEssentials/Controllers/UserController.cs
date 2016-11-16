@@ -17,7 +17,6 @@ namespace SecurityEssentials.Controllers
 
 
 		private ISEContext _context { get; set; }
-		private IUserIdentity _userIdentity { get; set; }
 
 		public UserController()
 			: this(new SEContext(), new UserIdentity())
@@ -148,7 +147,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				Logger.Information("Failed User Edit Post, model state invalid by requester {@requester}", _userIdentity.GetRequester(this, null));
+				LogModelStateErrors("Account Logon Post", ModelState);
 			}
 
 			return View("Edit", new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));
