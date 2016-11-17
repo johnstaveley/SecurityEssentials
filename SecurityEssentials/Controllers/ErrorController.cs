@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
-	public class ErrorController : AntiForgeryControllerBase
+	public class ErrorController : SecurityControllerBase
     {
 
 		public ErrorController() : this(new UserIdentity())

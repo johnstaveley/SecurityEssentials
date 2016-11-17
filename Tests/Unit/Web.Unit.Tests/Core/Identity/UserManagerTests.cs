@@ -9,42 +9,44 @@ using SecurityEssentials.Unit.Tests.TestDbSet;
 using System.Threading.Tasks;
 using System;
 using SecurityEssentials.Core.Constants;
+using static SecurityEssentials.Core.Constants.CONSTS;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
 
 	[TestClass]
-    public class UserManagerTests
-    {
+	public class UserManagerTests
+	{
 
-        AppUserManager _sut;
-        IAppConfiguration _configuration;
+		AppUserManager _sut;
+		IAppConfiguration _configuration;
 		IEncryption _encryption;
-        ISEContext _context;
-        IAppUserStore<User> _userStore;
+		ISEContext _context;
+		IAppUserStore<User> _userStore;
 		List<string> _bannedWords;
-       
-        [TestInitialize]
-        public void Setup()
-        {
+
+		[TestInitialize]
+		public void Setup()
+		{
 			_context = MockRepository.GenerateStub<ISEContext>();
 			_context.User = new TestDbSet<User>();
 			_context.LookupItem = new TestDbSet<LookupItem>();
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "Password1" });
 			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.BadPassword, Description = "LetMeIn123" });
+			_context.LookupItem.Add(new LookupItem() { LookupTypeId = CONSTS.LookupTypeId.SecurityQuestion, Id = 142 });
 			_configuration = MockRepository.GenerateStub<IAppConfiguration>();
 			_encryption = MockRepository.GenerateMock<IEncryption>();
-			_userStore = MockRepository.GenerateMock<IAppUserStore<User>>(); 
+			_userStore = MockRepository.GenerateMock<IAppUserStore<User>>();
 			_bannedWords = new List<string>() { "First Name", "SurName", "My Town", "My PostCode" };
-            _sut = new AppUserManager(_configuration, _context, _encryption, _userStore);
-        }
+			_sut = new AppUserManager(_configuration, _context, _encryption, _userStore);
+		}
 
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
+		[TestCleanup()]
+		public void MyTestCleanup()
+		{
 			_encryption.VerifyAllExpectations();
 			_userStore.VerifyAllExpectations();
-        }
+		}
 
 		[TestMethod]
 		public async Task Given_ValidDetails_When_ChangePassword_Then_PasswordChanged()
@@ -83,6 +85,39 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[TestMethod]
+		public async Task Given_BogusSecurityQuestion_When_CreateUser_Then_UserCreatedFailure()
+		{
+			var userName = "bob@bob.net";
+			_userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
+
+			// Act
+			var result = await _sut.CreateAsync(userName, "bob", "the bod", "Secure1HJ", "Secure1HJ", 143, "Jo was my mother");
+
+			// Assert
+			Assert.IsFalse(result.Succeeded);
+			Assert.IsTrue(result.Errors.Contains("Illegal security question"));
+			_userStore.AssertWasNotCalled(u => u.CreateAsync(Arg<User>.Is.Anything));
+
+		}
+
+		[TestMethod]
+		public async Task Given_PasswordInvalid_When_CreateUser_Then_UserCreatedFailure()
+		{
+			var userName = "bob@bob.net";
+			_userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
+
+			// Act
+			var result = await _sut.CreateAsync(userName, "bob", "the bod", "insecure", "insecure", 142, "Jo was my mother");
+
+			// Assert
+			Assert.IsFalse(result.Succeeded);
+			Assert.IsTrue(result.Errors.Contains(UserManagerMessages.PasswordValidityMessage));
+			_userStore.AssertWasNotCalled(u => u.CreateAsync(Arg<User>.Is.Anything));
+
+		}
+
+
+		[TestMethod]
 		public async Task Given_ValidDetails_When_CreateUser_Then_UserCreatedSuccess()
 		{
 			var userName = "bob@bob.net";
@@ -90,11 +125,11 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_userStore.Expect(a => a.CreateAsync(Arg<User>.Is.Anything)).Return(Task.FromResult(0));
 
 			// Act
-			var result = await _sut.CreateAsync(userName, "bob", "the bod", "unsecure1H", "unsecure1H", 142, "Jo was my mother");
+			var result = await _sut.CreateAsync(userName, "bob", "the bod", "Secure1HJ", "Secure1HJ", 142, "Jo was my mother");
 
 			// Assert
 			Assert.IsTrue(result.Succeeded);
-			_userStore.AssertWasCalled(u => u.CreateAsync(Arg<User>.Matches(c => 
+			_userStore.AssertWasCalled(u => u.CreateAsync(Arg<User>.Matches(c =>
 				!string.IsNullOrEmpty(c.EmailConfirmationToken) &&
 				c.Approved == _configuration.AccountManagementRegisterAutoApprove &&
 				c.EmailVerified == false &&
@@ -108,7 +143,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 				c.SecurityAnswer != "Jo was my mother" &&
 				c.UserLogs.Any(a => a.Description == "Account Created")
 			)));
-						
+
 		}
 
 		[TestMethod]
@@ -207,5 +242,5 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			Assert.IsTrue(result.Errors.All(a => a.Contains(errorMessageContains)));
 		}
 
-    }
+	}
 }

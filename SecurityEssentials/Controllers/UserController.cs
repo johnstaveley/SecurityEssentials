@@ -12,7 +12,7 @@ namespace SecurityEssentials.Controllers
 {
 
 	[SEAuthorize]
-	public class UserController : AntiForgeryControllerBase
+	public class UserController : SecurityControllerBase
 	{
 
 

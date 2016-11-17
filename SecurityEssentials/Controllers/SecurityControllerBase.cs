@@ -10,7 +10,7 @@ using System.Web.Mvc;
 namespace SecurityEssentials.Controllers
 {
 	[ExceptionHandler]
-    public abstract class AntiForgeryControllerBase : Controller
+    public abstract class SecurityControllerBase : Controller
     {
 
         private readonly ValidateAntiForgeryTokenAttribute _validator;
@@ -18,11 +18,11 @@ namespace SecurityEssentials.Controllers
 		public ILogger Logger;
 		public IUserIdentity _userIdentity;
 
-        protected AntiForgeryControllerBase() : this(HttpVerbs.Post, new UserIdentity())
+        protected SecurityControllerBase() : this(HttpVerbs.Post, new UserIdentity())
         {
         }
 
-        protected AntiForgeryControllerBase(HttpVerbs verbs, IUserIdentity userIdentity)
+        protected SecurityControllerBase(HttpVerbs verbs, IUserIdentity userIdentity)
         {
 			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
             _verbs = new AcceptVerbsAttribute(verbs);
@@ -51,20 +51,37 @@ namespace SecurityEssentials.Controllers
 			Requester requester = _userIdentity.GetRequester(this, null);
 			foreach (var error in allErrors)
 			{
+				var errorMessage = error.ErrorMessage;
 				requester.AppSensorDetectionPoint = null;
-				if (error.ErrorMessage.Contains("is required"))
+				if (errorMessage.Contains("is required"))
 				{
 					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE6;
 				}
-				if (Regex.Match(error.ErrorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
+				if (errorMessage.Contains("does not appear to be valid"))
+				{
+					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.IE2;
+				}
+				if (errorMessage.Contains("with a maximum length of") || error.ErrorMessage.Contains("with a minimum length of"))
 				{
 					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
 				}
-				var errorMessage = error.ErrorMessage;
+				if (Regex.Match(errorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
+				{
+					if (errorMessage.Contains("User name") || errorMessage.Contains("Email Address"))
+					{
+						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE4;
+					}
+					else if (errorMessage.Contains("Password"))
+					{
+						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE5;
+					}
+					else
+					{
+						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
+					}
+				}
 				Logger.Information("Failed {@method} validation bypass {errorMessage} attempted by user {@requester}", method, errorMessage, requester);
 			}
 		}
-
-
 	}
 }

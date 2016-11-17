@@ -9,12 +9,11 @@ using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Core;
 using SecurityEssentials.ViewModel;
 using SecurityEssentials.Core.Attributes;
-using System.Text.RegularExpressions;
 using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Controllers
 {
-	public class AccountController : AntiForgeryControllerBase
+	public class AccountController : SecurityControllerBase
     {
 
         private IAppConfiguration _configuration;
@@ -59,7 +58,7 @@ namespace SecurityEssentials.Controllers
         {
             _formsAuth.SignOut();
             _userManager.SignOut();
-			Logger.Debug("Entered Post Account.Logoff");
+			Logger.Debug("Entered Account Logoff Post");
 			Session.Abandon();
             return RedirectToAction("LogOn", "Account");
         }
@@ -90,7 +89,7 @@ namespace SecurityEssentials.Controllers
                 if (logonResult.Success)
                 {
                     await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);
-					Logger.Information("Successful Logon Post for username {model.UserName} by user {@requester}", model.UserName, requester);
+					Logger.Information("Successful Account Logon Post for username {model.UserName} by user {@requester}", model.UserName, requester);
 					return RedirectToLocal(returnUrl);
                 }
                 else
@@ -239,7 +238,7 @@ namespace SecurityEssentials.Controllers
             var recaptchaSuccess = true;
             if (_configuration.HasRecaptcha)
             {
-                _recaptcha.ValidateRecaptcha(this);
+				recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
             }
             if (recaptchaSuccess)
             {
@@ -319,7 +318,7 @@ namespace SecurityEssentials.Controllers
                 var recaptchaSuccess = true;
 				if (_configuration.HasRecaptcha)
                 {
-                    _recaptcha.ValidateRecaptcha(this);
+					recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     if (!recaptchaSuccess)
                     {
 						Requester requester = _userIdentity.GetRequester(this, null);
@@ -420,7 +419,7 @@ namespace SecurityEssentials.Controllers
             var recaptchaSuccess = true;
             if (_configuration.HasRecaptcha)
             {
-                _recaptcha.ValidateRecaptcha(this);
+				recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
             }
 			if (recaptchaSuccess)
 			{
@@ -431,6 +430,7 @@ namespace SecurityEssentials.Controllers
 					{
 						_context.SaveChanges();
 						await _userManager.LogOnAsync(user.UserName, false);
+						Logger.Information("Successful RecoverPassword Post by requester {@requester}", _userIdentity.GetRequester(this, null));
 						return View("RecoverPasswordSuccess");
 					}
 					else
@@ -477,7 +477,7 @@ namespace SecurityEssentials.Controllers
                 var recaptchaSuccess = true;
                 if (_configuration.HasRecaptcha)
                 {
-                    _recaptcha.ValidateRecaptcha(this);
+					recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                 }
                 var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
 				if (recaptchaSuccess)
@@ -503,7 +503,7 @@ namespace SecurityEssentials.Controllers
 						}
 						else
 						{
-							Logger.Information("Failed Account ChangeSecurityInformation Post, security questions do no match by requester {@requester}", _userIdentity.GetRequester(this, null));
+							Logger.Information("Failed Account ChangeSecurityInformation Post, security answers do not match by requester {@requester}", _userIdentity.GetRequester(this, null));
 							errorMessage = "The security question answers do not match";
 						}
 					}
@@ -554,7 +554,7 @@ namespace SecurityEssentials.Controllers
                     var recaptchaSuccess = true;
                     if (_configuration.HasRecaptcha)
                     {
-                        _recaptcha.ValidateRecaptcha(this);
+						recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     }
                     if (recaptchaSuccess)
                     {
@@ -578,12 +578,13 @@ namespace SecurityEssentials.Controllers
                             }
 
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-							Logger.Information("Successful Register Post for username {user.UserName} by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
+							Logger.Information("Successful Account Register Post for username {user.UserName} by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
 							return View("RegisterSuccess");
                         }
                         else
                         {
-							Logger.Information("Failed Account Register Post, user creation failed by requester {@requester}", _userIdentity.GetRequester(this, null));
+							var errorMessage = result.Errors.FirstOrDefault();
+							Logger.Information("Failed Account Register Post with message {errorMessage}, user creation failed by requester {@requester}", errorMessage, _userIdentity.GetRequester(this, null));
 							AddErrors(result);
                         }
                     }

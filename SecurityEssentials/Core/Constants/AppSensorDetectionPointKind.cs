@@ -80,8 +80,11 @@ namespace SecurityEssentials.Core.Constants
 		ACE4 = 31,
 		[Description("Cross Site Scripting Attempt")]
 		IE1 = 32,
+		[Description("Violation Of Implemented White Lists")]
 		IE2 = 33,
+		[Description("Violation Of Implemented Black Lists")]
 		IE3 = 34,
+		[Description("Violation Of Input data integrity")]
 		IE4 = 35,
 		IE5 = 36,
 		IE6 = 37,

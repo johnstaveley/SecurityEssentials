@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Text.RegularExpressions;
 using SecurityEssentials.Core.Constants;
+using static SecurityEssentials.Core.Constants.CONSTS;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -22,7 +23,6 @@ namespace SecurityEssentials.Core.Identity
         private readonly IAppConfiguration _configuration;
 		private readonly IEncryption _encryption;
         private readonly string _passwordValidityRegex = @"^.*(?=.{8,100})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
-        private readonly string _passwordInvalidityMessage = "Your password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value";
 		private readonly string _passwordGoodEntropyRegex = @"^(?!.*(.)\1{2})(.*?){3,29}$";
 
 		#endregion
@@ -69,6 +69,12 @@ namespace SecurityEssentials.Core.Identity
         {
             var user = await _userStore.FindByNameAsync(userName);
 
+			// Validate security question
+			var securityQuestion = _context.LookupItem.Where(a => a.Id == securityQuestionLookupItemId && a.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion).FirstOrDefault();
+			if (securityQuestion == null)
+			{
+				return new SEIdentityResult("Illegal security question");
+			}
 			var result = ValidatePassword(password, new List<string>() {firstName, lastName, securityAnswer});
 			if (result.Succeeded)
 			{
@@ -216,7 +222,7 @@ namespace SecurityEssentials.Core.Identity
 		{
 			if (string.IsNullOrEmpty(password) || Regex.Matches(password, _passwordValidityRegex).Count == 0)
 			{
-				return new SEIdentityResult(_passwordInvalidityMessage);
+				return new SEIdentityResult(UserManagerMessages.PasswordValidityMessage);
 			}
 
 			if (Regex.Matches(password, _passwordGoodEntropyRegex).Count == 0)

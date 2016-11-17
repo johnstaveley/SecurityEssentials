@@ -2,7 +2,7 @@
 
 namespace SecurityEssentials.Controllers
 {
-	public class HomeController : AntiForgeryControllerBase
+	public class HomeController : SecurityControllerBase
 	{
 		public ActionResult Index()
 		{
