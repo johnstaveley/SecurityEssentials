@@ -75,7 +75,22 @@ namespace SecurityEssentials.Controllers
             return View("LogOn");
         }
 
-        [HttpPost]
+		//protected void ValidateSubmission(Controller controller, List<string> expectedFormKeys)
+		//{
+		//	var keysSent = this.Request.Form.AllKeys;
+		//	if (!expectedFormKeys.Contains("_RequestVerificationToken")) expectedFormKeys.Add("_RequestVerificationToken");
+		//	// Check if any additional fields have been provided
+		//	var additionalKeys = keysSent.Except(expectedFormKeys).ToList();
+		//	if (additionalKeys.Count > 0)
+		//	{
+		//		var requester = _userIdentity.GetRequester(this);
+		//		var additionalFormKeys = string.Join(",", additionalKeys);
+		//		Logger.Information("Account Logon Post additional form keys {additionalFormKeys} sent by requester {@requester}", additionalFormKeys, requester);
+		//	}
+
+		//}
+
+		[HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
@@ -84,6 +99,7 @@ namespace SecurityEssentials.Controllers
 
 			Requester requester = _userIdentity.GetRequester(this);
 			var userName = model.UserName;
+			//ValidateSubmission(this, new List<string>() { "UserName", "Password" });
 			if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);

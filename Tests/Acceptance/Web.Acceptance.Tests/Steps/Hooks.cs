@@ -30,8 +30,9 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 				capabilities.SetCapability(CapabilityType.Proxy, proxy);
 				webDriver = new FirefoxDriver(capabilities);
 			}
-			else {
-				webDriver = new FirefoxDriver();
+			else
+			{
+				webDriver = new FirefoxDriver(new FirefoxBinary(), new FirefoxProfile(), TimeSpan.FromSeconds(180));
 			}
 			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
 			FeatureContext.Current.SetWebDriver(webDriver);

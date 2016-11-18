@@ -4,10 +4,10 @@ using System.IO;
 
 namespace SecurityEssentials.Core
 {
-    /// <summary>
-    /// Class to handle the encryption method used to Encrypt data
-    /// </summary>
-    public sealed class Encryption : IDisposable, SecurityEssentials.Core.IEncryption
+	/// <summary>
+	/// Class to handle the encryption method used to Encrypt data
+	/// </summary>
+	public sealed class Encryption : IDisposable, SecurityEssentials.Core.IEncryption
     {
 
         private RijndaelManaged encryptionAlgorithm;

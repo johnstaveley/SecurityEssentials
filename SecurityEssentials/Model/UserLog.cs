@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.Model
@@ -14,7 +7,7 @@ namespace SecurityEssentials.Model
 	/// <summary>
 	/// Table to store all account activity
 	/// </summary>
-    public class UserLog
+	public class UserLog
     {
 
 		public int Id { get; set; }

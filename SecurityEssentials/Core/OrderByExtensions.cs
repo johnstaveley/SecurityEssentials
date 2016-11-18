@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace SecurityEssentials.Core
 {
-    public static class OrderByExtensions
+	public static class OrderByExtensions
     {
         public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> enumerable, string orderBy)
         {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace SecurityEssentials.Model
 {
-    public class SEIdentityResult
+	public class SEIdentityResult
     {
         public SEIdentityResult(IEnumerable<string> errors)
         {

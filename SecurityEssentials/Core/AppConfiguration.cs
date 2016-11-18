@@ -1,18 +1,15 @@
 ﻿using SecurityEssentials.Core.Identity;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
 
 namespace SecurityEssentials.Core
 {
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>TODO: This should be created as a singleton using your DI framework</remarks>
-    public class AppConfiguration : IAppConfiguration
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>TODO: This should be created as a singleton using your DI framework</remarks>
+	public class AppConfiguration : IAppConfiguration
     {
 
 		public bool AccountManagementCheckFailedLogonAttempts { get; private set; }
