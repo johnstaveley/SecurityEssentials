@@ -14,7 +14,7 @@ namespace SecurityEssentials.Core.Identity
 
 		string GetClientIpAddress(HttpRequestBase request);
 
-		Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind);
+		Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null);
 
 	}
 }

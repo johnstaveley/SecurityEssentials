@@ -254,7 +254,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             };
             _userManager.Expect(a => a.ChangePasswordAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(Task.FromResult(new SEIdentityResult() { }));
-            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(5);
+            _userIdentity.Stub(u => u.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything)).Return(new Requester() { LoggedOnUserId = 5 });
 			_recaptcha.Expect(a => a.ValidateRecaptcha(Arg<Controller>.Is.Anything)).Return(true);
 
             // Act

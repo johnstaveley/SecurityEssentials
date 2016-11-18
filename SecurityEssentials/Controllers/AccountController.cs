@@ -82,14 +82,15 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
 
-			Requester requester = _userIdentity.GetRequester(this, null);
+			Requester requester = _userIdentity.GetRequester(this);
+			var userName = model.UserName;
 			if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
                 if (logonResult.Success)
                 {
-                    await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);
-					Logger.Information("Successful Account Logon Post for username {model.UserName} by user {@requester}", model.UserName, requester);
+                    await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);					
+					Logger.Information("Successful Account Logon Post for username {userName} by requester {@requester}", userName, model.UserName, requester);
 					return RedirectToLocal(returnUrl);
                 }
                 else
@@ -98,11 +99,11 @@ namespace SecurityEssentials.Controllers
                     _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
                     ModelState.AddModelError("", "Invalid credentials or the account is locked");
 					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE1;
-					Logger.Information("Failed Account Logon Post for username {model.UserName} attempt by user {@requester}", model.UserName, requester);
+					Logger.Information("Failed Account Logon Post for username {userName} attempt by requester {@requester}", userName, requester);
 					if (logonResult.IsCommonUserName)
 					{
 						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE12;
-						Logger.Information("Failed Account Logon Post Common username {model.UserName} attempt by user {@requester}", model.UserName, requester);
+						Logger.Information("Failed Account Logon Post Common username {userName} attempt by requester {@requester}", userName, requester);
 					}
 				}
 			}
@@ -175,16 +176,17 @@ namespace SecurityEssentials.Controllers
 		{
 			var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
 			var user = _context.User.Where(u => u.NewEmailAddressToken == newEmaiLAddressToken && u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
+			var requester = _userIdentity.GetRequester(this);
 			if (user == null)
 			{
 				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "NewEmailAddressConfirm");
-				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired by requester {@requester}", requester);
 				return View("Error", error);
 			}
 			if (user.Enabled == false)
 			{
 				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "NewEmailAddressConfirm");
-				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active by requester {@requester}", requester);
 				return View("Error", error);
 			}
 			user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request confirmed to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
@@ -234,18 +236,18 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
-            var userId = _userIdentity.GetUserId(this);
-            var recaptchaSuccess = true;
+			var requester = _userIdentity.GetRequester(this);
+			var recaptchaSuccess = true;
             if (_configuration.HasRecaptcha)
             {
 				recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
             }
             if (recaptchaSuccess)
             {
-                var user = _context.User.Where(u => u.Id == userId).FirstOrDefault();
+                var user = _context.User.Where(u => u.Id == requester.LoggedOnUserId.Value).FirstOrDefault();
                 if (user != null)
                 {
-                    var result = await _userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+                    var result = await _userManager.ChangePasswordAsync(requester.LoggedOnUserId.Value, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         // Email recipient with password change acknowledgement
@@ -258,7 +260,7 @@ namespace SecurityEssentials.Controllers
                     }
                     else
                     {
-						Logger.Information("Failed Account ChangePassword Post by requester {@requester}", _userIdentity.GetRequester(this, null));
+						Logger.Information("Failed Account ChangePassword Post by requester {@requester}", requester);
 						AddErrors(result);
                     }
                 }
@@ -269,7 +271,6 @@ namespace SecurityEssentials.Controllers
             }
 			else
 			{
-				Requester requester = _userIdentity.GetRequester(this, null);
 				Logger.Information("Failed Account Change Password Post Recaptcha failed by requester {@requester}", requester);
 			}
 			return View(model);
@@ -282,10 +283,11 @@ namespace SecurityEssentials.Controllers
         {
             var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
             var user = _context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
-            if (user == null)
+			var requester = _userIdentity.GetRequester(this);
+			if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerify");
-				Logger.Information("Failed Acccount EmailVerify Get for token {token} by requester {@requester}", emailVerificationToken, _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Acccount EmailVerify Get for token {emailVerificationToken} by requester {@requester}", emailVerificationToken, requester);
 				return View("Error", error);
             }
             user.EmailVerified = true;
@@ -312,23 +314,24 @@ namespace SecurityEssentials.Controllers
         [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
         public async Task<ActionResult> Recover(RecoverViewModel model)
         {
-            if (ModelState.IsValid)
+			var requester = _userIdentity.GetRequester(this);
+			var userName = model.UserName;
+			if (ModelState.IsValid)
             {
-                var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
+                var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).SingleOrDefault();
                 var recaptchaSuccess = true;
 				if (_configuration.HasRecaptcha)
                 {
 					recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     if (!recaptchaSuccess)
                     {
-						Requester requester = _userIdentity.GetRequester(this, null);
 						Logger.Information("Failed Account Recover Post Recaptcha failed by requester {@requester}", requester);
 						return View(model);
                     }
                 }
                 if (user != null)
                 {
-                    user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
+					user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                     user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
                     // Send recovery email with link to recover password form
                     string emailBody = EmailTemplates.ChangePasswordPendingBodyText(user.FirstName, user.LastName,  _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
@@ -339,7 +342,7 @@ namespace SecurityEssentials.Controllers
                 }
 				else
 				{
-					Logger.Information("Failed Account Recover Post UserName {UserName} by requester {@requester}", model.UserName, _userIdentity.GetRequester(this, null));
+					Logger.Information("Failed Account Recover Post UserName {userName} by requester {@requester}", userName, requester);
 					return View("RecoverSuccess");
 				}
 			}
@@ -357,17 +360,20 @@ namespace SecurityEssentials.Controllers
 		public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
-            var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow).FirstOrDefault();
+			var requester = _userIdentity.GetRequester(this);
+
+			var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow).FirstOrDefault();
             if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
-				Logger.Information("Failed Account RecoverPassword Get, recovery token {token} is not valid or expired by requester {@requester}", passwordResetToken, _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account RecoverPassword Get, recovery token {passwordResetToken} is not valid or expired by requester {@requester}", passwordResetToken, requester);
 				return View("Error", error);
             }
             if (user.Enabled == false)
             {
-                HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
-				Logger.Information("Failed Account RecoverPassword Get, account {UserName} not approved or active by requester {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
+				var userName = user.UserName;
+				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
+				Logger.Information("Failed Account RecoverPassword Get, account {userName} not approved or active by requester {@requester}", userName, requester);
 				return View("Error", error);
             }
             RecoverPasswordViewModel recoverPasswordModel = new RecoverPasswordViewModel()
@@ -389,16 +395,18 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
         {
             var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
-            if (user == null)
+			var id = recoverPasswordModel.Id;
+			var requester = _userIdentity.GetRequester(this);
+			if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is either not valid, not approved or not active"), "Account", "RecoverPassword");
-				Logger.Information("Failed Account RecoverPassword Post, recover attempted for a user id {id} which does not exist by requester {@requester}", recoverPasswordModel.Id, _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account RecoverPassword Post, recover attempted for a user id {id} which does not exist by requester {@requester}", id, requester);
 				return View("Error", error);
             }
             if (!(user.Enabled))
             {
                 HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is either not valid, not approved or not active"), "Account", "Recover");
-				Logger.Information("Failed Account RecoverPassword Post, account user id {id} is not approved or active by requester {@requester}", recoverPasswordModel.Id, _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account RecoverPassword Post, account user id {id} is not approved or active by requester {@requester}", id, requester);
 				return View("Error", error);
             }
             string encryptedSecurityAnswer = "";
@@ -407,13 +415,13 @@ namespace SecurityEssentials.Controllers
             if (user.SecurityAnswer != encryptedSecurityAnswer)
             {
                 ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
-				Logger.Information("Failed Account RecoverPassword Post, security answer is incorrect by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account RecoverPassword Post, security answer is incorrect by requester {@requester}", requester);
 				return View("RecoverPassword", recoverPasswordModel);
             }
             if (recoverPasswordModel.Password != recoverPasswordModel.ConfirmPassword)
             {
                 ModelState.AddModelError("ConfirmPassword", "The passwords do not match");
-				Logger.Information("Failed Account RecoverPassword Post, passwords do not match by requester {@requester}", _userIdentity.GetRequester(this, null));
+				Logger.Information("Failed Account RecoverPassword Post, passwords do not match by requester {@requester}", requester);
 				return View("RecoverPassword", recoverPasswordModel);
             }
             var recaptchaSuccess = true;
@@ -430,13 +438,13 @@ namespace SecurityEssentials.Controllers
 					{
 						_context.SaveChanges();
 						await _userManager.LogOnAsync(user.UserName, false);
-						Logger.Information("Successful RecoverPassword Post by requester {@requester}", _userIdentity.GetRequester(this, null));
+						Logger.Information("Successful RecoverPassword Post by requester {@requester}", requester);
 						return View("RecoverPasswordSuccess");
 					}
 					else
 					{
 						AddErrors(result);
-						Logger.Information("Failed Account RecoverPassword Post, change password async failed by requester {@requester}", _userIdentity.GetRequester(this, null));
+						Logger.Information("Failed Account RecoverPassword Post, change password async failed by requester {@requester}", requester);
 						return View("RecoverPassword", recoverPasswordModel);
 					}
 				}
@@ -448,7 +456,6 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				Requester requester = _userIdentity.GetRequester(this, null);
 				Logger.Information("Failed Account Recover Password Post Recaptcha failed by requester {@requester}", requester);
 			}
 			return View("RecoverPassword", recoverPasswordModel);
@@ -471,8 +478,8 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangeSecurityInformation(ChangeSecurityInformationViewModel model)
         {
             string errorMessage = "";
-
-            if (ModelState.IsValid)
+			var requester = _userIdentity.GetRequester(this);
+			if (ModelState.IsValid)
             {
                 var recaptchaSuccess = true;
                 if (_configuration.HasRecaptcha)
@@ -503,13 +510,13 @@ namespace SecurityEssentials.Controllers
 						}
 						else
 						{
-							Logger.Information("Failed Account ChangeSecurityInformation Post, security answers do not match by requester {@requester}", _userIdentity.GetRequester(this, null));
+							Logger.Information("Failed Account ChangeSecurityInformation Post, security answers do not match by requester {@requester}", requester);
 							errorMessage = "The security question answers do not match";
 						}
 					}
 					else
 					{
-						Logger.Information("Failed Account ChangeSecurityInformation Post, security information incorrect or account locked out by requester {@requester}", _userIdentity.GetRequester(this, null));
+						Logger.Information("Failed Account ChangeSecurityInformation Post, security information incorrect or account locked out by requester {@requester}", requester);
 						errorMessage = "Security information incorrect or account locked out";
 					}
 				}
@@ -542,8 +549,8 @@ namespace SecurityEssentials.Controllers
             var user = new User();
             var password = collection["Password"].ToString();
             var confirmPassword = collection["ConfirmPassword"].ToString();
-
-            if (ModelState.IsValid)
+			var requester = _userIdentity.GetRequester(this);
+			if (ModelState.IsValid)
             {
                 var propertiesToUpdate = new[]
             {
@@ -556,6 +563,7 @@ namespace SecurityEssentials.Controllers
                     {
 						recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     }
+					var userName = user.UserName;
                     if (recaptchaSuccess)
                     {
                         var result = await _userManager.CreateAsync(user.UserName, user.FirstName, user.LastName, password, confirmPassword,
@@ -578,19 +586,19 @@ namespace SecurityEssentials.Controllers
                             }
 
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-							Logger.Information("Successful Account Register Post for username {user.UserName} by user {@requester}", user.UserName, _userIdentity.GetRequester(this, null));
+							Logger.Information("Successful Account Register Post for username {userName} by user {@requester}", userName, requester);
 							return View("RegisterSuccess");
                         }
                         else
                         {
 							var errorMessage = result.Errors.FirstOrDefault();
-							Logger.Information("Failed Account Register Post with message {errorMessage}, user creation failed by requester {@requester}", errorMessage, _userIdentity.GetRequester(this, null));
+							Logger.Information("Failed Account Register Post of username {userName} with message {errorMessage}, user creation failed by requester {@requester}", userName, errorMessage, requester);
 							AddErrors(result);
                         }
                     }
 					else
 					{
-						Logger.Information("Failed Account Register Post Recaptcha failed by requester {@requester}", _userIdentity.GetRequester(this, null));
+						Logger.Information("Failed Account Register Post Recaptcha failed by requester {@requester}", requester);
 					}
 				}
             }
@@ -640,7 +648,8 @@ namespace SecurityEssentials.Controllers
             {
 				if (!string.IsNullOrEmpty(returnUrl))
 				{
-					Logger.Information("Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}", returnUrl, _userIdentity.GetRequester(this, null));
+					var requester = _userIdentity.GetRequester(this);
+					Logger.Information("Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}", returnUrl, requester);
 				}
 				return RedirectToAction("Landing", "Account");
             }

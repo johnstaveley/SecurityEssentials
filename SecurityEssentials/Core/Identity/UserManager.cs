@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Text.RegularExpressions;
 using SecurityEssentials.Core.Constants;
-using static SecurityEssentials.Core.Constants.CONSTS;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -222,7 +221,7 @@ namespace SecurityEssentials.Core.Identity
 		{
 			if (string.IsNullOrEmpty(password) || Regex.Matches(password, _passwordValidityRegex).Count == 0)
 			{
-				return new SEIdentityResult(UserManagerMessages.PasswordValidityMessage);
+				return new SEIdentityResult(CONSTS.UserManagerMessages.PasswordValidityMessage);
 			}
 
 			if (Regex.Matches(password, _passwordGoodEntropyRegex).Count == 0)

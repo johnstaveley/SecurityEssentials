@@ -48,7 +48,7 @@ namespace SecurityEssentials.Controllers
 		{
 			// Assumption is that javascript is turned on on the client
 			var allErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
-			Requester requester = _userIdentity.GetRequester(this, null);
+			Requester requester = _userIdentity.GetRequester(this);
 			foreach (var error in allErrors)
 			{
 				var errorMessage = error.ErrorMessage;

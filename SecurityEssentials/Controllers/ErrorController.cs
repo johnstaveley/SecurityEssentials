@@ -41,8 +41,9 @@ namespace SecurityEssentials.Controllers
 			Response.TrySkipIisCustomErrors = true;
 			var appSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE1;
 			// TODO: Determine if path exists, if so RE2, otherwise RE1
-			Requester requestor = _userIdentity.GetRequester(this, appSensorDetectionPoint);			
-			Logger.Information("Unknown route {CurrentExecutionFilePath} accessed by user {@requestor}", Request.CurrentExecutionFilePath, requestor);
+			Requester requester = _userIdentity.GetRequester(this, appSensorDetectionPoint);
+			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
+			Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
 			return result;
 		}
 
@@ -63,7 +64,7 @@ namespace SecurityEssentials.Controllers
 			}
 			Response.StatusCode = 500;
 			Response.TrySkipIisCustomErrors = true;
-			Requester requestor = _userIdentity.GetRequester(this, null);
+			Requester requestor = _userIdentity.GetRequester(this);
 			Logger.Error(Server.GetLastError(), "Error occurred by user {@requestor}", requestor);
 			return result;
 		}

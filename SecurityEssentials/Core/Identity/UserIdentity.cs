@@ -28,7 +28,7 @@ namespace SecurityEssentials.Core.Identity
             return controller.User.IsInRole(role);
         }
 
-		public Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind)
+		public Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null)
 		{
 			return new Requester()
 			{

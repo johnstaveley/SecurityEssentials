@@ -27,17 +27,16 @@ namespace SecurityEssentials.Core.Attributes
 		{
 			string action = filterContext.ActionDescriptor.ActionName;
 			string controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+			Requester requester = _userIdentity.GetRequester(filterContext.Controller as Controller, null);
 			if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
 			{
 				// The user is not authenticated
-				Requester requester = _userIdentity.GetRequester(filterContext.Controller as Controller, null);
 				Log.Logger.Information("Failed access attempt on controller {controller} and action {action} which required authorization by requester {@requester}", controller, action, requester);
 				base.HandleUnauthorizedRequest(filterContext);
 			}
 			else if (!this.Roles.Split(',').Any(filterContext.HttpContext.User.IsInRole))
 			{
 				// The user is not in any of the listed roles then log and show the unauthorized view
-				Requester requester = _userIdentity.GetRequester(filterContext.Controller as Controller, null);
 				Log.Logger.Information("Failed access attempt on controller {controller} and action {action} which required roles {roles} by requester {@requester}", controller, action, this.Roles, requester);
 				filterContext.Result = new ViewResult
 				{
