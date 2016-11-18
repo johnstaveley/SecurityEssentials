@@ -9,7 +9,6 @@ using SecurityEssentials.Unit.Tests.TestDbSet;
 using System.Threading.Tasks;
 using System;
 using SecurityEssentials.Core.Constants;
-using static SecurityEssentials.Core.Constants.CONSTS;
 
 namespace SecurityEssentials.Unit.Tests.Core.Identity
 {
@@ -111,7 +110,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 
 			// Assert
 			Assert.IsFalse(result.Succeeded);
-			Assert.IsTrue(result.Errors.Contains(UserManagerMessages.PasswordValidityMessage));
+			Assert.IsTrue(result.Errors.Contains(CONSTS.UserManagerMessages.PasswordValidityMessage));
 			_userStore.AssertWasNotCalled(u => u.CreateAsync(Arg<User>.Is.Anything));
 
 		}
