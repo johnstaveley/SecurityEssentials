@@ -18,7 +18,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 	public class AppSensorFixture
 	{
 
-		private IAppSensor _sut;
+		private AppSensor _sut;
 		private string _controllerName;
 		private string _actionName;
 		private string _httpMethod;
@@ -33,17 +33,24 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void Setup()
 		{
 			_controllerName = "Account";
-			_actionName = "LogOn";
+			_actionName = "Register";
 			_httpMethod = "POST";
 			_logger = MockRepository.GenerateMock<ILogger>();
 			_userIdentity = MockRepository.GenerateMock<IUserIdentity>();
-			_userIdentity.Stub(a => a.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything)).Return(new Requester());
+			_userIdentity.Stub(a => a.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything))
+				.Return(null) // will be ignored but still the API requires it
+				.WhenCalled(_ => {
+					var appSensorDetectionPointKind = (AppSensorDetectionPointKind?)_.Arguments[1];
+					var requester = new Requester()
+					{
+						AppSensorDetectionPoint = appSensorDetectionPointKind
+					};
+					_.ReturnValue = requester;
+				});
 			_sut = new AppSensor(_userIdentity, _logger);
 			_httpSession = MockRepository.GenerateMock<HttpSessionStateBase>();
 			_httpContext = MockRepository.GenerateMock<HttpContextBase>();
 			_httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
-			_httpRequest.Stub(a => a.CurrentExecutionFilePath).Return(string.Format("~/{0}/{1}", _controllerName, _actionName));
-			_httpRequest.Stub(a => a.HttpMethod).Return(_httpMethod);
 			_httpContext.Stub(c => c.Request).Return(_httpRequest);
 			_httpContext.Stub(c => c.Session).Return(_httpSession);
 			_controller = new HomeController();
@@ -66,6 +73,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_NoModelStateErrors_WHEN_InspectModelStateErrors_THEN_NothingLogged()
 		{
 			// Arrange
+			StubControllerCall();
 
 			// Act
 			_sut.InspectModelStateErrors(_controller);
@@ -80,6 +88,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_RequiredFieldMissed_WHEN_InspectModelStateErrors_THEN_DataMissingFromRequestDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("UserName", "Field is required");
 
 			// Act
@@ -94,6 +103,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_FieldInvalidAcccordingToRegex_WHEN_InspectModelStateErrors_THEN_ViolationOfImplementedWhiteListsDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("EmailAddress", "Email Address does not appear to be valid");
 
 			// Act
@@ -108,6 +118,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_FieldTooLong_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("UserName", " Y with a maximum length of 15");
 
 			// Act
@@ -122,6 +133,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_FieldTooShort_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("UserName", "X with a minimum length of 15");
 
 			// Act
@@ -136,6 +148,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_StringLengthConditionViolatedOnUserName_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInUserNameDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("EmailAddress", "The Email Address must be at least 7 and less than 255 characters long");
 
 			// Act
@@ -150,6 +163,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_StringLengthConditionViolatedOnPassword_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInPasswordDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("Password", "The Password must be at least 8 and less than 100 characters long");
 
 			// Act
@@ -164,6 +178,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_StringLengthConditionViolatedOnAnyNormalField_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			_controller.ModelState.AddModelError("AnyField", "The Any Field must be at least 7 and less than 255 characters long");
 
 			// Act
@@ -178,6 +193,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		public void GIVEN_FormDataValid_WHEN_ValidateFormData_THEN_NothingLogged()
 		{
 			// Arrange
+			StubControllerCall();
 			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "__RequestVerificationToken" };
 
 			// Act
@@ -188,10 +204,77 @@ namespace SecurityEssentials.Unit.Tests.Core
 
 		}
 
-		private void AssertDetectionPointFound(AppSensorDetectionPointKind appSensorDetectionPointKind)
+		[TestMethod]
+		public void GIVEN_AdditionalField_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall();
+			List<string> expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
+
+			// Act
+			_sut.ValidateFormData(_controller, expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.RE5, "additional");
+
+		}
+
+		[TestMethod]
+		public void GIVEN_AdditionalFieldOnLogOn_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			_httpMethod = "POST";
+			_controllerName = "Account";
+			_actionName = "LogOn";
+			StubControllerCall();
+			List<string> expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
+
+			// Act
+			_sut.ValidateFormData(_controller, expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.AE10, "additional");
+
+		}
+
+		[TestMethod]
+		public void GIVEN_MissingField_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall();
+			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
+
+			// Act
+			_sut.ValidateFormData(_controller, expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.RE6, "missing");
+
+		}
+
+		[TestMethod]
+		public void GIVEN_MissingFieldOnLogOn_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			_httpMethod = "POST";
+			_controllerName = "Account";
+			_actionName = "LogOn";
+			StubControllerCall();
+			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
+
+			// Act
+			_sut.ValidateFormData(_controller, expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.AE11, "missing");
+
+		}
+
+
+		private void AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind appSensorDetectionPointKind, string type)
 		{
 			_logger.AssertWasCalled(a => a.Information(
-				Arg<string>.Is.Equal("Failed {@controllerName} {@methodName} {@httpType} validation bypass {errorMessage} attempted by user {@requester}"),
+				Arg<string>.Matches(e => e.Contains("{@controllerName} {@methodName} {@httpMethod}") && e.Contains(type)),
 				Arg<object[]>.Matches(b => b.OfType<Requester>().Any(
 					c => c.AppSensorDetectionPoint == appSensorDetectionPointKind) &&
 					b.OfType<string>().Any(d => d == _controllerName) &&
@@ -200,6 +283,23 @@ namespace SecurityEssentials.Unit.Tests.Core
 					)));
 		}
 
+		private void AssertDetectionPointFound(AppSensorDetectionPointKind appSensorDetectionPointKind)
+		{
+			_logger.AssertWasCalled(a => a.Information(
+				Arg<string>.Is.Equal("Failed {@controllerName} {@methodName} {@httpMethod} validation bypass {errorMessage} attempted by user {@requester}"),
+				Arg<object[]>.Matches(b => b.OfType<Requester>().Any(
+					c => c.AppSensorDetectionPoint == appSensorDetectionPointKind) &&
+					b.OfType<string>().Any(d => d == _controllerName) &&
+					b.OfType<string>().Any(d => d == _actionName) &&
+					b.OfType<string>().Any(d => d == _httpMethod)
+					)));
+		}
+
+		private void StubControllerCall()
+		{
+			_httpRequest.Stub(a => a.HttpMethod).Return(_httpMethod);
+			_httpRequest.Stub(a => a.CurrentExecutionFilePath).Return(string.Format("~/{0}/{1}", _controllerName, _actionName));
+		}
 
 	}
 }

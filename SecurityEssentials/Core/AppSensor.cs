@@ -40,25 +40,33 @@ namespace SecurityEssentials.Core
 			var controllerMethod = controller.Request.CurrentExecutionFilePath.Trim('~').Trim('/').Split('/');
 			var controllerName = controllerMethod[0];
 			var methodName = controllerMethod[1];
-			var httpType = controller.Request.HttpMethod;
-			if (!expectedFormKeys.Contains("__RequestVerificationToken") && (httpType == "POST" || httpType == "PUT")) expectedFormKeys.Add("__RequestVerificationToken");
+			var httpMethod = controller.Request.HttpMethod;
+			if (!expectedFormKeys.Contains("__RequestVerificationToken") && (httpMethod == "POST" || httpMethod == "PUT")) expectedFormKeys.Add("__RequestVerificationToken");
 			// Check if any additional fields have been provided
 			var additionalKeys = keysSent.Except(expectedFormKeys).ToList();
 			if (additionalKeys.Count > 0)
 			{
 				var requester = _userIdentity.GetRequester(controller, AppSensorDetectionPointKind.RE5);
+				if (controllerName == "Account" && methodName == "LogOn" && httpMethod == "POST")
+				{
+					requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE10;
+				}
 				var additionalFormKeys = string.Join(",", additionalKeys);
-				_logger.Information("{@controllerName} {@methodName} {@httpType} additional form keys {additionalFormKeys} sent by requester {@requester}",
-					controllerName, methodName, httpType, additionalFormKeys, requester);
+				_logger.Information("{@controllerName} {@methodName} {@httpMethod} additional form keys {additionalFormKeys} sent by requester {@requester}",
+					controllerName, methodName, httpMethod, additionalFormKeys, requester);
 			}
 			// Check if any fields are missing from request
 			var missingKeys = expectedFormKeys.Except(keysSent).ToList();
 			if (missingKeys.Count > 0)
 			{
 				var requester = _userIdentity.GetRequester(controller, AppSensorDetectionPointKind.RE6);
+				if (controllerName == "Account" && methodName == "LogOn" && httpMethod == "POST")
+				{
+					requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE11;
+				}
 				var missingFormKeys = string.Join(",", missingKeys);
-				_logger.Information("{@controllerName} {@methodName} {@httpType}  missing form keys {missingFormKeys} sent by requester {@requester}", 
-					controllerName, methodName, httpType, missingFormKeys, requester);
+				_logger.Information("{@controllerName} {@methodName} {@httpMethod} missing form keys {missingFormKeys} sent by requester {@requester}", 
+					controllerName, methodName, httpMethod, missingFormKeys, requester);
 			}
 		}
 
@@ -74,7 +82,7 @@ namespace SecurityEssentials.Core
 			var controllerMethod = controller.Request.CurrentExecutionFilePath.Trim('~').Trim('/').Split('/');
 			var controllerName = controllerMethod[0];
 			var methodName = controllerMethod[1];
-			var httpType = controller.Request.HttpMethod;
+			var httpMethod = controller.Request.HttpMethod;
 			foreach (var error in allErrors)
 			{
 				var errorMessage = error.ErrorMessage;
@@ -110,7 +118,7 @@ namespace SecurityEssentials.Core
 						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
 					}
 				}
-				_logger.Information("Failed {@controllerName} {@methodName} {@httpType} validation bypass {errorMessage} attempted by user {@requester}", controllerName, methodName, httpType, errorMessage, requester);
+				_logger.Information("Failed {@controllerName} {@methodName} {@httpMethod} validation bypass {errorMessage} attempted by user {@requester}", controllerName, methodName, httpMethod, errorMessage, requester);
 			}
 		}
 
