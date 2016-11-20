@@ -25,7 +25,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Setup()
         {
             base.BaseSetup();
-            _sut = new UserController(_context, _userIdentity);
+            _sut = new UserController(_appSensor, _context, _userIdentity);
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
 
         }

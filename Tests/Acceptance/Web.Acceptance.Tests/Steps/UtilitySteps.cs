@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
@@ -13,6 +8,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 	{
 
 		[Given(@"I wait (.*) seconds")]
+		[When(@"I wait (.*) seconds")]
 		public void GivenIWaitSeconds(int waitInSeconds)
 		{
 			Thread.Sleep(waitInSeconds * 1000);

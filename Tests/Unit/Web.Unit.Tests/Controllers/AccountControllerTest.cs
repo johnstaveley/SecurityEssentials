@@ -40,7 +40,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
-            _sut = new AccountController(_configuration, _encryption, _formsAuth, _context, _userManager, _recaptcha, _services, _userIdentity);
+            _sut = new AccountController(_appSensor, _configuration, _encryption, _formsAuth, _context, _userManager, _recaptcha, _services, _userIdentity);
             _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
             _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);

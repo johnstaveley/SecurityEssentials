@@ -1,0 +1,205 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rhino.Mocks;
+using SecurityEssentials.Controllers;
+using SecurityEssentials.Core;
+using SecurityEssentials.Core.Constants;
+using SecurityEssentials.Core.Identity;
+using Serilog;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+
+namespace SecurityEssentials.Unit.Tests.Core
+{
+
+	[TestClass]
+	public class AppSensorFixture
+	{
+
+		private IAppSensor _sut;
+		private string _controllerName;
+		private string _actionName;
+		private string _httpMethod;
+		private ILogger _logger;
+		private IUserIdentity _userIdentity;
+		private HttpContextBase _httpContext;
+		private HttpRequestBase _httpRequest;
+		private HttpSessionStateBase _httpSession;
+		private HomeController _controller;
+
+		[TestInitialize]
+		public void Setup()
+		{
+			_controllerName = "Account";
+			_actionName = "LogOn";
+			_httpMethod = "POST";
+			_logger = MockRepository.GenerateMock<ILogger>();
+			_userIdentity = MockRepository.GenerateMock<IUserIdentity>();
+			_userIdentity.Stub(a => a.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything)).Return(new Requester());
+			_sut = new AppSensor(_userIdentity, _logger);
+			_httpSession = MockRepository.GenerateMock<HttpSessionStateBase>();
+			_httpContext = MockRepository.GenerateMock<HttpContextBase>();
+			_httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
+			_httpRequest.Stub(a => a.CurrentExecutionFilePath).Return(string.Format("~/{0}/{1}", _controllerName, _actionName));
+			_httpRequest.Stub(a => a.HttpMethod).Return(_httpMethod);
+			_httpContext.Stub(c => c.Request).Return(_httpRequest);
+			_httpContext.Stub(c => c.Session).Return(_httpSession);
+			_controller = new HomeController();
+			_controller.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _controller);
+			_controller.Request.Stub(a => a.Form).Return(new System.Collections.Specialized.NameValueCollection() { { "TestField1", "1" }, { "TestField2", "2" }, { "__RequestVerificationToken", "abc" } });
+
+		}
+
+		[TestCleanup]
+		public void Teardown()
+		{
+			_logger.VerifyAllExpectations();
+			_httpContext.VerifyAllExpectations();
+			_httpRequest.VerifyAllExpectations();
+			_httpSession.VerifyAllExpectations();
+			_userIdentity.VerifyAllExpectations();
+		}
+
+		[TestMethod]
+		public void GIVEN_NoModelStateErrors_WHEN_InspectModelStateErrors_THEN_NothingLogged()
+		{
+			// Arrange
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			_logger.AssertWasNotCalled(a => a.Information(Arg<string>.Is.Anything, Arg<object[]>.Is.Anything));
+
+
+		}
+
+		[TestMethod]
+		public void GIVEN_RequiredFieldMissed_WHEN_InspectModelStateErrors_THEN_DataMissingFromRequestDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("UserName", "Field is required");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.RE6);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_FieldInvalidAcccordingToRegex_WHEN_InspectModelStateErrors_THEN_ViolationOfImplementedWhiteListsDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("EmailAddress", "Email Address does not appear to be valid");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.IE2);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_FieldTooLong_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("UserName", " Y with a maximum length of 15");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.RE7);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_FieldTooShort_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("UserName", "X with a minimum length of 15");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.RE7);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_StringLengthConditionViolatedOnUserName_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInUserNameDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("EmailAddress", "The Email Address must be at least 7 and less than 255 characters long");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.AE4);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_StringLengthConditionViolatedOnPassword_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInPasswordDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("Password", "The Password must be at least 8 and less than 100 characters long");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.AE5);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_StringLengthConditionViolatedOnAnyNormalField_WHEN_InspectModelStateErrors_THEN_UnexpectedQuantityOfCharactersInParameterDetectionPointLogged()
+		{
+			// Arrange
+			_controller.ModelState.AddModelError("AnyField", "The Any Field must be at least 7 and less than 255 characters long");
+
+			// Act
+			_sut.InspectModelStateErrors(_controller);
+
+			// Assert
+			AssertDetectionPointFound(AppSensorDetectionPointKind.RE7);
+
+		}
+
+		[TestMethod]
+		public void GIVEN_FormDataValid_WHEN_ValidateFormData_THEN_NothingLogged()
+		{
+			// Arrange
+			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "__RequestVerificationToken" };
+
+			// Act
+			_sut.ValidateFormData(_controller, expectedFormKeys);
+
+			// Assert
+			_logger.AssertWasNotCalled(a => a.Information(Arg<string>.Is.Anything, Arg<object[]>.Is.Anything));
+
+		}
+
+		private void AssertDetectionPointFound(AppSensorDetectionPointKind appSensorDetectionPointKind)
+		{
+			_logger.AssertWasCalled(a => a.Information(
+				Arg<string>.Is.Equal("Failed {@controllerName} {@methodName} {@httpType} validation bypass {errorMessage} attempted by user {@requester}"),
+				Arg<object[]>.Matches(b => b.OfType<Requester>().Any(
+					c => c.AppSensorDetectionPoint == appSensorDetectionPointKind) &&
+					b.OfType<string>().Any(d => d == _controllerName) &&
+					b.OfType<string>().Any(d => d == _actionName) &&
+					b.OfType<string>().Any(d => d == _httpMethod)
+					)));
+		}
+
+
+	}
+}

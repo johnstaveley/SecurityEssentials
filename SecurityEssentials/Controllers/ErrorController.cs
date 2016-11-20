@@ -48,6 +48,36 @@ namespace SecurityEssentials.Controllers
 		}
 
 		// GET: Error
+		public ActionResult Forbidden()
+		{
+			ActionResult result;
+
+			object model = Request.Url.PathAndQuery;
+
+			if (!Request.IsAjaxRequest())
+			{
+				result = View(model);
+			}
+			else
+			{
+				result = PartialView("_Forbidden", model);
+			}
+			Response.StatusCode = 403;
+			Response.TrySkipIisCustomErrors = true;
+			Requester requester = _userIdentity.GetRequester(this);
+			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
+			if (Server.GetLastError() is HttpAntiForgeryException)
+			{
+				Logger.Information("Forbidden request, attempted CSRF {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
+			}
+			else
+			{
+				Logger.Information("Forbidden request {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
+			}
+			return result;
+		}
+
+		// GET: Error
 		public ActionResult Index()
 		{
 			ActionResult result;

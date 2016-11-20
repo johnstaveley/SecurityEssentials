@@ -79,6 +79,9 @@ namespace SecurityEssentials
 					case 404:
 						action = "NotFound";
 						break;
+					case 403:
+						action = "Forbidden";
+						break;
 
 						// others if any
 				}

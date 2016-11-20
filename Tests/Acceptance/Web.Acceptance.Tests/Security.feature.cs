@@ -133,7 +133,7 @@ this.ScenarioSetup(scenarioInfo);
                         "attempt1@user.com"});
             table3.AddRow(new string[] {
                         "Password",
-                        "rhubarb"});
+                        "rhubarb22"});
 #line 24
  testRunner.And("I enter the following login data:", ((string)(null)), table3, "And ");
 #line 28
@@ -155,7 +155,7 @@ this.ScenarioSetup(scenarioInfo);
                         "attempt2@user.com"});
             table4.AddRow(new string[] {
                         "Password",
-                        "rhubarb"});
+                        "rhubarb22"});
 #line 33
  testRunner.And("I enter the following login data:", ((string)(null)), table4, "And ");
 #line 37
@@ -177,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
                         "attempt3@user.com"});
             table5.AddRow(new string[] {
                         "Password",
-                        "rhubarb"});
+                        "rhubarb22"});
 #line 42
  testRunner.And("I enter the following login data:", ((string)(null)), table5, "And ");
 #line 46
@@ -199,12 +199,14 @@ this.ScenarioSetup(scenarioInfo);
                         "attempt4@user.com"});
             table6.AddRow(new string[] {
                         "Password",
-                        "rhubarb"});
+                        "rhubarb22"});
 #line 51
  testRunner.And("I enter the following login data:", ((string)(null)), table6, "And ");
 #line 55
  testRunner.When("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 56
+ testRunner.And("I wait 2 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 57
  testRunner.Then("an error message is shown \'You have performed this action more than 3 times in th" +
                     "e last 60 seconds.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

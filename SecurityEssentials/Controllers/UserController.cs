@@ -19,16 +19,18 @@ namespace SecurityEssentials.Controllers
 		private ISEContext _context { get; set; }
 
 		public UserController()
-			: this(new SEContext(), new UserIdentity())
+			: this(new AppSensor(), new SEContext(), new UserIdentity())
 		{
 
 		}
 
-		public UserController(ISEContext context, IUserIdentity userIdentity)
+		public UserController(IAppSensor appSensor, ISEContext context, IUserIdentity userIdentity)
 		{
+			if (appSensor == null) throw new ArgumentNullException("appSensor");
 			if (context == null) throw new ArgumentNullException("context");
 			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
 
+			_appSensor = appSensor;
 			_context = context;
 			_userIdentity = userIdentity;
 		}
@@ -122,13 +124,13 @@ namespace SecurityEssentials.Controllers
                     "FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
                     "Town","Postcode", "SkypeName"
                 };
+			var expectedFields = new List<string>() { "IsOwnProfile", "IsAdministrator", "User.Id" };
 			if (_userIdentity.IsUserInRole(this, "Admin") && !isOwnProfile)
 			{
-				propertiesToUpdate.Add("Approved");
-				propertiesToUpdate.Add("EmailVerified");
-				propertiesToUpdate.Add("Enabled");
-				propertiesToUpdate.Add("UserName");
+				propertiesToUpdate.AddRange(new List<string>() { "Approved", "EmailVerified", "Enabled", "UserName" });
 			}
+			propertiesToUpdate.ForEach(a => expectedFields.Add(string.Format("User.{0}", a)));
+			_appSensor.ValidateFormData(this, expectedFields);
 			if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
 			{
 				if (isOwnProfile && (user.Enabled == false || user.EmailVerified == false))
@@ -151,7 +153,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				LogModelStateErrors("Account Logon Post", ModelState);
+				_appSensor.InspectModelStateErrors(this);
 			}
 
 			return View("Edit", new UserViewModel(_userIdentity.GetUserId(this), _userIdentity.IsUserInRole(this, "Admin"), user));

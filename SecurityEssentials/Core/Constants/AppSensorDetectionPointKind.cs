@@ -21,6 +21,7 @@ namespace SecurityEssentials.Core.Constants
 		RE2 = 2,
 		RE3 = 3,
 		RE4 = 4,
+		[Description("Additional/Duplicated data in Request")]
 		RE5 = 5,
 		[Description("Data Missing from Request")]
 		RE6 = 6,

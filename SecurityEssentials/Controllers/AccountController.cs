@@ -25,13 +25,14 @@ namespace SecurityEssentials.Controllers
         private IUserManager _userManager;
 
         public AccountController()
-            : this(new AppConfiguration(), new Encryption(), new FormsAuth(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
+            : this(new AppSensor(), new AppConfiguration(), new Encryption(), new FormsAuth(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
         {
             // TODO: Replace with your DI Framework of choice
         }
 
-        public AccountController(IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
+        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
         {
+			if (appSensor == null) throw new ArgumentNullException("appSensor");
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
             if (encryption == null) throw new ArgumentNullException("encryption");
@@ -41,7 +42,8 @@ namespace SecurityEssentials.Controllers
             if (userManager == null) throw new ArgumentNullException("userManager");
             if (userIdentity == null) throw new ArgumentNullException("userIdentity");
 
-            _configuration = configuration;
+			_appSensor = appSensor;
+			_configuration = configuration;
             _context = context;
             _encryption = encryption;
             _formsAuth = formsAuth;
@@ -75,21 +77,6 @@ namespace SecurityEssentials.Controllers
             return View("LogOn");
         }
 
-		//protected void ValidateSubmission(Controller controller, List<string> expectedFormKeys)
-		//{
-		//	var keysSent = this.Request.Form.AllKeys;
-		//	if (!expectedFormKeys.Contains("_RequestVerificationToken")) expectedFormKeys.Add("_RequestVerificationToken");
-		//	// Check if any additional fields have been provided
-		//	var additionalKeys = keysSent.Except(expectedFormKeys).ToList();
-		//	if (additionalKeys.Count > 0)
-		//	{
-		//		var requester = _userIdentity.GetRequester(this);
-		//		var additionalFormKeys = string.Join(",", additionalKeys);
-		//		Logger.Information("Account Logon Post additional form keys {additionalFormKeys} sent by requester {@requester}", additionalFormKeys, requester);
-		//	}
-
-		//}
-
 		[HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -99,7 +86,7 @@ namespace SecurityEssentials.Controllers
 
 			Requester requester = _userIdentity.GetRequester(this);
 			var userName = model.UserName;
-			//ValidateSubmission(this, new List<string>() { "UserName", "Password" });
+			_appSensor.ValidateFormData(this, new List<string>() { "UserName", "Password" });
 			if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
@@ -125,7 +112,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				LogModelStateErrors("Account Logon Post", ModelState);
+				_appSensor.InspectModelStateErrors(this);
 			}
 
 			// If we got this far, something failed, redisplay form
@@ -152,6 +139,7 @@ namespace SecurityEssentials.Controllers
 		{
 			var userId = _userIdentity.GetUserId(this);
 			var user = _context.User.Where(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
+			_appSensor.ValidateFormData(this, new List<string>() { "NewEmailAddress", "Password" });
 			if (ModelState.IsValid)
 			{
 				var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
@@ -180,7 +168,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				LogModelStateErrors("Account ChangeEmailAddresss Post", ModelState);
+				_appSensor.InspectModelStateErrors(this);
 			}
 			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
 
@@ -258,7 +246,8 @@ namespace SecurityEssentials.Controllers
             {
 				recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
             }
-            if (recaptchaSuccess)
+			_appSensor.ValidateFormData(this, new List<string>() { "ConfirmPassword", "OldPassword", "NewPassword" });
+			if (recaptchaSuccess)
             {
                 var user = _context.User.Where(u => u.Id == requester.LoggedOnUserId.Value).FirstOrDefault();
                 if (user != null)
@@ -332,6 +321,7 @@ namespace SecurityEssentials.Controllers
         {
 			var requester = _userIdentity.GetRequester(this);
 			var userName = model.UserName;
+			_appSensor.ValidateFormData(this, new List<string>() { "UserName" });
 			if (ModelState.IsValid)
             {
                 var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).SingleOrDefault();
@@ -345,7 +335,7 @@ namespace SecurityEssentials.Controllers
 						return View(model);
                     }
                 }
-                if (user != null)
+				if (user != null)
                 {
 					user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                     user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
@@ -364,7 +354,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				LogModelStateErrors("Account Recover Post", ModelState);
+				_appSensor.InspectModelStateErrors(this);
 			}
 			return View("RecoverSuccess");
 
@@ -413,6 +403,7 @@ namespace SecurityEssentials.Controllers
             var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
 			var id = recoverPasswordModel.Id;
 			var requester = _userIdentity.GetRequester(this);
+			_appSensor.ValidateFormData(this, new List<string>() { "UserName", "SecurityAnswer", "Password", "ConfirmPassword", "Id", "PasswordResetToken" });
 			if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is either not valid, not approved or not active"), "Account", "RecoverPassword");
@@ -467,7 +458,7 @@ namespace SecurityEssentials.Controllers
 				else
 				{
 					ModelState.AddModelError("", "Password change was not successful");
-					LogModelStateErrors("Account RecoverPassword Post", ModelState);
+					_appSensor.InspectModelStateErrors(this);
 				}
 			}
 			else
@@ -495,6 +486,7 @@ namespace SecurityEssentials.Controllers
         {
             string errorMessage = "";
 			var requester = _userIdentity.GetRequester(this);
+			_appSensor.ValidateFormData(this, new List<string>() { "SecurityQuestionLookupItemId", "SecurityAnswer", "SecurityAnswerConfirm", "Password" });
 			if (ModelState.IsValid)
             {
                 var recaptchaSuccess = true;
@@ -538,7 +530,7 @@ namespace SecurityEssentials.Controllers
 				}
 				else
 				{
-					LogModelStateErrors("Account ChangeSecurityInformation Post", ModelState);
+					_appSensor.InspectModelStateErrors(this);
 				}
 			}
             var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
@@ -565,6 +557,8 @@ namespace SecurityEssentials.Controllers
             var user = new User();
             var password = collection["Password"].ToString();
             var confirmPassword = collection["ConfirmPassword"].ToString();
+			_appSensor.ValidateFormData(this, new List<string>() { "Password", "ConfirmPassword", "User.FirstName", "User.LastName", "User.UserName",
+				"User.SecurityQuestionLookupItemId", "User.SecurityAnswer" });
 			var requester = _userIdentity.GetRequester(this);
 			if (ModelState.IsValid)
             {
@@ -620,7 +614,7 @@ namespace SecurityEssentials.Controllers
             }
 			else
 			{
-				LogModelStateErrors("Account Register Post", ModelState);
+				_appSensor.InspectModelStateErrors(this);
 			}
 			var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var registerViewModel = new RegisterViewModel(confirmPassword, _configuration.HasRecaptcha, password, user, securityQuestions);

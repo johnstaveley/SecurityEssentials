@@ -32,7 +32,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			}
 			else
 			{
-				webDriver = new FirefoxDriver(new FirefoxBinary(), new FirefoxProfile(), TimeSpan.FromSeconds(180));
+				webDriver = new FirefoxDriver();
 			}
 			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
 			FeatureContext.Current.SetWebDriver(webDriver);

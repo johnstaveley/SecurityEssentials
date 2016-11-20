@@ -18,6 +18,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
     public abstract class BaseControllerTest
     {
 
+		protected IAppSensor _appSensor;
         protected ISEContext _context;
         protected HttpContextBase _httpContext;
         protected HttpRequestBase _httpRequest;
@@ -31,7 +32,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
           
         protected void BaseSetup()
         {
-            _context = MockRepository.GenerateStub<ISEContext>();
+			_appSensor = MockRepository.GenerateMock<IAppSensor>();
+			_context = MockRepository.GenerateStub<ISEContext>();
             _context.LookupItem = new TestDbSet<LookupItem>();
             _context.User = new TestDbSet<User>();
             _context.User.Add(GetUser());
@@ -47,11 +49,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         protected void VerifyAllExpectations()
         {
-            _httpContext.VerifyAllExpectations();
+			_appSensor.VerifyAllExpectations();
+			_httpContext.VerifyAllExpectations();
             _httpRequest.VerifyAllExpectations();
             _httpSession.VerifyAllExpectations();
             _userIdentity.VerifyAllExpectations();
-
         }
 
         protected User GetUser()

@@ -1,13 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Core;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SecurityEssentials.Unit.Tests.Core.Security
 {
-    /// <summary>
-    /// Summary description for Encryption2
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// Summary description for Encryption2
+	/// </summary>
+	[TestClass]
     public class Encryption
     {
         

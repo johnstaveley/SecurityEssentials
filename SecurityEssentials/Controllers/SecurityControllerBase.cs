@@ -4,7 +4,6 @@ using SecurityEssentials.Core.Identity;
 using Serilog;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
@@ -16,19 +15,22 @@ namespace SecurityEssentials.Controllers
         private readonly ValidateAntiForgeryTokenAttribute _validator;
         private readonly AcceptVerbsAttribute _verbs;
 		public ILogger Logger;
-		public IUserIdentity _userIdentity;
+		protected IUserIdentity _userIdentity;
+		protected IAppSensor _appSensor;
 
-        protected SecurityControllerBase() : this(HttpVerbs.Post, new UserIdentity())
+        protected SecurityControllerBase() : this(HttpVerbs.Post, new UserIdentity(), new AppSensor())
         {
+			// TODO: replace with DI container of choice
         }
 
-        protected SecurityControllerBase(HttpVerbs verbs, IUserIdentity userIdentity)
+        protected SecurityControllerBase(HttpVerbs verbs, IUserIdentity userIdentity, IAppSensor appSensor)
         {
 			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
             _verbs = new AcceptVerbsAttribute(verbs);
             _validator = new ValidateAntiForgeryTokenAttribute();
 			Logger = Log.Logger;
 			_userIdentity = userIdentity;
+			_appSensor = appSensor;
 
 		}
 
@@ -44,44 +46,5 @@ namespace SecurityEssentials.Controllers
             }
         }
 
-		protected void LogModelStateErrors(string method, ModelStateDictionary modelState)
-		{
-			// Assumption is that javascript is turned on on the client
-			var allErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
-			Requester requester = _userIdentity.GetRequester(this);
-			foreach (var error in allErrors)
-			{
-				var errorMessage = error.ErrorMessage;
-				requester.AppSensorDetectionPoint = null;
-				if (errorMessage.Contains("is required"))
-				{
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE6;
-				}
-				if (errorMessage.Contains("does not appear to be valid"))
-				{
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.IE2;
-				}
-				if (errorMessage.Contains("with a maximum length of") || error.ErrorMessage.Contains("with a minimum length of"))
-				{
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
-				}
-				if (Regex.Match(errorMessage, @"The (.*) must be at least (\d+) and less than (\d+) characters long").Success)
-				{
-					if (errorMessage.Contains("User name") || errorMessage.Contains("Email Address"))
-					{
-						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE4;
-					}
-					else if (errorMessage.Contains("Password"))
-					{
-						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE5;
-					}
-					else
-					{
-						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE7;
-					}
-				}
-				Logger.Information("Failed {@method} validation bypass {errorMessage} attempted by user {@requester}", method, errorMessage, requester);
-			}
-		}
 	}
 }

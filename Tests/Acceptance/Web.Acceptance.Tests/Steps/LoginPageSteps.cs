@@ -26,6 +26,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		}
 
 		[Given(@"I click the login button as quickly as possible")]
+		[When(@"I click the login button as quickly as possible")]
 		public void GivenIClickTheLoginButtonAsQuicklyAsPossible()
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
