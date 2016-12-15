@@ -13,3 +13,9 @@
 5) Set in web.config HasEmailConfigured = true
 
 6) if you deploy this into production make sure you remove the test users from the databaseInitializer
+
+
+Developer Notes
+---------------
+
+In order to get the acceptance tests running on my CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use FF64, you will need to replace this.
