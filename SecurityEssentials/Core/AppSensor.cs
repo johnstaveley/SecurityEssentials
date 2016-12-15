@@ -68,7 +68,23 @@ namespace SecurityEssentials.Core
 				_logger.Information("{@controllerName} {@methodName} {@httpMethod} missing form keys {missingFormKeys} sent by requester {@requester}", 
 					controllerName, methodName, httpMethod, missingFormKeys, requester);
 			}
-		}
+			//// Check for potential SQL Injection Comments
+			//foreach(var keySent in keysSent)
+			//{
+			//	var valuesSent = controller.Request.Form.GetValues(keySent);
+			//	foreach(var valueSent in valuesSent)
+			//	{
+			//		if (Regex.Match(valueSent, @"\*!?|\*|[';]--|--[\s\r\n\v\f]|(?:--[^-]*?-)|([^\-&])#.*?[\s\r\n\v\f]|;?\\x00").Success)
+			//		{
+			//			var requester = _userIdentity.GetRequester(controller, AppSensorDetectionPointKind.CIE1);
+			//			_logger.Information("{@controllerName} {@methodName} {@httpMethod} SQL injection sent in form submission {@valueSent} by requester {@requester}",
+			//				controllerName, methodName, httpMethod, valueSent, requester);
+			//		}
+
+			//	}
+			//}
+
+			}
 
 		/// <summary>
 		/// Detect if user has bypassed front end validation to try and get some illegal content into the database

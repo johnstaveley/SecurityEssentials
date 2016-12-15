@@ -21,7 +21,7 @@ namespace SecurityEssentials.Core
 #if !DEBUG
 			HttpContext.Current.Response.AddHeader("Strict-Transport-Security", "max-age=31536000"); // Ensure all future requests to the site are made over SSL
 #endif
-			HttpContext.Current.Response.Headers.Remove("Server"); // Remove server information disclosure
+			HttpContext.Current.Response.Headers.Remove("Server"); // SECURE: Remove server information disclosure
 		}
 
 		public void Dispose()

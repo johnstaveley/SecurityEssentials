@@ -28,6 +28,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 		private HttpRequestBase _httpRequest;
 		private HttpSessionStateBase _httpSession;
 		private HomeController _controller;
+		List<string> _expectedFormKeys;
 
 		[TestInitialize]
 		public void Setup()
@@ -35,6 +36,7 @@ namespace SecurityEssentials.Unit.Tests.Core
 			_controllerName = "Account";
 			_actionName = "Register";
 			_httpMethod = "POST";
+			_expectedFormKeys = new List<string>() { "TestField1", "TestField2" };
 			_logger = MockRepository.GenerateMock<ILogger>();
 			_userIdentity = MockRepository.GenerateMock<IUserIdentity>();
 			_userIdentity.Stub(a => a.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything))
@@ -55,7 +57,6 @@ namespace SecurityEssentials.Unit.Tests.Core
 			_httpContext.Stub(c => c.Session).Return(_httpSession);
 			_controller = new HomeController();
 			_controller.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _controller);
-			_controller.Request.Stub(a => a.Form).Return(new System.Collections.Specialized.NameValueCollection() { { "TestField1", "1" }, { "TestField2", "2" }, { "__RequestVerificationToken", "abc" } });
 
 		}
 
@@ -194,13 +195,13 @@ namespace SecurityEssentials.Unit.Tests.Core
 		{
 			// Arrange
 			StubControllerCall();
-			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "__RequestVerificationToken" };
+			_expectedFormKeys = new List<string>() { "TestField1", "TestField2", "__RequestVerificationToken" };
 
 			// Act
-			_sut.ValidateFormData(_controller, expectedFormKeys);
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
 
 			// Assert
-			_logger.AssertWasNotCalled(a => a.Information(Arg<string>.Is.Anything, Arg<object[]>.Is.Anything));
+			AssertNoDetectionPointFound();
 
 		}
 
@@ -209,10 +210,10 @@ namespace SecurityEssentials.Unit.Tests.Core
 		{
 			// Arrange
 			StubControllerCall();
-			List<string> expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
+			_expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
 
 			// Act
-			_sut.ValidateFormData(_controller, expectedFormKeys);
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
 
 			// Assert
 			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.RE5, "additional");
@@ -227,10 +228,10 @@ namespace SecurityEssentials.Unit.Tests.Core
 			_controllerName = "Account";
 			_actionName = "LogOn";
 			StubControllerCall();
-			List<string> expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
+			_expectedFormKeys = new List<string>() { "TestField1", "__RequestVerificationToken" };
 
 			// Act
-			_sut.ValidateFormData(_controller, expectedFormKeys);
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
 
 			// Assert
 			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.AE10, "additional");
@@ -242,10 +243,10 @@ namespace SecurityEssentials.Unit.Tests.Core
 		{
 			// Arrange
 			StubControllerCall();
-			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
+			_expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
 
 			// Act
-			_sut.ValidateFormData(_controller, expectedFormKeys);
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
 
 			// Assert
 			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.RE6, "missing");
@@ -260,13 +261,125 @@ namespace SecurityEssentials.Unit.Tests.Core
 			_controllerName = "Account";
 			_actionName = "LogOn";
 			StubControllerCall();
-			List<string> expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
+			_expectedFormKeys = new List<string>() { "TestField1", "TestField2", "TestField3", "__RequestVerificationToken" };
 
 			// Act
-			_sut.ValidateFormData(_controller, expectedFormKeys);
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
 
 			// Assert
 			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.AE11, "missing");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_InputParameterWithSQLComment_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("joe bloggs -- ");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_InputParameterWithSQLCommentBlock_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("joe bloggs /* ");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_InputParameterWithMySQLComment_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("joe bloggs # ");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_InputParameterWithValidApostrophe_WHEN_ValidateFormData_THEN_NoDetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("O'Hara");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertNoDetectionPointFound();
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_SQLInjectionSequence_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("anything' OR 'x'='x");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_SQLInjectionSequence2_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("x' OR 1=1; -- ");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_SQLInjectionSequence3_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("value' or sysdate is not null or sysdate<>'");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
+
+		}
+
+		[TestMethod, Ignore]
+		public void GIVEN_SQLInjectionSequence4_WHEN_ValidateFormData_THEN_DetectionPointLogged()
+		{
+			// Arrange
+			StubControllerCall("value%27 or sysdate is not null or sysdate<>'");
+
+			// Act
+			_sut.ValidateFormData(_controller, _expectedFormKeys);
+
+			// Assert
+			AssertFormValidationDetectionPointFound(AppSensorDetectionPointKind.CIE1, "SQL injection");
 
 		}
 
@@ -295,10 +408,17 @@ namespace SecurityEssentials.Unit.Tests.Core
 					)));
 		}
 
-		private void StubControllerCall()
+		private void AssertNoDetectionPointFound()
+		{
+			_logger.AssertWasNotCalled(a => a.Information(Arg<string>.Is.Anything, Arg<object[]>.Is.Anything));
+		}
+
+		private void StubControllerCall(string testField1Value = "1")
 		{
 			_httpRequest.Stub(a => a.HttpMethod).Return(_httpMethod);
 			_httpRequest.Stub(a => a.CurrentExecutionFilePath).Return(string.Format("~/{0}/{1}", _controllerName, _actionName));
+			_controller.Request.Stub(a => a.Form).Return(new System.Collections.Specialized.NameValueCollection() { { "TestField1", testField1Value }, { "TestField2", "2" }, { "__RequestVerificationToken", "abc" } });
+
 		}
 
 	}
