@@ -10,7 +10,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 20/11/2016</h4>
+                <h4>Created by John Staveley - Last updated 02/02/2016</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -32,7 +32,13 @@
                             <li>Unit tests for password hashing and authorization attributes</li>
                         </ul>
                     </li>
-                    <li>XSS: Incorporation of the WPL AntiXSS library to encode all output</li>
+                    <li>XSS:
+                        <ul>
+                            <li>Incorporation of the WPL AntiXSS library to encode all output</li>
+                            <li>Enforce the location of the scripts the browser can run using a content security policy header</li>
+                            <li>Enables browser's anti-xss capabilities by sending the XSS-Protection header</li>
+                        </ul>
+                    </li>
                     <li>Insecure direct object references: In user edit page it checks the user is entitled to be there</li>
                     <li>Security misconfiguration: Doesn't turn on anything you don't really need</li>
                     <li>Sensitive data exposure: 

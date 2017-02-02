@@ -13,14 +13,14 @@ Background:
 	#| user4@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     | samuel@pepys.org | B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F | [One day from now]               |
 	#| user5@user.com | Standard  | User     | x12a;pP02icdjshER | Never            | What is the name of your first pet? | Mr Miggins     |                                      |                     |                  |                                      |                                  |
 
-Scenario: Home Page Loads 
+Scenario: Home Page Loads  
 	Given I navigate to the website
 	When I am taken to the homepage
 
 Scenario: When I enter correct login details I am taken to the landing page
 	Given I navigate to the website	
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -34,7 +34,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 Scenario: When I enter incorrect login details then a warning is displayed
 	Given I navigate to the website
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -84,7 +84,7 @@ Scenario: When I enter registration details which are currently being used I am 
 @PAT
 Scenario: When I attempt password recovery using a valid account I am notified of success
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I click recover password
 	And I am navigated to the 'Recover' page
@@ -98,7 +98,7 @@ Scenario: When I attempt password recovery using a valid account I am notified o
 @PAT
 Scenario: When I attempt password recovery using an invalid account I am notified of success
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I click recover password
 	And I am navigated to the 'Recover' page
@@ -125,7 +125,7 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 @PAT
 Scenario: I can change my account information
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -153,7 +153,7 @@ Scenario: I can change my account information
 @PAT
 Scenario: I can change my password
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -177,7 +177,7 @@ Scenario: I can change my password
 @PAT
 Scenario: I can change my email address
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -208,7 +208,7 @@ Scenario: When I click on a valid change email address link, I change my email a
 @PAT
 Scenario: I can change my security information
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -232,7 +232,7 @@ Scenario: I can change my security information
 @PAT
 Scenario: I can view my user activity log information
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -247,7 +247,7 @@ Scenario: I can view my user activity log information
 @PAT
 Scenario: As an admin I can manage my users
 	Given I navigate to the website
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value             |

@@ -18,15 +18,16 @@ namespace SecurityEssentials.Controllers
 		protected IUserIdentity _userIdentity;
 		protected IAppSensor _appSensor;
 
-        protected SecurityControllerBase() : this(HttpVerbs.Post, new UserIdentity(), new AppSensor())
+        protected SecurityControllerBase() : this(new UserIdentity(), new AppSensor())
         {
 			// TODO: replace with DI container of choice
         }
 
-        protected SecurityControllerBase(HttpVerbs verbs, IUserIdentity userIdentity, IAppSensor appSensor)
+        protected SecurityControllerBase(IUserIdentity userIdentity, IAppSensor appSensor)
         {
+			if (appSensor == null) throw new ArgumentNullException("appSensor");
 			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
-            _verbs = new AcceptVerbsAttribute(verbs);
+            _verbs = new AcceptVerbsAttribute(HttpVerbs.Post);
             _validator = new ValidateAntiForgeryTokenAttribute();
 			Logger = Log.Logger;
 			_userIdentity = userIdentity;

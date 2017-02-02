@@ -30,9 +30,8 @@ namespace SecurityEssentials.Controllers
             // TODO: Replace with your DI Framework of choice
         }
 
-        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity)
+        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
         {
-			if (appSensor == null) throw new ArgumentNullException("appSensor");
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (context == null) throw new ArgumentNullException("context");
             if (encryption == null) throw new ArgumentNullException("encryption");
@@ -40,9 +39,7 @@ namespace SecurityEssentials.Controllers
             if (recaptcha == null) throw new ArgumentNullException("recaptcha");
             if (services == null) throw new ArgumentNullException("services");
             if (userManager == null) throw new ArgumentNullException("userManager");
-            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
 
-			_appSensor = appSensor;
 			_configuration = configuration;
             _context = context;
             _encryption = encryption;
@@ -50,7 +47,6 @@ namespace SecurityEssentials.Controllers
             _recaptcha = recaptcha;
             _services = services;
             _userManager = userManager;
-            _userIdentity = userIdentity;
         }
 
         [HttpPost]

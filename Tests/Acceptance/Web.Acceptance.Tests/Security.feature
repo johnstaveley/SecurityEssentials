@@ -19,7 +19,7 @@ Scenario: The web application will return the correct security headers
 Scenario: The application will prevent a brute force login attempt
 	Given I navigate to the website
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -28,7 +28,7 @@ Scenario: The application will prevent a brute force login attempt
 	And I click the login button
 	And I navigate to the website
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -37,7 +37,7 @@ Scenario: The application will prevent a brute force login attempt
 	And I click the login button as quickly as possible
 	And I navigate to the website
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
@@ -46,7 +46,7 @@ Scenario: The application will prevent a brute force login attempt
 	And I click the login button as quickly as possible
 	And I navigate to the website
 	And I am taken to the homepage
-	And I click login
+	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |

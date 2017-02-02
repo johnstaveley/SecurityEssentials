@@ -8,16 +8,14 @@ namespace SecurityEssentials.Controllers
 	public class ErrorController : SecurityControllerBase
     {
 
-		public ErrorController() : this(new UserIdentity())
+		public ErrorController() : this(new UserIdentity(), new AppSensor())
 		{
 			// TODO: Replace with your DI Framework of choice
 		}
 
-		public ErrorController(IUserIdentity userIdentity)
+		public ErrorController(IUserIdentity userIdentity, IAppSensor appSensor) : base (userIdentity, appSensor)
 		{
-			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
-
-			_userIdentity = userIdentity;
+			
 		}
 
 

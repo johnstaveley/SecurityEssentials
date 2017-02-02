@@ -24,15 +24,10 @@ namespace SecurityEssentials.Controllers
 
 		}
 
-		public UserController(IAppSensor appSensor, ISEContext context, IUserIdentity userIdentity)
+		public UserController(IAppSensor appSensor, ISEContext context, IUserIdentity userIdentity) : base (userIdentity, appSensor)
 		{
-			if (appSensor == null) throw new ArgumentNullException("appSensor");
 			if (context == null) throw new ArgumentNullException("context");
-			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
-
-			_appSensor = appSensor;
 			_context = context;
-			_userIdentity = userIdentity;
 		}
 
 		/// <summary>

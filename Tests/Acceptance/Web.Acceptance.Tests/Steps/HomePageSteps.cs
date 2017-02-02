@@ -22,8 +22,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			homePage.ClickRegister();
 		}
 
-		[When(@"I click login")]
-        [Given(@"I click login")]
+		[When(@"I click the login link in the navigation bar")]
+        [Given(@"I click the login link in the navigation bar")]
 		public void GivenIClickLogin()
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
