@@ -541,7 +541,6 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Config\RecaptchaNet.ReadMe.txt" />
-    <Content Include="RecaptchaNet.Readme.txt" />
     <Content Include="Scripts\app\antiforgerytoken.js" />
     <Content Include="Scripts\app\quickfind.js" />
     <Content Include="Scripts\app\user.js" />

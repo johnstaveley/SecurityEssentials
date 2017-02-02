@@ -20,7 +20,7 @@ To set up the project take the following steps:
 3) if you deploy this into production make sure you remove the test users from the databaseInitializer
 
 
-Developer Notes
+Notes
 ---------------
 
 In order to get the acceptance tests running on my CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefpx 64bit, you will need to replace this with the 64 bit version
@@ -29,3 +29,8 @@ Known Issues
 ------------
 
 If you use the Argon2 hashing algorithm then it will make use of an unmanaged dll called libargon2.dll. This needs to be put in the path (e.g. C:/Windows/SysWOW64/) for any executing code (either the web application or a CI server running the Argon2 unit tests). If you find a way around this restriction using unmanaged code then please let me know. 
+
+Resources
+---------
+
+Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
