@@ -204,7 +204,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything,
                 Arg<bool>.Is.Anything));
             _context.AssertWasCalled(a => a.SaveChanges());
-            var user = _context.User.Include("UserLogs").Where(a => a.Id == _testUserId).First();
+            var user = _context.User.Include("UserLogs").First(a => a.Id == _testUserId);
             Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddressToken));
             Assert.IsNotNull(user.NewEmailAddressRequestExpiryDate);
             Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddress));
@@ -219,7 +219,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var changeEmailAddressToken = "testchangetoken1";
             requestItems.Add("NewEmailAddressToken", changeEmailAddressToken);
             _httpRequest.Stub(a => a.QueryString).Return(requestItems);
-            var user = _context.User.Where(u => u.Id == _testUserId).First();
+            var user = _context.User.First(u => u.Id == _testUserId);
             user.NewEmailAddressToken = changeEmailAddressToken;
             user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
             user.NewEmailAddress = newEmaiLAddress;
@@ -335,8 +335,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_RequestVerificationToken_When_EmailVerify_Then_UserStatusUpdated()
         {
             // Arrange
-            var requestItems = new NameValueCollection();
-            requestItems.Add("EmailVerficationToken", "test1");
+            var requestItems = new NameValueCollection {{"EmailVerficationToken", "test1"}};
             _httpRequest.Stub(a => a.QueryString).Return(requestItems);
 
             // Act
@@ -424,14 +423,16 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_ValidSubmissionData_When_Register_Then_UserIsEmailedConfirmation()
         {
             // Arrange
-            var collection = new NameValueCollection();
-            collection.Add("Password", "password");
-            collection.Add("ConfirmPassword", "password");
-            collection.Add("User.UserName", _testUserName);
-            collection.Add("User.FirstName", "First name");
-            collection.Add("User.LastName", "Last Name");
-            collection.Add("User.SecurityQuestionLookupItemId", "1");
-            collection.Add("User.SecurityAnswer", "Bloggs");
+            var collection = new NameValueCollection
+            {
+                {"Password", "password"},
+                {"ConfirmPassword", "password"},
+                {"User.UserName", _testUserName},
+                {"User.FirstName", "First name"},
+                {"User.LastName", "Last Name"},
+                {"User.SecurityQuestionLookupItemId", "1"},
+                {"User.SecurityAnswer", "Bloggs"}
+            };
             _userManager.Expect(a => a.CreateAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything,
                 Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything,
                 Arg<string>.Is.Anything)).Return(Task.FromResult(new SEIdentityResult()));
@@ -453,10 +454,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             var requestItems = new NameValueCollection();
-            var passwordResetToken = "testreset1";
+            const string passwordResetToken = "testreset1";
             requestItems.Add("PasswordResetToken", passwordResetToken);
             _httpRequest.Stub(a => a.QueryString).Return(requestItems);
-            var user = _context.User.Where(u => u.Id == _testUserId).First();
+            var user = _context.User.First(u => u.Id == _testUserId);
             user.PasswordResetToken = passwordResetToken;
             user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
 

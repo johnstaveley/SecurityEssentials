@@ -20,8 +20,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Setup()
         {
             BaseSetup();
-            _sut = new UserController(_appSensor, _context, _userIdentity);
-            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
+            _sut = new UserController(_appSensor, _context, _userIdentity)
+            {
+                Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection())
+            };
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
         }
 
@@ -56,7 +58,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var dataReturned = AssertJsonResultReturned(result);
             Assert.AreEqual(true, dataReturned["success"]);
             Assert.AreEqual("", dataReturned["message"]);
-            var user = _context.User.Where(u => u.Id == _testUserId).First();
+            var user = _context.User.First(u => u.Id == _testUserId);
             Assert.IsFalse(user.Enabled);
             _context.AssertWasCalled(a => a.SaveChanges());
         }
@@ -80,9 +82,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_SubmissionCorrect_When_EditPost_Then_ViewReturned()
         {
             // Arrange
-            var collection = new NameValueCollection();
-            collection.Add("FirstName", "new");
-            collection.Add("LastName", "name");
+            var collection = new NameValueCollection {{"FirstName", "new"}, {"LastName", "name"}};
 
             _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
 
@@ -125,9 +125,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_DataExists_When_Read_Then_JsonReturned()
         {
             // Arrange
-            var requestItems = new NameValueCollection();
-            requestItems.Add("sort[0][dir]", "");
-            requestItems.Add("sort[0][field]", "");
+            var requestItems = new NameValueCollection {{"sort[0][dir]", ""}, {"sort[0][field]", ""}};
             // TODO: Fix this as a.Form doesn't work
             _httpRequest.Stub(a => a.Form).Return(requestItems);
 

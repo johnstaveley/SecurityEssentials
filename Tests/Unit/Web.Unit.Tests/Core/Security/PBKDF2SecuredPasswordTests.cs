@@ -11,7 +11,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_PasswordHashAndSalt_Then_NewPasswordIsHashedAsExpected()
         {
-            var password = "password1*SASDes";
+            const string password = "password1*SASDes";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);
@@ -24,7 +24,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_PasswordHashWithIterationsChanged_Then_PasswordHashesDoNotMatch()
         {
-            var password = "password1*SASDes";
+            const string password = "password1*SASDes";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var securedPassword2 = new SecuredPassword(password, HashStrategyKind.PBKDF2_8000Iterations);
             Assert.IsFalse(securedPassword2.Equals(securedPassword));
@@ -85,7 +85,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_WhenRehydratedAndMatching_Then_ReturnsTrue()
         {
-            var password = "password123";
+            const string password = "password123";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var rehydrated = new SecuredPassword(password, securedPassword.Hash, securedPassword.Salt,
                 HashStrategyKind.PBKDF2_5009Iterations);
@@ -106,7 +106,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void CreatePasswordHashAndSaltForSeeding()
         {
-            var password = "x12a;pP02icdjshER";
+            const string password = "x12a;pP02icdjshER";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);

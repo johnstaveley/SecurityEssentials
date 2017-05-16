@@ -14,10 +14,7 @@ namespace SecurityEssentials.Core
 
         public static IQueryable<T> OrderBy<T>(this IQueryable<T> collection, string orderBy)
         {
-            foreach (var orderByInfo in ParseOrderBy(orderBy))
-                collection = ApplyOrderBy(collection, orderByInfo);
-
-            return collection;
+            return ParseOrderBy(orderBy).Aggregate(collection, ApplyOrderBy);
         }
 
         private static IQueryable<T> ApplyOrderBy<T>(IQueryable<T> collection, OrderByInfo orderByInfo)

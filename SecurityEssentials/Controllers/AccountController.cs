@@ -101,13 +101,11 @@ namespace SecurityEssentials.Controllers
                 Logger.Information(
                     "Failed Account Logon Post for username {userName} attempt by requester {@requester}", userName,
                     requester);
-                if (logonResult.IsCommonUserName)
-                {
-                    requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE12;
-                    Logger.Information(
-                        "Failed Account Logon Post Common username {userName} attempt by requester {@requester}",
-                        userName, requester);
-                }
+                if (!logonResult.IsCommonUserName) return View(model);
+                requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE12;
+                Logger.Information(
+                    "Failed Account Logon Post Common username {userName} attempt by requester {@requester}",
+                    userName, requester);
             }
             else
             {
@@ -148,26 +146,26 @@ namespace SecurityEssentials.Controllers
                 var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
                 if (logonResult.Success)
                 {
-                    if (user != null)
+                    if (user == null)
+                        return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress,
+                            user.NewEmailAddressRequestExpiryDate));
+                    user.NewEmailAddressToken = Guid.NewGuid().ToString().Replace("-", "");
+                    user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
+                    user.NewEmailAddress = model.NewEmailAddress;
+                    // Send change username with link to recover password form
+                    var emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName,
+                        _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
+                    var emailSubject =
+                        $"{_configuration.ApplicationName} - Complete the change email address process";
+                    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName},
+                        null, null, emailSubject, emailBody, true);
+                    user.UserLogs.Add(new UserLog
                     {
-                        user.NewEmailAddressToken = Guid.NewGuid().ToString().Replace("-", "");
-                        user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
-                        user.NewEmailAddress = model.NewEmailAddress;
-                        // Send change username with link to recover password form
-                        var emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName,
-                            _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
-                        var emailSubject =
-                            $"{_configuration.ApplicationName} - Complete the change email address process";
-                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName},
-                            null, null, emailSubject, emailBody, true);
-                        user.UserLogs.Add(new UserLog
-                        {
-                            Description =
-                                $"Change email address request started to change from {user.UserName} to {user.NewEmailAddress}"
-                        });
-                        _context.SaveChanges();
-                        return View("ChangeEmailAddressPending");
-                    }
+                        Description =
+                            $"Change email address request started to change from {user.UserName} to {user.NewEmailAddress}"
+                    });
+                    _context.SaveChanges();
+                    return View("ChangeEmailAddressPending");
                 }
                 else
                 {
@@ -739,13 +737,11 @@ namespace SecurityEssentials.Controllers
         {
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
-            if (!string.IsNullOrEmpty(returnUrl))
-            {
-                var requester = _userIdentity.GetRequester(this);
-                Logger.Information(
-                    "Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}",
-                    returnUrl, requester);
-            }
+            if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Landing", "Account");
+            var requester = _userIdentity.GetRequester(this);
+            Logger.Information(
+                "Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}",
+                returnUrl, requester);
             return RedirectToAction("Landing", "Account");
         }
 

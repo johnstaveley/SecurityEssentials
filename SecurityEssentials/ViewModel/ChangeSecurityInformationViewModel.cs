@@ -40,7 +40,7 @@ namespace SecurityEssentials.ViewModel
         #region Constructor
 
         public ChangeSecurityInformationViewModel(string errorMessage, bool hasRecaptcha,
-            List<LookupItem> securityQuestions)
+            IEnumerable<LookupItem> securityQuestions)
         {
             SecurityQuestions = new SelectList(securityQuestions, "Id", "Description");
             ErrorMessage = errorMessage;

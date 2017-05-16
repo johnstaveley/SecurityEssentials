@@ -17,12 +17,15 @@ namespace SecurityEssentials.Core
         /// </summary>
         public Encryption()
         {
-            encryptionAlgorithm = new RijndaelManaged();
-            encryptionAlgorithm.BlockSize = 128;
-            encryptionAlgorithm.KeySize = 256;
-            encryptionAlgorithm.Mode = CipherMode.CFB; // Cipher feedback mode
-            encryptionAlgorithm.Padding = PaddingMode.PKCS7; // How to deal with the padding of blocks
-            // require Initialization vector to avoid patterns in input producing patterns in output
+            encryptionAlgorithm = new RijndaelManaged
+            {
+                BlockSize = 128,
+                KeySize = 256,
+                Mode = CipherMode.CFB, // Cipher feedback mode
+                Padding = PaddingMode.PKCS7 // How to deal with the padding of blocks
+                                            // require Initialization vector to avoid patterns in input producing patterns in output
+            };
+
         }
 
         public void Dispose()
@@ -116,8 +119,7 @@ namespace SecurityEssentials.Core
         private void CreateKey(string password, string salt, int iterationCount, out byte[] key, out byte[] IV)
         {
             var saltBytes = Encoding.Unicode.GetBytes(salt);
-            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes);
-            rfc2898DeriveBytes.IterationCount = iterationCount;
+            var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes) { IterationCount = iterationCount };
             key = rfc2898DeriveBytes.GetBytes(encryptionAlgorithm.KeySize / 8);
             IV = rfc2898DeriveBytes.GetBytes(encryptionAlgorithm.BlockSize / 8);
         }

@@ -110,10 +110,10 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 
             // Assert
             Assert.AreEqual(4, result.Claims.Count());
-            var nameIdentifier = result.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+            var nameIdentifier = result.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier);
             Assert.IsNotNull(nameIdentifier);
             Assert.AreEqual(_testUser.Id.ToString(), nameIdentifier.Value);
-            var roleName = result.Claims.Where(a => a.Type == ClaimTypes.Role).FirstOrDefault();
+            var roleName = result.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role);
             Assert.IsNotNull(roleName);
             Assert.AreEqual(testRoleName, roleName.Value);
         }
@@ -122,8 +122,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public async Task Given_ValidResetToken_When_ChangePasswordFromTokenAsync_Then_Success()
         {
             // Arrange
-            var passwordResetToken = "jafueokvnsdsjrogdsjvnasqpzlmveyij";
-            var newPassword = "pqlzmwoskeidjS1";
+            const string passwordResetToken = "jafueokvnsdsjrogdsjvnasqpzlmveyij";
+            const string newPassword = "pqlzmwoskeidjS1";
             _testUser.PasswordResetToken = passwordResetToken;
             _testUser.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(10);
             _testUser.PasswordHash = null;
@@ -138,7 +138,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
             Assert.IsNull(_testUser.PasswordResetExpiry);
             Assert.IsNull(_testUser.PasswordResetToken);
             Assert.AreEqual(0, _testUser.FailedLogonAttemptCount);
-            Assert.AreEqual(1, _testUser.UserLogs.Count());
+            Assert.AreEqual(1, _testUser.UserLogs.Count);
             Assert.IsTrue(_testUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
             Assert.IsNotNull(_testUser.PasswordHash);
             Assert.IsNotNull(_testUser.Salt);
@@ -160,7 +160,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
             // Assert
             Assert.AreEqual(0, result);
             _context.AssertWasCalled(a => a.SaveChangesAsync());
-            Assert.AreEqual(1, _testUser.UserLogs.Count());
+            Assert.AreEqual(1, _testUser.UserLogs.Count);
             Assert.IsTrue(_testUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
             Assert.AreNotEqual(oldPasswordHash, _testUser.PasswordHash);
             Assert.AreNotEqual(oldSalt, _testUser.Salt);

@@ -26,8 +26,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var message = string.Empty;
             if (failingActions.Any())
                 message =
-                    failingActions.Count() + " failing action" +
-                    (failingActions.Count() == 1 ? ":\n" : "s:\n") +
+                    failingActions.Count + " failing action" +
+                    (failingActions.Count == 1 ? ":\n" : "s:\n") +
                     failingActions.Select(method => method.Name + " in " + method.DeclaringType.Name)
                         .Aggregate((a, b) => a + ",\n" + b);
 

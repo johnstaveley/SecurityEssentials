@@ -26,7 +26,7 @@ namespace SecurityEssentials.Core.Attributes
         {
             var action = filterContext.ActionDescriptor.ActionName;
             var controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
-            var requester = _userIdentity.GetRequester(filterContext.Controller as Controller, null);
+            var requester = _userIdentity.GetRequester(filterContext.Controller as Controller);
             if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
             {
                 // The user is not authenticated

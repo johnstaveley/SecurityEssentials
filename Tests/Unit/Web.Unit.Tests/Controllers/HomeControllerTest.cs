@@ -14,8 +14,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Setup()
         {
             BaseSetup();
-            _sut = new HomeController();
-            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
+            _sut = new HomeController
+            {
+                Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection())
+            };
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
         }
 

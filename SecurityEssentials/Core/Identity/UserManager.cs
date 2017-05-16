@@ -112,12 +112,9 @@ namespace SecurityEssentials.Core.Identity
             var user = await FindUserByIdAsync(userId);
             var result = ValidatePassword(newPassword,
                 new List<string> {user.FirstName, user.LastName, user.SecurityAnswer});
-            if (result.Succeeded)
-            {
-                await _userStore.ChangePasswordAsync(userId, oldPassword, newPassword);
-                return new SEIdentityResult();
-            }
-            return result;
+            if (!result.Succeeded) return result;
+            await _userStore.ChangePasswordAsync(userId, oldPassword, newPassword);
+            return new SEIdentityResult();
         }
 
         #endregion
@@ -198,14 +195,10 @@ namespace SecurityEssentials.Core.Identity
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                // free managed resources
-                if (_context != null)
-                    _context.Dispose();
-                if (_userStore != null)
-                    _userStore.Dispose();
-            }
+            if (!disposing) return;
+            // free managed resources
+            _context?.Dispose();
+            _userStore?.Dispose();
         }
 
         #endregion

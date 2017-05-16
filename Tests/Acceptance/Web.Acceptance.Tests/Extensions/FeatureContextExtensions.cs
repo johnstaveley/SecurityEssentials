@@ -54,7 +54,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
                 Thread.Sleep(5000);
                 loginAttempts = GetLoginAttempts(featureContext);
                 Trace.WriteLine("Waiting 5 seconds for logon attempt");
-            } while (loginAttempts.Where(a => a > DateTime.UtcNow.AddSeconds(-62)).Count() >= 2);
+            } while (loginAttempts.Count(a => a > DateTime.UtcNow.AddSeconds(-62)) >= 2);
             loginAttempts.Add(DateTime.UtcNow);
             SetLoginAttempts(featureContext, loginAttempts);
         }

@@ -57,7 +57,7 @@ namespace SecurityEssentials.Core
             }
             // Check if any fields are missing from request
             var missingKeys = expectedFormKeys.Except(keysSent).ToList();
-            if (missingKeys.Count > 0)
+            if (missingKeys.Count <= 0) return;
             {
                 var requester = _userIdentity.GetRequester(controller, AppSensorDetectionPointKind.RE6);
                 if (controllerName == "Account" && methodName == "LogOn" && httpMethod == "POST")

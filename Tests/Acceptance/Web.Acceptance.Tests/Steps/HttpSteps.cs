@@ -33,7 +33,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             {
                 Assert.IsTrue(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key),
                     "Headers do not contain the correct key");
-                var actualHeader = actualHeaders.Where(a => a.Item1 == expectedHeader.Key).First();
+                var actualHeader = actualHeaders.First(a => a.Item1 == expectedHeader.Key);
                 Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, "Header values do not match");
             }
         }

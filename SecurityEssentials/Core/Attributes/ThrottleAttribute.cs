@@ -75,25 +75,23 @@ namespace SecurityEssentials.Core.Attributes
                     allowExecute = true;
             }
 
-            if (!allowExecute)
-            {
-                if (string.IsNullOrEmpty(Message))
-                    Message = "You have performed this action more than {x} times in the last {n} seconds.";
+            if (allowExecute) return;
+            if (string.IsNullOrEmpty(Message))
+                Message = "You have performed this action more than {x} times in the last {n} seconds.";
 
-                if (!string.IsNullOrEmpty(ContentName))
-                    c.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary {{"Controller", "Content"}, {"Action", ContentName}});
-                else
-                    c.Result = new ContentResult
-                    {
-                        Content = Message.Replace("{x}", Requests.ToString(CultureInfo.CurrentCulture))
-                            .Replace("{n}", Seconds.ToString(CultureInfo.CurrentCulture))
-                    };
+            if (!string.IsNullOrEmpty(ContentName))
+                c.Result = new RedirectToRouteResult(
+                    new RouteValueDictionary {{"Controller", "Content"}, {"Action", ContentName}});
+            else
+                c.Result = new ContentResult
+                {
+                    Content = Message.Replace("{x}", Requests.ToString(CultureInfo.CurrentCulture))
+                        .Replace("{n}", Seconds.ToString(CultureInfo.CurrentCulture))
+                };
 
-                // see 409 - http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-                c.HttpContext.Response.TrySkipIisCustomErrors = true; //to prevent iis from showing default 409 page
-                c.HttpContext.Response.StatusCode = (int) HttpStatusCode.Conflict;
-            }
+            // see 409 - http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+            c.HttpContext.Response.TrySkipIisCustomErrors = true; //to prevent iis from showing default 409 page
+            c.HttpContext.Response.StatusCode = (int) HttpStatusCode.Conflict;
         }
 
         // Used to get around weird cache behavior with value types

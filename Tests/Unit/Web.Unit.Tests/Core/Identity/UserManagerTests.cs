@@ -28,18 +28,20 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         {
             _context = MockRepository.GenerateStub<ISEContext>();
             _context.User = new TestDbSet<User>();
-            _context.LookupItem = new TestDbSet<LookupItem>();
-            _context.LookupItem.Add(new LookupItem
+            _context.LookupItem = new TestDbSet<LookupItem>
             {
-                LookupTypeId = CONSTS.LookupTypeId.BadPassword,
-                Description = "Password1"
-            });
-            _context.LookupItem.Add(new LookupItem
-            {
-                LookupTypeId = CONSTS.LookupTypeId.BadPassword,
-                Description = "LetMeIn123"
-            });
-            _context.LookupItem.Add(new LookupItem {LookupTypeId = CONSTS.LookupTypeId.SecurityQuestion, Id = 142});
+                new LookupItem
+                {
+                    LookupTypeId = CONSTS.LookupTypeId.BadPassword,
+                    Description = "Password1"
+                },
+                new LookupItem
+                {
+                    LookupTypeId = CONSTS.LookupTypeId.BadPassword,
+                    Description = "LetMeIn123"
+                },
+                new LookupItem {LookupTypeId = CONSTS.LookupTypeId.SecurityQuestion, Id = 142}
+            };
             _configuration = MockRepository.GenerateStub<IAppConfiguration>();
             _encryption = MockRepository.GenerateMock<IEncryption>();
             _userStore = MockRepository.GenerateMock<IAppUserStore<User>>();
@@ -58,9 +60,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public async Task Given_ValidDetails_When_ChangePassword_Then_PasswordChanged()
         {
             // Arrange
-            var userId = 1;
-            var oldPassword = "oldPassword910";
-            var newPassword = "newPassword345";
+            const int userId = 1;
+            const string oldPassword = "oldPassword910";
+            const string newPassword = "newPassword345";
             _userStore.Expect(a => a.ChangePasswordAsync(userId, oldPassword, newPassword)).Return(Task.FromResult(0));
             _userStore.Expect(a => a.FindByIdAsync(userId))
                 .Return(Task.FromResult(new User {FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "blah"}));
@@ -76,9 +78,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public async Task Given_PersonalInformationUsed_When_ChangePassword_Then_PasswordNotChanged()
         {
             // Arrange
-            var userId = 1;
-            var oldPassword = "oldPassword910";
-            var newPassword = "Joseph345";
+            const int userId = 1;
+            const string oldPassword = "oldPassword910";
+            const string newPassword = "Joseph345";
             _userStore.Expect(a => a.FindByIdAsync(userId))
                 .Return(Task.FromResult(new User {FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "blah"}));
 
@@ -93,7 +95,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         [TestMethod]
         public async Task Given_BogusSecurityQuestion_When_CreateUser_Then_UserCreatedFailure()
         {
-            var userName = "bob@bob.net";
+            const string userName = "bob@bob.net";
             _userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
 
             // Act
@@ -109,7 +111,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         [TestMethod]
         public async Task Given_PasswordInvalid_When_CreateUser_Then_UserCreatedFailure()
         {
-            var userName = "bob@bob.net";
+            const string userName = "bob@bob.net";
             _userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
 
             // Act
@@ -126,7 +128,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         [TestMethod]
         public async Task Given_ValidDetails_When_CreateUser_Then_UserCreatedSuccess()
         {
-            var userName = "bob@bob.net";
+            const string userName = "bob@bob.net";
             _userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
             _userStore.Expect(a => a.CreateAsync(Arg<User>.Is.Anything)).Return(Task.FromResult(0));
 
@@ -156,7 +158,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_ValidPassword_When_ValidatePassword_Then_Success()
         {
             // Arrange
-            var password = "MyNewPassword1";
+            const string password = "MyNewPassword1";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);
@@ -170,7 +172,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_PasswordContainsSpecialCharacters_When_ValidatePassword_Then_Succeeds()
         {
             // Arrange
-            var password = "*&^%$£\"!aAb2";
+            const string password = "*&^%$£\"!aAb2";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);
@@ -184,7 +186,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_PasswordContainsUserInformation_When_ValidatePassword_Then_Fails()
         {
             // Arrange
-            var password = "First Name1";
+            const string password = "First Name1";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);
@@ -197,7 +199,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_PasswordContainsConsecutivelyRepeatedCharacters_When_ValidatePassword_Then_Fails()
         {
             // Arrange
-            var password = "L7s8xvdooo123O";
+            const string password = "L7s8xvdooo123O";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);
@@ -210,7 +212,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_PasswordIsKnownBadPassword_When_ValidatePassword_Then_Fails()
         {
             // Arrange
-            var password = "LetMeIn123";
+            const string password = "LetMeIn123";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);
@@ -223,7 +225,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         public void Given_PasswordDoesNotMeetMinimumComplexity_When_ValidatePassword_Then_Fails()
         {
             // Arrange
-            var password = "aidhjthejfhgkfhds";
+            const string password = "aidhjthejfhgkfhds";
 
             // Act
             var result = _sut.ValidatePassword(password, _bannedWords);

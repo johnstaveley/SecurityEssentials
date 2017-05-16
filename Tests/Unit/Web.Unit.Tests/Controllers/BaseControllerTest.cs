@@ -33,8 +33,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _appSensor = MockRepository.GenerateMock<IAppSensor>();
             _context = MockRepository.GenerateStub<ISEContext>();
             _context.LookupItem = new TestDbSet<LookupItem>();
-            _context.User = new TestDbSet<User>();
-            _context.User.Add(GetUser());
+            _context.User = new TestDbSet<User> {GetUser()};
             _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
             _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
             _httpSession = MockRepository.GenerateMock<HttpSessionStateBase>();

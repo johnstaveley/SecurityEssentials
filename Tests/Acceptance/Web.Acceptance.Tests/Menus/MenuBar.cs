@@ -12,9 +12,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
             HomeTab = new HomeTab(driver, baseUri);
             AdminTab = new AdminTab(driver, baseUri);
 
-            Tabs = new List<BaseTab>();
-            Tabs.Add(HomeTab);
-            Tabs.Add(AdminTab);
+            Tabs = new List<BaseTab> {HomeTab, AdminTab};
         }
 
         public HomeTab HomeTab { get; }

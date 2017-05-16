@@ -22,8 +22,7 @@ namespace SecurityEssentials.Core
             // Users
             salt =
                 "K6GuRmwFwOupdDba+C1FqKYwyBuxCykesgiY+fmCVBNVwr7qafuQ7oj9HrgM3LTXMB9LtOkWc4Z7VzB3AjobRk4trmwy7yOyvXnZj9XcBom2s5htHz8tiYhgsV/fHLlNfbeFseOXMLqUN4AFf+/+07j2NiaQK+qLFDSOAFpvsfB6kHF5vk2JgJb8qQSaLAW5FrDFn4f6cqYQJg8H127xPm8WYJiU94sw4dd13XxneKUbzez3yikR20U7rfQMRFKUr2a14vApH4kGsg3F89n8B+w2A/Orz/iarA9uzATag0t2r5MPnQeG58odK5uOPTbWz1mka+gXVcY620SAdyo07Q==";
-            var standardPasswordHash =
-                "8FEhrfoeG+vhIwFUEGvEMv/dSYs4dfnjZJRMeSrgkOtrnwPUAwc4Y35eGiRMU3Gw2NS/sCbnHUpeOn+4kNR/AN+FuyfkZBuZZ/72WiAbFIy+o8CzlCSkvv3H7z2rXyw6UgQXJtYcFLJr0GfIZC2xOWbeaBHvFJLpyxkvXORLHzAM779UPHS9at+wOwAr0cf0nfEIpI58tzCQCadBi9fyg4lxDEvpkISDFxE7YKiSrAp5bofosOnNuDRdidBUwqOGvZM9IvaNUigSpY6LKXpe/x7pv72+4jnSmK5QFylXfA33dc8Jl5r1LGDsJa/hKajoCjACYeD0L5ShPd4RrKbPCw==";
+            const string standardPasswordHash = "8FEhrfoeG+vhIwFUEGvEMv/dSYs4dfnjZJRMeSrgkOtrnwPUAwc4Y35eGiRMU3Gw2NS/sCbnHUpeOn+4kNR/AN+FuyfkZBuZZ/72WiAbFIy+o8CzlCSkvv3H7z2rXyw6UgQXJtYcFLJr0GfIZC2xOWbeaBHvFJLpyxkvXORLHzAM779UPHS9at+wOwAr0cf0nfEIpI58tzCQCadBi9fyg4lxDEvpkISDFxE7YKiSrAp5bofosOnNuDRdidBUwqOGvZM9IvaNUigSpY6LKXpe/x7pv72+4jnSmK5QFylXfA33dc8Jl5r1LGDsJa/hKajoCjACYeD0L5ShPd4RrKbPCw==";
             encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], salt,
                 Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Chairman Meow",
                 out encryptedSecurityAnswer);

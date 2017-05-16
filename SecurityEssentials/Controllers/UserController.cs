@@ -37,14 +37,11 @@ namespace SecurityEssentials.Controllers
         public ActionResult Disable(int id)
         {
             var user = _context.User.FirstOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                var requester = _userIdentity.GetRequester(this);
-                Logger.Information("Failed User Disable, user {id} did not exist by requester {@requester}", id,
-                    requester);
-                return new HttpNotFoundResult();
-            }
-            return PartialView("_Disable", user);
+            if (user != null) return PartialView("_Disable", user);
+            var requester = _userIdentity.GetRequester(this);
+            Logger.Information("Failed User Disable, user {id} did not exist by requester {@requester}", id,
+                requester);
+            return new HttpNotFoundResult();
         }
 
         /// <summary>

@@ -19,10 +19,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
             IWebDriver webDriver = null;
             if (!string.IsNullOrEmpty(webBrowserProxy))
             {
-                var proxy = new Proxy();
-                proxy.HttpProxy = webBrowserProxy;
-                proxy.FtpProxy = webBrowserProxy;
-                proxy.SslProxy = webBrowserProxy;
+                var proxy = new Proxy
+                {
+                    HttpProxy = webBrowserProxy,
+                    FtpProxy = webBrowserProxy,
+                    SslProxy = webBrowserProxy
+                };
                 var capabilities = new DesiredCapabilities();
                 capabilities.SetCapability(CapabilityType.Proxy, proxy);
                 webDriver = new FirefoxDriver(capabilities);
@@ -47,13 +49,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
         [AfterScenario]
         public static void AfterScenario()
         {
-            if (ScenarioContext.Current.TestError != null &&
-                Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
-            {
-                var fileName =
-                    $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now:yyyy-MM-dd-hh-mm-ss}.png";
-                FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
-            }
+            if (ScenarioContext.Current.TestError == null ||
+                !Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"])) return;
+            var fileName =
+                $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now:yyyy-MM-dd-hh-mm-ss}.png";
+            FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
         }
     }
 }
