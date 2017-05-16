@@ -171,10 +171,10 @@ namespace SecurityEssentials.Core.Identity
         public AppUserManager(IAppConfiguration configuration, ISEContext context, IEncryption encryption,
             IAppUserStore<User> userStore)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (context == null) throw new ArgumentNullException("context");
-            if (encryption == null) throw new ArgumentNullException("encryption");
-            if (userStore == null) throw new ArgumentNullException("userStore");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (encryption == null) throw new ArgumentNullException(nameof(encryption));
+            if (userStore == null) throw new ArgumentNullException(nameof(userStore));
 
             _configuration = configuration;
             _context = context;

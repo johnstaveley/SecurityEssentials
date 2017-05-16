@@ -33,13 +33,13 @@ namespace SecurityEssentials.Controllers
             IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha,
             IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (context == null) throw new ArgumentNullException("context");
-            if (encryption == null) throw new ArgumentNullException("encryption");
-            if (formsAuth == null) throw new ArgumentNullException("formsAuth");
-            if (recaptcha == null) throw new ArgumentNullException("recaptcha");
-            if (services == null) throw new ArgumentNullException("services");
-            if (userManager == null) throw new ArgumentNullException("userManager");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (encryption == null) throw new ArgumentNullException(nameof(encryption));
+            if (formsAuth == null) throw new ArgumentNullException(nameof(formsAuth));
+            if (recaptcha == null) throw new ArgumentNullException(nameof(recaptcha));
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (userManager == null) throw new ArgumentNullException(nameof(userManager));
 
             _configuration = configuration;
             _context = context;

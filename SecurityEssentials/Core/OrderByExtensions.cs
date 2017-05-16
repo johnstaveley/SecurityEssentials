@@ -40,17 +40,11 @@ namespace SecurityEssentials.Core
 
             if (!orderByInfo.Initial && collection is IOrderedQueryable<T>)
             {
-                if (orderByInfo.Direction == SortDirection.Ascending)
-                    methodName = "ThenBy";
-                else
-                    methodName = "ThenByDescending";
+                methodName = orderByInfo.Direction == SortDirection.Ascending ? "ThenBy" : "ThenByDescending";
             }
             else
             {
-                if (orderByInfo.Direction == SortDirection.Ascending)
-                    methodName = "OrderBy";
-                else
-                    methodName = "OrderByDescending";
+                methodName = orderByInfo.Direction == SortDirection.Ascending ? "OrderBy" : "OrderByDescending";
             }
 
             //TODO: apply caching to the generic methodsinfos?

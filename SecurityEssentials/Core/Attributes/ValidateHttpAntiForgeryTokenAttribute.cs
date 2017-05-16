@@ -18,11 +18,11 @@ namespace SecurityEssentials.Core.Attributes
     {
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            if (actionContext == null) throw new ArgumentNullException("actionContext");
+            if (actionContext == null) throw new ArgumentNullException(nameof(actionContext));
             var request = actionContext.ControllerContext.Request;
-            IEnumerable<string> tokenHeaders;
             try
             {
+                IEnumerable<string> tokenHeaders;
                 if (request.Headers.TryGetValues("RequestVerificationToken", out tokenHeaders))
                     ValidateRequestHeader(tokenHeaders);
                 else

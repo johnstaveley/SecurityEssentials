@@ -43,7 +43,7 @@ namespace SecurityEssentials.Core.Identity
             Hash = hash;
             Salt = salt;
             SetHashStrategy(hashStrategy);
-            byte[] newKey = null;
+            byte[] newKey;
             switch (hashStrategy)
             {
                 case HashStrategyKind.PBKDF2_5009Iterations:
@@ -99,8 +99,7 @@ namespace SecurityEssentials.Core.Identity
 
         public bool Equals(SecuredPassword comparison)
         {
-            if (Hash.SequenceEqual(comparison.Hash) && Salt.SequenceEqual(comparison.Salt)) return true;
-            return false;
+            return Hash.SequenceEqual(comparison.Hash) && Salt.SequenceEqual(comparison.Salt);
         }
     }
 }

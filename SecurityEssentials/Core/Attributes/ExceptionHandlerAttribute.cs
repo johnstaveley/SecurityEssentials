@@ -18,7 +18,7 @@ namespace SecurityEssentials.Core.Attributes
 
         public ExceptionHandlerAttribute(IUserIdentity userIdentity)
         {
-            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
+            if (userIdentity == null) throw new ArgumentNullException(nameof(userIdentity));
 
             _userIdentity = userIdentity;
         }

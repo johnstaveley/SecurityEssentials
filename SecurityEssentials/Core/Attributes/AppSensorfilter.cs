@@ -22,8 +22,8 @@ namespace SecurityEssentials.Core.Attributes
 
         public AppSensorFilter(IUserIdentity userIdentity, ILogger logger)
         {
-            if (logger == null) throw new ArgumentNullException("logger");
-            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (userIdentity == null) throw new ArgumentNullException(nameof(userIdentity));
 
             _logger = logger;
             _userIdentity = userIdentity;

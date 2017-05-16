@@ -24,8 +24,8 @@ namespace SecurityEssentials.Controllers
 
         protected SecurityControllerBase(IUserIdentity userIdentity, IAppSensor appSensor)
         {
-            if (appSensor == null) throw new ArgumentNullException("appSensor");
-            if (userIdentity == null) throw new ArgumentNullException("userIdentity");
+            if (appSensor == null) throw new ArgumentNullException(nameof(appSensor));
+            if (userIdentity == null) throw new ArgumentNullException(nameof(userIdentity));
             _verbs = new AcceptVerbsAttribute(HttpVerbs.Post);
             _validator = new ValidateAntiForgeryTokenAttribute();
             Logger = Log.Logger;

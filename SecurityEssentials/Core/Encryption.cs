@@ -64,12 +64,9 @@ namespace SecurityEssentials.Core
             catch (CryptographicException ex)
             {
                 // http://support.microsoft.com/kb/842791 indicate that an exception 'Padding is invalid and cannot be removed' indicates the decryption has failed
-                if (ex.Message.Contains("Padding is invalid and cannot be removed"))
-                {
-                    output = null;
-                    return false;
-                }
-                throw;
+                if (!ex.Message.Contains("Padding is invalid and cannot be removed")) throw;
+                output = null;
+                return false;
             }
             return true;
         }

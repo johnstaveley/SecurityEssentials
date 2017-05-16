@@ -10,7 +10,7 @@ namespace SecurityEssentials.ViewModel
         #region Constructor
 
         public RegisterViewModel(string confirmPassword, bool hasRecaptcha, string password, User user,
-            List<LookupItem> securityQuestions)
+            IEnumerable<LookupItem> securityQuestions)
         {
             ConfirmPassword = confirmPassword;
             HasRecaptcha = hasRecaptcha;

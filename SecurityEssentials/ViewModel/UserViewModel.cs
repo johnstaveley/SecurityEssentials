@@ -8,8 +8,7 @@ namespace SecurityEssentials.ViewModel
 
         public UserViewModel(int currentUserId, bool isAdministrator, User user)
         {
-            if (currentUserId == user.Id) IsOwnProfile = true;
-            else IsOwnProfile = false;
+            IsOwnProfile = currentUserId == user.Id;
             IsAdministrator = isAdministrator;
             User = user;
         }

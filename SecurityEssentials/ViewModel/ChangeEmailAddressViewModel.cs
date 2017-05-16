@@ -10,12 +10,8 @@ namespace SecurityEssentials.ViewModel
         {
             EmailAddress = emailAddress;
             NewEmailAddress = newEmailAddress;
-            NewEmailAddressRequestExpiryDate = newUserNameRequestExpiryDate.HasValue
-                ? (DateTime?) newUserNameRequestExpiryDate.Value.ToLocalTime()
-                : null;
-            IsFormLocked = newUserNameRequestExpiryDate.HasValue
-                ? newUserNameRequestExpiryDate.Value > DateTime.UtcNow
-                : false;
+            NewEmailAddressRequestExpiryDate = newUserNameRequestExpiryDate?.ToLocalTime();
+            IsFormLocked = newUserNameRequestExpiryDate.HasValue && newUserNameRequestExpiryDate.Value > DateTime.UtcNow;
         }
 
         public ChangeEmailAddressViewModel()

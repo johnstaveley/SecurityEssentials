@@ -16,8 +16,8 @@ namespace SecurityEssentials.Core.Identity
 
         public UserStore(ISEContext context, IAppConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (context == null) throw new ArgumentNullException("context");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
             _configuration = configuration;
             _context = context;
