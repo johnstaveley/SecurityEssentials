@@ -1,26 +1,25 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Controllers;
-using Rhino.Mocks;
-using SecurityEssentials.Model;
-using System.Collections.Generic;
-using SecurityEssentials.ViewModel;
 using System.Web.Routing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rhino.Mocks;
+using SecurityEssentials.Controllers;
+using SecurityEssentials.Model;
+using SecurityEssentials.ViewModel;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-	[TestClass]
+    [TestClass]
     public class UserControllerTest : BaseControllerTest
     {
-
         private UserController _sut;
 
         [TestInitialize]
         public void Setup()
         {
-            base.BaseSetup();
+            BaseSetup();
             _sut = new UserController(_appSensor, _context, _userIdentity);
             _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
@@ -29,13 +28,12 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestCleanup]
         public void Teardown()
         {
-            base.VerifyAllExpectations();
+            VerifyAllExpectations();
         }
 
         [TestMethod]
         public void Given_UserExists_When_DisableGet_Then_PartialViewReturned()
         {
-
             // Arrange
 
             // Act
@@ -43,13 +41,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             AssertPartialViewResultReturned(result, "_Disable");
-
         }
 
         [TestMethod]
         public void Given_UserExistsAndCurrentUser_When_DisablePost_Then_UserDisabledAndSuccessJsonReturned()
         {
-
             // Arrange
             var collection = new NameValueCollection();
 
@@ -63,13 +59,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var user = _context.User.Where(u => u.Id == _testUserId).First();
             Assert.IsFalse(user.Enabled);
             _context.AssertWasCalled(a => a.SaveChanges());
-
         }
 
         [TestMethod]
         public void Given_UserExists_When_EditGet_Then_ViewReturned()
         {
-
             // Arrange
             _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
 
@@ -80,13 +74,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var viewModel = AssertViewResultReturnsType<UserViewModel>(result);
             Assert.AreEqual(_testUserId, viewModel.User.Id);
             Assert.IsTrue(viewModel.IsOwnProfile);
-
         }
 
         [TestMethod]
         public void Given_SubmissionCorrect_When_EditPost_Then_ViewReturned()
         {
-
             // Arrange
             var collection = new NameValueCollection();
             collection.Add("FirstName", "new");
@@ -98,16 +90,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var result = _sut.Edit(_testUserId, new FormCollection(collection));
 
             // Assert
-			var viewResult = AssertViewResultReturned(result, "Edit");
+            var viewResult = AssertViewResultReturned(result, "Edit");
             _context.AssertWasCalled(a => a.SaveChanges());
-			Assert.AreEqual("Your account information has been changed", viewResult.ViewBag.StatusMessage);
-
+            Assert.AreEqual("Your account information has been changed", viewResult.ViewBag.StatusMessage);
         }
 
         [TestMethod]
         public void When_Index_Then_ViewReturned()
         {
-
             // Arrange
 
             // Act
@@ -115,13 +105,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             AssertViewResultReturnsType<UsersViewModel>(result);
-
         }
 
         [TestMethod]
         public void Given_UserExists_When_LogGet_Then_ViewReturned()
         {
-
             // Arrange
             _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
 
@@ -136,11 +124,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestMethod]
         public void Given_DataExists_When_Read_Then_JsonReturned()
         {
-
             // Arrange
             var requestItems = new NameValueCollection();
             requestItems.Add("sort[0][dir]", "");
-            requestItems.Add("sort[0][field]", "");     
+            requestItems.Add("sort[0][field]", "");
             // TODO: Fix this as a.Form doesn't work
             _httpRequest.Stub(a => a.Form).Return(requestItems);
 
@@ -151,6 +138,5 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var dataReturned = AssertJsonResultReturned(result);
             // TODO: Validate it returns 1 item
         }
-
     }
 }

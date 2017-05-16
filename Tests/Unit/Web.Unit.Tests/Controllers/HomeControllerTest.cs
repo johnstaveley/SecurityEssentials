@@ -1,32 +1,19 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurityEssentials.Controllers;
-using Rhino.Mocks;
-using SecurityEssentials.Core;
-using SecurityEssentials.Core.Identity;
-using SecurityEssentials.Unit.Tests.TestDbSet;
-using SecurityEssentials.Model;
-using System.Collections.Generic;
-using SecurityEssentials.ViewModel;
-using System.Threading.Tasks;
-using System.Web.Routing;
-using System.Web;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest : BaseControllerTest
     {
-
         private HomeController _sut;
 
         [TestInitialize]
         public void Setup()
         {
-            base.BaseSetup();
+            BaseSetup();
             _sut = new HomeController();
             _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
             _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
@@ -35,13 +22,12 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestCleanup]
         public void Teardown()
         {
-            base.VerifyAllExpectations();
+            VerifyAllExpectations();
         }
 
         [TestMethod]
         public void When_About_Then_ViewReturned()
         {
-
             // Arrange
 
             // Act
@@ -54,7 +40,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         [TestMethod]
         public void When_Contact_Then_ViewReturned()
         {
-
             // Arrange
 
             // Act
@@ -63,13 +48,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             var viewResult = AssertViewResultReturned(result, "Contact");
             Assert.AreEqual("Your contact page.", viewResult.ViewData["Message"]);
-
         }
 
         [TestMethod]
         public void When_Index_Then_ViewReturned()
         {
-
             // Arrange
 
             // Act
@@ -78,8 +61,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             var viewResult = AssertViewResultReturned(result, "Index");
             Assert.AreEqual("Security Essentials", viewResult.ViewData["Message"]);
-
         }
-
     }
 }

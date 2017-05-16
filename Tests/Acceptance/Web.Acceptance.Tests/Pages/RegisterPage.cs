@@ -1,72 +1,46 @@
 ﻿using System;
-using System.Linq;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
+using OpenQA.Selenium.Support.UI;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
-using OpenQA.Selenium.Support.UI;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class RegisterPage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class RegisterPage : BasePage
+    {
+        public RegisterPage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.REGISTER)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement Submit
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+        public MenuBar MenuBar { get; }
 
-        private IWebElement Username
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_UserName")); }
-		}
+        private IWebElement Submit => GetVisibleWebElement(By.Id("submit"));
 
-        private IWebElement FirstName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_FirstName")); }
-		}
+        private IWebElement Username => GetVisibleWebElement(By.Id("User_UserName"));
 
-        private IWebElement LastName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_LastName")); }
-		}
+        private IWebElement FirstName => GetVisibleWebElement(By.Id("User_FirstName"));
 
-        private SelectElement SecurityQuestion
-		{
-			get { return new SelectElement(this.GetVisibleWebElement(By.Id("User_SecurityQuestionLookupItemId"))); }
-		}
+        private IWebElement LastName => GetVisibleWebElement(By.Id("User_LastName"));
 
-        private IWebElement SecurityAnswer
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_SecurityAnswer")); }
-		}
+        private SelectElement SecurityQuestion => new SelectElement(
+            GetVisibleWebElement(By.Id("User_SecurityQuestionLookupItemId")));
 
-        private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
-        private IWebElement ConfirmPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("ConfirmPassword")); }
-		}
-        
-		public RegisterPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.REGISTER)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement SecurityAnswer => GetVisibleWebElement(By.Id("User_SecurityAnswer"));
 
-		public void ClickSubmit()
-		{
-			Submit.Click();
-		}
+        private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
+
+        private IWebElement ConfirmPassword => GetVisibleWebElement(By.Id("ConfirmPassword"));
+
+        public void ClickSubmit()
+        {
+            Submit.Click();
+        }
 
         public void EnterDetails(Table table)
         {
-
             foreach (var row in table.Rows)
-            {
                 switch (row[0].ToLower())
                 {
                     case "username":
@@ -79,7 +53,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
                         LastName.SendKeys(row[1]);
                         break;
                     case "securityquestion":
-						SecurityQuestion.SelectByText(row[1]);
+                        SecurityQuestion.SelectByText(row[1]);
                         break;
                     case "securityanswer":
                         SecurityAnswer.SendKeys(row[1]);
@@ -92,11 +66,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
                         break;
                     default:
                         throw new Exception(string.Format("Field {0} not defined", row[0]));
-                }         
-            }             
-                          
-        }                 
-                          
-	}                     
-                          
+                }
+        }
+    }
 }

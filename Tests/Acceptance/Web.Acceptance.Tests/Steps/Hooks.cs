@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Configuration;
-using System.Drawing.Imaging;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
-using TechTalk.SpecFlow;
-using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.Extensions;
+using SecurityEssentials.Acceptance.Tests.Web.Extensions;
+using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 {
     [Binding]
     public class Hooks
     {
-
         [BeforeFeature]
         public static void BeforeFeature()
         {
-
-            var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"].ToString();
+            var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"];
             IWebDriver webDriver = null;
             if (!string.IsNullOrEmpty(webBrowserProxy))
             {
@@ -39,7 +36,6 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 
             var baseUri = new Uri(ConfigurationManager.AppSettings["WebServerUrl"]);
             FeatureContext.Current.SetBaseUri(baseUri);
-
         }
 
         [AfterFeature]
@@ -51,13 +47,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
         [AfterScenario]
         public static void AfterScenario()
         {
-            if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]) == true)
+            if (ScenarioContext.Current.TestError != null &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
             {
-                var fileName = string.Format("{0}TestFailure-{1}.png", ConfigurationManager.AppSettings["TestScreenCaptureDirectory"].ToString(), DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                var fileName = string.Format("{0}TestFailure-{1}.png",
+                    ConfigurationManager.AppSettings["TestScreenCaptureDirectory"],
+                    DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
                 FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
             }
         }
-
-
     }
 }

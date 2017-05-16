@@ -5,48 +5,37 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class RecoverPage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class RecoverPage : BasePage
+    {
+        public RecoverPage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.RECOVER)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement UserName
-		{
-			get { return this.GetVisibleWebElement(By.Id("UserName")); }
-		}
+        public MenuBar MenuBar { get; }
 
-		private IWebElement RecoverButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("recoverButton")); }
-		}
+        private IWebElement UserName => GetVisibleWebElement(By.Id("UserName"));
 
-		public RecoverPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.RECOVER)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement RecoverButton => GetVisibleWebElement(By.Id("recoverButton"));
 
 
-		public void EnterDetails(Table table)
-		{
+        public void EnterDetails(Table table)
+        {
+            foreach (var row in table.Rows)
+                switch (row[0].ToLower())
+                {
+                    case "username":
+                        UserName.SendKeys(row[1]);
+                        break;
+                    default:
+                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                }
+        }
 
-			foreach (var row in table.Rows)
-			{
-				switch (row[0].ToLower())
-				{
-					case "username":
-						UserName.SendKeys(row[1]);
-						break;
-					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
-				}
-			}
-		}
-
-		public void ClickSubmit()
-		{
-			RecoverButton.Click();
-		}
-
-	}
-
+        public void ClickSubmit()
+        {
+            RecoverButton.Click();
+        }
+    }
 }

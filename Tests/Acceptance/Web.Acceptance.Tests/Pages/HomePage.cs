@@ -5,45 +5,37 @@ using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class HomePage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class HomePage : BasePage
+    {
+        public HomePage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.HOME)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement Register
-		{
-			get { return this.GetVisibleWebElement(By.Id("registerLink")); }
-		}
+        public MenuBar MenuBar { get; }
 
-		private IWebElement Login
-		{
-			get { return this.GetVisibleWebElement(By.Id("loginLink")); }
-		}
+        private IWebElement Register => GetVisibleWebElement(By.Id("registerLink"));
 
-		public HomePage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.HOME)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement Login => GetVisibleWebElement(By.Id("loginLink"));
 
-		public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri)
-		{
-			var userUri = new Uri(baseUri, "Home/Index");
-			webDriver.Navigate().GoToUrl(userUri);
-			var homePage = new HomePage(webDriver, baseUri);
-			PageFactory.InitElements(webDriver, homePage);
-			return homePage;
-		}
+        public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri)
+        {
+            var userUri = new Uri(baseUri, "Home/Index");
+            webDriver.Navigate().GoToUrl(userUri);
+            var homePage = new HomePage(webDriver, baseUri);
+            PageFactory.InitElements(webDriver, homePage);
+            return homePage;
+        }
 
-		public void ClickLogin()
-		{
-			Login.Click();
-		}
+        public void ClickLogin()
+        {
+            Login.Click();
+        }
 
-		public void ClickRegister()
-		{
-			Register.Click();
-		}
-
-	}
-
+        public void ClickRegister()
+        {
+            Register.Click();
+        }
+    }
 }

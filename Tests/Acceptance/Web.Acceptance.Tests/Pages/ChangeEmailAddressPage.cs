@@ -1,61 +1,46 @@
 ﻿using System;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class ChangeEmailAddressPage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class ChangeEmailAddressPage : BasePage
+    {
+        public ChangeEmailAddressPage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.CHANGE_EMAIL_ADDRESS)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
-		
-		private IWebElement NewUserName
-		{
-			get { return this.GetVisibleWebElement(By.Id("NewEmailAddress")); }
-		}
+        public MenuBar MenuBar { get; }
 
-		private IWebElement ChangeButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+        private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		public ChangeEmailAddressPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.CHANGE_EMAIL_ADDRESS)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement NewUserName => GetVisibleWebElement(By.Id("NewEmailAddress"));
 
-		public void EnterDetails(Table table)
-		{
+        private IWebElement ChangeButton => GetVisibleWebElement(By.Id("submit"));
 
-			foreach (var row in table.Rows)
-			{
-				switch (row[0].ToLower())
-				{
-					case "newusername":
-					case "newemailaddress":
-						NewUserName.SendKeys(row[1]);
-						break;
-					case "password":
-						Password.SendKeys(row[1]);
-						break;
-					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
-				}
-			}
-		}
+        public void EnterDetails(Table table)
+        {
+            foreach (var row in table.Rows)
+                switch (row[0].ToLower())
+                {
+                    case "newusername":
+                    case "newemailaddress":
+                        NewUserName.SendKeys(row[1]);
+                        break;
+                    case "password":
+                        Password.SendKeys(row[1]);
+                        break;
+                    default:
+                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                }
+        }
 
-		public void ClickSubmit()
-		{
-			ChangeButton.Click();
-		}		
-
-	}
-
+        public void ClickSubmit()
+        {
+            ChangeButton.Click();
+        }
+    }
 }

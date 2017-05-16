@@ -6,72 +6,56 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class RecoverPasswordPage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class RecoverPasswordPage : BasePage
+    {
+        public RecoverPasswordPage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.RECOVER_PASSWORD)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
+        public MenuBar MenuBar { get; }
 
-		private IWebElement ConfirmPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("ConfirmPassword")); }
-		}
+        private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		private IWebElement SecurityAnswer
-		{
-			get { return this.GetVisibleWebElement(By.Id("SecurityAnswer")); }
-		}
+        private IWebElement ConfirmPassword => GetVisibleWebElement(By.Id("ConfirmPassword"));
 
-		private IWebElement RecoverButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+        private IWebElement SecurityAnswer => GetVisibleWebElement(By.Id("SecurityAnswer"));
 
-		public RecoverPasswordPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.RECOVER_PASSWORD)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement RecoverButton => GetVisibleWebElement(By.Id("submit"));
 
-		public void EnterDetails(Table table)
-		{
+        public void EnterDetails(Table table)
+        {
+            foreach (var row in table.Rows)
+                switch (row[0].ToLower())
+                {
+                    case "confirm password":
+                        ConfirmPassword.SendKeys(row[1]);
+                        break;
+                    case "password":
+                        Password.SendKeys(row[1]);
+                        break;
+                    case "securityanswer":
+                        SecurityAnswer.SendKeys(row[1]);
+                        break;
+                    default:
+                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                }
+        }
 
-			foreach (var row in table.Rows)
-			{
-				switch (row[0].ToLower())
-				{
-					case "confirm password":
-						ConfirmPassword.SendKeys(row[1]);
-						break;
-					case "password":
-						Password.SendKeys(row[1]);
-						break;
-					case "securityanswer":
-						SecurityAnswer.SendKeys(row[1]);
-						break;
-					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
-				}
-			}
-		}
+        public void ClickSubmit()
+        {
+            RecoverButton.Click();
+        }
 
-		public void ClickSubmit()
-		{
-			RecoverButton.Click();
-		}
-
-		public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string passwordResetToken)
-		{
-			var userUri = new Uri(baseUri, string.Format("Account/RecoverPassword?PasswordResetToken={0}", passwordResetToken));
-			webDriver.Navigate().GoToUrl(userUri);
-			var homePage = new HomePage(webDriver, baseUri);
-			PageFactory.InitElements(webDriver, homePage);
-			return homePage;
-		}
-
-	}
-
+        public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string passwordResetToken)
+        {
+            var userUri = new Uri(baseUri,
+                string.Format("Account/RecoverPassword?PasswordResetToken={0}", passwordResetToken));
+            webDriver.Navigate().GoToUrl(userUri);
+            var homePage = new HomePage(webDriver, baseUri);
+            PageFactory.InitElements(webDriver, homePage);
+            return homePage;
+        }
+    }
 }

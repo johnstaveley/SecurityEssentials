@@ -5,66 +5,48 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 {
-	public class LoginPage : BasePage
-	{
-		public MenuBar MenuBar { get; private set; }
+    public class LoginPage : BasePage
+    {
+        public LoginPage(IWebDriver webDriver, Uri baseUri)
+            : base(webDriver, baseUri, PageTitles.LOGIN)
+        {
+            MenuBar = new MenuBar(webDriver, baseUri);
+        }
 
-		private IWebElement UserName
-		{
-			get { return this.GetVisibleWebElement(By.Id("UserName")); }
-		}
+        public MenuBar MenuBar { get; }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
+        private IWebElement UserName => GetVisibleWebElement(By.Id("UserName"));
 
-		private IWebElement RecoverLink
-		{
-			get { return this.GetVisibleWebElement(By.Id("Recover")); }
-		}
+        private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		private IWebElement LoginButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("Login")); }
-		}				
+        private IWebElement RecoverLink => GetVisibleWebElement(By.Id("Recover"));
 
-		public LoginPage(IWebDriver webDriver, Uri baseUri)
-			: base(webDriver, baseUri, PageTitles.LOGIN)
-		{
-			MenuBar = new MenuBar(webDriver, baseUri);
-		}
+        private IWebElement LoginButton => GetVisibleWebElement(By.Id("Login"));
 
-		public void ClickSubmit()
-		{
-			LoginButton.Click();
-		}
+        public void ClickSubmit()
+        {
+            LoginButton.Click();
+        }
 
-		public void ClickRecoverPassword()
-		{
-			RecoverLink.Click();
-		}
+        public void ClickRecoverPassword()
+        {
+            RecoverLink.Click();
+        }
 
-		public void EnterDetails(Table table)
-		{
-
-			foreach (var row in table.Rows)
-			{
-				switch (row[0].ToLower())
-				{
-					case "username":
-						UserName.SendKeys(row[1]);
-						break;
-					case "password":
-						Password.SendKeys(row[1]);
-						break;
-					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
-				}
-			}
-
-		}                 
-
-	}
-
+        public void EnterDetails(Table table)
+        {
+            foreach (var row in table.Rows)
+                switch (row[0].ToLower())
+                {
+                    case "username":
+                        UserName.SendKeys(row[1]);
+                        break;
+                    case "password":
+                        Password.SendKeys(row[1]);
+                        break;
+                    default:
+                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                }
+        }
+    }
 }

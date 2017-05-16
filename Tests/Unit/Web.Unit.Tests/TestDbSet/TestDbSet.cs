@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,13 +14,36 @@ namespace SecurityEssentials.Unit.Tests.TestDbSet
     public class TestDbSet<TEntity> : DbSet<TEntity>, IQueryable, IEnumerable<TEntity>, IDbAsyncEnumerable<TEntity>
         where TEntity : class
     {
-        ObservableCollection<TEntity> _data;
-        IQueryable _query;
+        private readonly ObservableCollection<TEntity> _data;
+        private readonly IQueryable _query;
 
         public TestDbSet()
         {
             _data = new ObservableCollection<TEntity>();
             _query = _data.AsQueryable();
+        }
+
+        public override ObservableCollection<TEntity> Local => _data;
+
+        IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
+        {
+            return new TestDbAsyncEnumerator<TEntity>(_data.GetEnumerator());
+        }
+
+        IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
+        {
+            return _data.GetEnumerator();
+        }
+
+        Type IQueryable.ElementType => _query.ElementType;
+
+        Expression IQueryable.Expression => _query.Expression;
+
+        IQueryProvider IQueryable.Provider => new TestDbAsyncQueryProvider<TEntity>(_query.Provider);
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _data.GetEnumerator();
         }
 
         public override TEntity Add(TEntity item)
@@ -49,41 +72,6 @@ namespace SecurityEssentials.Unit.Tests.TestDbSet
         public override TDerivedEntity Create<TDerivedEntity>()
         {
             return Activator.CreateInstance<TDerivedEntity>();
-        }
-
-        public override ObservableCollection<TEntity> Local
-        {
-            get { return _data; }
-        }
-
-        Type IQueryable.ElementType
-        {
-            get { return _query.ElementType; }
-        }
-
-        Expression IQueryable.Expression
-        {
-            get { return _query.Expression; }
-        }
-
-        IQueryProvider IQueryable.Provider
-        {
-            get { return new TestDbAsyncQueryProvider<TEntity>(_query.Provider); }
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
-
-        IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
-
-        IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
-        {
-            return new TestDbAsyncEnumerator<TEntity>(_data.GetEnumerator());
         }
     }
 
@@ -131,11 +119,13 @@ namespace SecurityEssentials.Unit.Tests.TestDbSet
     {
         public TestDbAsyncEnumerable(IEnumerable<T> enumerable)
             : base(enumerable)
-        { }
+        {
+        }
 
         public TestDbAsyncEnumerable(Expression expression)
             : base(expression)
-        { }
+        {
+        }
 
         public IDbAsyncEnumerator<T> GetAsyncEnumerator()
         {
@@ -147,10 +137,7 @@ namespace SecurityEssentials.Unit.Tests.TestDbSet
             return GetAsyncEnumerator();
         }
 
-        IQueryProvider IQueryable.Provider
-        {
-            get { return new TestDbAsyncQueryProvider<T>(this); }
-        }
+        IQueryProvider IQueryable.Provider => new TestDbAsyncQueryProvider<T>(this);
     }
 
     internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
@@ -172,15 +159,8 @@ namespace SecurityEssentials.Unit.Tests.TestDbSet
             return Task.FromResult(_inner.MoveNext());
         }
 
-        public T Current
-        {
-            get { return _inner.Current; }
-        }
+        public T Current => _inner.Current;
 
-        object IDbAsyncEnumerator.Current
-        {
-            get { return Current; }
-        }
+        object IDbAsyncEnumerator.Current => Current;
     }
 }
-

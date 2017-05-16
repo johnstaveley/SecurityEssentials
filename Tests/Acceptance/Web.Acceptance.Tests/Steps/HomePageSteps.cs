@@ -1,43 +1,40 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
-	[Binding]
-	public class HomePageSteps
-	{
-		[Given(@"I am taken to the homepage")]
-		[When(@"I am taken to the homepage")]
-		public void ThenIAmTakenToTheHomepage()
-		{			
+    [Binding]
+    public class HomePageSteps
+    {
+        [Given(@"I am taken to the homepage")]
+        [When(@"I am taken to the homepage")]
+        public void ThenIAmTakenToTheHomepage()
+        {
             var homePage = ScenarioContext.Current.GetPage<HomePage>();
-			Assert.IsTrue(homePage.IsCurrentPage);
-		}
+            Assert.IsTrue(homePage.IsCurrentPage);
+        }
 
         [Given(@"I click register in the title bar")]
-		public void GivenIClickRegisterInTheTitleBar()
-		{
-			var homePage = ScenarioContext.Current.GetPage<HomePage>();
-			homePage.ClickRegister();
-		}
+        public void GivenIClickRegisterInTheTitleBar()
+        {
+            var homePage = ScenarioContext.Current.GetPage<HomePage>();
+            homePage.ClickRegister();
+        }
 
-		[When(@"I click the login link in the navigation bar")]
+        [When(@"I click the login link in the navigation bar")]
         [Given(@"I click the login link in the navigation bar")]
-		public void GivenIClickLogin()
-		{
-			var homePage = ScenarioContext.Current.GetPage<HomePage>();
-			homePage.ClickLogin();
+        public void GivenIClickLogin()
+        {
+            var homePage = ScenarioContext.Current.GetPage<HomePage>();
+            homePage.ClickLogin();
+        }
 
-		}
-
-		[Given(@"I delete all cookies from the cache")]
-		public void GivenIDeleteAllCookiesFromTheCache()
-		{
-			var driver = FeatureContext.Current.GetWebDriver();
-			driver.Manage().Cookies.DeleteAllCookies();
-		}
-
-
-	}
+        [Given(@"I delete all cookies from the cache")]
+        public void GivenIDeleteAllCookiesFromTheCache()
+        {
+            var driver = FeatureContext.Current.GetWebDriver();
+            driver.Manage().Cookies.DeleteAllCookies();
+        }
+    }
 }
