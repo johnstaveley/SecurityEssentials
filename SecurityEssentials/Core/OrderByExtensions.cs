@@ -76,9 +76,7 @@ namespace SecurityEssentials.Core
 
                 if (pair.Length > 2)
                     throw new ArgumentException(
-                        string.Format(
-                            "Invalid OrderBy string '{0}'. Order By Format: Property, Property2 ASC, Property2 DESC",
-                            item));
+                        $"Invalid OrderBy string '{item}'. Order By Format: Property, Property2 ASC, Property2 DESC");
 
                 var prop = pair[0].Trim();
 

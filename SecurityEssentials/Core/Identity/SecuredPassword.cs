@@ -93,7 +93,7 @@ namespace SecurityEssentials.Core.Identity
                     _saltSize = 0;
                     break;
                 default:
-                    throw new ArgumentException(string.Format("hashStrategy {0} is not defined", hashStrategy));
+                    throw new ArgumentException($"hashStrategy {hashStrategy} is not defined");
             }
         }
 

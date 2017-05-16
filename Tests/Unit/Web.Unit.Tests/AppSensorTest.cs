@@ -429,7 +429,7 @@ namespace SecurityEssentials.Unit.Tests.Core
         {
             _httpRequest.Stub(a => a.HttpMethod).Return(_httpMethod);
             _httpRequest.Stub(a => a.CurrentExecutionFilePath)
-                .Return(string.Format("~/{0}/{1}", _controllerName, _actionName));
+                .Return($"~/{_controllerName}/{_actionName}");
             _controller.Request.Stub(a => a.Form).Return(new NameValueCollection
             {
                 {"TestField1", testField1Value},

@@ -131,7 +131,7 @@ namespace SecurityEssentials.Controllers
             var expectedFields = new List<string> {"IsOwnProfile", "IsAdministrator", "User.Id"};
             if (_userIdentity.IsUserInRole(this, "Admin") && !isOwnProfile)
                 propertiesToUpdate.AddRange(new List<string> {"Approved", "EmailVerified", "Enabled", "UserName"});
-            propertiesToUpdate.ForEach(a => expectedFields.Add(string.Format("User.{0}", a)));
+            propertiesToUpdate.ForEach(a => expectedFields.Add($"User.{a}"));
             _appSensor.ValidateFormData(this, expectedFields);
             if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
                 if (isOwnProfile && (user.Enabled == false || user.EmailVerified == false))
@@ -206,7 +206,7 @@ namespace SecurityEssentials.Controllers
             if (!string.IsNullOrWhiteSpace(sortField) && !string.IsNullOrWhiteSpace(sortDirection))
             {
                 sortField = sortField.Replace("_", ".");
-                users = users.OrderBy(string.Format("{0} {1}", sortField, sortDirection));
+                users = users.OrderBy($"{sortField} {sortDirection}");
             }
 
             var recordCount = users.Count();

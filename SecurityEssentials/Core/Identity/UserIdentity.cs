@@ -102,7 +102,7 @@ namespace SecurityEssentials.Core.Identity
             var hash = hashstring.ComputeHash(bytes);
             var hashString = string.Empty;
             foreach (var x in hash)
-                hashString += string.Format("{0:x2}", x);
+                hashString += $"{x:x2}";
             return hashString;
         }
     }

@@ -50,9 +50,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
             if (ScenarioContext.Current.TestError != null &&
                 Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
             {
-                var fileName = string.Format("{0}TestFailure-{1}.png",
-                    ConfigurationManager.AppSettings["TestScreenCaptureDirectory"],
-                    DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+                var fileName =
+                    $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now:yyyy-MM-dd-hh-mm-ss}.png";
                 FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
             }
         }

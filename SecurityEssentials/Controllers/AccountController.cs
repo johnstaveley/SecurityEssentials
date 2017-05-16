@@ -156,15 +156,14 @@ namespace SecurityEssentials.Controllers
                         // Send change username with link to recover password form
                         var emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName,
                             _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
-                        var emailSubject = string.Format("{0} - Complete the change email address process",
-                            _configuration.ApplicationName);
+                        var emailSubject =
+                            $"{_configuration.ApplicationName} - Complete the change email address process";
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName},
                             null, null, emailSubject, emailBody, true);
                         user.UserLogs.Add(new UserLog
                         {
                             Description =
-                                string.Format("Change email address request started to change from {0} to {1}",
-                                    user.UserName, user.NewEmailAddress)
+                                $"Change email address request started to change from {user.UserName} to {user.NewEmailAddress}"
                         });
                         _context.SaveChanges();
                         return View("ChangeEmailAddressPending");
@@ -216,11 +215,10 @@ namespace SecurityEssentials.Controllers
             }
             user.UserLogs.Add(new UserLog
             {
-                Description = string.Format("Change email address request confirmed to change from {0} to {1}",
-                    user.UserName, user.NewEmailAddress)
+                Description =
+                    $"Change email address request confirmed to change from {user.UserName} to {user.NewEmailAddress}"
             });
-            var emailSubject = string.Format("{0} - Change email address process completed",
-                _configuration.ApplicationName);
+            var emailSubject = $"{_configuration.ApplicationName} - Change email address process completed";
             var emailBody = EmailTemplates.ChangeEmailAddressCompletedBodyText(user.FirstName, user.LastName,
                 _configuration.ApplicationName, user.UserName, user.NewEmailAddressToken);
             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName}, null, null,
@@ -229,9 +227,8 @@ namespace SecurityEssentials.Controllers
             user.NewEmailAddress = null;
             user.NewEmailAddressRequestExpiryDate = null;
             user.NewEmailAddressToken = null;
-            emailBody = string.Format(
-                "A request has been completed to change your {0} username/email address to {1}. This email address can now be used to log into the application.",
-                _configuration.ApplicationName, user.UserName);
+            emailBody =
+                $"A request has been completed to change your {_configuration.ApplicationName} username/email address to {user.UserName}. This email address can now be used to log into the application.";
             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName}, null, null,
                 emailSubject, emailBody, true);
             await _context.SaveChangesAsync();
@@ -289,8 +286,7 @@ namespace SecurityEssentials.Controllers
                         // Email recipient with password change acknowledgement
                         var emailBody = EmailTemplates.ChangePasswordCompletedBodyText(user.FirstName, user.LastName,
                             _configuration.ApplicationName);
-                        var emailSubject = string.Format("{0} - Password change confirmation",
-                            _configuration.ApplicationName);
+                        var emailSubject = $"{_configuration.ApplicationName} - Password change confirmation";
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName},
                             null, null, emailSubject, emailBody, true);
                         _context.SaveChanges();
@@ -381,8 +377,7 @@ namespace SecurityEssentials.Controllers
                     // Send recovery email with link to recover password form
                     var emailBody = EmailTemplates.ChangePasswordPendingBodyText(user.FirstName, user.LastName,
                         _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
-                    var emailSubject = string.Format("{0} - Complete the password recovery process",
-                        _configuration.ApplicationName);
+                    var emailSubject = $"{_configuration.ApplicationName} - Complete the password recovery process";
                     _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> {user.UserName}, null,
                         null, emailSubject, emailBody, true);
                     user.UserLogs.Add(new UserLog {Description = "Password reset link generated and sent"});
@@ -589,8 +584,7 @@ namespace SecurityEssentials.Controllers
                             await _context.SaveChangesAsync();
 
                             // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                            var emailSubject = string.Format("{0} - Security Information Changed",
-                                _configuration.ApplicationName);
+                            var emailSubject = $"{_configuration.ApplicationName} - Security Information Changed";
                             var emailBody = EmailTemplates.ChangeSecurityInformationCompletedBodyText(user.FirstName,
                                 user.LastName, _configuration.ApplicationName);
                             _services.SendEmail(_configuration.DefaultFromEmailAddress,
@@ -677,16 +671,14 @@ namespace SecurityEssentials.Controllers
                             var emailSubject = "";
                             if (result.Succeeded)
                             {
-                                emailSubject = string.Format("{0} - Complete your registration",
-                                    _configuration.ApplicationName);
+                                emailSubject = $"{_configuration.ApplicationName} - Complete your registration";
                                 emailBody = EmailTemplates.RegistrationPendingBodyText(user.FirstName, user.LastName,
                                     _configuration.ApplicationName, _configuration.WebsiteBaseUrl,
                                     user.EmailConfirmationToken);
                             }
                             else
                             {
-                                emailSubject = string.Format("{0} - Duplicate Registration",
-                                    _configuration.ApplicationName);
+                                emailSubject = $"{_configuration.ApplicationName} - Duplicate Registration";
                                 emailBody = EmailTemplates.RegistrationDuplicatedBodyText(user.FirstName, user.LastName,
                                     _configuration.ApplicationName, _configuration.WebsiteBaseUrl);
                             }

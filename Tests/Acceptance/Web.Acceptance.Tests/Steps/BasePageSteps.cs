@@ -11,7 +11,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
         {
             var driver = FeatureContext.Current.GetWebDriver();
             Assert.IsTrue(driver.PageSource.Contains(errorMessage),
-                string.Format("Page should have contained error message '{0}'", errorMessage));
+                $"Page should have contained error message '{errorMessage}'");
         }
     }
 }

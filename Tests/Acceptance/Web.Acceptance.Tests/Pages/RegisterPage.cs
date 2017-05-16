@@ -65,7 +65,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
                         ConfirmPassword.SendKeys(row[1]);
                         break;
                     default:
-                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                        throw new Exception($"Field {row[0]} not defined");
                 }
         }
     }

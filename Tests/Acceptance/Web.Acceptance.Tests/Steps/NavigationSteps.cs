@@ -30,122 +30,115 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
                 case "account log":
                     var accountLogPage = new AccountLogPage(webDriver, uri);
                     Assert.IsTrue(accountLogPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", accountLogPage.GetType().Name));
+                        $"Page {accountLogPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(accountLogPage);
                     break;
                 case "change email address":
                     var changeEmailAddressPage = new ChangeEmailAddressPage(webDriver, uri);
                     Assert.IsTrue(changeEmailAddressPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changeEmailAddressPage.GetType().Name));
+                        $"Page {changeEmailAddressPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changeEmailAddressPage);
                     break;
                 case "change email address pending":
                     var changeEmailAddressPendingPage = new ChangeEmailAddressPendingPage(webDriver, uri);
                     Assert.IsTrue(changeEmailAddressPendingPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changeEmailAddressPendingPage.GetType().Name));
+                        $"Page {changeEmailAddressPendingPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changeEmailAddressPendingPage);
                     break;
                 case "change email address success":
                     var changeEmailAddressSuccessPage = new ChangeEmailAddressSuccessPage(webDriver, uri);
                     Assert.IsTrue(changeEmailAddressSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changeEmailAddressSuccessPage.GetType().Name));
+                        $"Page {changeEmailAddressSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changeEmailAddressSuccessPage);
                     break;
                 case "change password":
                     var changePasswordPage = new ChangePasswordPage(webDriver, uri);
                     Assert.IsTrue(changePasswordPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", changePasswordPage.GetType().Name));
+                        $"Page {changePasswordPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changePasswordPage);
                     break;
                 case "change password success":
                     var changePasswordSuccessPage = new ChangePasswordSuccessPage(webDriver, uri);
                     Assert.IsTrue(changePasswordSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changePasswordSuccessPage.GetType().Name));
+                        $"Page {changePasswordSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changePasswordSuccessPage);
                     break;
                 case "change security information":
                     var changeSecurityInformationPage = new ChangeSecurityInformationPage(webDriver, uri);
                     Assert.IsTrue(changeSecurityInformationPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changeSecurityInformationPage.GetType().Name));
+                        $"Page {changeSecurityInformationPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changeSecurityInformationPage);
                     break;
                 case "change security information success":
                     var changeSecurityInformationSuccessPage = new ChangeSecurityInformationSuccessPage(webDriver, uri);
                     Assert.IsTrue(changeSecurityInformationSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            changeSecurityInformationSuccessPage.GetType().Name));
+                        $"Page {changeSecurityInformationSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(changeSecurityInformationSuccessPage);
                     break;
                 case "home":
                     var homePage = new HomePage(webDriver, uri);
                     Assert.IsTrue(homePage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", homePage.GetType().Name));
+                        $"Page {homePage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(homePage);
                     break;
                 case "landing":
                     var landingPage = new LandingPage(webDriver, uri);
                     Assert.IsTrue(landingPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", landingPage.GetType().Name));
+                        $"Page {landingPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(landingPage);
                     break;
                 case "login":
                     var loginPage = new LoginPage(webDriver, uri);
                     Assert.IsTrue(loginPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", loginPage.GetType().Name));
+                        $"Page {loginPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(loginPage);
                     break;
                 case "manage users":
                     var userIndexPage = new UserIndexPage(webDriver, uri);
                     Assert.IsTrue(userIndexPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", userIndexPage.GetType().Name));
+                        $"Page {userIndexPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(userIndexPage);
                     break;
                 case "recover":
                     var recoverPage = new RecoverPage(webDriver, uri);
                     Assert.IsTrue(recoverPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", recoverPage.GetType().Name));
+                        $"Page {recoverPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(recoverPage);
                     break;
                 case "recover password":
                     var recoverPasswordPage = new RecoverPasswordPage(webDriver, uri);
                     Assert.IsTrue(recoverPasswordPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", recoverPasswordPage.GetType().Name));
+                        $"Page {recoverPasswordPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(recoverPasswordPage);
                     break;
                 case "recover password success":
                     var recoverPasswordSuccessPage = new RecoverPasswordSuccessPage(webDriver, uri);
                     Assert.IsTrue(recoverPasswordSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page",
-                            recoverPasswordSuccessPage.GetType().Name));
+                        $"Page {recoverPasswordSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(recoverPasswordSuccessPage);
                     break;
                 case "recover success":
                     var recoverSuccessPage = new RecoverSuccessPage(webDriver, uri);
                     Assert.IsTrue(recoverSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", recoverSuccessPage.GetType().Name));
+                        $"Page {recoverSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(recoverSuccessPage);
                     break;
                 case "register":
                     var registerPage = new RegisterPage(webDriver, uri);
                     Assert.IsTrue(registerPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", registerPage.GetType().Name));
+                        $"Page {registerPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(registerPage);
                     break;
                 case "register success":
                     var registerSuccessPage = new RegisterSuccessPage(webDriver, uri);
                     Assert.IsTrue(registerSuccessPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", registerSuccessPage.GetType().Name));
+                        $"Page {registerSuccessPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(registerSuccessPage);
                     break;
                 case "user edit":
                     var userEditPage = new UserEditPage(webDriver, uri);
                     Assert.IsTrue(userEditPage.IsCurrentPage,
-                        string.Format("Page {0} is not the current expected page", userEditPage.GetType().Name));
+                        $"Page {userEditPage.GetType().Name} is not the current expected page");
                     ScenarioContext.Current.Set(userEditPage);
                     break;
                 default:

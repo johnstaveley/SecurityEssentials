@@ -39,7 +39,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
                         SecurityAnswer.SendKeys(row[1]);
                         break;
                     default:
-                        throw new Exception(string.Format("Field {0} not defined", row[0]));
+                        throw new Exception($"Field {row[0]} not defined");
                 }
         }
 
@@ -51,7 +51,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
         public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string passwordResetToken)
         {
             var userUri = new Uri(baseUri,
-                string.Format("Account/RecoverPassword?PasswordResetToken={0}", passwordResetToken));
+                $"Account/RecoverPassword?PasswordResetToken={passwordResetToken}");
             webDriver.Navigate().GoToUrl(userUri);
             var homePage = new HomePage(webDriver, baseUri);
             PageFactory.InitElements(webDriver, homePage);

@@ -104,7 +104,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
             Assert.AreNotEqual(input, encrypted);
             Assert.AreNotEqual(true,
-                _testDecrypt.Decrypt(_password, string.Format("{0}1", _salt), _iterationCount, encrypted, out output));
+                _testDecrypt.Decrypt(_password, $"{_salt}1", _iterationCount, encrypted, out output));
             Assert.AreNotEqual(input, output);
         }
 
@@ -117,7 +117,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
             Assert.AreNotEqual(input, encrypted);
             Assert.AreNotEqual(true,
-                _testDecrypt.Decrypt(string.Format("{0}1", _password), _salt, _iterationCount, encrypted, out output));
+                _testDecrypt.Decrypt($"{_password}1", _salt, _iterationCount, encrypted, out output));
             Assert.AreNotEqual(input, output);
         }
     }

@@ -30,17 +30,15 @@
 
         public static string ChangePasswordCompletedBodyText(string firstName, string lastName, string applicationName)
         {
-            return string.Format(
-                "{0}Just a note from {1} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap{2}",
-                GetGreeting(firstName, lastName), applicationName, NotSpoofText(applicationName));
+            return
+                $"{GetGreeting(firstName, lastName)}Just a note from {applicationName} to say your password has been changed today, if this wasn't done by yourself, please contact the site administrator asap{NotSpoofText(applicationName)}";
         }
 
         public static string ChangeSecurityInformationCompletedBodyText(string firstName, string lastName,
             string applicationName)
         {
-            return string.Format(
-                "{0}Please be advised that the security information on your {1} account been changed. If you did not initiate this action then please contact the site administrator as soon as possible{2}",
-                GetGreeting(firstName, lastName), applicationName, NotSpoofText(applicationName));
+            return
+                $"{GetGreeting(firstName, lastName)}Please be advised that the security information on your {applicationName} account been changed. If you did not initiate this action then please contact the site administrator as soon as possible{NotSpoofText(applicationName)}";
         }
 
         public static string ChangeEmailAddressPendingBodyText(string firstName, string lastName,
@@ -54,15 +52,13 @@
         public static string ChangeEmailAddressCompletedBodyText(string firstName, string lastName,
             string applicationName, string oldEmailAddress, string newEmailAddress)
         {
-            return string.Format(
-                "{0}A request has been completed to change your {1} username/email address from {2} to {3}. This email address can no longer be used to sign into the account. If you did not request this then please contact the website administration asap.{4}",
-                GetGreeting(firstName, lastName), applicationName, oldEmailAddress, newEmailAddress,
-                NotSpoofText(applicationName));
+            return
+                $"{GetGreeting(firstName, lastName)}A request has been completed to change your {applicationName} username/email address from {oldEmailAddress} to {newEmailAddress}. This email address can no longer be used to sign into the account. If you did not request this then please contact the website administration asap.{NotSpoofText(applicationName)}";
         }
 
         public static string GetGreeting(string firstName, string lastName)
         {
-            return string.Format("Dear {0} {1},<br /><br />", firstName, lastName);
+            return $"Dear {firstName} {lastName},<br /><br />";
         }
 
         private static string NotSpoofText(string applicationName)

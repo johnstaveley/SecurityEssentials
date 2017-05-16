@@ -9,7 +9,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
         public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string newUserNameToken)
         {
             var userUri = new Uri(baseUri,
-                string.Format("Account/ChangeEmailAddressConfirm?NewEmailAddressToken={0}", newUserNameToken));
+                $"Account/ChangeEmailAddressConfirm?NewEmailAddressToken={newUserNameToken}");
             webDriver.Navigate().GoToUrl(userUri);
             var homePage = new HomePage(webDriver, baseUri);
             PageFactory.InitElements(webDriver, homePage);
