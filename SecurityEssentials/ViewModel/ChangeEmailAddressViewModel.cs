@@ -11,7 +11,8 @@ namespace SecurityEssentials.ViewModel
             EmailAddress = emailAddress;
             NewEmailAddress = newEmailAddress;
             NewEmailAddressRequestExpiryDate = newUserNameRequestExpiryDate?.ToLocalTime();
-            IsFormLocked = newUserNameRequestExpiryDate.HasValue && newUserNameRequestExpiryDate.Value > DateTime.UtcNow;
+            IsFormLocked = newUserNameRequestExpiryDate.HasValue &&
+                           newUserNameRequestExpiryDate.Value > DateTime.UtcNow;
         }
 
         public ChangeEmailAddressViewModel()

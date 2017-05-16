@@ -36,13 +36,9 @@ namespace SecurityEssentials.Core
             var methodName = string.Empty;
 
             if (!orderByInfo.Initial && collection is IOrderedQueryable<T>)
-            {
                 methodName = orderByInfo.Direction == SortDirection.Ascending ? "ThenBy" : "ThenByDescending";
-            }
             else
-            {
                 methodName = orderByInfo.Direction == SortDirection.Ascending ? "OrderBy" : "OrderByDescending";
-            }
 
             //TODO: apply caching to the generic methodsinfos?
             return (IOrderedQueryable<T>) typeof(Queryable).GetMethods().Single(

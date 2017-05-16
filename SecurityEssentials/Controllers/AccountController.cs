@@ -167,13 +167,10 @@ namespace SecurityEssentials.Controllers
                     _context.SaveChanges();
                     return View("ChangeEmailAddressPending");
                 }
-                else
-                {
-                    Logger.Information(
-                        "Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}",
-                        _userIdentity.GetRequester(this, AppSensorDetectionPointKind.AE1));
-                    ModelState.AddModelError("Password", "The password is not correct");
-                }
+                Logger.Information(
+                    "Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}",
+                    _userIdentity.GetRequester(this, AppSensorDetectionPointKind.AE1));
+                ModelState.AddModelError("Password", "The password is not correct");
             }
             else
             {
@@ -189,7 +186,7 @@ namespace SecurityEssentials.Controllers
         {
             var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
             var user = _context.User.FirstOrDefault(u => u.NewEmailAddressToken == newEmaiLAddressToken &&
-                                                u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow);
+                                                         u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow);
             var requester = _userIdentity.GetRequester(this);
             if (user == null)
             {
@@ -404,7 +401,8 @@ namespace SecurityEssentials.Controllers
 
             var user = _context.User
                 .Include("SecurityQuestionLookupItem")
-                .FirstOrDefault(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow);
+                .FirstOrDefault(u => u.PasswordResetToken == passwordResetToken &&
+                                     u.PasswordResetExpiry > DateTime.UtcNow);
             if (user == null)
             {
                 var error = new HandleErrorInfo(
