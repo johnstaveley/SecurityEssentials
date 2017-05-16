@@ -100,10 +100,7 @@ namespace SecurityEssentials.Core.Identity
             var bytes = Encoding.Unicode.GetBytes(textToHash);
             var hashstring = new SHA256Managed();
             var hash = hashstring.ComputeHash(bytes);
-            var hashString = string.Empty;
-            foreach (var x in hash)
-                hashString += $"{x:x2}";
-            return hashString;
+            return hash.Aggregate(string.Empty, (current, x) => current + $"{x:x2}");
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SecurityEssentials.Controllers
         [HttpGet]
         public ActionResult Disable(int id)
         {
-            var user = _context.User.Where(u => u.Id == id).FirstOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 var requester = _userIdentity.GetRequester(this);
@@ -59,7 +59,7 @@ namespace SecurityEssentials.Controllers
         {
             if (id == 0) return Json(new {success = false, message = "unable to locate user id"});
             var requester = _userIdentity.GetRequester(this);
-            var user = _context.User.Where(u => u.Id == id).FirstOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 Logger.Information("Failed User Disable Post for id {id}, user did not exist by requester {@requester}",

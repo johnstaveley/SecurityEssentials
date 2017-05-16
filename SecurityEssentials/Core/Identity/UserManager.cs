@@ -28,9 +28,8 @@ namespace SecurityEssentials.Core.Identity
             var user = await _userStore.FindByNameAsync(userName);
 
             // Validate security question
-            var securityQuestion = _context.LookupItem
-                .Where(a => a.Id == securityQuestionLookupItemId &&
-                            a.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion).FirstOrDefault();
+            var securityQuestion = _context.LookupItem.FirstOrDefault(a => a.Id == securityQuestionLookupItemId &&
+                            a.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion);
             if (securityQuestion == null)
                 return new SEIdentityResult("Illegal security question");
             var result = ValidatePassword(password, new List<string> {firstName, lastName, securityAnswer});
@@ -93,7 +92,7 @@ namespace SecurityEssentials.Core.Identity
             try
             {
                 var userName = AuthenticationManager.User.Identity.Name;
-                var user = _context.User.Where(u => u.UserName == userName).FirstOrDefault();
+                var user = _context.User.FirstOrDefault(u => u.UserName == userName);
                 user.UserLogs.Add(new UserLog {Description = "User Logged Off"});
                 _context.SaveChanges();
             }
@@ -139,9 +138,8 @@ namespace SecurityEssentials.Core.Identity
                 return new SEIdentityResult(
                     "Your password cannot repeat the same character or digit more than 3 times consecutively, please choose another");
 
-            var badPassword = _context.LookupItem
-                .Where(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword &&
-                            l.Description.ToLower() == password.ToLower()).FirstOrDefault();
+            var badPassword = _context.LookupItem.FirstOrDefault(l => l.LookupTypeId == CONSTS.LookupTypeId.BadPassword &&
+                            string.Equals(l.Description, password, StringComparison.CurrentCultureIgnoreCase));
             if (badPassword != null)
                 return new SEIdentityResult(
                     "Your password is on a list of easy to guess passwords, please choose another");

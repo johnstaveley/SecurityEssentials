@@ -7,7 +7,7 @@ namespace SecurityEssentials.Model
     {
         public SEIdentityResult(IEnumerable<string> errors)
         {
-            if (errors != null && errors.Count() > 0)
+            if (errors != null && errors.Any())
             {
                 Errors = errors;
                 Succeeded = false;

@@ -140,8 +140,8 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangeEmailAddress(ChangeEmailAddressViewModel model)
         {
             var userId = _userIdentity.GetUserId(this);
-            var user = _context.User.Where(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved)
-                .FirstOrDefault();
+            var user = _context.User
+                .FirstOrDefault(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved);
             _appSensor.ValidateFormData(this, new List<string> {"NewEmailAddress", "Password"});
             if (ModelState.IsValid)
             {
@@ -190,8 +190,8 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangeEmailAddressConfirm()
         {
             var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
-            var user = _context.User.Where(u => u.NewEmailAddressToken == newEmaiLAddressToken &&
-                                                u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.NewEmailAddressToken == newEmaiLAddressToken &&
+                                                u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow);
             var requester = _userIdentity.GetRequester(this);
             if (user == null)
             {
@@ -276,7 +276,7 @@ namespace SecurityEssentials.Controllers
             _appSensor.ValidateFormData(this, new List<string> {"ConfirmPassword", "OldPassword", "NewPassword"});
             if (recaptchaSuccess)
             {
-                var user = _context.User.Where(u => u.Id == requester.LoggedOnUserId.Value).FirstOrDefault();
+                var user = _context.User.FirstOrDefault(u => u.Id == requester.LoggedOnUserId.Value);
                 if (user != null)
                 {
                     var result = await _userManager.ChangePasswordAsync(requester.LoggedOnUserId.Value,
@@ -315,7 +315,7 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> EmailVerify()
         {
             var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
-            var user = _context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.EmailConfirmationToken == emailVerificationToken);
             var requester = _userIdentity.GetRequester(this);
             if (user == null)
             {
@@ -357,12 +357,10 @@ namespace SecurityEssentials.Controllers
             if (ModelState.IsValid)
             {
                 var user = _context.User
-                    .Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved)
-                    .SingleOrDefault();
-                var recaptchaSuccess = true;
+                    .SingleOrDefault(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved);
                 if (_configuration.HasRecaptcha)
                 {
-                    recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
+                    var recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                     if (!recaptchaSuccess)
                     {
                         Logger.Information("Failed Account Recover Post Recaptcha failed by requester {@requester}",
@@ -406,9 +404,9 @@ namespace SecurityEssentials.Controllers
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
             var requester = _userIdentity.GetRequester(this);
 
-            var user = _context.User.Include("SecurityQuestionLookupItem")
-                .Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow)
-                .FirstOrDefault();
+            var user = _context.User
+                .Include("SecurityQuestionLookupItem")
+                .FirstOrDefault(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow);
             if (user == null)
             {
                 var error = new HandleErrorInfo(
@@ -449,7 +447,7 @@ namespace SecurityEssentials.Controllers
             Seconds = 60)]
         public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
         {
-            var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.Id == recoverPasswordModel.Id);
             var id = recoverPasswordModel.Id;
             var requester = _userIdentity.GetRequester(this);
             _appSensor.ValidateFormData(this,
@@ -573,7 +571,7 @@ namespace SecurityEssentials.Controllers
                     {
                         if (model.SecurityAnswer == model.SecurityAnswerConfirm)
                         {
-                            var user = _context.User.Where(u => u.UserName == logonResult.UserName).FirstOrDefault();
+                            var user = _context.User.FirstOrDefault(u => u.UserName == logonResult.UserName);
                             var encryptedSecurityAnswer = "";
                             _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
                                 _configuration.EncryptionIterationCount, model.SecurityAnswer,
@@ -665,7 +663,7 @@ namespace SecurityEssentials.Controllers
                             user.SecurityQuestionLookupItemId, user.SecurityAnswer);
                         if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
                         {
-                            user = _context.User.Where(u => u.UserName == user.UserName).First();
+                            user = _context.User.First(u => u.UserName == user.UserName);
                             // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
                             var emailBody = "";
                             var emailSubject = "";
