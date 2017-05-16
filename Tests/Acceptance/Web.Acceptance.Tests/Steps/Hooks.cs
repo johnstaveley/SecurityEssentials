@@ -34,8 +34,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 			{
 				webDriver = new FirefoxDriver();
 			}
-			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
-			FeatureContext.Current.SetWebDriver(webDriver);
+			webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            FeatureContext.Current.SetWebDriver(webDriver);
 
 			var baseUri = new Uri(ConfigurationManager.AppSettings["WebServerUrl"]);
 			FeatureContext.Current.SetBaseUri(baseUri);
