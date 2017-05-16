@@ -12,7 +12,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_PasswordHashAndSalt_Then_NewPasswordIsHashedAsExpected()
         {
-            string password = "password1*SASDes";
+            var password = "password1*SASDes";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);
@@ -25,7 +25,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         [TestMethod]
         public void Given_PasswordHashWithIterationsChanged_Then_PasswordHashesDoNotMatch()
         {
-            string password = "password1*SASDes";
+            var password = "password1*SASDes";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var securedPassword2 = new SecuredPassword(password, HashStrategyKind.PBKDF2_8000Iterations);
             Assert.IsFalse(securedPassword2.Equals(securedPassword));
@@ -107,7 +107,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void CreatePasswordHashAndSaltForSeeding()
         {
 
-            string password = "x12a;pP02icdjshER";
+            var password = "x12a;pP02icdjshER";
             var securedPassword = new SecuredPassword(password, HashStrategyKind.PBKDF2_5009Iterations);
             var storedSalt = Convert.ToBase64String(securedPassword.Salt);
             var storedHash = Convert.ToBase64String(securedPassword.Hash);

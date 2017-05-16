@@ -30,7 +30,7 @@ namespace SecurityEssentials.Acceptance.Tests
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner(null, 0);
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Security", "\tIn order to avoid information disclosure\r\n\tAs a pen tester\r\n\tI want to be sure t" +
+            var featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Security", "\tIn order to avoid information disclosure\r\n\tAs a pen tester\r\n\tI want to be sure t" +
                     "he application has the correct security settings and behaviour", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -73,13 +73,13 @@ namespace SecurityEssentials.Acceptance.Tests
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Security")]
         public virtual void TheWebApplicationWillReturnTheCorrectSecurityHeaders()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The web application will return the correct security headers", ((string[])(null)));
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The web application will return the correct security headers", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.When("I call http get on the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            var table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Key",
                         "Value"});
             table1.AddRow(new string[] {
@@ -94,7 +94,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
  testRunner.Then("the response headers will contain:", ((string)(null)), table1, "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+            var table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "Key"});
             table2.AddRow(new string[] {
                         "X-AspNet-Version"});
@@ -113,7 +113,7 @@ this.ScenarioSetup(scenarioInfo);
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Security")]
         public virtual void TheApplicationWillPreventABruteForceLoginAttempt()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The application will prevent a brute force login attempt", ((string[])(null)));
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The application will prevent a brute force login attempt", ((string[])(null)));
 #line 19
 this.ScenarioSetup(scenarioInfo);
 #line 20
@@ -125,7 +125,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 23
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+            var table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table3.AddRow(new string[] {
@@ -147,7 +147,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 32
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            var table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table4.AddRow(new string[] {
@@ -169,7 +169,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 41
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+            var table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table5.AddRow(new string[] {
@@ -191,7 +191,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 50
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+            var table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table6.AddRow(new string[] {

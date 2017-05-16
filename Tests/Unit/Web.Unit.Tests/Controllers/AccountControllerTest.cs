@@ -372,7 +372,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_ValidSubmissionData_When_Recover_Then_SavesEmailsAndSuccessViewReturned()
         {
             // Arrange
-            RecoverViewModel model = new RecoverViewModel()
+            var model = new RecoverViewModel()
             {
                 UserName = _testUserName
             };

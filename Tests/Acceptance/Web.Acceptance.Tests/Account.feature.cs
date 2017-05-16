@@ -30,7 +30,7 @@ namespace SecurityEssentials.Acceptance.Tests
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner(null, 0);
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Account", "\tIn order to securely access the application\r\n\tAs a user\r\n\tI want to be manage my" +
+            var featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Account", "\tIn order to securely access the application\r\n\tAs a user\r\n\tI want to be manage my" +
                     " account", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -81,7 +81,7 @@ namespace SecurityEssentials.Acceptance.Tests
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
         public virtual void HomePageLoads()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Home Page Loads", ((string[])(null)));
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Home Page Loads", ((string[])(null)));
 #line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -99,7 +99,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Account")]
         public virtual void WhenIEnterCorrectLoginDetailsIAmTakenToTheLandingPage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter correct login details I am taken to the landing page", ((string[])(null)));
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter correct login details I am taken to the landing page", ((string[])(null)));
 #line 20
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -113,7 +113,7 @@ this.FeatureBackground();
 #line 24
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            var table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table1.AddRow(new string[] {
@@ -141,7 +141,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIEnterIncorrectLoginDetailsThenAWarningIsDisplayed()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter incorrect login details then a warning is displayed", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter incorrect login details then a warning is displayed", new string[] {
                         "PAT"});
 #line 34
 this.ScenarioSetup(scenarioInfo);
@@ -156,7 +156,7 @@ this.FeatureBackground();
 #line 38
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+            var table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table2.AddRow(new string[] {
@@ -170,7 +170,7 @@ this.FeatureBackground();
 #line 43
  testRunner.When("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+            var table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field"});
             table3.AddRow(new string[] {
                         "Invalid credentials or the account is locked"});
@@ -186,7 +186,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIEnterValidRegistrationDetailsICanRegisterANewUser()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter valid registration details I can register a new user", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter valid registration details I can register a new user", new string[] {
                         "PAT"});
 #line 49
 this.ScenarioSetup(scenarioInfo);
@@ -199,7 +199,7 @@ this.FeatureBackground();
 #line 52
  testRunner.And("I am navigated to the \'Register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            var table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table4.AddRow(new string[] {
@@ -240,7 +240,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIEnterRegistrationDetailsWhichAreCurrentlyBeingUsedIAmAdvisedOfRegistrationSuccess()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter registration details which are currently being used I am advised of " +
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I enter registration details which are currently being used I am advised of " +
                     "registration success", new string[] {
                         "PAT"});
 #line 67
@@ -254,7 +254,7 @@ this.FeatureBackground();
 #line 70
  testRunner.And("I am navigated to the \'Register\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+            var table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table5.AddRow(new string[] {
@@ -294,7 +294,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIAttemptPasswordRecoveryUsingAValidAccountIAmNotifiedOfSuccess()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using a valid account I am notified of success", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using a valid account I am notified of success", new string[] {
                         "PAT"});
 #line 85
 this.ScenarioSetup(scenarioInfo);
@@ -311,7 +311,7 @@ this.FeatureBackground();
 #line 90
  testRunner.And("I am navigated to the \'Recover\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+            var table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table6.AddRow(new string[] {
@@ -334,7 +334,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIAttemptPasswordRecoveryUsingAnInvalidAccountIAmNotifiedOfSuccess()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using an invalid account I am notified of succes" +
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I attempt password recovery using an invalid account I am notified of succes" +
                     "s", new string[] {
                         "PAT"});
 #line 99
@@ -352,7 +352,7 @@ this.FeatureBackground();
 #line 104
  testRunner.And("I am navigated to the \'Recover\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+            var table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table7.AddRow(new string[] {
@@ -375,7 +375,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIClickOnAValidPasswordResetLinkICanEnterMySecurityInformationAndChangeMyPassword()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid password reset link, I can enter my security information " +
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid password reset link, I can enter my security information " +
                     "and change my password", new string[] {
                         "PAT"});
 #line 112
@@ -388,7 +388,7 @@ this.FeatureBackground();
 #line 114
  testRunner.And("I am navigated to the \'Recover Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+            var table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table8.AddRow(new string[] {
@@ -416,7 +416,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void ICanChangeMyAccountInformation()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my account information", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my account information", new string[] {
                         "PAT"});
 #line 126
 this.ScenarioSetup(scenarioInfo);
@@ -429,7 +429,7 @@ this.FeatureBackground();
 #line 129
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+            var table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table9.AddRow(new string[] {
@@ -449,7 +449,7 @@ this.FeatureBackground();
 #line 137
  testRunner.And("I am navigated to the \'User Edit\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+            var table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table10.AddRow(new string[] {
@@ -495,7 +495,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void ICanChangeMyPassword()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my password", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my password", new string[] {
                         "PAT"});
 #line 154
 this.ScenarioSetup(scenarioInfo);
@@ -508,7 +508,7 @@ this.FeatureBackground();
 #line 157
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+            var table11 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table11.AddRow(new string[] {
@@ -528,7 +528,7 @@ this.FeatureBackground();
 #line 165
  testRunner.And("I am navigated to the \'Change Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+            var table12 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table12.AddRow(new string[] {
@@ -556,7 +556,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void ICanChangeMyEmailAddress()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my email address", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my email address", new string[] {
                         "PAT"});
 #line 178
 this.ScenarioSetup(scenarioInfo);
@@ -569,7 +569,7 @@ this.FeatureBackground();
 #line 181
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+            var table13 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table13.AddRow(new string[] {
@@ -589,7 +589,7 @@ this.FeatureBackground();
 #line 189
  testRunner.And("I am navigated to the \'Change email address\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+            var table14 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table14.AddRow(new string[] {
@@ -615,7 +615,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void WhenIClickOnAValidChangeEmailAddressLinkIChangeMyEmailAddressToANewOne()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid change email address link, I change my email address to a" +
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I click on a valid change email address link, I change my email address to a" +
                     " new one", new string[] {
                         "PAT"});
 #line 200
@@ -637,7 +637,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void ICanChangeMySecurityInformation()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my security information", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my security information", new string[] {
                         "PAT"});
 #line 209
 this.ScenarioSetup(scenarioInfo);
@@ -650,7 +650,7 @@ this.FeatureBackground();
 #line 212
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+            var table15 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table15.AddRow(new string[] {
@@ -670,7 +670,7 @@ this.FeatureBackground();
 #line 220
  testRunner.And("I am navigated to the \'Change security Information\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
+            var table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table16.AddRow(new string[] {
@@ -701,7 +701,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void ICanViewMyUserActivityLogInformation()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can view my user activity log information", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can view my user activity log information", new string[] {
                         "PAT"});
 #line 233
 this.ScenarioSetup(scenarioInfo);
@@ -714,7 +714,7 @@ this.FeatureBackground();
 #line 236
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
+            var table17 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table17.AddRow(new string[] {
@@ -745,7 +745,7 @@ this.FeatureBackground();
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("PAT")]
         public virtual void AsAnAdminICanManageMyUsers()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("As an admin I can manage my users", new string[] {
+            var scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("As an admin I can manage my users", new string[] {
                         "PAT"});
 #line 248
 this.ScenarioSetup(scenarioInfo);
@@ -758,7 +758,7 @@ this.FeatureBackground();
 #line 251
  testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
+            var table18 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table18.AddRow(new string[] {
@@ -782,7 +782,7 @@ this.FeatureBackground();
 #line 261
  testRunner.Then("I am navigated to the \'User Edit\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
+            var table19 = new TechTalk.SpecFlow.Table(new string[] {
                         "Field",
                         "Value"});
             table19.AddRow(new string[] {

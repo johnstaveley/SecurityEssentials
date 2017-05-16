@@ -47,7 +47,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 			var elements = _driver.FindElements(By.Id(_menuId));
 			if (!elements.Any()) throw new InvalidOperationException("Element with menuId " + _menuId + " not found");
 
-			IWebElement element = elements.Single();
+			var element = elements.Single();
 			var classValue = element.GetAttribute("class");
 			return !classValue.Contains("greyed-out");
 		}

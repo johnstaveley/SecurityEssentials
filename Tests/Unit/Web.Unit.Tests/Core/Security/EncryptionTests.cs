@@ -35,7 +35,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_BasicMessage_Succeeds()
         {
 
-            string input = "John Was here John was here again";
+            var input = "John Was here John was here again";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted), "Encryption was not successful");
@@ -49,7 +49,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_ComplexMessage_Succeeds()
         {
 
-            string input = "john was here 1234567890!£$%^&**()-_=+[]{}';,./#:@~?><  \\|`¬";
+            var input = "john was here 1234567890!£$%^&**()-_=+[]{}';,./#:@~?><  \\|`¬";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted), "Encryption was not successful");
@@ -63,7 +63,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_BlankString_Succeeds()
         {
 
-            string input = "";
+            var input = "";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
@@ -91,7 +91,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_Message_ChangeIterations_Fails()
         {
 
-            string input = "The quick brown fox jumped over the lazy dog";
+            var input = "The quick brown fox jumped over the lazy dog";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
@@ -106,7 +106,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_Message_ChangeSalt_Fails()
         {
 
-            string input = "The quick brown fox jumped over the lazy dog";
+            var input = "The quick brown fox jumped over the lazy dog";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
@@ -120,7 +120,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
         public void EnDecrypt_Message_ChangePassword_Fails()
         {
 
-            string input = "The quick brown fox jumped over the lazy dog";
+            var input = "The quick brown fox jumped over the lazy dog";
             string output;
             string encrypted;
             Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _salt, _iterationCount, input, out encrypted));
