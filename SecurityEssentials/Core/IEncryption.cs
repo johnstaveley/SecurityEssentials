@@ -1,5 +1,4 @@
-﻿using System;
-namespace SecurityEssentials.Core
+﻿namespace SecurityEssentials.Core
 {
     public interface IEncryption
     {

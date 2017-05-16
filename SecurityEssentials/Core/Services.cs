@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Mail;
+using System.Threading;
 
 namespace SecurityEssentials.Core
 {
     public class Services : IServices
     {
+        private readonly IAppConfiguration _configuration;
 
-		private readonly IAppConfiguration _configuration;
+        public Services() : this(new AppConfiguration())
+        {
+        }
 
-		public Services() : this(new AppConfiguration())
-		{
-
-		}
-
-		public Services(IAppConfiguration configuration)
-		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
-			_configuration = configuration;
-		}
+        public Services(IAppConfiguration configuration)
+        {
+            if (configuration == null) throw new ArgumentNullException("configuration");
+            _configuration = configuration;
+        }
 
         /// <summary>
         ///     Send Email - Requires smtp settings inside the web.config file
@@ -31,36 +30,27 @@ namespace SecurityEssentials.Core
         /// <param name="body">The body of the email.</param>
         /// <param name="htmlEmail">Is the email html</param>
         /// <returns>boolean value</returns>
-        public bool SendEmail(string from, ICollection<string> toAddresses, ICollection<string> cc, ICollection<string> bcc, string subject,
-                                    string body, bool htmlEmail)
+        public bool SendEmail(string from, ICollection<string> toAddresses, ICollection<string> cc,
+            ICollection<string> bcc, string subject,
+            string body, bool htmlEmail)
         {
-			if (!_configuration.HasEmailConfigured) return true;
+            if (!_configuration.HasEmailConfigured) return true;
 
             if (toAddresses == null) throw new ArgumentException("toAddresses has not been specified");
             using (var message = new MailMessage())
             {
                 message.From = new MailAddress(from);
 
-                foreach (string item in toAddresses)
-                {
+                foreach (var item in toAddresses)
                     message.To.Add(new MailAddress(item));
-                }
 
                 if (cc != null)
-                {
-                    foreach (string item in cc)
-                    {
+                    foreach (var item in cc)
                         message.CC.Add(new MailAddress(item));
-                    }
-                }
 
                 if (bcc != null)
-                {
-                    foreach (string item in bcc)
-                    {
+                    foreach (var item in bcc)
                         message.Bcc.Add(new MailAddress(item));
-                    }
-                }
 
                 message.Subject = subject;
                 message.IsBodyHtml = htmlEmail;
@@ -73,19 +63,15 @@ namespace SecurityEssentials.Core
 
                 return true;
             }
-
         }
 
         /// <summary>
-        /// Pauses program execution
+        ///     Pauses program execution
         /// </summary>
         /// <param name="milliseconds"></param>
         public void Wait(int milliseconds)
         {
-            System.Threading.Thread.Sleep(milliseconds);
+            Thread.Sleep(milliseconds);
         }
-
-
     }
 }
-

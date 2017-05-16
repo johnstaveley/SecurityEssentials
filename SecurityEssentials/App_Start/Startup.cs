@@ -1,7 +1,9 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using SecurityEssentials.App_Start;
 
-[assembly: OwinStartupAttribute(typeof(SecurityEssentials.App_Start.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
+
 namespace SecurityEssentials.App_Start
 {
     public partial class Startup

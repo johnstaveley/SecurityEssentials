@@ -1,4 +1,4 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@model HandleErrorInfo
 @{
     Layout = "_Layout.cshtml";
     ViewBag.Title = "Error";
@@ -15,14 +15,16 @@
     {
         <div>
             <p>
-                <b>Exception:</b> @Model.Exception.Message<br />
-                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Exception:</b> @Model.Exception.Message<br/>
+                <b>Controller:</b> @Model.ControllerName<br/>
                 <b>Action:</b> @Model.ActionName
-@if (@Model.Exception.InnerException != null) {
-        <b>Action:</b> @Model.Exception.InnerException.Message
-}
+                @if (Model.Exception.InnerException != null)
+                {
+                    <b>Action:</b>
+                    @Model.Exception.InnerException.Message
+                }
             </p>
-            <div style="overflow:scroll">
+            <div style="overflow: scroll">
                 <pre>
 @Model.Exception.StackTrace
                 </pre>

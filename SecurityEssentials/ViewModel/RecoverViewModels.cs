@@ -2,7 +2,6 @@
 
 namespace SecurityEssentials.ViewModel
 {
-
     public class RecoverViewModel
     {
         [Required]
@@ -10,6 +9,5 @@ namespace SecurityEssentials.ViewModel
         public string UserName { get; set; }
 
         public bool HasRecaptcha { get; set; }
-
     }
 }

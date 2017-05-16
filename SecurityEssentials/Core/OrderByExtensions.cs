@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SecurityEssentials.Core
 {
-	public static class OrderByExtensions
+    public static class OrderByExtensions
     {
         public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> enumerable, string orderBy)
         {
@@ -15,7 +14,7 @@ namespace SecurityEssentials.Core
 
         public static IQueryable<T> OrderBy<T>(this IQueryable<T> collection, string orderBy)
         {
-            foreach (OrderByInfo orderByInfo in ParseOrderBy(orderBy))
+            foreach (var orderByInfo in ParseOrderBy(orderBy))
                 collection = ApplyOrderBy(collection, orderByInfo);
 
             return collection;
@@ -23,21 +22,21 @@ namespace SecurityEssentials.Core
 
         private static IQueryable<T> ApplyOrderBy<T>(IQueryable<T> collection, OrderByInfo orderByInfo)
         {
-            string[] props = orderByInfo.PropertyName.Split('.');
-            Type type = typeof(T);
+            var props = orderByInfo.PropertyName.Split('.');
+            var type = typeof(T);
 
-            ParameterExpression arg = Expression.Parameter(type, "x");
+            var arg = Expression.Parameter(type, "x");
             Expression expr = arg;
-            foreach (string prop in props)
+            foreach (var prop in props)
             {
                 // use reflection (not ComponentModel) to mirror LINQ
-                PropertyInfo pi = type.GetProperty(prop);
+                var pi = type.GetProperty(prop);
                 expr = Expression.Property(expr, pi);
                 type = pi.PropertyType;
             }
-            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
-            LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
-            string methodName = String.Empty;
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
+            var lambda = Expression.Lambda(delegateType, expr, arg);
+            var methodName = string.Empty;
 
             if (!orderByInfo.Initial && collection is IOrderedQueryable<T>)
             {
@@ -55,46 +54,46 @@ namespace SecurityEssentials.Core
             }
 
             //TODO: apply caching to the generic methodsinfos?
-            return (IOrderedQueryable<T>)typeof(Queryable).GetMethods().Single(
-                method => method.Name == methodName
-                          && method.IsGenericMethodDefinition
-                          && method.GetGenericArguments().Length == 2
-                          && method.GetParameters().Length == 2)
-                                                            .MakeGenericMethod(typeof(T), type)
-                                                            .Invoke(null, new object[] { collection, lambda });
+            return (IOrderedQueryable<T>) typeof(Queryable).GetMethods().Single(
+                    method => method.Name == methodName
+                              && method.IsGenericMethodDefinition
+                              && method.GetGenericArguments().Length == 2
+                              && method.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(T), type)
+                .Invoke(null, new object[] {collection, lambda});
         }
 
         private static IEnumerable<OrderByInfo> ParseOrderBy(string orderBy)
         {
-            if (String.IsNullOrEmpty(orderBy))
+            if (string.IsNullOrEmpty(orderBy))
                 yield break;
 
-            string[] items = orderBy.Split(',');
-            bool initial = true;
-            foreach (string item in items)
+            var items = orderBy.Split(',');
+            var initial = true;
+            foreach (var item in items)
             {
-                string[] pair = item.Trim().Split(' ');
+                var pair = item.Trim().Split(' ');
 
                 if (pair.Length > 2)
                     throw new ArgumentException(
-                        String.Format(
+                        string.Format(
                             "Invalid OrderBy string '{0}'. Order By Format: Property, Property2 ASC, Property2 DESC",
                             item));
 
-                string prop = pair[0].Trim();
+                var prop = pair[0].Trim();
 
-                if (String.IsNullOrEmpty(prop))
+                if (string.IsNullOrEmpty(prop))
                     throw new ArgumentException(
                         "Invalid Property. Order By Format: Property, Property2 ASC, Property2 DESC");
 
                 var dir = SortDirection.Ascending;
 
                 if (pair.Length == 2)
-                    dir = ("desc".Equals(pair[1].Trim(), StringComparison.OrdinalIgnoreCase)
-                               ? SortDirection.Descending
-                               : SortDirection.Ascending);
+                    dir = "desc".Equals(pair[1].Trim(), StringComparison.OrdinalIgnoreCase)
+                        ? SortDirection.Descending
+                        : SortDirection.Ascending;
 
-                yield return new OrderByInfo { PropertyName = prop, Direction = dir, Initial = initial };
+                yield return new OrderByInfo {PropertyName = prop, Direction = dir, Initial = initial};
 
                 initial = false;
             }

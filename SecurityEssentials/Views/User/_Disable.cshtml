@@ -1,15 +1,14 @@
 ﻿@model SecurityEssentials.Model.User
 
-    @using( Html.BeginForm()) {
+@using (Html.BeginForm())
+{
+    <div>
 
-<div>
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
 
-    @Html.ValidationSummary(true)
-    @Html.HiddenFor(model => model.Id)
+        <p id="contactNarrative">@string.Format("Are you sure you want to disable the user {0}?", Model.FullName)</p>
 
-   <p id="contactNarrative">@string.Format("Are you sure you want to disable the user {0}?", Model.FullName)</p>
-
-</div>
-       
-    }
-<form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form> 
+    </div>
+}
+<form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form>

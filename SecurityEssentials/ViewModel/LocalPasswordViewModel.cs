@@ -7,12 +7,14 @@ namespace SecurityEssentials.ViewModel
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 6)]
-		public string OldPassword { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.",
+            MinimumLength = 6)]
+        public string OldPassword { get; set; }
 
         [Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 6)]
-		[DataType(DataType.Password)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.",
+            MinimumLength = 6)]
+        [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
 

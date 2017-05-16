@@ -1,27 +1,24 @@
-﻿using Recaptcha.Web;
-using System;
+﻿using System.Web.Mvc;
+using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
-using System.Web.Mvc;
 
 namespace SecurityEssentials.Core
 {
     public class SecurityCheckRecaptcha : IRecaptcha
     {
-
         public bool ValidateRecaptcha(Controller controller)
         {
+            var recaptchaSuccess = true;
 
-            bool recaptchaSuccess = true;
+            var recaptchaHelper = controller.GetRecaptchaVerificationHelper();
 
-            RecaptchaVerificationHelper recaptchaHelper = controller.GetRecaptchaVerificationHelper();
-
-            if (String.IsNullOrEmpty(recaptchaHelper.Response))
+            if (string.IsNullOrEmpty(recaptchaHelper.Response))
             {
                 controller.ModelState.AddModelError("", "Captcha answer cannot be empty.");
                 recaptchaSuccess = false;
             }
 
-            RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            var recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
 
             if (recaptchaResult != RecaptchaVerificationResult.Success)
             {
@@ -30,7 +27,5 @@ namespace SecurityEssentials.Core
             }
             return recaptchaSuccess;
         }
-
-
     }
 }

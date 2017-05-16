@@ -1,7 +1,7 @@
 ﻿/*global $,alert,console,document,AddAntiForgeryToken,kendo,window,refreshGrid */
 
 function refreshData(gotoFirstPage) {
-    'use strict';
+    "use strict";
 
     if (gotoFirstPage === true) {
         $("#kendoUserGrid").data("kendoGrid").dataSource.page(1);
@@ -16,7 +16,7 @@ function editUserCommand(e) {
 
     e.preventDefault();
     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-    window.location.href = 'User/Edit/' + dataItem.Id;
+    window.location.href = "User/Edit/" + dataItem.Id;
 
 }
 
@@ -33,22 +33,22 @@ function disableUserCommand(e) {
         .appendTo("body")
         .dialog({
             title: "Disable User?",
-            close: function () { $(this).remove(); },
+            close: function() { $(this).remove(); },
             modal: true,
             width: 450,
             left: 0,
             resizable: false,
             buttons: {
-                "Disable": function () {
+                "Disable": function() {
                     var self = this;
                     $.ajax({
                         context: document.body,
                         data: $.addAntiForgeryToken({ id: userId }),
-                        dataType: 'json',
-                        error: function (xmlHttpRequest, status, error) {
+                        dataType: "json",
+                        error: function(xmlHttpRequest, status, error) {
                             alert("An error occurred whilst trying to contact the website");
                         },
-                        success: function (data) {
+                        success: function(data) {
                             if (data.success === true) {
                                 refreshData(false);
                                 $(self).dialog("close");
@@ -57,30 +57,30 @@ function disableUserCommand(e) {
                                 $(self).dialog("close");
                             }
                         },
-                        type: 'POST',
-                        url: 'User/Disable'
+                        type: "POST",
+                        url: "User/Disable"
                     });
                 },
-                Cancel: function () {
+                Cancel: function() {
                     $(this).dialog("close");
                 }
             }
         })
-            .load('User/Disable/' + userId);
+        .load("User/Disable/" + userId);
 }
 
-$(document).ready(function () {
-    'use strict';
+$(document).ready(function() {
+    "use strict";
 
     var usersData = new kendo.data.DataSource({
         transport: {
             read: {
-                url: 'User/Read/',
+                url: "User/Read/",
                 dataType: "json",
-                data: function () {
+                data: function() {
                     var filterDescription = "",
                         parameter = {
-                            searchText: $('#quickFindCriteria').val()
+                            searchText: $("#quickFindCriteria").val()
                         };
                     // Get text for filter bar
                     return parameter;
@@ -98,7 +98,7 @@ $(document).ready(function () {
     });
 
     $("#kendoUserGrid").kendoGrid({
-        dataBound: function () {
+        dataBound: function() {
             var userList = $(this)[0]._data,
                 user,
                 isEnabled;
@@ -106,13 +106,15 @@ $(document).ready(function () {
                 isEnabled = userList[user].Enabled == true;
                 if (!isEnabled) {
                     var uid = userList[user].uid;
-                    $.each($('#kendoUserGrid tr'), function () {
-                        if ($(this).data("uid") == uid) {
-                            $(this).find('a.disableUser').addClass('disabled').on('click', function () {
-                                return false;
-                            });
-                        }
-                    });
+                    $.each($("#kendoUserGrid tr"),
+                        function() {
+                            if ($(this).data("uid") == uid) {
+                                $(this).find("a.disableUser").addClass("disabled").on("click",
+                                    function() {
+                                        return false;
+                                    });
+                            }
+                        });
 
                 }
             }
@@ -129,7 +131,7 @@ $(document).ready(function () {
         columns: [
             { field: "FullName", sortable: false, title: "Name" },
             { field: "Id", hidden: true },
-            { field: "UserName", title: "User Name"},
+            { field: "UserName", title: "User Name" },
             { field: "TelNoMobile", title: "Mobile No" },
             {
                 field: "Enabled",
@@ -137,7 +139,8 @@ $(document).ready(function () {
                 editable: false,
                 sortable: false,
                 title: "Enabled",
-                template: "<input type='checkbox' #= Enabled ? checked='checked': '' # class='chkbx' disabled='disabled' />",
+                template:
+                    "<input type='checkbox' #= Enabled ? checked='checked': '' # class='chkbx' disabled='disabled' />",
                 attributes: { style: "text-align: center;" }
             },
             {
@@ -146,13 +149,14 @@ $(document).ready(function () {
                 editable: false,
                 sortable: false,
                 title: "Approved",
-                template: "<input type='checkbox' #= Approved ? checked='checked': '' # class='chkbx' disabled='disabled' />",
+                template:
+                    "<input type='checkbox' #= Approved ? checked='checked': '' # class='chkbx' disabled='disabled' />",
                 attributes: { style: "text-align: center;" }
             },
             {
                 command: [
-                    { text: "Edit", className: 'editUser', click: editUserCommand },
-                    { text: "Disable", className: 'disableUser', click: disableUserCommand }
+                    { text: "Edit", className: "editUser", click: editUserCommand },
+                    { text: "Disable", className: "disableUser", click: disableUserCommand }
                 ],
                 title: " ",
                 attributes: { style: "text-align: center;" }
@@ -160,9 +164,10 @@ $(document).ready(function () {
         ]
     });
 
-    $('#kendoUserGrid tbody').on('click', ':checkbox', function (e) {
-        e.stopPropagation();
-    });
+    $("#kendoUserGrid tbody").on("click",
+        ":checkbox",
+        function(e) {
+            e.stopPropagation();
+        });
 
 });
-

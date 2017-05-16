@@ -2,7 +2,7 @@
 
 namespace SecurityEssentials.ViewModel
 {
-	    public class RecoverPasswordViewModel
+    public class RecoverPasswordViewModel
     {
         [Required]
         [Display(Name = "User name")]
@@ -13,19 +13,20 @@ namespace SecurityEssentials.ViewModel
 
         [Required]
         [Display(Name = "Answer to security question")]
-        [MaxLength(20, ErrorMessage="The length of the security answer is too long")]
-		public string SecurityAnswer { get; set; }
+        [MaxLength(20, ErrorMessage = "The length of the security answer is too long")]
+        public string SecurityAnswer { get; set; }
 
         [Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 6)]
-		[DataType(DataType.Password)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.",
+            MinimumLength = 6)]
+        [DataType(DataType.Password)]
         [Display(Name = "Enter new Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
         [Required]
-        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         public int Id { get; set; }
@@ -34,5 +35,4 @@ namespace SecurityEssentials.ViewModel
 
         public bool HasRecaptcha { get; set; }
     }
-
 }

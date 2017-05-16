@@ -16,11 +16,12 @@
         <th>@Html.DisplayNameFor(model => model.Description)</th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-        <td>@Html.DisplayFor(modelItem => item.Description)</td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+        </tr>
+    }
 
 </table>

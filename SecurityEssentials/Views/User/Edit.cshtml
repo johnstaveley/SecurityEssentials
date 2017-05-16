@@ -11,18 +11,18 @@
             <div>
                 <div>
                     <div>
-                        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
                         {
                             @Html.ValidationSummary(true)
                             @Html.HiddenFor(model => model.User.Id)
                             @Html.HiddenFor(model => model.IsOwnProfile)
                             @Html.HiddenFor(model => model.IsAdministrator)
-if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+                            if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                             {
                                 <div class="form-group">
                                     <div class="alert alert-info" id="statusMessage">@ViewBag.StatusMessage</div>
                                 </div>
-}
+                            }
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.UserName)
@@ -30,49 +30,50 @@ if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.Title)
-                                @Html.TextBoxFor(model => model.User.Title, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.Title, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.Title)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.FirstName)
-                                @Html.TextBoxFor(model => model.User.FirstName, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.FirstName, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.FirstName)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.LastName)
-                                @Html.TextBoxFor(model => model.User.LastName, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.LastName, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.LastName)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.TelNoWork)
-                                @Html.TextBoxFor(model => model.User.TelNoWork, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.TelNoWork, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.TelNoWork)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.TelNoHome)
-                                @Html.TextBoxFor(model => model.User.TelNoHome, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.TelNoHome, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.TelNoHome)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.TelNoMobile)
-                                @Html.TextBoxFor(model => model.User.TelNoMobile, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.TelNoMobile, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.TelNoMobile)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.Town)
-                                @Html.TextBoxFor(model => model.User.Town, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.Town, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.Town)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.Postcode)
-                                @Html.TextBoxFor(model => model.User.Postcode, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.Postcode, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.Postcode)
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.SkypeName)
-                                @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.User.SkypeName, new {@class = "form-control"})
                                 @Html.ValidationMessageFor(model => model.User.SkypeName)
-                            </div>if (User.IsInRole("Admin"))
+                            </div>
+                            if (User.IsInRole("Admin"))
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.EmailVerified)
@@ -86,14 +87,14 @@ if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                                     @Html.LabelFor(model => model.User.Enabled)
                                     @Html.CheckBoxFor(model => model.User.Enabled)
                                 </div>
-}
+                            }
                             else
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.User.EmailVerified)
-                                    @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
+                                    @Html.DisplayFor(model => model.User.EmailVerified, new {@class = "form-control"})
                                 </div>
-}
+                            }
                             <div class="form-group">
                                 @Html.LabelFor(model => model.User.PasswordLastChangedDate)
                                 @Model.User.PasswordLastChangedDate.ToLocalTime()
@@ -105,10 +106,12 @@ if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
                             <div class="row">
                                 <div class="col-md-8">&nbsp;</div>
                                 <div class="col-md-2">@Html.ActionLink("Cancel", "Index", "User")</div>
-                                <div class="col-md-2"><input id="submit" type="submit" value="Save" class="btn btn-primary btn-block" /></div>
+                                <div class="col-md-2">
+                                    <input id="submit" type="submit" value="Save" class="btn btn-primary btn-block"/>
+                                </div>
                             </div>
-                                @Html.AntiForgeryToken()
-}
+                            @Html.AntiForgeryToken()
+                        }
                     </div>
 
                 </div>

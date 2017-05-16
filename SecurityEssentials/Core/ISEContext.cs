@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
-using SecurityEssentials.Model;
 using System.Threading.Tasks;
+using SecurityEssentials.Model;
 
 namespace SecurityEssentials.Core
 {
@@ -14,8 +14,8 @@ namespace SecurityEssentials.Core
 
         int SaveChanges();
         Task<int> SaveChangesAsync();
-		void SetModified(object entity);
-		void SetConfigurationValidateOnSaveEnabled(bool isValidated);
+        void SetModified(object entity);
+        void SetConfigurationValidateOnSaveEnabled(bool isValidated);
         void Dispose();
     }
 }

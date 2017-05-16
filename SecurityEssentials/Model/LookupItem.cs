@@ -3,12 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecurityEssentials.Model
 {
-
     public class LookupItem
     {
+        public LookupItem()
+        {
+            IsOther = false;
+            IsHidden = false;
+            SecurityQuestionLookupItems = new List<User>();
+        }
 
-		[DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
-		public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
 
         public int LookupTypeId { get; set; }
 
@@ -20,15 +25,7 @@ namespace SecurityEssentials.Model
 
         // Foreign keys
         public virtual ICollection<User> SecurityQuestionLookupItems { get; set; }
+
         public virtual LookupType LookupType { get; set; }
-                                           
-        public LookupItem()
-        {
-            IsOther = false;
-            IsHidden = false;
-			SecurityQuestionLookupItems = new List<User>();
-        }
-
     }
-
 }

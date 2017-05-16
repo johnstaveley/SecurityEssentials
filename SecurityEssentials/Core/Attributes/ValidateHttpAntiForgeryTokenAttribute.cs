@@ -13,24 +13,20 @@ using System.Web.Mvc;
 // taken from http://www.asp.net/single-page-application/overview/templates/breezeknockout-template
 namespace SecurityEssentials.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public sealed class ValidateHttpAntiForgeryTokenAttribute : AuthorizationFilterAttribute
     {
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             if (actionContext == null) throw new ArgumentNullException("actionContext");
-            HttpRequestMessage request = actionContext.ControllerContext.Request;
+            var request = actionContext.ControllerContext.Request;
             IEnumerable<string> tokenHeaders;
             try
             {
                 if (request.Headers.TryGetValues("RequestVerificationToken", out tokenHeaders))
-                {
                     ValidateRequestHeader(tokenHeaders);
-                }
                 else
-                {
                     AntiForgery.Validate();
-                }
             }
             catch (HttpAntiForgeryException e)
             {
@@ -40,12 +36,12 @@ namespace SecurityEssentials.Core.Attributes
 
         private static void ValidateRequestHeader(IEnumerable<string> tokenHeaders)
         {
-            string cookieToken = String.Empty;
-            string formToken = String.Empty;
-            string tokenValue = tokenHeaders.FirstOrDefault();
-            if (!String.IsNullOrEmpty(tokenValue))
+            var cookieToken = string.Empty;
+            var formToken = string.Empty;
+            var tokenValue = tokenHeaders.FirstOrDefault();
+            if (!string.IsNullOrEmpty(tokenValue))
             {
-                string[] tokens = tokenValue.Split(':');
+                var tokens = tokenValue.Split(':');
                 if (tokens.Length == 2)
                 {
                     cookieToken = tokens[0].Trim();
@@ -55,5 +51,4 @@ namespace SecurityEssentials.Core.Attributes
             AntiForgery.Validate(cookieToken, formToken);
         }
     }
-
 }

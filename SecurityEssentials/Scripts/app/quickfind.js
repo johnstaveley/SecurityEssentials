@@ -12,42 +12,43 @@ will cause the datagrid which is being searched to be refreshed. It also relies 
 </div>
 */
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     // Clear quick find between page loads so that quick find criteria are not persisted between loading of the form
-    $('#quickFindCriteria').val('');
+    $("#quickFindCriteria").val("");
 
     // load initial values of quickFind
-    var quickFindPreviousValue = $('#quickFindCriteria').val(),
+    var quickFindPreviousValue = $("#quickFindCriteria").val(),
         quickFindChanged = false;
 
-    $('#quickFindCriteria').bind('keyup change', function () {
-        // check value has changed
-        if (quickFindPreviousValue !== $(this).val()) {
-            quickFindChanged = true;
-            refreshData(true);
-        }
-        // if user clears out current text then reset search
-        if (quickFindChanged && $(this).val().length === 0) {
-            quickFindPreviousValue = "";
-            quickFindChanged = false;
-            refreshData();
-        }
-        if ($(this).val().length >= 1) {
-            $('#clearquickfind').show();
-            $('#disableclear').hide();
-        } else {
-            $('#clearquickfind').hide();
-            $('#disableclear').show();
-        }
-        quickFindPreviousValue = $(this).val();
-    });
+    $("#quickFindCriteria").bind("keyup change",
+        function() {
+            // check value has changed
+            if (quickFindPreviousValue !== $(this).val()) {
+                quickFindChanged = true;
+                refreshData(true);
+            }
+            // if user clears out current text then reset search
+            if (quickFindChanged && $(this).val().length === 0) {
+                quickFindPreviousValue = "";
+                quickFindChanged = false;
+                refreshData();
+            }
+            if ($(this).val().length >= 1) {
+                $("#clearquickfind").show();
+                $("#disableclear").hide();
+            } else {
+                $("#clearquickfind").hide();
+                $("#disableclear").show();
+            }
+            quickFindPreviousValue = $(this).val();
+        });
 
-    $("#clearquickfind").click(function () {
-        $('#quickFindCriteria').val('');
+    $("#clearquickfind").click(function() {
+        $("#quickFindCriteria").val("");
         refreshData();
-        $('#clearquickfind').hide();
-        $('#disableclear').show();
+        $("#clearquickfind").hide();
+        $("#disableclear").show();
         return false;
     });
 

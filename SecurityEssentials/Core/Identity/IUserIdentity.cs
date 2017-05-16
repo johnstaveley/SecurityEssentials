@@ -1,6 +1,6 @@
-﻿using SecurityEssentials.Core.Constants;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
+using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Core.Identity
 {
@@ -12,9 +12,8 @@ namespace SecurityEssentials.Core.Identity
 
         bool IsUserInRole(Controller controller, string role);
 
-		string GetClientIpAddress(HttpRequestBase request);
+        string GetClientIpAddress(HttpRequestBase request);
 
-		Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null);
-
-	}
+        Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null);
+    }
 }

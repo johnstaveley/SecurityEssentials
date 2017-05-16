@@ -1,134 +1,106 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
-using Liphsoft.Crypto.Argon2;
 using System.Text;
+using Liphsoft.Crypto.Argon2;
 
 namespace SecurityEssentials.Core.Identity
 {
+    /// <summary>
+    ///     Uses a user specified algorithm with variable number of iterations
+    /// </summary>
+    public class SecuredPassword
+    {
+        private int _saltSize = 256;
 
-	/// <summary>
-	/// Uses a user specified algorithm with variable number of iterations
-	/// </summary>
-	public class SecuredPassword
-	{
+        public SecuredPassword(string plainPassword, HashStrategyKind hashStrategy)
+        {
+            if (string.IsNullOrWhiteSpace(plainPassword))
+                throw new ArgumentNullException(plainPassword);
+            SetHashStrategy(hashStrategy);
 
-		private int _saltSize = 256;
-		private uint _hashingParameter = 5000;
-		private bool _isValid = false;
-		private readonly byte[] _hash;
-		private readonly byte[] _salt;
-		private HashStrategyKind _hashStrategy;
+            switch (hashStrategy)
+            {
+                case HashStrategyKind.PBKDF2_5009Iterations:
+                case HashStrategyKind.PBKDF2_8000Iterations:
+                    using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, (int) HashingParameter))
+                    {
+                        Salt = deriveBytes.Salt;
+                        Hash = deriveBytes.GetBytes(_saltSize);
+                    }
+                    break;
+                case HashStrategyKind.Argon2_48kWorkCost:
+                    var argon2Hasher = new PasswordHasher(memoryCost: HashingParameter);
+                    Salt = PasswordHasher.GenerateSalt(256);
+                    Hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), Salt));
+                    break;
+            }
+            IsValid = true;
+        }
 
-		public byte[] Hash
-		{
-			get { return _hash; }
-		}
+        public SecuredPassword(string plainPassword, byte[] hash, byte[] salt, HashStrategyKind hashStrategy)
+        {
+            Hash = hash;
+            Salt = salt;
+            SetHashStrategy(hashStrategy);
+            byte[] newKey = null;
+            switch (hashStrategy)
+            {
+                case HashStrategyKind.PBKDF2_5009Iterations:
+                case HashStrategyKind.PBKDF2_8000Iterations:
+                    using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, (int) HashingParameter))
+                    {
+                        newKey = deriveBytes.GetBytes(_saltSize);
+                        IsValid = newKey.SequenceEqual(hash);
+                    }
+                    break;
+                case HashStrategyKind.Argon2_48kWorkCost:
+                    var argon2Hasher = new PasswordHasher(memoryCost: HashingParameter);
+                    newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
+                    IsValid = newKey.SequenceEqual(hash);
+                    break;
+            }
+        }
 
-		public HashStrategyKind HashStrategy
-		{
-			get { return _hashStrategy; }
-		}
+        public byte[] Hash { get; }
 
-		/// <summary>
-		/// Number of iterations, work cost etc
-		/// </summary>
-		public uint HashingParameter
-		{
-			get { return _hashingParameter; }
-		}
+        public HashStrategyKind HashStrategy { get; private set; }
 
-		public byte[] Salt
-		{
-			get { return _salt; }
-		}		
+        /// <summary>
+        ///     Number of iterations, work cost etc
+        /// </summary>
+        public uint HashingParameter { get; private set; } = 5000;
 
-		public bool IsValid
-		{
-			get { return _isValid; }
-		}
+        public byte[] Salt { get; }
 
-		public SecuredPassword(string plainPassword, HashStrategyKind hashStrategy)
-		{
-			if (string.IsNullOrWhiteSpace(plainPassword))
-			{
-				throw new ArgumentNullException(plainPassword);
-			}
-			SetHashStrategy(hashStrategy);
+        public bool IsValid { get; }
 
-			switch (hashStrategy)
-			{
-				case HashStrategyKind.PBKDF2_5009Iterations:
-				case HashStrategyKind.PBKDF2_8000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, (int) _hashingParameter))
-					{
-						_salt = deriveBytes.Salt;
-						_hash = deriveBytes.GetBytes(_saltSize);
-					}
-					break;
-				case HashStrategyKind.Argon2_48kWorkCost:
-					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					_salt = PasswordHasher.GenerateSalt((uint) 256);
-					_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
-					break;
-			}
-			_isValid = true;
-		}
+        private void SetHashStrategy(HashStrategyKind hashStrategy)
+        {
+            HashStrategy = hashStrategy;
+            switch (hashStrategy)
+            {
+                case HashStrategyKind.PBKDF2_5009Iterations:
+                    HashingParameter = 5009;
+                    _saltSize = 256;
+                    break;
+                case HashStrategyKind.PBKDF2_8000Iterations:
+                    HashingParameter = 8000;
+                    _saltSize = 256;
+                    break;
+                case HashStrategyKind.Argon2_48kWorkCost:
+                    HashingParameter = 48000;
+                    _saltSize = 0;
+                    break;
+                default:
+                    throw new ArgumentException(string.Format("hashStrategy {0} is not defined", hashStrategy));
+            }
+        }
 
-		public SecuredPassword(string plainPassword, byte[] hash, byte[] salt, HashStrategyKind hashStrategy)
-		{
-			_hash = hash;
-			_salt = salt;
-			SetHashStrategy(hashStrategy);
-			byte[] newKey = null;
-			switch (hashStrategy)
-			{
-				case HashStrategyKind.PBKDF2_5009Iterations:
-				case HashStrategyKind.PBKDF2_8000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, (int) _hashingParameter))
-					{
-						newKey = deriveBytes.GetBytes(_saltSize);
-						_isValid = newKey.SequenceEqual(hash);
-					}
-					break;
-				case HashStrategyKind.Argon2_48kWorkCost:
-					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
-					_isValid = newKey.SequenceEqual(hash);
-					break;
-			}
-			
-
-		}
-
-		private void SetHashStrategy(HashStrategyKind hashStrategy)
-		{
-			_hashStrategy = hashStrategy;
-			switch (hashStrategy)
-			{
-				case HashStrategyKind.PBKDF2_5009Iterations:
-					_hashingParameter = 5009;
-					_saltSize = 256;
-					break;
-				case HashStrategyKind.PBKDF2_8000Iterations:
-					_hashingParameter = 8000;
-					_saltSize = 256;
-					break;
-				case HashStrategyKind.Argon2_48kWorkCost:
-					_hashingParameter = 48000;
-					_saltSize = 0;
-					break;
-				default:
-					throw new ArgumentException(string.Format("hashStrategy {0} is not defined", hashStrategy.ToString()));
-			}
-
-		}
-
-		public bool Equals(SecuredPassword comparison)
-		{
-			if (_hash.SequenceEqual(comparison.Hash) && _salt.SequenceEqual(comparison.Salt)) return true;
-			return false;
-		}
-
-	}
+        public bool Equals(SecuredPassword comparison)
+        {
+            if (Hash.SequenceEqual(comparison.Hash) && Salt.SequenceEqual(comparison.Salt)) return true;
+            return false;
+        }
+    }
 }

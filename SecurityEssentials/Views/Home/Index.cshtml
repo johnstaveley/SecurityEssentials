@@ -14,7 +14,8 @@
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
-                    <li>Weak account management: 
+                    <li>
+                        Weak account management:
                         <ul>
                             <li>Uses claims based authorization</li>
                             <li>Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified</li>
@@ -32,7 +33,8 @@
                             <li>Unit tests for password hashing and authorization attributes</li>
                         </ul>
                     </li>
-                    <li>XSS:
+                    <li>
+                        XSS:
                         <ul>
                             <li>Incorporation of the WPL AntiXSS library to encode all output</li>
                             <li>Enforce the location of the scripts the browser can run using a content security policy header</li>
@@ -41,7 +43,8 @@
                     </li>
                     <li>Insecure direct object references: In user edit page it checks the user is entitled to be there</li>
                     <li>Security misconfiguration: Doesn't turn on anything you don't really need</li>
-                    <li>Sensitive data exposure: 
+                    <li>
+                        Sensitive data exposure:
                         <ul>
                             <li>Auto-complete off on registration page</li>
                             <li>Enforces TLS of all data in production through use of web.configs</li>
@@ -80,23 +83,24 @@
                 <h2>How you can ensure your application remains secure over time</h2>
                 <ul>
                     <li>Add unit tests to ensure correct role is applied to functions requiring security such as admin</li>
-	                <li>Run the build process detailed below</li>
-	                <li>Patch the server!</li>
-	                <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
+                    <li>Run the build process detailed below</li>
+                    <li>Patch the server!</li>
+                    <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
                     <li>Check the logs for repeated security violation attempts and block users if required</li>
                 </ul>
             </p>
-            <p><h2>How your build process can ensure you remain secure over time</h2>
-            Following this process will help prevent security regressions from occurring. As part of your build process you should run all unit and acceptance tests provided with this project, you can also run <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
-            <ul>
-                <li>(Some of) 1, 3, 5, 6, 8, 10 - <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a>, check the report for vulnerabilities</li>
-                <li>2. Account management process - Unit and acceptance tests</li>
-                <li>4. Insecure direct object references - Unit tests</li>
-                <li>7. Missing file level access control - Unit tests</li>
-                <li>8. CSRF - Unit tests and ZAP</li>
-                <li>9. Vulnerable dependencies - <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report for high level vulnerabilities</li>
-                <li>10. Unvalidated redirects and forwards - Unit tests</li>
-            </ul>
+            <p>
+                <h2>How your build process can ensure you remain secure over time</h2>
+                Following this process will help prevent security regressions from occurring. As part of your build process you should run all unit and acceptance tests provided with this project, you can also run <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
+                <ul>
+                    <li>(Some of) 1, 3, 5, 6, 8, 10 - <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a>, check the report for vulnerabilities</li>
+                    <li>2. Account management process - Unit and acceptance tests</li>
+                    <li>4. Insecure direct object references - Unit tests</li>
+                    <li>7. Missing file level access control - Unit tests</li>
+                    <li>8. CSRF - Unit tests and ZAP</li>
+                    <li>9. Vulnerable dependencies - <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report for high level vulnerabilities</li>
+                    <li>10. Unvalidated redirects and forwards - Unit tests</li>
+                </ul>
             </p>
             <p>Created 29/01/2015</p>
         </div>

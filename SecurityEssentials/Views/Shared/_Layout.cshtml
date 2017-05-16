@@ -1,108 +1,110 @@
-﻿@using Microsoft.AspNet.Identity;
+﻿@using Microsoft.AspNet.Identity
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>@ViewBag.Title - Security Essentials Project</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <meta name="viewport" content="width=device-width" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width"/>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
-    <meta name="description" content="Security Essentials Project" />
+    <meta name="description" content="Security Essentials Project"/>
 </head>
 <body>
-    <header>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
-            </div>
-            <div class="float-right">
-                <section id="login">
-                    @Html.Partial("_LoginPartial")
-                </section>
-                <nav class="navbar navbar-default" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+<header>
+    <div class="content-wrapper">
+        <div class="float-left">
+            <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+        </div>
+        <div class="float-right">
+            <section id="login">
+                @Html.Partial("_LoginPartial")
+            </section>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                        @if (Request.IsAuthenticated)
+                        {
+                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "pull-right"}))
+                            {
+                                @Html.AntiForgeryToken()
+                                <ul class="nav nav-pills">
+                                    <li role="presentation">Logged on as @User.Identity.Name</li>
+                                    <li role="presentation">
+                                        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                                    </li>
+                                </ul>
+                            }
+                        }
+                        <ul class="nav nav-pills">
+                            <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    @if (Request.IsAuthenticated)
+                                    {
+                                        <li>@Html.ActionLink("Home", "Landing", "Home")</li>
+                                    }
+                                    else
+                                    {
+                                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                    }
+                                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                                </ul>
+                            </li>
                             @if (Request.IsAuthenticated)
                             {
-                                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "pull-right" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <ul class="nav nav-pills">
-                                        <li role="presentation">Logged on as @User.Identity.Name</li>
-                                        <li role="presentation"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                                    </ul>
-                                }
-                            }
-                            <ul class="nav nav-pills">
-                                <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
+                                <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
+                                    <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        @if (Request.IsAuthenticated)
+                                        @if (User.IsInRole("Admin"))
                                         {
-                                            <li>@Html.ActionLink("Home", "Landing", "Home")</li>
+                                            <li>@Html.ActionLink("Manage Users", "Index", "User", null, new {Id = "manageUsers"})</li>
                                         }
-                                        else
-                                        {
-                                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                                        }
-                                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                                        <li>@Html.ActionLink("Manage Account", "Edit", "User", new {Id = User.Identity.GetUserId()}, new {Id = "manageAccount"})</li>
+                                        <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", null, new {title = "Manage", id = "changePassword"})</li>
+                                        <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", null, new {title = "Manage", id = "changeEmailAddress"})</li>
+                                        <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", new {Id = User.Identity.GetUserId()}, new {Id = "changeSecurityInformation"})</li>
+                                        <li>@Html.ActionLink("Account Log", "Log", "User", new {Id = User.Identity.GetUserId()}, new {Id = "accountLog"})</li>
                                     </ul>
+
                                 </li>
-                                @if (Request.IsAuthenticated)
-                                {
-                                    <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
-                                        <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
-                                        <ul class="dropdown-menu">
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <li>@Html.ActionLink("Manage Users", "Index", "User", null, new { Id = "manageUsers" })</li>
-                                            }
-                                            <li>@Html.ActionLink("Manage Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, new { Id = "manageAccount" })</li>
-                                            <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id="changePassword" })</li>
-                                            <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changeEmailAddress" })</li>
-                                            <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", new { Id = User.Identity.GetUserId() }, new { Id = "changeSecurityInformation" })</li>
-                                            <li>@Html.ActionLink("Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, new { Id = "accountLog" })</li>
-                                        </ul>
+                            }
+                        </ul>
 
-                                    </li>
-                                }
-                            </ul>
-
-                        </div>
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
-    </header>
-    <div id="body">
-        @RenderSection("featured", required: false)
-        <section class="content-wrapper main-content clear-fix">
-            @RenderBody()
-        </section>
     </div>
-    <footer>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p>&copy; @DateTime.Now.Year - Security Essentials Project</p>
-            </div>
+</header>
+<div id="body">
+    @RenderSection("featured", false)
+    <section class="content-wrapper main-content clear-fix">
+        @RenderBody()
+    </section>
+</div>
+<footer>
+    <div class="content-wrapper">
+        <div class="float-left">
+            <p>&copy; @DateTime.Now.Year - Security Essentials Project</p>
         </div>
-    </footer>
+    </div>
+</footer>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/antiforgerytoken")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/antiforgerytoken")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", false)
 </body>
 </html>

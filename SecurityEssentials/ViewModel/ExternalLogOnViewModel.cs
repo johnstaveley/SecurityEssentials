@@ -1,5 +1,4 @@
-﻿
-namespace SecurityEssentials.Model
+﻿namespace SecurityEssentials.Model
 {
     public class ExternalLogOnViewModel
     {

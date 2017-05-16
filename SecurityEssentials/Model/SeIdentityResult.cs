@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SecurityEssentials.Model
 {
-	public class SEIdentityResult
+    public class SEIdentityResult
     {
         public SEIdentityResult(IEnumerable<string> errors)
         {
@@ -14,19 +14,22 @@ namespace SecurityEssentials.Model
             }
             else
             {
-                Errors = new List<string> { };
+                Errors = new List<string>();
                 Succeeded = true;
             }
         }
+
         //
         // Summary:
         //     Failure constructor that takes error messages
-        public SEIdentityResult(params string[] errors) : this(errors.ToList()) { }
+        public SEIdentityResult(params string[] errors) : this(errors.ToList())
+        {
+        }
 
         // Summary:
         //     List of errors
-        public IEnumerable<string> Errors { get; private set; }
-        public bool Succeeded { get; private set; }
+        public IEnumerable<string> Errors { get; }
 
+        public bool Succeeded { get; }
     }
 }

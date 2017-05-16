@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SecurityEssentials.ViewModel
 {
@@ -10,12 +6,14 @@ namespace SecurityEssentials.ViewModel
     {
         [Required]
         [DataType(DataType.Password)]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 8)]
-		[Display(Name = "Current password")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.",
+            MinimumLength = 8)]
+        [Display(Name = "Current password")]
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 8)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.",
+            MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
@@ -26,6 +24,5 @@ namespace SecurityEssentials.ViewModel
         public string ConfirmPassword { get; set; }
 
         public bool HasRecaptcha { get; set; }
-
     }
 }
