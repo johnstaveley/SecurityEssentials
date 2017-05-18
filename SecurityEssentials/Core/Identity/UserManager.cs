@@ -34,46 +34,42 @@ namespace SecurityEssentials.Core.Identity
             if (securityQuestion == null)
                 return new SEIdentityResult("Illegal security question");
             var result = ValidatePassword(password, new List<string> {firstName, lastName, securityAnswer});
-            if (result.Succeeded)
+
+            if (!result.Succeeded) return result;
+
+            if (user != null) return new SEIdentityResult("Username already registered");
+
+            user = new User {UserName = userName};
+            var securedPassword = new SecuredPassword(password, _configuration.DefaultHashStrategy);
+            try
             {
-                if (user == null)
-                {
-                    user = new User();
-                    user.UserName = userName;
-                    var securedPassword = new SecuredPassword(password, _configuration.DefaultHashStrategy);
-                    try
-                    {
-                        user.Approved = _configuration.AccountManagementRegisterAutoApprove;
-                        user.EmailConfirmationToken = Guid.NewGuid().ToString().Replace("-", "");
-                        user.EmailVerified = false;
-                        user.Enabled = true;
-                        user.FirstName = firstName;
-                        user.LastName = lastName;
-                        user.PasswordLastChangedDate = DateTime.UtcNow;
-                        user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
-                        user.Salt = Convert.ToBase64String(securedPassword.Salt);
-                        user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
-                        var encryptedSecurityAnswer = "";
-                        _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
-                            _configuration.EncryptionIterationCount, securityAnswer, out encryptedSecurityAnswer);
-                        user.SecurityAnswer = encryptedSecurityAnswer;
-                        user.UserName = userName;
-                        user.UserLogs.Add(new UserLog {Description = "Account Created"});
-                        await _userStore.CreateAsync(user);
-                    }
-                    catch
-                    {
-                        return new SEIdentityResult(
-                            "An error occurred creating the user, please contact the system administrator");
-                    }
-
-                    return new SEIdentityResult();
-                }
-
-                // TODO: Log duplicate account creation
-                return new SEIdentityResult("Username already registered");
+                user.Approved = _configuration.AccountManagementRegisterAutoApprove;
+                user.EmailConfirmationToken = Guid.NewGuid().ToString().Replace("-", "");
+                user.EmailVerified = false;
+                user.Enabled = true;
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                user.PasswordLastChangedDate = DateTime.UtcNow;
+                user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
+                user.Salt = Convert.ToBase64String(securedPassword.Salt);
+                user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
+                string encryptedSecurityAnswer;
+                _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
+                    _configuration.EncryptionIterationCount, securityAnswer, out encryptedSecurityAnswer);
+                user.SecurityAnswer = encryptedSecurityAnswer;
+                user.UserName = userName;
+                user.UserLogs.Add(new UserLog {Description = "Account Created"});
+                await _userStore.CreateAsync(user);
             }
-            return result;
+            catch
+            {
+                return new SEIdentityResult(
+                    "An error occurred creating the user, please contact the system administrator");
+            }
+
+            return new SEIdentityResult();
+
+            // TODO: Log duplicate account creation
         }
 
         #endregion

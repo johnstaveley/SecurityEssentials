@@ -51,23 +51,24 @@ namespace SecurityEssentials.Core.Identity
             {
                 var securePassword = new SecuredPassword(password, Convert.FromBase64String(user.PasswordHash),
                     Convert.FromBase64String(user.Salt), user.HashStrategy);
-                if (_configuration.AccountManagementCheckFailedLogonAttempts == false || user.FailedLogonAttemptCount <
-                    _configuration.AccountManagementMaximumFailedLogonAttempts)
-                    if (securePassword.IsValid)
-                    {
-                        user.FailedLogonAttemptCount = 0;
-                        await _context.SaveChangesAsync();
-                        logonResult.Success = true;
-                        logonResult.UserName = user.UserName;
-                        return logonResult;
-                    }
-                    else
-                    {
-                        user.FailedLogonAttemptCount += 1;
-                        logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
-                        user.UserLogs.Add(new UserLog {Description = "Failed Logon attempt"});
-                        await _context.SaveChangesAsync();
-                    }
+                if (_configuration.AccountManagementCheckFailedLogonAttempts && user.FailedLogonAttemptCount >=
+                    _configuration.AccountManagementMaximumFailedLogonAttempts) return logonResult;
+
+                if (securePassword.IsValid)
+                {
+                    user.FailedLogonAttemptCount = 0;
+                    await _context.SaveChangesAsync();
+                    logonResult.Success = true;
+                    logonResult.UserName = user.UserName;
+                    return logonResult;
+                }
+                else
+                {
+                    user.FailedLogonAttemptCount += 1;
+                    logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
+                    user.UserLogs.Add(new UserLog {Description = "Failed Logon attempt"});
+                    await _context.SaveChangesAsync();
+                }
             }
             return logonResult;
         }
@@ -79,20 +80,18 @@ namespace SecurityEssentials.Core.Identity
         public async Task<ClaimsIdentity> CreateIdentityAsync(User user, string authenticationType)
         {
             user = await FindByNameAsync(user.UserName).ConfigureAwait(false);
-            if (user != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.AuthenticationMethod, authenticationType)
-                };
-                foreach (var userRole in user.UserRoles)
-                    claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Description));
-                return new ClaimsIdentity(claims, authenticationType);
-            }
 
-            return null;
+            if (user == null) return null;
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.AuthenticationMethod, authenticationType)
+            };
+            foreach (var userRole in user.UserRoles)
+                claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Description));
+            return new ClaimsIdentity(claims, authenticationType);
         }
 
         #endregion
@@ -184,12 +183,13 @@ namespace SecurityEssentials.Core.Identity
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-                if (_context != null)
-                {
-                    _context.Dispose();
-                    _context = null;
-                }
+            if (!disposing) return;
+
+
+           if (_context == null) return;
+
+            _context.Dispose();
+            _context = null;
         }
 
         #endregion
