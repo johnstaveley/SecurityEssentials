@@ -179,13 +179,13 @@ namespace SecurityEssentials.Controllers
 			var requester = _userIdentity.GetRequester(this);
 			if (user == null)
 			{
-				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "NewEmailAddressConfirm");
+				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "ChangeEmailAddressConfirm");
 				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired by requester {@requester}", requester);
 				return View("Error", error);
 			}
 			if (user.Enabled == false)
 			{
-				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "NewEmailAddressConfirm");
+				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "ChangeEmailAddressConfirm");
 				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active by requester {@requester}", requester);
 				return View("Error", error);
 			}
