@@ -192,7 +192,7 @@ namespace SecurityEssentials.Controllers
             {
                 var error = new HandleErrorInfo(
                     new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account",
-                    "NewEmailAddressConfirm");
+                    "ChangeEmailAddressConfirm");
                 Logger.Information(
                     "Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired by requester {@requester}",
                     requester);
@@ -202,7 +202,7 @@ namespace SecurityEssentials.Controllers
             {
                 var error = new HandleErrorInfo(
                     new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account",
-                    "NewEmailAddressConfirm");
+                    "ChangeEmailAddressConfirm");
                 Logger.Information(
                     "Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active by requester {@requester}",
                     requester);
