@@ -7,9 +7,10 @@ namespace SecurityEssentials.Model
     {
         public SEIdentityResult(IEnumerable<string> errors)
         {
-            if (errors != null && errors.Any())
+            var err = errors as IList<string> ?? errors.ToList();
+            if (err.Any())
             {
-                Errors = errors;
+                Errors = err;
                 Succeeded = false;
             }
             else
