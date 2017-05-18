@@ -48,6 +48,7 @@ namespace SecurityEssentials.Controllers
         /// </summary>
         /// <returns></returns>
         /// <param name="id">The unique identifier of the User to disable</param>
+        /// <param name="collection"></param>
         /// <remarks>POST: /User/Disable/5</remarks>
         [HttpPost]
         [SEAuthorize(Roles = "Admin")]

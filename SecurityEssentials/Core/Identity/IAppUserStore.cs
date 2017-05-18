@@ -6,7 +6,7 @@ using SecurityEssentials.Model;
 
 namespace SecurityEssentials.Core.Identity
 {
-    public interface IAppUserStore<T> : IUserStore<T, int>, IUserPasswordStore<T, int>, IDisposable
+    public interface IAppUserStore<T> : IUserPasswordStore<T, int>
         where T : class, IUser<int>
     {
         Task<int> ChangePasswordAsync(int userId, string currentPassword, string newPassword);

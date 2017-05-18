@@ -1,4 +1,5 @@
-﻿namespace SecurityEssentials.Core.Identity
+﻿// ReSharper disable All
+namespace SecurityEssentials.Core.Identity
 {
     public enum HashStrategyKind
     {
