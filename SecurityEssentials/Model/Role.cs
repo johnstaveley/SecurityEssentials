@@ -2,7 +2,7 @@
 
 namespace SecurityEssentials.Model
 {
-    public class Role
+    public sealed class Role
     {
         public Role()
         {
@@ -22,6 +22,6 @@ namespace SecurityEssentials.Model
         public string PermissionDescription { get; set; }
 
         // Reverse navigation
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }
     }
 }

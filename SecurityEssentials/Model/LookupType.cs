@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecurityEssentials.Model
 {
-    public class LookupType
+    public sealed class LookupType
     {
         public LookupType()
         {
@@ -16,6 +16,6 @@ namespace SecurityEssentials.Model
         public string Description { get; set; }
 
         // Reverse navigation
-        public virtual ICollection<LookupItem> LookupItem { get; set; }
+        public ICollection<LookupItem> LookupItem { get; set; }
     }
 }

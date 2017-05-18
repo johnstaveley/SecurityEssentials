@@ -8,7 +8,7 @@ using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Model
 {
-    public class User : IUser<int>
+    public sealed class User : IUser<int>
     {
         public User()
         {
@@ -161,12 +161,12 @@ namespace SecurityEssentials.Model
         public DateTime? NewEmailAddressRequestExpiryDate { get; set; }
 
         // Foreign Key
-        public virtual LookupItem SecurityQuestionLookupItem { get; set; }
+        public LookupItem SecurityQuestionLookupItem { get; set; }
 
         // Reverse navigation
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }
 
-        public virtual ICollection<UserLog> UserLogs { get; set; }
+        public ICollection<UserLog> UserLogs { get; set; }
 
         /// <summary>
         ///     READONLY: FirstName concatenated with LastName

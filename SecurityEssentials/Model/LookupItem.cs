@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecurityEssentials.Model
 {
-    public class LookupItem
+    public sealed class LookupItem
     {
         public LookupItem()
         {
@@ -24,8 +24,8 @@ namespace SecurityEssentials.Model
         public int? GroupId { get; set; }
 
         // Foreign keys
-        public virtual ICollection<User> SecurityQuestionLookupItems { get; set; }
+        public ICollection<User> SecurityQuestionLookupItems { get; set; }
 
-        public virtual LookupType LookupType { get; set; }
+        public LookupType LookupType { get; set; }
     }
 }
