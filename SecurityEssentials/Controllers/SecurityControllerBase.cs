@@ -35,7 +35,7 @@ namespace SecurityEssentials.Controllers
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (filterContext == null) throw new ArgumentNullException("filterContext is null");
+            if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
             base.OnAuthorization(filterContext);
 
             var httpMethodOverride = filterContext.HttpContext.Request.GetHttpMethodOverride();
