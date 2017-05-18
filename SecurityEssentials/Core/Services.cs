@@ -23,7 +23,7 @@ namespace SecurityEssentials.Core
         ///     Send Email - Requires smtp settings inside the web.config file
         /// </summary>
         /// <param name="from">Who to send email from.</param>
-        /// <param name="to">Who to send email to.</param>
+        /// <param name="toAddresses">Who to send email to.</param>
         /// <param name="cc">Who to copy into the email.</param>
         /// <param name="bcc">Who to blind copy into the email.</param>
         /// <param name="subject">The subject line of the email.</param>

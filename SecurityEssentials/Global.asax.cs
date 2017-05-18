@@ -53,12 +53,10 @@ namespace SecurityEssentials
 
             if (currentRouteData != null)
             {
-                if (currentRouteData.Values["controller"] != null &&
-                    !string.IsNullOrEmpty(currentRouteData.Values["controller"].ToString()))
+                if (!string.IsNullOrEmpty(currentRouteData.Values["controller"]?.ToString()))
                     currentController = currentRouteData.Values["controller"].ToString();
 
-                if (currentRouteData.Values["action"] != null &&
-                    !string.IsNullOrEmpty(currentRouteData.Values["action"].ToString()))
+                if (!string.IsNullOrEmpty(currentRouteData.Values["action"]?.ToString()))
                     currentAction = currentRouteData.Values["action"].ToString();
             }
 

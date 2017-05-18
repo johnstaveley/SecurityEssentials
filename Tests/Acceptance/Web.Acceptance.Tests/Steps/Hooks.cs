@@ -16,7 +16,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
         public static void BeforeFeature()
         {
             var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"];
-            IWebDriver webDriver = null;
+            IWebDriver webDriver;
             if (!string.IsNullOrEmpty(webBrowserProxy))
             {
                 var proxy = new Proxy
