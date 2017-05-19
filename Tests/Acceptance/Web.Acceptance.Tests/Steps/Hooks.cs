@@ -2,13 +2,15 @@
 using System.Configuration;
 using System.Drawing.Imaging;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
-using TechTalk.SpecFlow;
-using SecurityEssentials.Acceptance.Tests.Web.Extensions;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.IE;
+using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Support.Extensions;
+using SecurityEssentials.Acceptance.Tests.Web.Extensions;
+using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Steps
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class Hooks
@@ -18,21 +20,41 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 		public static void BeforeFeature()
 		{
 
-			var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"].ToString();
-			IWebDriver webDriver = null;
+			var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"];
+			var webBrowserType = ConfigurationManager.AppSettings["WebBrowserType"];
+			IWebDriver webDriver;
 			if (!string.IsNullOrEmpty(webBrowserProxy))
 			{
-				var proxy = new Proxy();
-				proxy.HttpProxy = webBrowserProxy;
-				proxy.FtpProxy = webBrowserProxy;
-				proxy.SslProxy = webBrowserProxy;
-				var capabilities = new DesiredCapabilities();
-				capabilities.SetCapability(CapabilityType.Proxy, proxy);
-				webDriver = new FirefoxDriver(capabilities);
+				FirefoxProfile profile = new FirefoxProfile();
+				var proxy = new Proxy
+				{
+					HttpProxy = webBrowserProxy,
+					FtpProxy = webBrowserProxy,
+					SslProxy = webBrowserProxy
+				};
+				profile.SetProxyPreferences(proxy);
+				webDriver = new FirefoxDriver(profile);
 			}
 			else
 			{
-				webDriver = new FirefoxDriver();
+				switch (webBrowserType)
+				{
+					case "Chrome":
+						webDriver = new ChromeDriver();
+						break;
+					case "FireFox":
+						webDriver = new FirefoxDriver();
+						break;
+					case "IE":
+					case "Internet Explorer":
+						webDriver = new InternetExplorerDriver();
+						break;
+					case "PhantomJS":
+						webDriver = new PhantomJSDriver();
+						break;
+					default:
+						throw new Exception($"Unable to set browser type {webBrowserType}");
+				}
 			}
 			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
 			FeatureContext.Current.SetWebDriver(webDriver);
@@ -49,9 +71,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
 		}
 
 		[AfterScenario]
-		public static void AfterScenario() {
-			if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]) == true) {
-				string fileName = string.Format("{0}TestFailure-{1}.png", ConfigurationManager.AppSettings["TestScreenCaptureDirectory"].ToString(), DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss"));
+		public static void TakeScreenShotIfInError()
+		{
+			if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
+			{
+				string fileName = $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.png";
 				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ImageFormat.Png);
 			}
 		}
