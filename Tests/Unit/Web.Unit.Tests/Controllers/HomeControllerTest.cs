@@ -16,9 +16,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             BaseSetup();
             _sut = new HomeController
             {
-                Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection())
+                Url = new UrlHelper(new RequestContext(HttpContext, new RouteData()), new RouteCollection())
             };
-            _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
+            _sut.ControllerContext = new ControllerContext(HttpContext, new RouteData(), _sut);
         }
 
         [TestCleanup]

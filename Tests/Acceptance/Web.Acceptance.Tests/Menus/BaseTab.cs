@@ -9,18 +9,18 @@ namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public abstract class BaseTab
     {
-        protected readonly Uri _baseUri;
-        protected readonly IWebDriver _driver;
+        protected readonly Uri BaseUri;
+        protected readonly IWebDriver Driver;
         private readonly string _dropdowndId;
         private readonly string _menuId;
         private readonly WebDriverWait _wait;
 
         protected BaseTab(IWebDriver driver, Uri baseUri, string title, string menuId, string dropdownId = null)
         {
-            _driver = driver;
+            Driver = driver;
             _menuId = menuId;
             _dropdowndId = dropdownId;
-            _baseUri = baseUri;
+            BaseUri = baseUri;
             Title = title;
             _wait = new WebDriverWait(driver,
                 new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings["WaitIntervalSeconds"])));
@@ -46,7 +46,7 @@ namespace SecurityEssentials.Acceptance.Tests.Menus
 
         public bool IsEnabled()
         {
-            var elements = _driver.FindElements(By.Id(_menuId));
+            var elements = Driver.FindElements(By.Id(_menuId));
             if (!elements.Any()) throw new InvalidOperationException("Element with menuId " + _menuId + " not found");
 
             var element = elements.Single();
@@ -57,7 +57,7 @@ namespace SecurityEssentials.Acceptance.Tests.Menus
         public IList<string> GetEnabledSubMenuOptions()
         {
             Click(_dropdowndId);
-            var menuElement = _driver.FindElement(By.Id(_menuId));
+            var menuElement = Driver.FindElement(By.Id(_menuId));
             var options = menuElement.FindElements(By.CssSelector("ul > li > a"));
             var subMenuOptions = options.Where(o => o.Text != Title).Select(o => o.Text).ToList();
             Click(_dropdowndId);
@@ -67,7 +67,7 @@ namespace SecurityEssentials.Acceptance.Tests.Menus
         public IList<string> GetGreyedOutSubMenuOptions()
         {
             Click(_dropdowndId);
-            var menuElement = _driver.FindElement(By.Id(_menuId));
+            var menuElement = Driver.FindElement(By.Id(_menuId));
             var options = menuElement.FindElements(By.CssSelector("ul > li.greyed-out"));
             var subMenuOptions = options.Where(o => o.Text != Title).Select(o => o.Text).ToList();
             Click(_dropdowndId);

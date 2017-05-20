@@ -40,11 +40,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _userManager = MockRepository.GenerateMock<IUserManager>();
             _recaptcha = MockRepository.GenerateMock<IRecaptcha>();
             _services = MockRepository.GenerateMock<IServices>();
-            _sut = new AccountController(_appSensor, _configuration, _encryption, _formsAuth, _context, _userManager,
-                _recaptcha, _services, _userIdentity);
-            _httpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
-            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
-            _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
+            _sut = new AccountController(AppSensor, _configuration, _encryption, _formsAuth, Context, _userManager,
+                _recaptcha, _services, UserIdentity);
+            HttpRequest.Stub(x => x.Url).Return(new Uri("http://localhost/a", UriKind.Absolute));
+            _sut.Url = new UrlHelper(new RequestContext(HttpContext, new RouteData()), new RouteCollection());
+            _sut.ControllerContext = new ControllerContext(HttpContext, new RouteData(), _sut);
         }
 
         [TestCleanup]
@@ -61,22 +61,22 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_PreviousUserActivity_When_UserLands_Then_LastActivityDisplayed()
         {
             // Arrange
-            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(5);
+            UserIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(5);
 
             // Act
             var result = _sut.Landing();
 
             // Assert
             var data = AssertViewResultReturnsType<LandingViewModel>(result);
-            Assert.AreEqual(_lastAccountActivity.ToLocalTime().ToString("dd/MM/yyyy HH:mm"), data.LastAccountActivity);
-            Assert.AreEqual(_firstName, data.FirstName);
+            Assert.AreEqual(LastAccountActivity.ToLocalTime().ToString("dd/MM/yyyy HH:mm"), data.LastAccountActivity);
+            Assert.AreEqual(FirstName, data.FirstName);
         }
 
         [TestMethod]
         public void Given_AccountNotFound_When_UserLands_Then_HttpNotFound()
         {
             // Arrange
-            _userIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
+            UserIdentity.Expect(u => u.GetUserId(Arg<Controller>.Is.Anything)).Return(4);
 
             // Act
             var result = _sut.Landing();
@@ -130,7 +130,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var logon = new LogOnViewModel {UserName = "joeblogs", Password = "password1", RememberMe = false};
             UserManagerAttemptsLoginWithResult(false);
-            _userIdentity.Expect(a => a.GetRequester(Arg<Controller>.Is.Anything,
+            UserIdentity.Expect(a => a.GetRequester(Arg<Controller>.Is.Anything,
                 Arg<AppSensorDetectionPointKind>.Is.Anything)).Return(new Requester());
             _services.Expect(a => a.Wait(Arg<int>.Is.Anything));
 
@@ -147,7 +147,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_UserAuthenticated_When_LogonViewRequested_Then_RedirectToLandingPage()
         {
             // Arrange
-            _httpRequest.Stub(x => x.IsAuthenticated).Return(true);
+            HttpRequest.Stub(x => x.IsAuthenticated).Return(true);
 
             // Act
             var result = _sut.LogOn(_returnUrl);
@@ -173,14 +173,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_UserExists_When_ChangeEmailAddressGet_Then_ViewReturned()
         {
             // Arrange
-            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+            UserIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(TestUserId);
 
             // Act
             var result = _sut.ChangeEmailAddress();
 
             // Assert
             var viewModel = AssertViewResultReturnsType<ChangeEmailAddressViewModel>(result);
-            Assert.AreEqual(_testUserName, viewModel.EmailAddress);
+            Assert.AreEqual(TestUserName, viewModel.EmailAddress);
             Assert.IsFalse(viewModel.IsFormLocked);
         }
 
@@ -188,9 +188,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public async Task Given_ValidSubmissionData_When_ChangeEmailAddress_Then_SavesEmailsAndPendingViewReturned()
         {
             // Arrange
-            var model = new ChangeEmailAddressViewModel(_testUserName, null, null);
-            model.NewEmailAddress = "joe@bloggs.com";
-            _userIdentity.Expect(e => e.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+            var model = new ChangeEmailAddressViewModel(TestUserName, null, null) {NewEmailAddress = "joe@bloggs.com"};
+            UserIdentity.Expect(e => e.GetUserId(Arg<Controller>.Is.Anything)).Return(TestUserId);
             _userManager.Expect(a => a.TryLogOnAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(Task.FromResult(new LogonResult {Success = true}));
 
@@ -203,8 +202,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Arg<List<string>>.Is.Anything,
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything,
                 Arg<bool>.Is.Anything));
-            _context.AssertWasCalled(a => a.SaveChanges());
-            var user = _context.User.Include("UserLogs").First(a => a.Id == _testUserId);
+            Context.AssertWasCalled(a => a.SaveChanges());
+            var user = Context.User.Include("UserLogs").First(a => a.Id == TestUserId);
             Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddressToken));
             Assert.IsNotNull(user.NewEmailAddressRequestExpiryDate);
             Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddress));
@@ -215,11 +214,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             var requestItems = new NameValueCollection();
-            var newEmaiLAddress = "samuel@pepys.com";
-            var changeEmailAddressToken = "testchangetoken1";
+            const string newEmaiLAddress = "samuel@pepys.com";
+            const string changeEmailAddressToken = "testchangetoken1";
             requestItems.Add("NewEmailAddressToken", changeEmailAddressToken);
-            _httpRequest.Stub(a => a.QueryString).Return(requestItems);
-            var user = _context.User.First(u => u.Id == _testUserId);
+            HttpRequest.Stub(a => a.QueryString).Return(requestItems);
+            var user = Context.User.First(u => u.Id == TestUserId);
             user.NewEmailAddressToken = changeEmailAddressToken;
             user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
             user.NewEmailAddress = newEmaiLAddress;
@@ -241,7 +240,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                     Arg<bool>.Is.Anything),
                 options => options.Repeat.Times(2));
             _userManager.AssertWasCalled(a => a.SignOut());
-            _context.AssertWasCalled(a => a.SaveChangesAsync());
+            Context.AssertWasCalled(a => a.SaveChangesAsync());
         }
 
         [TestMethod]
@@ -257,7 +256,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             _userManager.Expect(a => a.ChangePasswordAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything,
                     Arg<string>.Is.Anything))
                 .Return(Task.FromResult(new SEIdentityResult()));
-            _userIdentity
+            UserIdentity
                 .Stub(u => u.GetRequester(Arg<Controller>.Is.Anything, Arg<AppSensorDetectionPointKind>.Is.Anything))
                 .Return(new Requester {LoggedOnUserId = 5});
             _recaptcha.Expect(a => a.ValidateRecaptcha(Arg<Controller>.Is.Anything)).Return(true);
@@ -272,7 +271,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything,
                 Arg<bool>.Is.Anything));
             _formsAuth.AssertWasCalled(a => a.SignOut());
-            _context.AssertWasCalled(a => a.SaveChanges());
+            Context.AssertWasCalled(a => a.SaveChanges());
         }
 
         [TestMethod]
@@ -313,9 +312,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 SecurityAnswerConfirm = "a"
             };
             _userManager.Expect(a => a.TryLogOnAsync(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
-                .Return(Task.FromResult(new LogonResult {Success = true, UserName = _testUserName}));
+                .Return(Task.FromResult(new LogonResult {Success = true, UserName = TestUserName}));
             _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything,
-                Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
+                Arg<string>.Is.Anything, out Arg<string>.Out(EncryptedSecurityAnswer).Dummy)).Return(false);
             _recaptcha.Expect(a => a.ValidateRecaptcha(Arg<Controller>.Is.Anything)).Return(true);
 
 
@@ -324,7 +323,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             AssertViewResultReturned(result, "ChangeSecurityInformationSuccess");
-            _context.AssertWasCalled(a => a.SaveChangesAsync());
+            Context.AssertWasCalled(a => a.SaveChangesAsync());
             _services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything,
                 Arg<List<string>>.Is.Anything,
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything,
@@ -336,14 +335,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             var requestItems = new NameValueCollection {{"EmailVerficationToken", "test1"}};
-            _httpRequest.Stub(a => a.QueryString).Return(requestItems);
+            HttpRequest.Stub(a => a.QueryString).Return(requestItems);
 
             // Act
             var result = await _sut.EmailVerify();
 
             // Assert
             AssertViewResultReturned(result, "EmailVerificationSuccess");
-            _context.AssertWasCalled(a => a.SaveChangesAsync());
+            Context.AssertWasCalled(a => a.SaveChangesAsync());
         }
 
         [TestMethod]
@@ -378,7 +377,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var model = new RecoverViewModel
             {
-                UserName = _testUserName
+                UserName = TestUserName
             };
             _recaptcha.Expect(a => a.ValidateRecaptcha(Arg<Controller>.Is.Anything)).Return(true);
 
@@ -391,7 +390,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Arg<List<string>>.Is.Anything,
                 Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything,
                 Arg<bool>.Is.Anything));
-            _context.AssertWasCalled(a => a.SaveChangesAsync());
+            Context.AssertWasCalled(a => a.SaveChangesAsync());
         }
 
         [TestMethod]
@@ -400,10 +399,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var model = new RecoverPasswordViewModel
             {
-                Id = _testUserId
+                Id = TestUserId
             };
             _encryption.Expect(e => e.Encrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything,
-                Arg<string>.Is.Anything, out Arg<string>.Out(_encryptedSecurityAnswer).Dummy)).Return(false);
+                Arg<string>.Is.Anything, out Arg<string>.Out(EncryptedSecurityAnswer).Dummy)).Return(false);
             _userManager
                 .Expect(a => a.ChangePasswordAsync(Arg<int>.Is.Anything, Arg<string>.Is.Anything,
                     Arg<string>.Is.Anything)).Return(Task.FromResult(new SEIdentityResult()));
@@ -416,7 +415,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             AssertViewResultReturned(result, "RecoverPasswordSuccess");
-            _context.AssertWasCalled(a => a.SaveChanges());
+            Context.AssertWasCalled(a => a.SaveChanges());
         }
 
         [TestMethod]
@@ -427,7 +426,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             {
                 {"Password", "password"},
                 {"ConfirmPassword", "password"},
-                {"User.UserName", _testUserName},
+                {"User.UserName", TestUserName},
                 {"User.FirstName", "First name"},
                 {"User.LastName", "Last Name"},
                 {"User.SecurityQuestionLookupItemId", "1"},
@@ -456,8 +455,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var requestItems = new NameValueCollection();
             const string passwordResetToken = "testreset1";
             requestItems.Add("PasswordResetToken", passwordResetToken);
-            _httpRequest.Stub(a => a.QueryString).Return(requestItems);
-            var user = _context.User.First(u => u.Id == _testUserId);
+            HttpRequest.Stub(a => a.QueryString).Return(requestItems);
+            var user = Context.User.First(u => u.Id == TestUserId);
             user.PasswordResetToken = passwordResetToken;
             user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
 
@@ -467,7 +466,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Assert
             var model = AssertViewResultReturnsType<RecoverPasswordViewModel>(result);
             Assert.AreEqual(passwordResetToken, model.PasswordResetToken);
-            Assert.AreEqual(_testUserId, model.Id);
+            Assert.AreEqual(TestUserId, model.Id);
             Assert.AreEqual("test question", model.SecurityQuestion);
         }
 
@@ -476,7 +475,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             // Arrange
             _formsAuth.Expect(a => a.SignOut());
-            _httpSession.Expect(h => h.Abandon());
+            HttpSession.Expect(h => h.Abandon());
 
             // Act
             var result = _sut.LogOff();

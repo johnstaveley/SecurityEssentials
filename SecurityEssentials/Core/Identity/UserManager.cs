@@ -95,6 +95,7 @@ namespace SecurityEssentials.Core.Identity
             }
             catch
             {
+                // ignored
             }
             finally
             {

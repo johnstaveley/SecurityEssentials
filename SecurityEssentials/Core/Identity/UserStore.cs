@@ -13,13 +13,23 @@ namespace SecurityEssentials.Core.Identity
     {
         #region Constructor
 
-        public UserStore(ISEContext context, IAppConfiguration configuration)
+        public UserStore(ISEContext context, IAppConfiguration configuration, UserStore store)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            _configuration = configuration;
-            _context = context;
+            Configuration = configuration;
+            Store = store;
+            Context = context;
+        }
+
+        public UserStore(ISEContext context, IAppConfiguration configuration) : this(context, configuration, new UserStore())
+        {
+
+        }
+
+        public UserStore()
+        {
         }
 
         #endregion
@@ -34,29 +44,29 @@ namespace SecurityEssentials.Core.Identity
         /// <returns></returns>
         public async Task<LogonResult> TryLogOnAsync(string userName, string password)
         {
-            var user = await _context.User
+            var user = await Context.User
                 .SingleOrDefaultAsync(u => u.UserName == userName && u.Enabled && u.Approved && u.EmailVerified)
                 .ConfigureAwait(false);
             var logonResult = new LogonResult();
             if (user == null)
             {
                 // Check if the user exists and if not is one of a commonly used set of usernames
-                var userNameExists = await _context.User.SingleOrDefaultAsync(u => u.UserName == userName);
+                var userNameExists = await Context.User.SingleOrDefaultAsync(u => u.UserName == userName);
                 if (userNameExists == null)
-                    if (commonlyUsedUserNames.ToList().Contains(userName))
+                    if (_commonlyUsedUserNames.ToList().Contains(userName))
                         logonResult.IsCommonUserName = true;
             }
             else
             {
                 var securePassword = new SecuredPassword(password, Convert.FromBase64String(user.PasswordHash),
                     Convert.FromBase64String(user.Salt), user.HashStrategy);
-                if (_configuration.AccountManagementCheckFailedLogonAttempts && user.FailedLogonAttemptCount >=
-                    _configuration.AccountManagementMaximumFailedLogonAttempts) return logonResult;
+                if (Configuration.AccountManagementCheckFailedLogonAttempts && user.FailedLogonAttemptCount >=
+                    Configuration.AccountManagementMaximumFailedLogonAttempts) return logonResult;
 
                 if (securePassword.IsValid)
                 {
                     user.FailedLogonAttemptCount = 0;
-                    await _context.SaveChangesAsync();
+                    await Context.SaveChangesAsync();
                     logonResult.Success = true;
                     logonResult.UserName = user.UserName;
                     return logonResult;
@@ -65,8 +75,8 @@ namespace SecurityEssentials.Core.Identity
                 {
                     user.FailedLogonAttemptCount += 1;
                     logonResult.FailedLogonAttemptCount = user.FailedLogonAttemptCount;
-                    user.UserLogs.Add(new UserLog {Description = "Failed Logon attempt"});
-                    await _context.SaveChangesAsync();
+                    user.UserLogs.Add(new UserLog { Description = "Failed Logon attempt" });
+                    await Context.SaveChangesAsync();
                 }
             }
             return logonResult;
@@ -97,13 +107,13 @@ namespace SecurityEssentials.Core.Identity
 
         #region Declarations
 
-        private readonly string[] commonlyUsedUserNames = {"administrator", "admin", "test"};
+        private readonly string[] _commonlyUsedUserNames = { "administrator", "admin", "test" };
 
         public IPasswordHasher PasswordHasher { get; set; }
         public IIdentityValidator<string> PasswordValidator { get; set; }
-        protected UserStore Store { get; private set; }
-        private ISEContext _context { get; set; }
-        private IAppConfiguration _configuration { get; }
+        protected UserStore Store { get; }
+        private ISEContext Context { get; set; }
+        private IAppConfiguration Configuration { get; }
 
         #endregion
 
@@ -113,36 +123,36 @@ namespace SecurityEssentials.Core.Identity
         {
             user.DateCreated = DateTime.UtcNow;
 
-            _context.User.Add(user);
-            _context.SetConfigurationValidateOnSaveEnabled(false);
+            Context.User.Add(user);
+            Context.SetConfigurationValidateOnSaveEnabled(false);
 
-            if (await _context.SaveChangesAsync().ConfigureAwait(false) == 0)
+            if (await Context.SaveChangesAsync().ConfigureAwait(false) == 0)
                 throw new Exception("Error creating new user");
         }
 
         public async Task UpdateAsync(User user)
         {
-            _context.User.Attach(user);
-            _context.SetModified(user);
+            Context.User.Attach(user);
+            Context.SetModified(user);
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(User user)
         {
-            _context.User.Remove(user);
+            Context.User.Remove(user);
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<User> FindByIdAsync(int userId)
         {
-            return await _context.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            return await Context.User.SingleOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
         }
 
         public async Task<User> FindByNameAsync(string userName)
         {
-            return await _context.User
+            return await Context.User
                 .SingleOrDefaultAsync(u => !string.IsNullOrEmpty(u.UserName) &&
                                            string.Compare(u.UserName, userName,
                                                StringComparison.InvariantCultureIgnoreCase) == 0).ConfigureAwait(false);
@@ -185,10 +195,10 @@ namespace SecurityEssentials.Core.Identity
             if (!disposing) return;
 
 
-           if (_context == null) return;
+            if (Context == null) return;
 
-            _context.Dispose();
-            _context = null;
+            Context.Dispose();
+            Context = null;
         }
 
         #endregion
@@ -202,7 +212,7 @@ namespace SecurityEssentials.Core.Identity
             if (user.PasswordResetToken != passwordResetToken || !user.PasswordResetExpiry.HasValue ||
                 user.PasswordResetExpiry < DateTime.UtcNow)
                 return new IdentityResult("Your password reset token has expired or does not exist");
-            var securedPassword = new SecuredPassword(newPassword, _configuration.DefaultHashStrategy);
+            var securedPassword = new SecuredPassword(newPassword, Configuration.DefaultHashStrategy);
             user.HashStrategy = securedPassword.HashStrategy;
             user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
             user.PasswordLastChangedDate = DateTime.UtcNow;
@@ -210,9 +220,9 @@ namespace SecurityEssentials.Core.Identity
             user.PasswordResetExpiry = null;
             user.PasswordResetToken = null;
             user.FailedLogonAttemptCount = 0;
-            user.UserLogs.Add(new UserLog {Description = "Password changed using token"});
+            user.UserLogs.Add(new UserLog { Description = "Password changed using token" });
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
             return new IdentityResult();
         }
 
@@ -223,7 +233,7 @@ namespace SecurityEssentials.Core.Identity
                 Convert.FromBase64String(user.Salt), user.HashStrategy);
             if (securePassword.IsValid)
             {
-                var newPasswordHash = new SecuredPassword(currentPassword, _configuration.DefaultHashStrategy);
+                var newPasswordHash = new SecuredPassword(currentPassword, Configuration.DefaultHashStrategy);
                 user.PasswordHash = Convert.ToBase64String(newPasswordHash.Hash);
                 user.PasswordLastChangedDate = DateTime.UtcNow;
                 user.Salt = Convert.ToBase64String(newPasswordHash.Salt);
@@ -231,9 +241,9 @@ namespace SecurityEssentials.Core.Identity
                 user.PasswordResetExpiry = null;
                 user.PasswordResetToken = null;
                 user.FailedLogonAttemptCount = 0;
-                user.UserLogs.Add(new UserLog {Description = "Password changed"});
+                user.UserLogs.Add(new UserLog { Description = "Password changed" });
             }
-            return await _context.SaveChangesAsync().ConfigureAwait(false);
+            return await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion

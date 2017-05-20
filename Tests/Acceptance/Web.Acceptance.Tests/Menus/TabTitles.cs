@@ -1,4 +1,5 @@
-﻿namespace SecurityEssentials.Acceptance.Tests.Menus
+﻿// ReSharper disable InconsistentNaming
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public static class TabTitles
     {

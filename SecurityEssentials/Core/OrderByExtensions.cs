@@ -28,6 +28,7 @@ namespace SecurityEssentials.Core
             {
                 // use reflection (not ComponentModel) to mirror LINQ
                 var pi = type.GetProperty(prop);
+                // ReSharper disable once AssignNullToNotNullAttribute
                 expr = Expression.Property(expr, pi);
                 type = pi.PropertyType;
             }

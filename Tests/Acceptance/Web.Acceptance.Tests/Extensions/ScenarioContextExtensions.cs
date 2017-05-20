@@ -8,6 +8,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
     public static class ScenarioContextExtensions
     {
+        // ReSharper disable once InconsistentNaming
         public const string KEY_HTTP_HEADERS = "Http_Headers";
 
         public static IEnumerable<Tuple<string, string>> GetHttpHeaders(this ScenarioContext scenarioContext)

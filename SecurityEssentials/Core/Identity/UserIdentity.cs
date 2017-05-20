@@ -50,6 +50,7 @@ namespace SecurityEssentials.Core.Identity
 
                 // Attempt to parse.  If it fails, we catch below and return "0.0.0.0"
                 // Could use TryParse instead, but I wanted to catch all exceptions
+                // ReSharper disable once AssignNullToNotNullAttribute
                 IPAddress.Parse(userHostAddress);
 
                 var xForwardedFor = request.ServerVariables["X_FORWARDED_FOR"];

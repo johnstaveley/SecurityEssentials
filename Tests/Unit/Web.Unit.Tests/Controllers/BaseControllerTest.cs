@@ -16,60 +16,60 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 {
     public abstract class BaseControllerTest
     {
-        protected IAppSensor _appSensor;
-        protected ISEContext _context;
-        protected string _encryptedSecurityAnswer = "encryptedSecurityAnswer";
-        protected string _firstName = "Bob";
-        protected HttpContextBase _httpContext;
-        protected HttpRequestBase _httpRequest;
-        protected HttpSessionStateBase _httpSession;
-        protected DateTime _lastAccountActivity = DateTime.Parse("2016-05-10");
-        protected int _testUserId = 5;
-        protected string _testUserName = "testuserName@test.com";
-        protected IUserIdentity _userIdentity;
+        protected IAppSensor AppSensor;
+        protected ISEContext Context;
+        protected string EncryptedSecurityAnswer = "encryptedSecurityAnswer";
+        protected string FirstName = "Bob";
+        protected HttpContextBase HttpContext;
+        protected HttpRequestBase HttpRequest;
+        protected HttpSessionStateBase HttpSession;
+        protected DateTime LastAccountActivity = DateTime.Parse("2016-05-10");
+        protected int TestUserId = 5;
+        protected string TestUserName = "testuserName@test.com";
+        protected IUserIdentity UserIdentity;
 
         protected void BaseSetup()
         {
-            _appSensor = MockRepository.GenerateMock<IAppSensor>();
-            _context = MockRepository.GenerateStub<ISEContext>();
-            _context.LookupItem = new TestDbSet<LookupItem>();
-            _context.User = new TestDbSet<User> {GetUser()};
-            _context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
-            _userIdentity = MockRepository.GenerateMock<IUserIdentity>();
-            _httpSession = MockRepository.GenerateMock<HttpSessionStateBase>();
-            _httpContext = MockRepository.GenerateMock<HttpContextBase>();
-            _httpRequest = MockRepository.GenerateMock<HttpRequestBase>();
-            _httpContext.Stub(c => c.Request).Return(_httpRequest);
-            _httpContext.Stub(c => c.Session).Return(_httpSession);
+            AppSensor = MockRepository.GenerateMock<IAppSensor>();
+            Context = MockRepository.GenerateStub<ISEContext>();
+            Context.LookupItem = new TestDbSet<LookupItem>();
+            Context.User = new TestDbSet<User> {GetUser()};
+            Context.Stub(a => a.SaveChangesAsync()).Return(Task.FromResult(0));
+            UserIdentity = MockRepository.GenerateMock<IUserIdentity>();
+            HttpSession = MockRepository.GenerateMock<HttpSessionStateBase>();
+            HttpContext = MockRepository.GenerateMock<HttpContextBase>();
+            HttpRequest = MockRepository.GenerateMock<HttpRequestBase>();
+            HttpContext.Stub(c => c.Request).Return(HttpRequest);
+            HttpContext.Stub(c => c.Session).Return(HttpSession);
         }
 
         protected void VerifyAllExpectations()
         {
-            _appSensor.VerifyAllExpectations();
-            _httpContext.VerifyAllExpectations();
-            _httpRequest.VerifyAllExpectations();
-            _httpSession.VerifyAllExpectations();
-            _userIdentity.VerifyAllExpectations();
+            AppSensor.VerifyAllExpectations();
+            HttpContext.VerifyAllExpectations();
+            HttpRequest.VerifyAllExpectations();
+            HttpSession.VerifyAllExpectations();
+            UserIdentity.VerifyAllExpectations();
         }
 
         protected User GetUser()
         {
             return new User
             {
-                Id = _testUserId,
+                Id = TestUserId,
                 Enabled = true,
                 Approved = true,
                 EmailVerified = true,
-                FirstName = _firstName,
-                UserName = _testUserName,
+                FirstName = FirstName,
+                UserName = TestUserName,
                 EmailConfirmationToken = "test1",
                 SecurityQuestionLookupItemId = 1,
                 SecurityQuestionLookupItem = new LookupItem {Id = 1, Description = "test question"},
-                SecurityAnswer = _encryptedSecurityAnswer,
+                SecurityAnswer = EncryptedSecurityAnswer,
                 UserLogs = new List<UserLog>
                 {
                     new UserLog {Id = 2, DateCreated = DateTime.Parse("2016-06-10"), Description = "did stuff"},
-                    new UserLog {Id = 1, DateCreated = _lastAccountActivity, Description = "did old stuff"}
+                    new UserLog {Id = 1, DateCreated = LastAccountActivity, Description = "did old stuff"}
                 }
             };
         }

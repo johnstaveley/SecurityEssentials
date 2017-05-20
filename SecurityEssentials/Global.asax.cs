@@ -84,7 +84,8 @@ namespace SecurityEssentials
 
             //httpContext.ClearError();
             httpContext.Response.Clear();
-            httpContext.Response.StatusCode = ex is HttpException ? ((HttpException) ex).GetHttpCode() : 500;
+            var exception = ex as HttpException;
+            httpContext.Response.StatusCode = exception?.GetHttpCode() ?? 500;
             httpContext.Response.TrySkipIisCustomErrors = true;
 
             routeData.Values["controller"] = "Error";

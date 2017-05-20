@@ -13,8 +13,8 @@ namespace SecurityEssentials.Controllers
     {
         private readonly ValidateAntiForgeryTokenAttribute _validator;
         private readonly AcceptVerbsAttribute _verbs;
-        protected IAppSensor _appSensor;
-        protected IUserIdentity _userIdentity;
+        protected IAppSensor AppSensor;
+        protected IUserIdentity UserIdentity;
         public ILogger Logger;
 
         protected SecurityControllerBase() : this(new UserIdentity(), new AppSensor())
@@ -29,8 +29,8 @@ namespace SecurityEssentials.Controllers
             _verbs = new AcceptVerbsAttribute(HttpVerbs.Post);
             _validator = new ValidateAntiForgeryTokenAttribute();
             Logger = Log.Logger;
-            _userIdentity = userIdentity;
-            _appSensor = appSensor;
+            UserIdentity = userIdentity;
+            AppSensor = appSensor;
         }
 
         protected override void OnAuthorization(AuthorizationContext filterContext)

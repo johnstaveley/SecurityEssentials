@@ -1,4 +1,5 @@
-﻿namespace SecurityEssentials.Acceptance.Tests.Pages
+﻿// ReSharper disable InconsistentNaming
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
     public static class PageTitles
     {

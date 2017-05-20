@@ -10,6 +10,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
     public static class FeatureContextExtensions
     {
+        // ReSharper disable once InconsistentNaming
         public const string LOGIN_ATTEMPTS = "Login_Attempts";
 
         public static void SetWebDriver(this FeatureContext fc, IWebDriver webDriver)

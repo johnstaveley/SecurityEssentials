@@ -10,7 +10,7 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
 {
     public abstract class BasePage
     {
-        protected readonly WebDriverWait _wait;
+        protected readonly WebDriverWait Wait;
 
         protected BasePage(IWebDriver webDriver, Uri baseUri, string pageTitle)
         {
@@ -18,7 +18,7 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
             Driver = webDriver;
             PageTitle = pageTitle;
             WaitInterval = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings["WaitIntervalSeconds"]));
-            _wait = new WebDriverWait(Driver, WaitInterval);
+            Wait = new WebDriverWait(Driver, WaitInterval);
         }
 
         public string PageTitle { get; }
@@ -52,7 +52,7 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
 
         protected IWebElement GetVisibleWebElement(By by)
         {
-            return _wait.Until(ExpectedConditions.ElementIsVisible(by));
+            return Wait.Until(ExpectedConditions.ElementIsVisible(by));
         }
 
         public void ReloadPage()

@@ -20,11 +20,11 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Setup()
         {
             BaseSetup();
-            _sut = new UserController(_appSensor, _context, _userIdentity)
+            _sut = new UserController(AppSensor, Context, UserIdentity)
             {
-                Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection())
+                Url = new UrlHelper(new RequestContext(HttpContext, new RouteData()), new RouteCollection())
             };
-            _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
+            _sut.ControllerContext = new ControllerContext(HttpContext, new RouteData(), _sut);
         }
 
         [TestCleanup]
@@ -39,7 +39,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
 
             // Act
-            var result = _sut.Disable(_testUserId);
+            var result = _sut.Disable(TestUserId);
 
             // Assert
             AssertPartialViewResultReturned(result, "_Disable");
@@ -52,29 +52,29 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             var collection = new NameValueCollection();
 
             // Act
-            var result = _sut.Disable(_testUserId, new FormCollection(collection));
+            var result = _sut.Disable(TestUserId, new FormCollection(collection));
 
             // Assert
             var dataReturned = AssertJsonResultReturned(result);
             Assert.AreEqual(true, dataReturned["success"]);
             Assert.AreEqual("", dataReturned["message"]);
-            var user = _context.User.First(u => u.Id == _testUserId);
+            var user = Context.User.First(u => u.Id == TestUserId);
             Assert.IsFalse(user.Enabled);
-            _context.AssertWasCalled(a => a.SaveChanges());
+            Context.AssertWasCalled(a => a.SaveChanges());
         }
 
         [TestMethod]
         public void Given_UserExists_When_EditGet_Then_ViewReturned()
         {
             // Arrange
-            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+            UserIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(TestUserId);
 
             // Act
-            var result = _sut.Edit(_testUserId);
+            var result = _sut.Edit(TestUserId);
 
             // Assert
             var viewModel = AssertViewResultReturnsType<UserViewModel>(result);
-            Assert.AreEqual(_testUserId, viewModel.User.Id);
+            Assert.AreEqual(TestUserId, viewModel.User.Id);
             Assert.IsTrue(viewModel.IsOwnProfile);
         }
 
@@ -84,14 +84,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var collection = new NameValueCollection {{"FirstName", "new"}, {"LastName", "name"}};
 
-            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+            UserIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(TestUserId);
 
             // Act
-            var result = _sut.Edit(_testUserId, new FormCollection(collection));
+            var result = _sut.Edit(TestUserId, new FormCollection(collection));
 
             // Assert
             var viewResult = AssertViewResultReturned(result, "Edit");
-            _context.AssertWasCalled(a => a.SaveChanges());
+            Context.AssertWasCalled(a => a.SaveChanges());
             Assert.AreEqual("Your account information has been changed", viewResult.ViewBag.StatusMessage);
         }
 
@@ -111,10 +111,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         public void Given_UserExists_When_LogGet_Then_ViewReturned()
         {
             // Arrange
-            _userIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(_testUserId);
+            UserIdentity.Expect(a => a.GetUserId(Arg<Controller>.Is.Anything)).Return(TestUserId);
 
             // Act
-            var result = _sut.Log(_testUserId);
+            var result = _sut.Log(TestUserId);
 
             // Assert
             var viewModel = AssertViewResultReturnsType<List<UserLog>>(result);
@@ -127,7 +127,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             // Arrange
             var requestItems = new NameValueCollection {{"sort[0][dir]", ""}, {"sort[0][field]", ""}};
             // TODO: Fix this as a.Form doesn't work
-            _httpRequest.Stub(a => a.Form).Return(requestItems);
+            HttpRequest.Stub(a => a.Form).Return(requestItems);
 
             // Act
             var result = _sut.Read();

@@ -80,9 +80,9 @@ namespace SecurityEssentials.Controllers
             Seconds = 60)]
         public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
         {
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             var userName = model.UserName;
-            _appSensor.ValidateFormData(this, new List<string> {"UserName", "Password"});
+            AppSensor.ValidateFormData(this, new List<string> {"UserName", "Password"});
             if (ModelState.IsValid)
             {
                 var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
@@ -109,7 +109,7 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-                _appSensor.InspectModelStateErrors(this);
+                AppSensor.InspectModelStateErrors(this);
             }
 
             // If we got this far, something failed, redisplay form
@@ -119,12 +119,12 @@ namespace SecurityEssentials.Controllers
         [HttpGet]
         public ActionResult ChangeEmailAddress()
         {
-            var userId = _userIdentity.GetUserId(this);
+            var userId = UserIdentity.GetUserId(this);
             var users = _context.User.Where(u => u.Id == userId);
             if (users.ToList().Count == 0) return new HttpNotFoundResult();
             var user = users.FirstOrDefault();
             // SECURE: Check user should have access to this account
-            if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id)
+            if (!UserIdentity.IsUserInRole(this, "Admin") && UserIdentity.GetUserId(this) != user.Id)
                 return new HttpNotFoundResult();
             return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress,
                 user.NewEmailAddressRequestExpiryDate));
@@ -137,13 +137,13 @@ namespace SecurityEssentials.Controllers
             Seconds = 60)]
         public async Task<ActionResult> ChangeEmailAddress(ChangeEmailAddressViewModel model)
         {
-            var userId = _userIdentity.GetUserId(this);
+            var userId = UserIdentity.GetUserId(this);
             var user = _context.User
                 .FirstOrDefault(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved);
-            _appSensor.ValidateFormData(this, new List<string> {"NewEmailAddress", "Password"});
+            AppSensor.ValidateFormData(this, new List<string> {"NewEmailAddress", "Password"});
             if (ModelState.IsValid)
             {
-                var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
+                var logonResult = await _userManager.TryLogOnAsync(UserIdentity.GetUserName(this), model.Password);
                 if (logonResult.Success)
                 {
                     if (user == null)
@@ -169,12 +169,12 @@ namespace SecurityEssentials.Controllers
                 }
                 Logger.Information(
                     "Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}",
-                    _userIdentity.GetRequester(this, AppSensorDetectionPointKind.AE1));
+                    UserIdentity.GetRequester(this, AppSensorDetectionPointKind.AE1));
                 ModelState.AddModelError("Password", "The password is not correct");
             }
             else
             {
-                _appSensor.InspectModelStateErrors(this);
+                AppSensor.InspectModelStateErrors(this);
             }
             return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress,
                 user.NewEmailAddressRequestExpiryDate));
@@ -187,7 +187,7 @@ namespace SecurityEssentials.Controllers
             var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
             var user = _context.User.FirstOrDefault(u => u.NewEmailAddressToken == newEmaiLAddressToken &&
                                                          u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow);
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             if (user == null)
             {
                 var error = new HandleErrorInfo(
@@ -264,11 +264,11 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             var recaptchaSuccess = true;
             if (_configuration.HasRecaptcha)
                 recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-            _appSensor.ValidateFormData(this, new List<string> {"ConfirmPassword", "OldPassword", "NewPassword"});
+            AppSensor.ValidateFormData(this, new List<string> {"ConfirmPassword", "OldPassword", "NewPassword"});
             if (recaptchaSuccess)
             {
                 var user = _context.User.FirstOrDefault(u => u.Id == requester.LoggedOnUserId.Value);
@@ -311,7 +311,7 @@ namespace SecurityEssentials.Controllers
         {
             var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
             var user = _context.User.FirstOrDefault(u => u.EmailConfirmationToken == emailVerificationToken);
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             if (user == null)
             {
                 var error = new HandleErrorInfo(
@@ -346,9 +346,9 @@ namespace SecurityEssentials.Controllers
         [AllowXRequestsEveryXSeconds(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
         public async Task<ActionResult> Recover(RecoverViewModel model)
         {
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             var userName = model.UserName;
-            _appSensor.ValidateFormData(this, new List<string> {"UserName"});
+            AppSensor.ValidateFormData(this, new List<string> {"UserName"});
             if (ModelState.IsValid)
             {
                 var user = _context.User
@@ -385,7 +385,7 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-                _appSensor.InspectModelStateErrors(this);
+                AppSensor.InspectModelStateErrors(this);
             }
             return View("RecoverSuccess");
         }
@@ -397,7 +397,7 @@ namespace SecurityEssentials.Controllers
         public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
 
             var user = _context.User
                 .Include("SecurityQuestionLookupItem")
@@ -445,8 +445,8 @@ namespace SecurityEssentials.Controllers
         {
             var user = _context.User.FirstOrDefault(u => u.Id == recoverPasswordModel.Id);
             var id = recoverPasswordModel.Id;
-            var requester = _userIdentity.GetRequester(this);
-            _appSensor.ValidateFormData(this,
+            var requester = UserIdentity.GetRequester(this);
+            AppSensor.ValidateFormData(this,
                 new List<string>
                 {
                     "UserName",
@@ -519,7 +519,7 @@ namespace SecurityEssentials.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Password change was not successful");
-                    _appSensor.InspectModelStateErrors(this);
+                    AppSensor.InspectModelStateErrors(this);
                 }
             else
                 Logger.Information("Failed Account Recover Password Post Recaptcha failed by requester {@requester}",
@@ -547,8 +547,8 @@ namespace SecurityEssentials.Controllers
         public async Task<ActionResult> ChangeSecurityInformation(ChangeSecurityInformationViewModel model)
         {
             var errorMessage = "";
-            var requester = _userIdentity.GetRequester(this);
-            _appSensor.ValidateFormData(this,
+            var requester = UserIdentity.GetRequester(this);
+            AppSensor.ValidateFormData(this,
                 new List<string>
                 {
                     "SecurityQuestionLookupItemId",
@@ -561,7 +561,7 @@ namespace SecurityEssentials.Controllers
                 var recaptchaSuccess = true;
                 if (_configuration.HasRecaptcha)
                     recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
+                var logonResult = await _userManager.TryLogOnAsync(UserIdentity.GetUserName(this), model.Password);
                 if (recaptchaSuccess)
                     if (logonResult.Success)
                     {
@@ -598,7 +598,7 @@ namespace SecurityEssentials.Controllers
                         errorMessage = "Security information incorrect or account locked out";
                     }
                 else
-                    _appSensor.InspectModelStateErrors(this);
+                    AppSensor.InspectModelStateErrors(this);
             }
             var securityQuestions = _context.LookupItem
                 .Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false)
@@ -629,7 +629,7 @@ namespace SecurityEssentials.Controllers
             var user = new User();
             var password = collection["Password"];
             var confirmPassword = collection["ConfirmPassword"];
-            _appSensor.ValidateFormData(this, new List<string>
+            AppSensor.ValidateFormData(this, new List<string>
             {
                 "Password",
                 "ConfirmPassword",
@@ -639,7 +639,7 @@ namespace SecurityEssentials.Controllers
                 "User.SecurityQuestionLookupItemId",
                 "User.SecurityAnswer"
             });
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             if (ModelState.IsValid)
             {
                 var propertiesToUpdate = new[]
@@ -699,7 +699,7 @@ namespace SecurityEssentials.Controllers
             }
             else
             {
-                _appSensor.InspectModelStateErrors(this);
+                AppSensor.InspectModelStateErrors(this);
             }
             var securityQuestions = _context.LookupItem
                 .Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false)
@@ -712,7 +712,7 @@ namespace SecurityEssentials.Controllers
         [HttpGet]
         public ActionResult Landing()
         {
-            var currentUserId = _userIdentity.GetUserId(this);
+            var currentUserId = UserIdentity.GetUserId(this);
             var users = _context.User.Where(u => u.Id == currentUserId);
             if (users.ToList().Count == 0) return new HttpNotFoundResult();
             var user = users.FirstOrDefault();
@@ -736,7 +736,7 @@ namespace SecurityEssentials.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
             if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Landing", "Account");
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             Logger.Information(
                 "Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}",
                 returnUrl, requester);

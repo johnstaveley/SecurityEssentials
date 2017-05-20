@@ -10,14 +10,14 @@ namespace SecurityEssentials.Core
     /// </summary>
     public sealed class Encryption : IDisposable, IEncryption
     {
-        private readonly RijndaelManaged encryptionAlgorithm;
+        private readonly RijndaelManaged _encryptionAlgorithm;
 
         /// <summary>
         ///     Constructor
         /// </summary>
         public Encryption()
         {
-            encryptionAlgorithm = new RijndaelManaged
+            _encryptionAlgorithm = new RijndaelManaged
             {
                 BlockSize = 128,
                 KeySize = 256,
@@ -29,7 +29,7 @@ namespace SecurityEssentials.Core
 
         public void Dispose()
         {
-            encryptionAlgorithm.Dispose();
+            _encryptionAlgorithm.Dispose();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SecurityEssentials.Core
             byte[] bytKey;
             byte[] bytIV;
             CreateKey(password, salt, iterationCount, out bytKey, out bytIV);
-            var decryptor = encryptionAlgorithm.CreateDecryptor(bytKey, bytIV);
+            var decryptor = _encryptionAlgorithm.CreateDecryptor(bytKey, bytIV);
             var cipher = Convert.FromBase64String(input);
 
             try
@@ -90,7 +90,7 @@ namespace SecurityEssentials.Core
 
             using (var stream = new MemoryStream())
             {
-                using (var encryptor = encryptionAlgorithm.CreateEncryptor(bytKey, bytIV))
+                using (var encryptor = _encryptionAlgorithm.CreateEncryptor(bytKey, bytIV))
                 {
                     using (var cryptoStream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write))
                     {
@@ -112,13 +112,13 @@ namespace SecurityEssentials.Core
         /// <param name="iterationCount">The number of iterations of the encryption algorithm used to encrypt data</param>
         /// <param name="salt">The salt used in addition to the encryption key</param>
         /// <param name="key">Returned encryption key to use when encrypting the data</param>
-        /// <param name="IV">Returned Initialization vector to use when encrypting the data</param>
-        private void CreateKey(string password, string salt, int iterationCount, out byte[] key, out byte[] IV)
+        /// <param name="iv">Returned Initialization vector to use when encrypting the data</param>
+        private void CreateKey(string password, string salt, int iterationCount, out byte[] key, out byte[] iv)
         {
             var saltBytes = Encoding.Unicode.GetBytes(salt);
             var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes) {IterationCount = iterationCount};
-            key = rfc2898DeriveBytes.GetBytes(encryptionAlgorithm.KeySize / 8);
-            IV = rfc2898DeriveBytes.GetBytes(encryptionAlgorithm.BlockSize / 8);
+            key = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.KeySize / 8);
+            iv = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.BlockSize / 8);
         }
     }
 }

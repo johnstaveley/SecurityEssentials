@@ -32,7 +32,7 @@ namespace SecurityEssentials.Controllers
             Response.TrySkipIisCustomErrors = true;
             var appSensorDetectionPoint = AppSensorDetectionPointKind.RE1;
             // TODO: Determine if path exists, if so RE2, otherwise RE1
-            var requester = _userIdentity.GetRequester(this, appSensorDetectionPoint);
+            var requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
             var currentExecutionFilePath = Request.CurrentExecutionFilePath;
             Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}",
                 currentExecutionFilePath, requester);
@@ -52,7 +52,7 @@ namespace SecurityEssentials.Controllers
                 result = PartialView("_Forbidden", model);
             Response.StatusCode = 403;
             Response.TrySkipIisCustomErrors = true;
-            var requester = _userIdentity.GetRequester(this);
+            var requester = UserIdentity.GetRequester(this);
             var currentExecutionFilePath = Request.CurrentExecutionFilePath;
             if (Server.GetLastError() is HttpAntiForgeryException)
                 Logger.Information(
@@ -77,7 +77,7 @@ namespace SecurityEssentials.Controllers
                 result = PartialView("_Index", model);
             Response.StatusCode = 500;
             Response.TrySkipIisCustomErrors = true;
-            var requestor = _userIdentity.GetRequester(this);
+            var requestor = UserIdentity.GetRequester(this);
             Logger.Error(Server.GetLastError(), "Error occurred by user {@requestor}", requestor);
             return result;
         }

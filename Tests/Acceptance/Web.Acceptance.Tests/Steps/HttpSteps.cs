@@ -19,6 +19,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             var response = HttpWeb.Get(ConfigurationManager.AppSettings["WebServerUrl"]);
             var headers = Enumerable
                 .Range(0, response.Headers.Count)
+                // ReSharper disable once AssignNullToNotNullAttribute
                 .SelectMany(i => response.Headers.GetValues(i)
                     .Select(v => Tuple.Create(response.Headers.GetKey(i), v)));
             ScenarioContext.Current.SetHttpHeaders(headers);
