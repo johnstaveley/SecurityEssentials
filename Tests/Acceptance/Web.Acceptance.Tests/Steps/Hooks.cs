@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Configuration;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
+using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Steps
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
     [Binding]
     public class Hooks
@@ -16,22 +19,40 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Steps
         public static void BeforeFeature()
         {
             var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"];
+            var webBrowserType = ConfigurationManager.AppSettings["WebBrowserType"];
             IWebDriver webDriver;
             if (!string.IsNullOrEmpty(webBrowserProxy))
             {
+                FirefoxProfile profile = new FirefoxProfile();
                 var proxy = new Proxy
                 {
                     HttpProxy = webBrowserProxy,
                     FtpProxy = webBrowserProxy,
                     SslProxy = webBrowserProxy
                 };
-                var capabilities = new DesiredCapabilities();
-                capabilities.SetCapability(CapabilityType.Proxy, proxy);
-                webDriver = new FirefoxDriver(capabilities);
+                profile.SetProxyPreferences(proxy);
+                webDriver = new FirefoxDriver(profile);
             }
             else
             {
-                webDriver = new FirefoxDriver();
+                switch (webBrowserType)
+                {
+                    case "Chrome":
+                        webDriver = new ChromeDriver();
+                        break;
+                    case "FireFox":
+                        webDriver = new FirefoxDriver();
+                        break;
+                    case "IE":
+                    case "Internet Explorer":
+                        webDriver = new InternetExplorerDriver();
+                        break;
+                    case "PhantomJS":
+                        webDriver = new PhantomJSDriver();
+                        break;
+                    default:
+                        throw new Exception($"Unable to set browser type {webBrowserType}");
+                }
             }
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             FeatureContext.Current.SetWebDriver(webDriver);
