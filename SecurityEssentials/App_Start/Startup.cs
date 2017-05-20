@@ -1,10 +1,10 @@
 ﻿using Microsoft.Owin;
 using Owin;
-using SecurityEssentials.App_Start;
+using SecurityEssentials;
 
 [assembly: OwinStartup(typeof(Startup))]
 
-namespace SecurityEssentials.App_Start
+namespace SecurityEssentials
 {
     public partial class Startup
     {

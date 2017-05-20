@@ -12,7 +12,7 @@ using SecurityEssentials.Core.Constants;
 using SecurityEssentials.Core.Identity;
 using Serilog;
 
-namespace SecurityEssentials.Unit.Tests.Core
+namespace SecurityEssentials.Unit.Tests
 {
     [TestClass]
     public class AppSensorFixture

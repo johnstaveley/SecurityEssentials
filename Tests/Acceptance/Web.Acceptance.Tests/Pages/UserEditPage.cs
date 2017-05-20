@@ -1,9 +1,9 @@
 ﻿using System;
 using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
     public class UserEditPage : BasePage
     {

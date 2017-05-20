@@ -5,7 +5,7 @@ using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public abstract class BaseTab
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
     public static class ScenarioContextExtensions
     {

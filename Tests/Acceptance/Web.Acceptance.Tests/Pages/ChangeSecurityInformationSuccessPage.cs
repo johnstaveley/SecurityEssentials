@@ -1,8 +1,8 @@
 ﻿using System;
 using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using SecurityEssentials.Acceptance.Tests.Menus;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
     public class ChangeSecurityInformationSuccessPage : BasePage
     {

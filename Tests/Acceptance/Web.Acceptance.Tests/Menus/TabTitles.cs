@@ -1,4 +1,4 @@
-﻿namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+﻿namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public static class TabTitles
     {

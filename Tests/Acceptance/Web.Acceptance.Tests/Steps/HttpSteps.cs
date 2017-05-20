@@ -2,9 +2,9 @@
 using System.Configuration;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecurityEssentials.Acceptance.Tests.Extensions;
 using SecurityEssentials.Acceptance.Tests.Model;
 using SecurityEssentials.Acceptance.Tests.Utility;
-using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 

@@ -4,7 +4,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 
-namespace SecurityEssentials.App_Start
+namespace SecurityEssentials
 {
     public static partial class Startup
     {

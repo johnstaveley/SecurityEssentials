@@ -6,7 +6,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
     public static class FeatureContextExtensions
     {

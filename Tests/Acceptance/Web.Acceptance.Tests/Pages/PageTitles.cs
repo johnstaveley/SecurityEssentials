@@ -1,4 +1,4 @@
-﻿namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+﻿namespace SecurityEssentials.Acceptance.Tests.Pages
 {
     public static class PageTitles
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public class MenuBar
     {

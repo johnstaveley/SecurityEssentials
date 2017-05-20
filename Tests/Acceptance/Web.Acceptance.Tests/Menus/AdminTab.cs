@@ -1,9 +1,9 @@
 ﻿using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
+using SecurityEssentials.Acceptance.Tests.Pages;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public class AdminTab : BaseTab
     {

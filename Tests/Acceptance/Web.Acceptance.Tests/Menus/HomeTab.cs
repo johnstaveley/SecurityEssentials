@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenQA.Selenium;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
     public class HomeTab : BaseTab
     {
