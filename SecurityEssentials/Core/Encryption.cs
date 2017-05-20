@@ -45,7 +45,6 @@ namespace SecurityEssentials.Core
         {
             byte[] bytKey;
             byte[] bytIV;
-            var bytInput = Encoding.Unicode.GetBytes(input);
             CreateKey(password, salt, iterationCount, out bytKey, out bytIV);
             var decryptor = encryptionAlgorithm.CreateDecryptor(bytKey, bytIV);
             var cipher = Convert.FromBase64String(input);
@@ -88,7 +87,6 @@ namespace SecurityEssentials.Core
             byte[] bytKey;
             byte[] bytIV;
             CreateKey(password, salt, iterationCount, out bytKey, out bytIV);
-            var bytInput = Encoding.Unicode.GetBytes(input);
 
             using (var stream = new MemoryStream())
             {

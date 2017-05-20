@@ -176,7 +176,7 @@ namespace SecurityEssentials.Core.Identity
         }
 
         public AppUserManager() : this(new AppConfiguration(), new SEContext(), new Encryption(),
-            new UserStore<User>(new SEContext(), new AppConfiguration()))
+            new UserStore(new SEContext(), new AppConfiguration()))
         {
             // TODO: Put in IoC container
         }

@@ -5,12 +5,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using SecurityEssentials.Model;
 
 namespace SecurityEssentials.Core.Identity
 {
-    public class UserStore<TUser> : IAppUserStore<User>
+    public class UserStore : IAppUserStore<User>
     {
         #region Constructor
 
@@ -102,7 +101,7 @@ namespace SecurityEssentials.Core.Identity
 
         public IPasswordHasher PasswordHasher { get; set; }
         public IIdentityValidator<string> PasswordValidator { get; set; }
-        protected UserStore<IdentityUser> Store { get; private set; }
+        protected UserStore Store { get; private set; }
         private ISEContext _context { get; set; }
         private IAppConfiguration _configuration { get; }
 

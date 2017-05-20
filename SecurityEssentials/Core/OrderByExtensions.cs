@@ -33,7 +33,7 @@ namespace SecurityEssentials.Core
             }
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
             var lambda = Expression.Lambda(delegateType, expr, arg);
-            var methodName = string.Empty;
+            string methodName;
 
             if (!orderByInfo.Initial && collection is IOrderedQueryable<T>)
                 methodName = orderByInfo.Direction == SortDirection.Ascending ? "ThenBy" : "ThenByDescending";

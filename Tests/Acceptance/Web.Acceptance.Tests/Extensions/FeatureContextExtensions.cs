@@ -40,7 +40,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
         private static List<DateTime> GetLoginAttempts(this FeatureContext featureContext)
         {
-            List<DateTime> loginAttempts = null;
+            List<DateTime> loginAttempts;
             if (!featureContext.TryGetValue(LOGIN_ATTEMPTS, out loginAttempts))
                 SetLoginAttempts(featureContext, new List<DateTime>());
             return featureContext.Get<List<DateTime>>(LOGIN_ATTEMPTS);
@@ -48,7 +48,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
         public static void WaitForLoginAttempt(this FeatureContext featureContext)
         {
-            var loginAttempts = GetLoginAttempts(featureContext);
+            List<DateTime> loginAttempts;
             do
             {
                 Thread.Sleep(5000);

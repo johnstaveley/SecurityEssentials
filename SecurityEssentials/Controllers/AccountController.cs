@@ -476,7 +476,7 @@ namespace SecurityEssentials.Controllers
                     id, requester);
                 return View("Error", error);
             }
-            var encryptedSecurityAnswer = "";
+            string encryptedSecurityAnswer;
             _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
                 _configuration.EncryptionIterationCount, recoverPasswordModel.SecurityAnswer,
                 out encryptedSecurityAnswer);
@@ -568,7 +568,7 @@ namespace SecurityEssentials.Controllers
                         if (model.SecurityAnswer == model.SecurityAnswerConfirm)
                         {
                             var user = _context.User.FirstOrDefault(u => u.UserName == logonResult.UserName);
-                            var encryptedSecurityAnswer = "";
+                            string encryptedSecurityAnswer;
                             _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
                                 _configuration.EncryptionIterationCount, model.SecurityAnswer,
                                 out encryptedSecurityAnswer);
@@ -661,8 +661,8 @@ namespace SecurityEssentials.Controllers
                         {
                             user = _context.User.First(u => u.UserName == user.UserName);
                             // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                            var emailBody = "";
-                            var emailSubject = "";
+                            string emailBody;
+                            string emailSubject;
                             if (result.Succeeded)
                             {
                                 emailSubject = $"{_configuration.ApplicationName} - Complete your registration";

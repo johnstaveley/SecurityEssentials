@@ -12,8 +12,8 @@ namespace SecurityEssentials.Core
         protected override void Seed(SEContext context)
         {
             var encryptor = new Encryption();
-            var encryptedSecurityAnswer = "";
-            var salt = "";
+            string encryptedSecurityAnswer;
+            string salt;
 
             // Roles
             var adminRole = new Role {Id = 1, Description = "Admin"};

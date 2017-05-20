@@ -18,7 +18,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
         private IAppConfiguration _configuration;
         private ISEContext _context;
 
-        private UserStore<User> _sut;
+        private UserStore _sut;
         protected User _testUser;
         private string testRoleName;
 
@@ -33,7 +33,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
             _testUser = GetUser();
             _context.User.Add(_testUser);
 
-            _sut = new UserStore<User>(_context, _configuration);
+            _sut = new UserStore(_context, _configuration);
         }
 
         [TestMethod]
