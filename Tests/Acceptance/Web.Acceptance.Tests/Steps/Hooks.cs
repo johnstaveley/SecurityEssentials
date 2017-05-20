@@ -5,7 +5,6 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.PhantomJS;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
 using SecurityEssentials.Acceptance.Tests.Web.Extensions;
 using TechTalk.SpecFlow;
@@ -23,7 +22,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             IWebDriver webDriver;
             if (!string.IsNullOrEmpty(webBrowserProxy))
             {
-                FirefoxProfile profile = new FirefoxProfile();
+                var profile = new FirefoxProfile();
                 var proxy = new Proxy
                 {
                     HttpProxy = webBrowserProxy,
