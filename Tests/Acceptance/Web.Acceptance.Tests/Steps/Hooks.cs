@@ -67,10 +67,15 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 
 		}
 
+		[AfterFeature]
+		public static void AfterFeature()
+		{
+			if (FeatureContext.Current.HasWebDriver()) FeatureContext.Current.GetWebDriver().Quit();
+		}
+
 		[AfterTestRun]
 		public static void AfterTestRun()
 		{
-			if (FeatureContext.Current.HasWebDriver()) FeatureContext.Current.GetWebDriver().Quit();
 			if (bool.Parse(ConfigurationManager.AppSettings["RestoreDatabaseAfterTests"]))
 			{
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseTeardown.sql");
