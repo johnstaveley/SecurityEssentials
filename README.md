@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-###Created by John Staveley - Last major update 13/10/2016
+###Created by John Staveley - Last update 21/05/2017
 
 ##Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -10,15 +10,15 @@ This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, 
 * Weak account management: 
 	+ Uses claims based auth
 	+ Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified
-	+ Enforces a strong password - Bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters
+	+ Enforces a strong password - Bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters, bans use of previous N passwords
 	+ Has a water tight account management process
-	+ Prevents anti-enumeration through well designed messages
+	+ Prevents anti-enumeration through well designed system messages
 	+ Logs account activity which can be checked by the user to see if there is any illicit activity
 	+ Emails on key account events and gives anti-phishing advice
 	+ Verifies email by sending an email to the specified address
 	+ Re-verifies email when requesting a change of email
 	+ Prevents brute force of logon
-	+ Prevents brute force of registration or password reset through anti-throttling and CAPTCHA
+	+ Prevents brute force of registration or password reset through anti-throttling and CAPTCHA (optional)
 	+ Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm
 	+ Increasing wait time on logon failure rather than account lock out
 	+ Unit tests for password hashing and authorization attributes
@@ -46,6 +46,7 @@ Other threats it protects against and features:
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
 * Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards
+* Forces user to change their password if their password has expired
 * Professionally pentested
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
