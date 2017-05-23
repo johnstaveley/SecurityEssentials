@@ -16,7 +16,7 @@ namespace SecurityEssentials.Model
 		public int UserId { get; set; }
 
 		[Required, Display(Name="Date Created")]
-		public DateTime DateCreated {get; set; }
+		public DateTime CreatedDateUtc {get; set; }
 
 		[Required, MinLength(2), Display(Name = "Description")]
 		public string Description { get; set; }
@@ -26,7 +26,7 @@ namespace SecurityEssentials.Model
 
         public UserLog()
         {
-			DateCreated = DateTime.UtcNow;
+			CreatedDateUtc = DateTime.UtcNow;
         }
 
 

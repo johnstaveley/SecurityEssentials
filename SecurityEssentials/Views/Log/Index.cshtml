@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SecurityEssentials.Model.Log>
+
+@{
+    ViewBag.Title = "Logs";
+}
+
+<h2>Logs</h2>
+<p>Shows the most recent system logs</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Message)</th>
+        <th>@Html.DisplayNameFor(model => model.Level)</th>
+        <th>@Html.DisplayNameFor(model => model.TimeStamp)</th>
+        <th>@Html.DisplayNameFor(model => model.Exception)</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.Message)</td>
+        <td>@Html.DisplayFor(modelItem => item.Level)</td>
+        <td>@Html.DisplayFor(modelItem => item.TimeStamp)</td>
+        <td>@Html.DisplayFor(modelItem => item.Exception)</td>
+    </tr>
+}
+
+</table>

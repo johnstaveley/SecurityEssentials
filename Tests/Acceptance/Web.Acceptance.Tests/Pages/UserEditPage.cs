@@ -1,98 +1,54 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 using TechTalk.SpecFlow;
-using OpenQA.Selenium.Support.UI;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class UserEditPage : BasePage
 	{
 
-		public MenuBar MenuBar { get; private set; }
-
-		private IWebElement StatusMessage
-		{
-			get { return this.GetVisibleWebElement(By.Id("statusMessage")); }
-		}
-
-		private IWebElement UserName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_UserName")); }
-		}
-
-		private IWebElement Title
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_Title")); }
-		}
-
-		private IWebElement FirstName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_FirstName")); }
-		}
-
-		private IWebElement LastName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_LastName")); }
-		}
-
-		private IWebElement TelNoWork
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_TelNoWork")); }
-		}
-
-		private IWebElement TelNoHome
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_TelNoHome")); }
-		}
-
-		private IWebElement TelNoMobile
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_TelNoMobile")); }
-		}
-
-		private IWebElement Town
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_Town")); }
-		}
-
-		private IWebElement PostCode
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_Postcode")); }
-		}
-
-		private IWebElement SkypeName
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_SkypeName")); }
-		}
-
-		private IWebElement EmailVerified
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_EmailVerified")); }
-		}
-
-		private IWebElement Approved
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_Approved")); }
-		}
-
-		private IWebElement Enabled
-		{
-			get { return this.GetVisibleWebElement(By.Id("User_Enabled")); }
-		}
-
-
-		private IWebElement SubmitButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}		
-
+		public MenuBar MenuBar { get; }
+		private IWebElement StatusMessage => GetVisibleWebElement(By.Id("statusMessage"));
+		private IWebElement UserName => GetVisibleWebElement(By.Id("User_UserName"));
+		private IWebElement Title => GetVisibleWebElement(By.Id("User_Title"));
+		private IWebElement FirstName => GetVisibleWebElement(By.Id("User_FirstName"));
+		private IWebElement LastName => GetVisibleWebElement(By.Id("User_LastName"));
+		private IWebElement MakeAdminButton => GetVisibleWebElement(By.Id("makeAdmin"));
+		private IWebElement RemoveAdminButton => GetVisibleWebElement(By.Id("removeAdmin"));
+		private IWebElement TelNoWork => GetVisibleWebElement(By.Id("User_TelNoWork"));
+		private IWebElement TelNoHome => GetVisibleWebElement(By.Id("User_TelNoHome"));
+		private IWebElement TelNoMobile => GetVisibleWebElement(By.Id("User_TelNoMobile"));
+		private IWebElement Town => GetVisibleWebElement(By.Id("User_Town"));
+		private IWebElement PostCode => GetVisibleWebElement(By.Id("User_Postcode"));
+		private IWebElement SkypeName => GetVisibleWebElement(By.Id("User_SkypeName"));
+		private IWebElement EmailVerified => GetVisibleWebElement(By.Id("User_EmailVerified"));
+		private IWebElement Approved => GetVisibleWebElement(By.Id("User_Approved"));
+		private IWebElement DeleteUser => GetVisibleWebElement(By.Id("deleteUser"));
+		private IWebElement Enabled => GetVisibleWebElement(By.Id("User_Enabled"));
+		private IWebElement ResetPassword => GetVisibleWebElement(By.Id("resetPassword"));
+		private IWebElement SubmitButton => GetVisibleWebElement(By.Id("submit"));
 		public UserEditPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.USER_EDIT)
 		{
 			MenuBar = new MenuBar(webDriver, baseUri);
 		}
-
+		public void ClickDeleteUser()
+		{
+			DeleteUser.Click();
+		}
+		public void ClickMakeAdmin()
+		{
+			MakeAdminButton.Click();
+		}
+		public void ClickRemoveAdmin()
+		{
+			RemoveAdminButton.Click();
+		}
+		public void ClickResetPassword()
+		{
+			ResetPassword.Click();
+		}
 		public void EnterDetails(Table table)
 		{
 
@@ -149,60 +105,77 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						Town.SendKeys(row[1]);
 						break;
 					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
+						throw new Exception($"Field {row[0]} not defined");
 				}
 			}
 		}
-
 		public bool GetApproved()
 		{
-			return this.Approved.Selected;
+			return Approved.Selected;
 		}
-
 		public bool GetEmailVerified()
 		{
-			return this.EmailVerified.Selected;
+			return EmailVerified.Selected;
 		}
 
 		public bool GetEnabled()
 		{
-			return this.Enabled.Selected;
+			return Enabled.Selected;
 		}
-
 		public string GetFirstName()
 		{
-			return this.FirstName.GetAttribute("value");
+			return FirstName.GetAttribute("value");
 		}
-
-		public string GetLastName()
-		{
-			return this.LastName.GetAttribute("value");
-		}
-
-		public string GetMobileTelephoneNumber()
-		{
-			return this.TelNoMobile.GetAttribute("value");
-		}
-
-		public string GetTitle()
-		{
-			return this.Title.GetAttribute("value");
-		}
-
-		public string GetUserName()
-		{
-			return this.UserName.Text;
-		}
-
-		public void ClickSubmit()
-		{
-			SubmitButton.Click();
-		}
-
+		public bool GetIfTextIndicatingUserIsAnAdminExists => Driver.FindElements(By.Id("textIndicatingUserIsAnAdmin")).Count > 0;
 		public string GetStatusMessage()
 		{
 			return StatusMessage.Text;
 		}
+		public string GetTelNoHome()
+		{
+			return TelNoHome.GetAttribute("value");
+		}
+		public string GetLastName()
+		{
+			return LastName.GetAttribute("value");
+		}
+		public string GetPostcode()
+		{
+			return PostCode.GetAttribute("value");
+		}
+		public string GetSkypeName()
+		{
+			return SkypeName.GetAttribute("value");
+		}
+		public string GetTelNoMobile()
+		{
+			return TelNoMobile.GetAttribute("value");
+		}
+		public string GetTelNoWork()
+		{
+			return TelNoWork.GetAttribute("value");
+		}
+		public string GetTown()
+		{
+			return Town.GetAttribute("value");
+		}
 
+		public bool IsUserNameEditable()
+		{
+			return UserName.TagName == "input";
+		}	
+		public string GetTitle()
+		{
+			return Title.GetAttribute("value");
+		}
+
+		public string GetUserName()
+		{
+			return (UserName.TagName == "input" ? UserName.GetAttribute("value") : UserName.Text);
+		}
+		public void ClickSubmit()
+		{
+			SubmitButton.Click();
+		}
 	}
 }

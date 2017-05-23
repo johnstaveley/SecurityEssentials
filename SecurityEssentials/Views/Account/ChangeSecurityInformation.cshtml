@@ -4,13 +4,13 @@
     ViewBag.Active = "Admin";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h1>@ViewBag.Title.</h1>
 
-@using (Html.BeginForm("ChangeSecurityInformation", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
+@using (Html.BeginForm("ChangeSecurityInformationAsync", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
 {
     @Html.AntiForgeryToken()
     <hr />
-        @Html.ValidationSummary()
+    @Html.ValidationSummary(true)
     if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
         <div class="alert alert-info">@Model.ErrorMessage</div>
@@ -26,27 +26,43 @@
             Re-enter your password, then your new security information to complete this action.
         </div>
     </div>
-        <div class="row">
-            &nbsp;
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.Password, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off", maxlength = 20 })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.SecurityQuestionLookupItemId, new { @class = "control-label" })</div>
+        <div class="col-md-4">
+            @Html.DropDownListFor(model => model.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })
         </div>
-        <div class="row">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">@Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off", maxlength = 20 })</div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.SecurityQuestionLookupItemId, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.DropDownListFor(model => model.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.SecurityAnswer, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswer, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.SecurityAnswerConfirm, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">@Html.PasswordFor(m => m.SecurityAnswerConfirm, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
-        </div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.SecurityQuestionLookupItemId, "", new { @class = "text-danger" })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.SecurityAnswer, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.SecurityAnswer, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.SecurityAnswer, "", new { @class = "text-danger" })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.SecurityAnswerConfirm, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.SecurityAnswerConfirm, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.SecurityAnswerConfirm, "", new { @class = "text-danger" })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
     if (Model.HasRecaptcha)
     {
         <div class="row">
@@ -55,10 +71,10 @@
                 @Html.Partial("_Recaptcha");
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">&nbsp;</div>
+        </div>
     }
-    <div class="row">
-        &nbsp;
-    </div>
     <div class="row">
         <div class="col-md-offset-10 col-md-2">
             <input id="submit" type="submit" class="btn btn-default btn btn-primary" value="Save Changes" />
@@ -67,5 +83,5 @@
 }
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
 }

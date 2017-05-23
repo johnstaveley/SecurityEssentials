@@ -1,5 +1,6 @@
-﻿using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
@@ -11,7 +12,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void ThenAnErrorMessageIsShown(string errorMessage)
 		{
 			var driver = FeatureContext.Current.GetWebDriver();
-			Assert.IsTrue(driver.PageSource.Contains(errorMessage), string.Format("Page should have contained error message '{0}'", errorMessage));
+			Assert.IsTrue(driver.PageSource.Contains(errorMessage), $"Page should have contained error message '{errorMessage}'");
 		}
 
 	}

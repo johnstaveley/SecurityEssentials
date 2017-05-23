@@ -2,7 +2,7 @@
 {
 	public static class TabTitles
 	{
-		public const string HOME = "Home";
-		public const string ADMIN = "Admin";
+		public const string Home = "Home";
+		public const string Admin = "Admin";
 	}
 }

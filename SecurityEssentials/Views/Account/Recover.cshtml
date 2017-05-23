@@ -4,21 +4,21 @@
     ViewBag.Active = "Home";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("RecoverAsync", "Account"))
 {
     @Html.AntiForgeryToken()
 
     <div class="container">
         <div>
             <div class="row">
-                <div class="col-md-12"><h2>Recover your password</h2></div>
+                <div class="col-md-12"><h1>Recover your password</h1></div>
             </div>
             <div class="row">
                 <div class="col-md-12">@Html.ValidationSummary(true)</div>
             </div>
             <div>
                 <div class="row">
-                    <div class="col-md-12">Enter your Email address and captcha code to recover your password</div>
+                    <div class="col-md-12">Enter your Email address to recover your password</div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">@Html.LabelFor(m => m.UserName)</div>
@@ -26,16 +26,19 @@
                     <div class="col-md-4">@Html.ValidationMessageFor(m => m.UserName)</div>
                 </div>
                 @if (Model.HasRecaptcha) {
-                <div class="row">
-                    <div class="col-md-4">Enter the figures you see in the box shown</div>
-                    <div class="col-md-8">
-                        @Html.Partial("_Recaptcha")
+                    <div class="row">
+                        <div class="col-md-4">Enter the figures you see in the box shown</div>
+                        <div class="col-md-8">
+                            @Html.Partial("_Recaptcha")
+                        </div>
                     </div>
-                </div>
                 }
                 <div class="row">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-8">
+                    <div class="col-md-12">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7"></div>
+                    <div class="col-md-5">
                         @Html.ActionLink("Cancel", "LogOn", "Account", null, new { @class = "btn btn-primary" })
                         <input id="recoverButton" type="submit" value="Recover" class="btn btn-primary" />
                     </div>
@@ -48,5 +51,5 @@
     </p>
 }
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    
 }

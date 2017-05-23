@@ -1,12 +1,13 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class RecoverSuccessPage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
 		public RecoverSuccessPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.RECOVER_SUCCESS)

@@ -5,12 +5,12 @@
     ViewBag.Active = "Admin";
 }
 
-<h2>@ViewBag.Title.</h2>
-@using (Html.BeginForm("ChangeEmailAddress", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+<h1>@ViewBag.Title.</h1>
+@using (Html.BeginForm("ChangeEmailAddressAsync", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
 {
     @Html.AntiForgeryToken()
     <hr />
-    @Html.ValidationSummary()
+    @Html.ValidationSummary(true)
     <div class="row">
         To change your email address, please enter your password and the new email address, an email confirmation link will be then sent to your own address to confirm the change. At this point your new email address will become active. All changes will be logged.
         This page should show any pending email change requests. The Administrator can always change email addresses from the user list page.
@@ -22,35 +22,41 @@
             There is an outstanding request to change the email address from @Model.EmailAddress to @Model.NewEmailAddress Until this request expires at @Model.NewEmailAddressRequestExpiryDate.Value.ToString("dd/MM/yyyy HH:mm") a new change request cannot be issued.
         </div>
     }
-    else {
+    else
+    {
         <div class="row">
-            @Html.LabelFor(model => model.EmailAddress, new { @class = "col-md-4 control-label" })
+            <div class="col-md-12">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 labelBold">Current Email Address</div>
             <div class="col-md-8">@Html.DisplayTextFor(model => model.EmailAddress)</div>
         </div>
         <div class="row">
-            @Html.LabelFor(model => model.Password, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.PasswordFor(model => model.Password, new { @class = "form-control", autocomplete = "off" })
-                @Html.ValidationMessageFor(model => model.Password)
-            </div>
+            <div class="col-md-12">&nbsp;</div>
         </div>
         <div class="row">
-            @Html.LabelFor(model => model.NewEmailAddress, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.NewEmailAddress, new { @class = "form-control", autocomplete = "off" })
-                @Html.ValidationMessageFor(model => model.NewEmailAddress)
-            </div>
+            <div class="col-md-4">@Html.LabelFor(model => model.Password, new { @class = "control-label" })</div>
+            <div class="col-md-4">@Html.PasswordFor(model => model.Password, new { @class = "form-control", autocomplete = "off" })</div>
+            <div class="col-md-4">@Html.ValidationMessageFor(model => model.Password)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">@Html.LabelFor(model => model.NewEmailAddress, new { @class = "control-label" })</div>
+            <div class="col-md-4">@Html.TextBoxFor(model => model.NewEmailAddress, new { @class = "form-control", autocomplete = "off" })</div>
+            <div class="col-md-4">@Html.ValidationMessageFor(model => model.NewEmailAddress)</div>
         </div>
         <div class="row">
             <div class="col-md-2">&nbsp;</div>
         </div>
-            <div class="row">
-                <div class="col-md-offset-10 col-md-2">
-                    <input id="submit" type="submit" value="Request Change" class="btn btn-primary" />
-                </div>
+        <div class="row">
+            <div class="col-md-offset-10 col-md-2">
+                <input id="submit" type="submit" value="Request Change" class="btn btn-primary" />
             </div>
+        </div>
     }
 }
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
 }

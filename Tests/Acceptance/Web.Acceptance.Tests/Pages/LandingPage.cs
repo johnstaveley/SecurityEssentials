@@ -1,18 +1,15 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using System;
+using SecurityEssentials.Acceptance.Tests.Menus;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class LandingPage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get;  }
 
-		private IWebElement LastAccountActivity
-		{
-			get { return this.GetVisibleWebElement(By.Id("LastAccountActivity")); }
-		}
-
+		private IWebElement LastAccountActivity => GetVisibleWebElement(By.Id("LastAccountActivity"));
 		public LandingPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.LANDING)
 		{
@@ -23,7 +20,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		{
 			return LastAccountActivity.Text;
 		}
-
+		
 	}
 
 }

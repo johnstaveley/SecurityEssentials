@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SecurityEssentials.Acceptance.Tests.Utility;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public abstract class BasePage
 	{
-		protected readonly WebDriverWait _wait;
+		protected readonly WebDriverWait Wait;
 
-		public string PageTitle { get; private set; }
+		public string PageTitle { get; }
 		protected Uri BaseUri { get; private set; }
-		protected IWebDriver Driver { get; private set; }
-		protected TimeSpan WaitInterval { get; private set; }
+		protected IWebDriver Driver { get; }
+		protected TimeSpan WaitInterval { get; }
 
 		protected BasePage(IWebDriver webDriver, Uri baseUri, string pageTitle)
 		{
@@ -23,12 +23,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			Driver = webDriver;
 			PageTitle = pageTitle;
 			WaitInterval = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings["WaitIntervalSeconds"]));
-			_wait = new WebDriverWait(Driver, WaitInterval);
+			Wait = new WebDriverWait(Driver, WaitInterval);
 		}
 
 		protected IWebElement GetVisibleWebElement(By by)
 		{
-			return _wait.Until(ExpectedConditions.ElementIsVisible(by));
+			return Wait.Until(ExpectedConditions.ElementIsVisible(by));
 		}
 
 		public virtual bool IsCurrentPage
@@ -48,19 +48,14 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 			}
 		}
 
-		private IWebElement ErrorSummary
+		public List<string> ErrorSummary
 		{
-			get { return this.GetVisibleWebElement(By.ClassName("validation-summary-errors")); }
+			get { return GetVisibleWebElement(By.ClassName("validation-summary-errors")).FindElements(By.TagName("li")).Select(a => a.Text).ToList(); }
 		}
 
-		public List<string> Errors
+		public List<string> FieldErrors
 		{
-			get { return ErrorSummary.FindElements(By.TagName("li")).Select(a => a.Text).ToList(); }
-		}
-
-		private IWebElement LastAccountActivity
-		{
-			get { return this.GetVisibleWebElement(By.Id("LastAccountActivity")); }
+			get { return Driver.FindElements(By.ClassName("field-validation-error")).Select(a => a.Text).ToList(); }
 		}
 
 		public void ReloadPage()

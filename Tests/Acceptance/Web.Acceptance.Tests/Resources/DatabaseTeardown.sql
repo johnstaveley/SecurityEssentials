@@ -1,0 +1,6 @@
+﻿TRUNCATE TABLE [dbo].[UserRoles]
+TRUNCATE TABLE [dbo].[UserLogs]
+DELETE FROM [dbo].[Users]
+--TRUNCATE TABLE [dbo].[Logs]
+DELETE FROM [dbo].[LookupItems]
+DELETE FROM [dbo].[LookupTypes]

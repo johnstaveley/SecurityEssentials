@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Core.Attributes
@@ -14,22 +13,13 @@ namespace SecurityEssentials.Core.Attributes
 	{
 
 		public List<string> ExpectedFormKeys { get; set; }
-		private IUserIdentity _userIdentity;
-		private ILogger _logger;
-
-		public AppSensorFilter()
-			: this(new UserIdentity(), Log.Logger)
-		{
-			// TODO: Implement using IoC
-		}
+		private readonly IUserIdentity _userIdentity;
+		private readonly ILogger _logger;		
 
 		public AppSensorFilter(IUserIdentity userIdentity, ILogger logger)
 		{
-			if (logger == null) throw new ArgumentNullException("logger");
-			if (userIdentity == null) throw new ArgumentNullException("userIdentity");
-
-			_logger = logger;
-			_userIdentity = userIdentity;
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			_userIdentity = userIdentity ?? throw new ArgumentNullException(nameof(userIdentity));
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -49,10 +39,10 @@ namespace SecurityEssentials.Core.Attributes
 				var additionalKeys = keysSent.Except(ExpectedFormKeys).ToList();
 				if (additionalKeys.Count > 0)
 				{
-					var requester = _userIdentity.GetRequester((Controller)controller, AppSensorDetectionPointKind.RE5);
+					var requester = _userIdentity.GetRequester((Controller)controller, AppSensorDetectionPointKind.Re5);
 					if (controllerName == "Account" && methodName == "LogOn" && httpMethod == "POST")
 					{
-						requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE10;
+						requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae10;
 					}
 					var additionalFormKeys = string.Join(",", additionalKeys);
 					_logger.Information("{@controllerName} {@methodName} {@httpMethod} additional form keys {additionalFormKeys} sent by requester {@requester}",
@@ -62,10 +52,10 @@ namespace SecurityEssentials.Core.Attributes
 				var missingKeys = ExpectedFormKeys.Except(keysSent).ToList();
 				if (missingKeys.Count > 0)
 				{
-					var requester = _userIdentity.GetRequester((Controller)controller, AppSensorDetectionPointKind.RE6);
+					var requester = _userIdentity.GetRequester((Controller)controller, AppSensorDetectionPointKind.Re6);
 					if (controllerName == "Account" && methodName == "LogOn" && httpMethod == "POST")
 					{
-						requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.AE11;
+						requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae11;
 					}
 					var missingFormKeys = string.Join(",", missingKeys);
 					_logger.Information("{@controllerName} {@methodName} {@httpMethod} missing form keys {missingFormKeys} sent by requester {@requester}",
@@ -75,15 +65,19 @@ namespace SecurityEssentials.Core.Attributes
 				foreach (var keySent in keysSent)
 				{
 					var valuesSent = filterContext.HttpContext.Request.Form.GetValues(keySent);
-					foreach (var valueSent in valuesSent)
+					if (valuesSent != null)
 					{
-						if (Regex.Match(valueSent, @"\*!?|\*|[';]--|--[\s\r\n\v\f]|(?:--[^-]*?-)|([^\-&])#.*?[\s\r\n\v\f]|;?\\x00").Success)
+						foreach (var valueSent in valuesSent)
 						{
-							var requester = _userIdentity.GetRequester((Controller)controller, AppSensorDetectionPointKind.CIE1);
-							_logger.Information("{@controllerName} {@methodName} {@httpMethod} SQL injection sent in form submission {@valueSent} by requester {@requester}",
-								controllerName, methodName, httpMethod, valueSent, requester);
+							if (Regex.Match(valueSent, @"\*!?|\*|[';]--|--[\s\r\n\v\f]|(?:--[^-]*?-)|([^\-&])#.*?[\s\r\n\v\f]|;?\\x00")
+								.Success)
+							{
+								var requester = _userIdentity.GetRequester((Controller) controller, AppSensorDetectionPointKind.Cie1);
+								_logger.Information(
+									"{@controllerName} {@methodName} {@httpMethod} SQL injection sent in form submission {@valueSent} by requester {@requester}",
+									controllerName, methodName, httpMethod, valueSent, requester);
+							}
 						}
-
 					}
 				}
 			}

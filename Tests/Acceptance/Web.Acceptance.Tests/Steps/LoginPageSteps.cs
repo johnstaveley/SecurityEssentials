@@ -1,23 +1,25 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
-using TechTalk.SpecFlow;
+﻿using NUnit.Framework;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class LoginPageSteps
 	{
 
-        [Given(@"I click recover password")]
+		[Given(@"I click recover password")]
 		public void GivenIClickRecoverPassword()
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
 			loginPage.ClickRecoverPassword();
 		}
 
-		[When(@"I click the login button")]
 		[Given(@"I click the login button")]
+		[When(@"I click the login button")]
+		[Then(@"I click the login button")]
 		public void GivenIClickTheLoginButton()
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
@@ -34,6 +36,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		}
 
 		[Given(@"I enter the following login data:")]
+		[Then(@"I enter the following login data:")]
 		public void GivenIEnterTheFollowingLoginData(Table table)
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
@@ -44,9 +47,9 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void ThenTheFollowingErrorsAreDisplayed(Table table)
 		{
 			var loginPage = ScenarioContext.Current.GetPage<LoginPage>();
-			var actualErrors = loginPage.Errors;
+			var actualErrors = loginPage.ErrorSummary;
 			var expectedErrors = table.Rows.Select(a => a[0]).ToList();
-			Assert.IsTrue(actualErrors.SequenceEqual(expectedErrors));
+			Assert.IsTrue(actualErrors.SequenceEqual(expectedErrors), "Expected FieldErrors are not present");
 		}
 
 	}

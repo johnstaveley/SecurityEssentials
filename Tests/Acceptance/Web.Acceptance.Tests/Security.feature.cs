@@ -17,42 +17,40 @@ namespace SecurityEssentials.Acceptance.Tests
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.1.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute()]
+    [NUnit.Framework.TestFixtureAttribute()]
+    [NUnit.Framework.DescriptionAttribute("Security")]
+    [NUnit.Framework.CategoryAttribute("CheckForErrors")]
     public partial class SecurityFeature
     {
         
-        private static TechTalk.SpecFlow.ITestRunner testRunner;
+        private TechTalk.SpecFlow.ITestRunner testRunner;
         
 #line 1 "Security.feature"
 #line hidden
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute()]
-        public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
+        [NUnit.Framework.TestFixtureSetUpAttribute()]
+        public virtual void FeatureSetup()
         {
-            testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner(null, 0);
+            testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Security", "\tIn order to avoid information disclosure\r\n\tAs a pen tester\r\n\tI want to be sure t" +
-                    "he application has the correct security settings and behaviour", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    "he application has the correct security settings and behaviour", ProgrammingLanguage.CSharp, new string[] {
+                        "CheckForErrors"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute()]
-        public static void FeatureTearDown()
+        [NUnit.Framework.TestFixtureTearDownAttribute()]
+        public virtual void FeatureTearDown()
         {
             testRunner.OnFeatureEnd();
             testRunner = null;
         }
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute()]
+        [NUnit.Framework.SetUpAttribute()]
         public virtual void TestInitialize()
         {
-            if (((testRunner.FeatureContext != null) 
-                        && (testRunner.FeatureContext.FeatureInfo.Title != "Security")))
-            {
-                SecurityEssentials.Acceptance.Tests.SecurityFeature.FeatureSetup(null);
-            }
         }
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute()]
+        [NUnit.Framework.TearDownAttribute()]
         public virtual void ScenarioTearDown()
         {
             testRunner.OnScenarioEnd();
@@ -68,15 +66,28 @@ namespace SecurityEssentials.Acceptance.Tests
             testRunner.CollectScenarioErrors();
         }
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The web application will return the correct security headers")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Security")]
+        public virtual void FeatureBackground()
+        {
+#line 7
+#line 8
+ testRunner.Given("I delete all cookies from the cache", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 9
+ testRunner.And("I clear down the database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("I have the standard set of lookups", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("The web application will return the correct security headers")]
         public virtual void TheWebApplicationWillReturnTheCorrectSecurityHeaders()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The web application will return the correct security headers", ((string[])(null)));
-#line 6
+#line 12
 this.ScenarioSetup(scenarioInfo);
 #line 7
+this.FeatureBackground();
+#line 13
  testRunner.When("I call http get on the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -91,7 +102,10 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "X-XSS-Protection",
                         "1; mode=block"});
-#line 8
+            table1.AddRow(new string[] {
+                        "Referrer-Policy",
+                        "origin"});
+#line 14
  testRunner.Then("the response headers will contain:", ((string)(null)), table1, "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -102,27 +116,28 @@ this.ScenarioSetup(scenarioInfo);
                         "X-AspNetMvc-Version"});
             table2.AddRow(new string[] {
                         "Server"});
-#line 13
+#line 20
  testRunner.And("the response headers will not contain:", ((string)(null)), table2, "And ");
 #line hidden
             this.ScenarioCleanup();
         }
         
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The application will prevent a brute force login attempt")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Security")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("The application will prevent a brute force login attempt")]
         public virtual void TheApplicationWillPreventABruteForceLoginAttempt()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The application will prevent a brute force login attempt", ((string[])(null)));
-#line 19
+#line 26
 this.ScenarioSetup(scenarioInfo);
-#line 20
+#line 7
+this.FeatureBackground();
+#line 27
  testRunner.Given("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 21
+#line 28
  testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 22
+#line 29
  testRunner.And("I click the login link in the navigation bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 23
+#line 30
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -130,21 +145,21 @@ this.ScenarioSetup(scenarioInfo);
                         "Value"});
             table3.AddRow(new string[] {
                         "UserName",
-                        "attempt1@user.com"});
+                        "attempt1@test.net"});
             table3.AddRow(new string[] {
                         "Password",
                         "rhubarb22"});
-#line 24
- testRunner.And("I enter the following login data:", ((string)(null)), table3, "And ");
-#line 28
- testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 29
- testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
- testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31
+ testRunner.And("I enter the following login data:", ((string)(null)), table3, "And ");
+#line 35
+ testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+ testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 37
+ testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 38
  testRunner.And("I click the login link in the navigation bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 32
+#line 39
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -152,21 +167,21 @@ this.ScenarioSetup(scenarioInfo);
                         "Value"});
             table4.AddRow(new string[] {
                         "UserName",
-                        "attempt2@user.com"});
+                        "attempt2@test.net"});
             table4.AddRow(new string[] {
                         "Password",
                         "rhubarb22"});
-#line 33
- testRunner.And("I enter the following login data:", ((string)(null)), table4, "And ");
-#line 37
- testRunner.And("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 38
- testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 39
- testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 40
+ testRunner.And("I enter the following login data:", ((string)(null)), table4, "And ");
+#line 44
+ testRunner.And("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 45
+ testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 46
+ testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 47
  testRunner.And("I click the login link in the navigation bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 41
+#line 48
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
@@ -174,21 +189,21 @@ this.ScenarioSetup(scenarioInfo);
                         "Value"});
             table5.AddRow(new string[] {
                         "UserName",
-                        "attempt3@user.com"});
+                        "attempt3@test.net"});
             table5.AddRow(new string[] {
                         "Password",
                         "rhubarb22"});
-#line 42
- testRunner.And("I enter the following login data:", ((string)(null)), table5, "And ");
-#line 46
- testRunner.And("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 47
- testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 48
- testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 49
+ testRunner.And("I enter the following login data:", ((string)(null)), table5, "And ");
+#line 53
+ testRunner.And("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 54
+ testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 55
+ testRunner.And("I am taken to the homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 56
  testRunner.And("I click the login link in the navigation bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 50
+#line 57
  testRunner.And("I am navigated to the \'login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -196,19 +211,146 @@ this.ScenarioSetup(scenarioInfo);
                         "Value"});
             table6.AddRow(new string[] {
                         "UserName",
-                        "attempt4@user.com"});
+                        "attempt4@test.net"});
             table6.AddRow(new string[] {
                         "Password",
                         "rhubarb22"});
-#line 51
+#line 58
  testRunner.And("I enter the following login data:", ((string)(null)), table6, "And ");
-#line 55
+#line 62
  testRunner.When("I click the login button as quickly as possible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 56
+#line 63
  testRunner.And("I wait 2 seconds", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 57
- testRunner.Then("an error message is shown \'You have performed this action more than 3 times in th" +
-                    "e last 60 seconds.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 64
+ testRunner.Then("an error message is shown \'You have requested this resource too many times in the" +
+                    " last 60 seconds.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("A user with an expired password is redirected to the change password page until t" +
+            "hey change the password")]
+        public virtual void AUserWithAnExpiredPasswordIsRedirectedToTheChangePasswordPageUntilTheyChangeThePassword()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user with an expired password is redirected to the change password page until t" +
+                    "hey change the password", ((string[])(null)));
+#line 66
+this.ScenarioSetup(scenarioInfo);
+#line 7
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "UserName",
+                        "Title",
+                        "FirstName",
+                        "LastName",
+                        "Password",
+                        "SecurityQuestion",
+                        "SecurityAnswer",
+                        "IsAdmin",
+                        "Approved",
+                        "Enabled",
+                        "WorkTelephoneNumber",
+                        "HomeTelephoneNumber",
+                        "MobileTelephoneNumber",
+                        "Town",
+                        "Postcode",
+                        "SkypeName",
+                        "PasswordExpiryDate"});
+            table7.AddRow(new string[] {
+                        "user1@test.net",
+                        "Mr",
+                        "Needs",
+                        "Approval",
+                        "zasXX8576jFj123",
+                        "What is the name of your first pet?",
+                        "Beatrix",
+                        "false",
+                        "true",
+                        "true",
+                        "0123",
+                        "0456",
+                        "0789",
+                        "town",
+                        "postcode",
+                        "skype",
+                        "[Expired]"});
+#line 67
+ testRunner.Given("the following users are setup in the database:", ((string)(null)), table7, "Given ");
+#line 70
+ testRunner.And("the user \'user1@test.net\' has the password expiry date set", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 71
+ testRunner.And("I navigate to the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 72
+ testRunner.And("I click the login link in the navigation bar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 73
+ testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table8.AddRow(new string[] {
+                        "UserName",
+                        "user1@test.net"});
+            table8.AddRow(new string[] {
+                        "Password",
+                        "zasXX8576jFj123"});
+#line 74
+ testRunner.And("I enter the following login data:", ((string)(null)), table8, "And ");
+#line 78
+ testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 79
+ testRunner.And("I am navigated to the \'Change Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 80
+ testRunner.And("I select Admin -> Change Security Information from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 81
+ testRunner.And("I am navigated to the \'Change Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 82
+ testRunner.And("I select Admin -> Manage Account from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 83
+ testRunner.And("I am navigated to the \'Change Password\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table9.AddRow(new string[] {
+                        "CurrentPassword",
+                        "zasXX8576jFj123"});
+            table9.AddRow(new string[] {
+                        "NewPassword",
+                        "NewPassword45678"});
+            table9.AddRow(new string[] {
+                        "ConfirmNewPassword",
+                        "NewPassword45678"});
+#line 84
+ testRunner.And("I enter the following change password data:", ((string)(null)), table9, "And ");
+#line 89
+ testRunner.When("I submit the change password form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 90
+ testRunner.Then("I am navigated to the \'Change Password Success\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 91
+ testRunner.And("the user \'user1@test.net\' does not have the password expiry date set", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 92
+ testRunner.And("I select Admin -> Change Security Information from the menu", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 93
+ testRunner.And("I am navigated to the \'Login\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Field",
+                        "Value"});
+            table10.AddRow(new string[] {
+                        "UserName",
+                        "user1@test.net"});
+            table10.AddRow(new string[] {
+                        "Password",
+                        "NewPassword45678"});
+#line 94
+ testRunner.And("I enter the following login data:", ((string)(null)), table10, "And ");
+#line 98
+ testRunner.And("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 99
+ testRunner.And("I am navigated to the \'Change Security Information\' page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

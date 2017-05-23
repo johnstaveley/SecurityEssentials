@@ -57,11 +57,20 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -96,13 +105,22 @@
     <Compile Include="Menus\MenuBar.cs" />
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
+    <Compile Include="Model\DescriptionViewModel.cs" />
     <Compile Include="Model\HttpHeader.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Model\UserToCreate.cs" />
+    <Compile Include="Model\UserViewModel.cs" />
     <Compile Include="Pages\ChangeEmailAddressPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressPendingPage.cs" />
     <Compile Include="Pages\ChangePasswordSuccessPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressSuccessPage.cs" />
     <Compile Include="Pages\ChangeEmailAddressConfirmPage.cs" />
+    <Compile Include="Pages\DeleteUserPage.cs" />
+    <Compile Include="Pages\LogPage.cs" />
+    <Compile Include="Pages\MakeAdminPage.cs" />
+    <Compile Include="Pages\RemoveAdminPage.cs" />
+    <Compile Include="Pages\ResetPasswordPage.cs" />
     <Compile Include="Pages\UserIndexPage.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\AccountLogPage.cs" />
@@ -130,10 +148,12 @@
     <Compile Include="Steps\AccountLogSteps.cs" />
     <Compile Include="Steps\ChangeEmailAddressSteps.cs" />
     <Compile Include="Steps\ChangeSecurityInformationSteps.cs" />
+    <Compile Include="Steps\DatabaseSteps.cs" />
     <Compile Include="Steps\HttpSteps.cs" />
     <Compile Include="Steps\LandingPageSteps.cs" />
     <Compile Include="Steps\LoginPageSteps.cs" />
     <Compile Include="Steps\ChangePasswordSteps.cs" />
+    <Compile Include="Steps\LogSteps.cs" />
     <Compile Include="Steps\RecoverPasswordSteps.cs" />
     <Compile Include="Steps\UserEditSteps.cs" />
     <Compile Include="Steps\RecoverSteps.cs" />
@@ -142,8 +162,15 @@
     <Compile Include="Steps\Hooks.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />
     <Compile Include="Steps\UtilitySteps.cs" />
+    <Compile Include="User.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>User.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\DatabaseCommand.cs" />
     <Compile Include="Utility\Repeater.cs" />
     <Compile Include="Utility\HttpWeb.cs" />
+    <Compile Include="Utility\SeDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Account.feature">
@@ -167,9 +194,26 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Security.feature.cs</LastGenOutput>
     </None>
+    <None Include="User.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>User.feature.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SecurityEssentials\SecurityEssentials.Web.csproj">
+      <Project>{ac8e9b1b-9815-4398-b755-57a59615788c}</Project>
+      <Name>SecurityEssentials.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LookupRestore.sql" />
+    <EmbeddedResource Include="Resources\DatabaseTeardown.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DatabaseRestore.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />

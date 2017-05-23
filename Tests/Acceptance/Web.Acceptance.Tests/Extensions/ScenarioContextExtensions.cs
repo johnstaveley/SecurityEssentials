@@ -1,24 +1,46 @@
-﻿using TechTalk.SpecFlow;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using SecurityEssentials.Acceptance.Tests.Pages;
+using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
 	public static class ScenarioContextExtensions
 	{
 
-		public const string KEY_HTTP_HEADERS = "Http_Headers";
+		public const string KeyHttpHeaders = "Http_Headers";
+		public const string KeyHash = "Hash";
+		public const string KeySalt = "Salt";
 
 		public static IEnumerable<Tuple<string, string>> GetHttpHeaders(this ScenarioContext scenarioContext)
 		{
-			return scenarioContext.Get<IEnumerable<Tuple<string, string>>>(KEY_HTTP_HEADERS);
+			return scenarioContext.Get<IEnumerable<Tuple<string, string>>>(KeyHttpHeaders);
 		}
 
 		public static void SetHttpHeaders(this ScenarioContext scenarioContext, IEnumerable<Tuple<string, string>> value)
 		{
-			scenarioContext.Set<IEnumerable<Tuple<string, string>>>(value, KEY_HTTP_HEADERS);
+			scenarioContext.Set(value, KeyHttpHeaders);
+		}
+
+		public static string GetHash(this ScenarioContext scenarioContext)
+		{
+			return scenarioContext.Get<string>(KeyHash);
+		}
+
+		public static void SetSalt(this ScenarioContext scenarioContext, string value)
+		{
+			scenarioContext.Set(value, KeySalt);
+		}
+
+		public static string GetSalt(this ScenarioContext scenarioContext)
+		{
+			return scenarioContext.Get<string>(KeySalt);
+		}
+
+		public static void SetHash(this ScenarioContext scenarioContext, string value)
+		{
+			scenarioContext.Set(value, KeyHash);
 		}
 
 		public static T GetPage<T>(this ScenarioContext scenarioContext) where T : BasePage

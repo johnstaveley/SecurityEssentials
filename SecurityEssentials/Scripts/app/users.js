@@ -78,8 +78,7 @@ $(document).ready(function () {
                 url: 'User/Read/',
                 dataType: "json",
                 data: function () {
-                    var filterDescription = "",
-                        parameter = {
+                        var parameter = {
                             searchText: $('#quickFindCriteria').val()
                         };
                     // Get text for filter bar
@@ -103,11 +102,11 @@ $(document).ready(function () {
                 user,
                 isEnabled;
             for (user in userList) {
-                isEnabled = userList[user].Enabled == true;
+                isEnabled = userList[user].Enabled === true;
                 if (!isEnabled) {
                     var uid = userList[user].uid;
                     $.each($('#kendoUserGrid tr'), function () {
-                        if ($(this).data("uid") == uid) {
+                        if ($(this).data("uid") === uid) {
                             $(this).find('a.disableUser').addClass('disabled').on('click', function () {
                                 return false;
                             });

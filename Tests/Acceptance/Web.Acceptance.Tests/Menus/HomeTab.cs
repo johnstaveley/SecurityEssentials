@@ -1,5 +1,4 @@
 ﻿using System;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
@@ -8,7 +7,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 	public class HomeTab : BaseTab
 	{
 		public HomeTab(IWebDriver driver, Uri baseUri)
-			: base(driver, baseUri, TabTitles.HOME, "home", "home")
+			: base(driver, baseUri, TabTitles.Home, "home", "home")
 		{
 		}
 

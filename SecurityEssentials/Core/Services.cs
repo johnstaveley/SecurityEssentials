@@ -9,22 +9,16 @@ namespace SecurityEssentials.Core
 
 		private readonly IAppConfiguration _configuration;
 
-		public Services() : this(new AppConfiguration())
-		{
-
-		}
-
 		public Services(IAppConfiguration configuration)
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
-			_configuration = configuration;
+			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 		}
 
         /// <summary>
         ///     Send Email - Requires smtp settings inside the web.config file
         /// </summary>
         /// <param name="from">Who to send email from.</param>
-        /// <param name="to">Who to send email to.</param>
+        /// <param name="toAddresses">Who to send email to.</param>
         /// <param name="cc">Who to copy into the email.</param>
         /// <param name="bcc">Who to blind copy into the email.</param>
         /// <param name="subject">The subject line of the email.</param>

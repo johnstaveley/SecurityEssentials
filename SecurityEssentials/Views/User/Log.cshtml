@@ -1,26 +1,39 @@
-﻿@model IEnumerable<SecurityEssentials.Model.UserLog>
+﻿@model SecurityEssentials.ViewModel.UserLogViewModel
 
 @{
     ViewBag.Title = "Account Log";
     ViewBag.Active = "Admin";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>User Activity Log</h2>
+<h1>Account Log</h1>
 
-<p id="mostRecentMessage">Viewing ten most recent log entries for @ViewBag.UserName</p>
-<p>If you suspect your account has been compromised, please change your password immediately</p>
-<table class="table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.DateCreated)</th>
-        <th>@Html.DisplayNameFor(model => model.Description)</th>
-    </tr>
+<p>Viewing ten most recent log entries for @ViewBag.UserName</p>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-        <td>@Html.DisplayFor(modelItem => item.Description)</td>
-    </tr>
+@if (Model.UserLogs.Any())
+{
+    <p>If you suspect the account has been compromised, please disable the account or change the password immediately</p>
+
+    <table id="userLogTable" class="table">
+        <tr>
+            <th>Created Date</th>
+            <th>Description</th>
+        </tr>
+
+        @foreach (var item in Model.UserLogs)
+        {
+            <tr>
+                <td>@item.CreatedDateUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            </tr>
+        }
+    </table>
+
+    <hr />
+    
+}
+else
+{
+    <p>No activity has been recorded against this account</p>
 }
 
-</table>
+

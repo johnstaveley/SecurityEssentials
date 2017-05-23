@@ -1,26 +1,31 @@
-﻿using System.Web.Http;
+﻿using SecurityEssentials.App_Start;
+using SecurityEssentials.Controllers;
+using SecurityEssentials.Core;
+using SecurityEssentials.Core.Identity;
+using Serilog;
+using System;
+using System.Configuration;
+using System.Security.Claims;
+using System.Web;
+using System.Web.Helpers;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using System.Security.Claims;
-using SecurityEssentials.Core;
-using System.Web.Helpers;
-using Serilog;
-using System.Configuration;
-using SecurityEssentials.Controllers;
-using System.Web;
-using System;
+using Microsoft.AspNet.Identity;
+using Serilog.Core;
 
 namespace SecurityEssentials
 {
 	// Note: For instructions on enabling IIS6 or IIS7 classic mode, 
 	// visit http://go.microsoft.com/?LinkId=9394801
 
-	public class MvcApplication : System.Web.HttpApplication
+	public class MvcApplication : HttpApplication
 	{
 
 		protected void Application_Start()
 		{
+			DependencyInjection.Configure();
 			AreaRegistration.RegisterAllAreas();
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -29,12 +34,12 @@ namespace SecurityEssentials
 			AuthConfig.RegisterAuth();
 			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
 			// SECURE: Remove automatic XFrame option header so we can add it in filters to entire site
-			System.Web.Helpers.AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
+			AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
 
 			// SECURE: Remove server information disclosure
 			MvcHandler.DisableMvcResponseHeader = true;
 
-			using (var context = new SEContext())
+			using (var context = new SeContext())
 			{
 				context.Database.Initialize(true);
 			}
@@ -66,7 +71,8 @@ namespace SecurityEssentials
 			}
 
 			var ex = Server.GetLastError();
-			var controller = new ErrorController();
+			// TODO: Remove service location antipattern
+			var controller = new ErrorController(DependencyInjection.Container.GetInstance<IUserIdentity>(), DependencyInjection.Container.GetInstance<AppSensor>());
 			var routeData = new RouteData();
 			var action = "Index";
 

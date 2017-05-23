@@ -2,7 +2,6 @@
     ViewBag.Title = "Home Page";
     ViewBag.Active = "Home";
 }
-@section featured {
     <section class="featured">
         <div class="content-wrapper">
             <hgroup class="title">
@@ -10,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 19/05/2016</h4>
+                <h4>Created by John Staveley - Last updated 21/05/2017</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -62,9 +61,10 @@
                     <li>Form overposting: Example given of how to avoid this</li>
                     <li>Acceptance tests for key functionality</li>
                     <li>Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards</li>
+                    <li>Professionally pentested</li>
                 </ul>
             </p>
-            <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information</p>
+            <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.md in project for more information</p>
             <p>
                 <h2>Steps to secure your website on the server</h2>
                 When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
@@ -101,4 +101,3 @@
             <p>Created 29/01/2015</p>
         </div>
     </section>
-}

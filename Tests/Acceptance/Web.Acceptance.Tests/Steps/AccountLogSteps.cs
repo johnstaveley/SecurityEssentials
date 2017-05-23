@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 {
@@ -8,11 +9,12 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 	public class AccountLogSteps
 	{
 
-		[Then(@"I am shown the message '(.*)'")]
-		public void ThenIAmShownTheMessage(string message)
+		[Then(@"I am shown the following user logs:")]
+		public void ThenIAmShownTheFollowingUserLogs(Table table)
 		{
 			var page = ScenarioContext.Current.GetPage<AccountLogPage>();
-			Assert.IsTrue(page.GetMostRecentMessage().Contains(message));
+			var userLogsDisplayed = page.GetUserLogsDisplayed();
+			table.CompareToSet(userLogsDisplayed);
 		}
 
 

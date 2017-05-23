@@ -46,5 +46,6 @@ Other threats it protects against and features:
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
 * Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards
+* Professionally pentested
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*

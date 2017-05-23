@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace SecurityEssentials.Model
 {
-	public class SEIdentityResult
+	public class SeIdentityResult
     {
-        public SEIdentityResult(IEnumerable<string> errors)
+        public SeIdentityResult(IEnumerable<string> errors)
         {
             if (errors != null && errors.Count() > 0)
             {
@@ -21,7 +21,7 @@ namespace SecurityEssentials.Model
         //
         // Summary:
         //     Failure constructor that takes error messages
-        public SEIdentityResult(params string[] errors) : this(errors.ToList()) { }
+        public SeIdentityResult(params string[] errors) : this(errors.ToList()) { }
 
         // Summary:
         //     List of errors

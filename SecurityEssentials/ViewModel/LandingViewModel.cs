@@ -19,7 +19,7 @@ namespace SecurityEssentials.ViewModel
 		{
 
 			FirstName = firstName;
-			LastAccountActivity = (lastAccountActivity != null ? lastAccountActivity.DateCreated.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : "Never logged in");
+			LastAccountActivity = (lastAccountActivity != null ? lastAccountActivity.CreatedDateUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : "Never logged in");
 			UserId = userId;
 
 		}

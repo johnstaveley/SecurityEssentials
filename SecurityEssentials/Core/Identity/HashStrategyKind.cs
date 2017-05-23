@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace SecurityEssentials.Core.Identity
+﻿namespace SecurityEssentials.Core.Identity
 {
 	public enum HashStrategyKind
 	{
-		PBKDF2_5009Iterations = 0,
-		PBKDF2_8000Iterations = 1,
-		Argon2_48kWorkCost = 2
+		Pbkdf25009Iterations = 0,
+		Pbkdf28000Iterations = 1,
+		Argon248KWorkCost = 2
 	}
 }

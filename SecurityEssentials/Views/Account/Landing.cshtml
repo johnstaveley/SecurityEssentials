@@ -16,19 +16,8 @@
                     <div class="col-md-8 alert">@ViewBag.StatusMessage</div>
                 </div>}
             <div class="row">
-                <div class="col-md-12">Welcome back @Html.DisplayFor(m => m.FirstName)</div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">&nbsp;</div>
-            </div>
-            <div class="row">
-                <div class="col-md-12" id="LastAccountActivity">
-                    The last actvity logged against your account was @Html.DisplayFor(m => m.LastAccountActivity).
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-12">
-                    Go @Html.ActionLink("here", "Log", "User", new { Id = Model.UserId }, null) for a full list of your account activity.
+                    Welcome back @Html.DisplayFor(m => m.FirstName) <span id="LastAccountActivity">the last activity logged against your account was @Html.DisplayFor(m => m.LastAccountActivity).</span> Go @Html.ActionLink("here", "Log", "User", new {Id = Model.UserId}, null) for a full list of your account activity. If you notice any suspicious activity on your account then you should notify your system administrator immediately.
                 </div>
             </div>
             <div class="row">
@@ -38,3 +27,4 @@
             </div>
         </div>
     </div>
+</div>

@@ -1,8 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using NUnit.Framework;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class LandingPageSteps
@@ -11,9 +12,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		public void ThenTheFollowingLastActivityMessageIsShown(string textToMatch)
 		{
 			var landingPage = ScenarioContext.Current.GetPage<LandingPage>();
-			Assert.IsTrue(landingPage.GetLastAccountActivity().Contains(textToMatch));
+			Assert.IsTrue(landingPage.GetLastAccountActivity().Contains(textToMatch), $"Expected text '{textToMatch}' but was '{landingPage.GetLastAccountActivity()}'");
 		}
-
-
 	}
 }

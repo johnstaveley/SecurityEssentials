@@ -1,35 +1,27 @@
 ﻿using SecurityEssentials.Core;
 using SecurityEssentials.Core.Identity;
-using System;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
 	public class ErrorController : SecurityControllerBase
     {
-
-		public ErrorController() : this(new UserIdentity(), new AppSensor())
-		{
-			// TODO: Replace with your DI Framework of choice
-		}
-
+		
 		public ErrorController(IUserIdentity userIdentity, IAppSensor appSensor) : base (userIdentity, appSensor)
 		{
 			
 		}
-
-
 
 		// GET: Error
 		public ActionResult NotFound()
         {
 			ActionResult result;
 
-			object model = Request.Url.PathAndQuery;
+			object model = Request.Url?.PathAndQuery;
 
 			if (!Request.IsAjaxRequest())
 			{
-				result = View(model);
+				result = View("NotFound", model);
 			}
 			else
 			{
@@ -37,9 +29,9 @@ namespace SecurityEssentials.Controllers
 			}
 			Response.StatusCode = 404;
 			Response.TrySkipIisCustomErrors = true;
-			var appSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.RE1;
+			var appSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.Re1;
 			// TODO: Determine if path exists, if so RE2, otherwise RE1
-			Requester requester = _userIdentity.GetRequester(this, appSensorDetectionPoint);
+			Requester requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
 			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
 			Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
 			return result;
@@ -50,11 +42,11 @@ namespace SecurityEssentials.Controllers
 		{
 			ActionResult result;
 
-			object model = Request.Url.PathAndQuery;
+			object model = Request.Url?.PathAndQuery;
 
 			if (!Request.IsAjaxRequest())
 			{
-				result = View(model);
+				result = View("Forbidden", model);
 			}
 			else
 			{
@@ -62,7 +54,7 @@ namespace SecurityEssentials.Controllers
 			}
 			Response.StatusCode = 403;
 			Response.TrySkipIisCustomErrors = true;
-			Requester requester = _userIdentity.GetRequester(this);
+			Requester requester = UserIdentity.GetRequester(this);
 			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
 			if (Server.GetLastError() is HttpAntiForgeryException)
 			{
@@ -80,11 +72,11 @@ namespace SecurityEssentials.Controllers
 		{
 			ActionResult result;
 
-			object model = Request.Url.PathAndQuery;
+			object model = Request.Url?.PathAndQuery;
 
 			if (!Request.IsAjaxRequest())
 			{
-				result = View(model);
+				result = View("Index", model);
 			}
 			else
 			{
@@ -92,7 +84,7 @@ namespace SecurityEssentials.Controllers
 			}
 			Response.StatusCode = 500;
 			Response.TrySkipIisCustomErrors = true;
-			Requester requestor = _userIdentity.GetRequester(this);
+			Requester requestor = UserIdentity.GetRequester(this);
 			Logger.Error(Server.GetLastError(), "Error occurred by user {@requestor}", requestor);
 			return result;
 		}

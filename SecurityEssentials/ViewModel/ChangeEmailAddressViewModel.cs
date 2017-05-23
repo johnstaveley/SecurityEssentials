@@ -9,10 +9,12 @@ namespace SecurityEssentials.ViewModel
 
 		[Display(Name ="Current Email Address")]
 		[StringLength(200, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 7)]
+		[RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,4})+)$", ErrorMessage = "The {0} does not appear to be valid")]
 		public string EmailAddress { get; set; }
 
 		[Display(Name = "Enter New Email Address")]
 		[StringLength(200, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 7)]
+		[RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,4})+)$", ErrorMessage = "The {0} does not appear to be valid")]
 		public string NewEmailAddress { get; set; }
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and less than {1} characters long.", MinimumLength = 6)]

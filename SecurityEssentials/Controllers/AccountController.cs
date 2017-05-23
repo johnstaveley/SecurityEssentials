@@ -1,67 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using SecurityEssentials.Model;
-using SecurityEssentials.Core.Identity;
-using SecurityEssentials.Core;
-using SecurityEssentials.ViewModel;
+﻿using SecurityEssentials.Core;
 using SecurityEssentials.Core.Attributes;
 using SecurityEssentials.Core.Constants;
+using SecurityEssentials.Core.Identity;
+using SecurityEssentials.Model;
+using SecurityEssentials.ViewModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
 	public class AccountController : SecurityControllerBase
     {
 
-        private IAppConfiguration _configuration;
-        private IEncryption _encryption;
-        private IFormsAuth _formsAuth;
-        private IRecaptcha _recaptcha;
-        private IServices _services;
-        private ISEContext _context;
-        private IUserManager _userManager;
+	    private readonly IAppConfiguration _configuration;
+	    private readonly IEncryption _encryption;
+	    private readonly IFormsAuth _formsAuth;
+	    private readonly IHttpCache _httpCache;
+	    private readonly IRecaptcha _recaptcha;
+	    private readonly IServices _services;
+	    private readonly ISeContext _context;
+	    private readonly IUserManager _userManager;	
 
-        public AccountController()
-            : this(new AppSensor(), new AppConfiguration(), new Encryption(), new FormsAuth(), new SEContext(), new AppUserManager(), new SecurityCheckRecaptcha(), new Services(), new UserIdentity())
+        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISeContext context, IHttpCache httpCache, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
         {
-            // TODO: Replace with your DI Framework of choice
-        }
+			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+	        _context = context ?? throw new ArgumentNullException(nameof(context));
+	        _encryption = encryption ?? throw new ArgumentNullException(nameof(encryption));
+	        _formsAuth = formsAuth ?? throw new ArgumentNullException(nameof(formsAuth));
+	        _httpCache = httpCache ?? throw new ArgumentNullException(nameof(httpCache));
+	        _recaptcha = recaptcha ?? throw new ArgumentNullException(nameof(recaptcha));
+	        _services = services ?? throw new ArgumentNullException(nameof(services));
+	        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+		}
 
-        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISEContext context, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
-        {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (context == null) throw new ArgumentNullException("context");
-            if (encryption == null) throw new ArgumentNullException("encryption");
-            if (formsAuth == null) throw new ArgumentNullException("formsAuth");
-            if (recaptcha == null) throw new ArgumentNullException("recaptcha");
-            if (services == null) throw new ArgumentNullException("services");
-            if (userManager == null) throw new ArgumentNullException("userManager");
-
-			_configuration = configuration;
-            _context = context;
-            _encryption = encryption;
-            _formsAuth = formsAuth;
-            _recaptcha = recaptcha;
-            _services = services;
-            _userManager = userManager;
-        }
-
-        [HttpPost]
-        [SEAuthorize]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            _formsAuth.SignOut();
-            _userManager.SignOut();
+		[HttpPost]
+		[SeAuthorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult LogOff()
+		{
+			_formsAuth.SignOut();
+			_userManager.SignOut();
 			Logger.Debug("Entered Account Logoff Post");
 			Session.Abandon();
-            return RedirectToAction("LogOn", "Account");
-        }
+			return RedirectToAction("LogOn", "Account");
+		}
 
-        [AllowAnonymous]
+		[AllowAnonymous]
 		[HttpGet]
         public ActionResult LogOn(string returnUrl)
         {
@@ -73,192 +60,212 @@ namespace SecurityEssentials.Controllers
             return View("LogOn");
         }
 
-		[HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "LogOn", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 3, Seconds = 60)]
-        public async Task<ActionResult> LogOn(LogOnViewModel model, string returnUrl)
-        {
+	    [HttpPost]
+	    [AllowAnonymous]
+	    [ValidateAntiForgeryToken]
+	    [AllowXRequestsEveryXSeconds(Name = "LogOn", ContentName = "TooManyRequests", Requests = 3, Seconds = 60)]
+	    public async Task<ActionResult> LogOnAsync(LogOnViewModel model, string returnUrl)
+	    {
 
-			Requester requester = _userIdentity.GetRequester(this);
+		    Requester requester = UserIdentity.GetRequester(this);
 			var userName = model.UserName;
-			_appSensor.ValidateFormData(this, new List<string>() { "UserName", "Password" });
+		    AppSensor.ValidateFormData(this, new List<string> { "UserName", "Password" });
 			if (ModelState.IsValid)
-            {
-                var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
-                if (logonResult.Success)
-                {
-                    await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);					
-					Logger.Information("Successful Account Logon Post for username {userName} by requester {@requester}", userName, model.UserName, requester);
-					return RedirectToLocal(returnUrl);
-                }
-                else
-                {
-                    // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
-                    _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
-                    ModelState.AddModelError("", "Invalid credentials or the account is locked");
-					requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE1;
+		    {
+			    var logonResult = await _userManager.TryLogOnAsync(model.UserName, model.Password);
+			    if (logonResult.Success)
+			    {
+				    var userId = await _userManager.LogOnAsync(logonResult.UserName, model.RememberMe);
+				    Logger.Information("Successful Account Logon Post for username {userName}", userName, model.UserName);
+				    if (logonResult.MustChangePassword)
+				    {
+					    _httpCache.SetCache($"MustChangePassword-{userId}", "");
+				    }
+				    return RedirectToLocal(returnUrl);
+			    }
+			    else
+			    {
+				    // SECURE: Increasing wait time (with random component) for each successive logon failure (instead of locking out)
+				    _services.Wait(500 + (logonResult.FailedLogonAttemptCount * 200) + (new Random().Next(4) * 200));
+				    ModelState.AddModelError("", "Invalid credentials or the account is locked");
+				    requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae1;
 					Logger.Information("Failed Account Logon Post for username {userName} attempt by requester {@requester}", userName, requester);
-					if (logonResult.IsCommonUserName)
-					{
-						requester.AppSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.AE12;
-						Logger.Information("Failed Account Logon Post Common username {userName} attempt by requester {@requester}", userName, requester);
+				    if (logonResult.IsCommonUserName)
+				    {
+					    requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae12;
+					    Logger.Information("Failed Account Logon Post Common username {userName} attempt by requester {@requester}", userName, requester);
 					}
-				}
-			}
+			    }
+		    }
 			else
 			{
-				_appSensor.InspectModelStateErrors(this);
+				AppSensor.InspectModelStateErrors(this);
 			}
 
 			// If we got this far, something failed, redisplay form
-			return View(model);
-        }
+			return View("LogOn", model);
+	    }
 
-		[HttpGet]
-		public ActionResult ChangeEmailAddress()
-		{
-			var userId = _userIdentity.GetUserId(this);
-			var users = _context.User.Where(u => u.Id == userId);
-			if (users.ToList().Count == 0) return new HttpNotFoundResult();
-			var user = users.FirstOrDefault();
-			// SECURE: Check user should have access to this account
-			if (!_userIdentity.IsUserInRole(this, "Admin") && _userIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
-			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
-		}
+	    [HttpGet]
+	    public ActionResult ChangeEmailAddress()
+	    {
+		    var userId = UserIdentity.GetUserId(this);
+		    var users = _context.User.Where(u => u.Id == userId);
+		    if (users.ToList().Count == 0) return new HttpNotFoundResult();
+		    var user = users.Single();
+		    // SECURE: Check user should have access to this account
+		    if (!UserIdentity.IsUserInRole(this, "Admin") && UserIdentity.GetUserId(this) != user.Id) return new HttpNotFoundResult();
+		    return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDateUtc));
+	    }
 
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-		public async Task<ActionResult> ChangeEmailAddress(ChangeEmailAddressViewModel model)
+		[AllowXRequestsEveryXSeconds(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		public async Task<ActionResult> ChangeEmailAddressAsync(ChangeEmailAddressViewModel model)
 		{
-			var userId = _userIdentity.GetUserId(this);
-			var user = _context.User.Where(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved).FirstOrDefault();
-			_appSensor.ValidateFormData(this, new List<string>() { "NewEmailAddress", "Password" });
+			var userId = UserIdentity.GetUserId(this);
+			var user = _context.User.FirstOrDefault(u => u.Id == userId && u.Enabled && u.EmailVerified && u.Approved);
+			AppSensor.ValidateFormData(this, new List<string> { "NewEmailAddress", "Password" });
+			if (user == null) return HttpNotFound();
 			if (ModelState.IsValid)
 			{
-				var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
-				if (logonResult.Success)
+				if (_context.User.Any(a => a.Id != user.Id && model.NewEmailAddress == a.UserName))
 				{
-
-					if (user != null)
-						{
-						user.NewEmailAddressToken = Guid.NewGuid().ToString().Replace("-", "");
-						user.NewEmailAddressRequestExpiryDate = DateTime.UtcNow.AddMinutes(15);
-						user.NewEmailAddress = model.NewEmailAddress;
-						// Send change username with link to recover password form
-						string emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
-						string emailSubject = string.Format("{0} - Complete the change email address process", _configuration.ApplicationName);
-						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-						user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request started to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
-						_context.SaveChanges();
-						return View("ChangeEmailAddressPending");
-					}
+					ModelState.AddModelError("NewEmailAddress", "This email address is already in use");
+					Logger.Information("Failed Account ChangeEmailAddress Post, Username already exists");
 				}
 				else
 				{
-					Logger.Information("Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}", _userIdentity.GetRequester(this, Core.Constants.AppSensorDetectionPointKind.AE1));
-					ModelState.AddModelError("Password", "The password is not correct");
+					var logonResult = await _userManager.TryLogOnAsync(UserIdentity.GetUserName(this), model.Password);
+					if (logonResult.Success)
+					{
+						user.NewEmailAddressToken = Guid.NewGuid().ToString().Replace("-", "");
+						user.NewEmailAddressRequestExpiryDateUtc = DateTime.UtcNow.AddMinutes(15);
+						user.NewEmailAddress = model.NewEmailAddress;
+						// Send change username with link to recover password form
+						string emailBody = EmailTemplates.ChangeEmailAddressPendingBodyText(user.FirstName, user.LastName,
+							_configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.NewEmailAddressToken);
+						string emailSubject = $"{_configuration.ApplicationName} - Complete the change email address process";
+						_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null,
+							emailSubject, emailBody, true);
+						user.UserLogs.Add(new UserLog
+						{
+							Description = $"Change email address request started to change from {user.UserName} to {user.NewEmailAddress}"
+						});
+						_context.SaveChanges();
+						return View("ChangeEmailAddressPending");
+					}
+					else
+					{
+						Logger.Information("Failed Account ChangeEmailAddress Post, Password incorrect by requester {@requester}",
+							UserIdentity.GetRequester(this, AppSensorDetectionPointKind.Ae1));
+						ModelState.AddModelError("Password", "The password is not correct");
+					}
 				}
 			}
 			else
 			{
-				_appSensor.InspectModelStateErrors(this);
+				AppSensor.InspectModelStateErrors(this);
 			}
-			return View(new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDate));
+			return View("ChangeEmailAddress", new ChangeEmailAddressViewModel(user.UserName, user.NewEmailAddress, user.NewEmailAddressRequestExpiryDateUtc));
 
 		}
 
-		[AllowAnonymous]
-		[HttpGet]
-		public async Task<ActionResult> ChangeEmailAddressConfirm()
-		{
-			var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
-			var user = _context.User.Where(u => u.NewEmailAddressToken == newEmaiLAddressToken && u.NewEmailAddressRequestExpiryDate > DateTime.UtcNow).FirstOrDefault();
-			var requester = _userIdentity.GetRequester(this);
-			if (user == null)
-			{
-				HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "ChangeEmailAddressConfirm");
-				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired by requester {@requester}", requester);
-				return View("Error", error);
-			}
-			if (user.Enabled == false)
-			{
-				HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "ChangeEmailAddressConfirm");
-				Logger.Information("Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active by requester {@requester}", requester);
-				return View("Error", error);
-			}
-			user.UserLogs.Add(new UserLog() { Description = string.Format("Change email address request confirmed to change from {0} to {1}", user.UserName, user.NewEmailAddress) });
-			string emailSubject = string.Format("{0} - Change email address process completed", _configuration.ApplicationName);
-			string emailBody = EmailTemplates.ChangeEmailAddressCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, user.UserName, user.NewEmailAddressToken);
-			_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-			user.UserName = user.NewEmailAddress;
-			user.NewEmailAddress = null;
-			user.NewEmailAddressRequestExpiryDate = null;
-			user.NewEmailAddressToken = null;
-			emailBody = string.Format("A request has been completed to change your {0} username/email address to {1}. This email address can now be used to log into the application.",
-				_configuration.ApplicationName, user.UserName);
-			_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-			await _context.SaveChangesAsync();
-			_userManager.SignOut();
-			return View("ChangeEmailAddressSuccess");
-		}
-
+	    [AllowAnonymous]
+	    [HttpGet]
+	    public async Task<ActionResult> ChangeEmailAddressConfirmAsync()
+	    {
+		    var newEmaiLAddressToken = Request.QueryString["NewEmailAddressToken"] ?? "";
+		    var user = _context.User.FirstOrDefault(u => u.NewEmailAddressToken == newEmaiLAddressToken && u.NewEmailAddressRequestExpiryDateUtc > DateTime.UtcNow);
+		    if (user == null)
+		    {
+			    HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The new user name token is not valid or has expired"), "Account", "ChangeEmailAddressConfirmAsync");
+			    Logger.Information("Failed Account ChangeEmailAddressConfirm Get, The new user name token is not valid or has expired");
+			    return View("Error", error);
+		    }
+		    if (user.Enabled == false)
+		    {
+			    HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "ChangeEmailAddressConfirmAsync");
+			    Logger.Information("Failed Account ChangeEmailAddressConfirm Get, Account is not currently approved or active");
+			    return View("Error", error);
+		    }
+		    user.UserLogs.Add(new UserLog { Description = $"Change email address request confirmed to change from {user.UserName} to {user.NewEmailAddress}" });
+		    string emailSubject = $"{_configuration.ApplicationName} - Change email address process completed";
+		    string emailBody = EmailTemplates.ChangeEmailAddressCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, user.UserName, user.NewEmailAddress);
+		    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
+		    user.UserName = user.NewEmailAddress;
+		    user.NewEmailAddress = null;
+		    user.NewEmailAddressRequestExpiryDateUtc = null;
+		    user.NewEmailAddressToken = null;
+		    emailBody = $"A request has been completed to change your {_configuration.ApplicationName} username/email address to {user.UserName}. This email address can now be used to log into the application.";
+		    _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
+		    await _context.SaveChangesAsync();
+		    _userManager.SignOut();
+		    return View("ChangeEmailAddressSuccess");
+	    }
 
 		[AllowAnonymous]
 		[HttpGet]
 		public ActionResult ChangePasswordSuccess()
         {
 			ViewBag.ReturnUrl = Url.Action("ChangePassword");
-            var model = new ChangePasswordViewModel()
+            var model = new ChangePasswordViewModel
             {
                 HasRecaptcha = _configuration.HasRecaptcha
             };
-            return View(model);
-        }
+            return View("ChangePasswordSuccess", model);
 
-		[SEAuthorize]
-		[HttpGet]
-		public ActionResult ChangePassword()
-		{
-			var model = new ChangePasswordViewModel()
-			{
-				HasRecaptcha = _configuration.HasRecaptcha
-			};
-			return View(model);
 		}
 
+	    [SeAuthorize]
+	    [HttpGet]
+	    public ActionResult ChangePassword()
+	    {
+		    var reason = Request.QueryString["Reason"] ?? "";
+		    var model = new ChangePasswordViewModel
+		    {
+			    HasRecaptcha = _configuration.HasRecaptcha,
+			    MustChangePassword = reason == "MustChangePassword"
+		    };
+		    return View(model);
+	    }
+
 		[HttpPost]
-        [SEAuthorize]
+        [SeAuthorize]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangePassword", Message = "You have performed this action more than {x} times in the last {n} seconds.", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+		[AllowXRequestsEveryXSeconds(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		public async Task<ActionResult> ChangePasswordAsync(ChangePasswordViewModel model)
         {
             ViewBag.ReturnUrl = Url.Action("ChangePassword");
-			var requester = _userIdentity.GetRequester(this);
+			var requester = UserIdentity.GetRequester(this);
 			var recaptchaSuccess = true;
             if (_configuration.HasRecaptcha)
             {
 				recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
             }
-			_appSensor.ValidateFormData(this, new List<string>() { "ConfirmPassword", "OldPassword", "NewPassword" });
+			AppSensor.ValidateFormData(this, new List<string> { "ConfirmPassword", "OldPassword", "NewPassword" });
 			if (recaptchaSuccess)
             {
-                var user = _context.User.Where(u => u.Id == requester.LoggedOnUserId.Value).FirstOrDefault();
-                if (user != null)
-                {
-                    var result = await _userManager.ChangePasswordAsync(requester.LoggedOnUserId.Value, model.OldPassword, model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        // Email recipient with password change acknowledgement
-                        string emailBody = EmailTemplates.ChangePasswordCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
-                        string emailSubject = string.Format("{0} - Password change confirmation", _configuration.ApplicationName);
-                        _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                        _context.SaveChanges();
-						_formsAuth.SignOut();
-                        return View("ChangePasswordSuccess");
-                    }
+				var userId = UserIdentity.GetUserId(this);
+	            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+	            if (user != null)
+	            {
+		            var result = await _userManager.ChangePasswordAsync(UserIdentity.GetUserId(this), model.OldPassword, model.NewPassword);
+		            if (result.Succeeded)
+		            {
+			            // Email recipient with password change acknowledgement
+			            string emailBody = EmailTemplates.ChangePasswordCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
+			            string emailSubject = $"{_configuration.ApplicationName} - Password change confirmation";
+			            _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
+			            _context.SaveChanges();
+			            _formsAuth.SignOut();
+			            _userManager.SignOut();
+			            _httpCache.RemoveFromCache($"MustChangePassword-{userId}");
+			            Session.Abandon();
+			            Logger.Debug("Account Logoff due to password change");
+			            return View("ChangePasswordSuccess");
+					}
                     else
                     {
 						Logger.Information("Failed Account ChangePassword Post by requester {@requester}", requester);
@@ -274,26 +281,26 @@ namespace SecurityEssentials.Controllers
 			{
 				Logger.Information("Failed Account Change Password Post Recaptcha failed by requester {@requester}", requester);
 			}
-			return View(model);
+			return View("ChangePassword", model);
         }
 
         [AllowAnonymous]
 		[HttpGet]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> EmailVerify()
+        [AllowXRequestsEveryXSeconds(Name = "EmailVerify", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        public async Task<ActionResult> EmailVerifyAsync()
         {
             var emailVerificationToken = Request.QueryString["EmailVerficationToken"] ?? "";
-            var user = _context.User.Where(u => u.EmailConfirmationToken == emailVerificationToken).FirstOrDefault();
-			var requester = _userIdentity.GetRequester(this);
+            var user = _context.User.SingleOrDefault(u => u.EmailConfirmationToken == emailVerificationToken);
+			var requester = UserIdentity.GetRequester(this);
 			if (user == null)
             {
-                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerify");
+                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The email verification token is not valid or has expired"), "Account", "EmailVerifyAsync");
 				Logger.Information("Failed Acccount EmailVerify Get for token {emailVerificationToken} by requester {@requester}", emailVerificationToken, requester);
 				return View("Error", error);
             }
             user.EmailVerified = true;
             user.EmailConfirmationToken = null;
-            user.UserLogs.Add(new UserLog() { Description = "User Verified Email Address" });
+            user.UserLogs.Add(new UserLog { Description = "User Verified Email Address" });
             await _context.SaveChangesAsync();
             return View("EmailVerificationSuccess");
         }
@@ -302,7 +309,7 @@ namespace SecurityEssentials.Controllers
 		[HttpGet]
         public ActionResult Recover()
         {
-            var model = new RecoverViewModel()
+            var model = new RecoverViewModel
             {
                 HasRecaptcha = _configuration.HasRecaptcha
             };
@@ -312,34 +319,32 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "Recover", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> Recover(RecoverViewModel model)
+		[AllowXRequestsEveryXSeconds(Name = "ChangePassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		public async Task<ActionResult> RecoverAsync(RecoverViewModel model)
         {
-			var requester = _userIdentity.GetRequester(this);
+			var requester = UserIdentity.GetRequester(this);
 			var userName = model.UserName;
-			_appSensor.ValidateFormData(this, new List<string>() { "UserName" });
+			AppSensor.ValidateFormData(this, new List<string> { "UserName" });
 			if (ModelState.IsValid)
             {
-                var user = _context.User.Where(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved).SingleOrDefault();
-                var recaptchaSuccess = true;
+                var user = _context.User.SingleOrDefault(u => u.UserName == model.UserName && u.Enabled && u.EmailVerified && u.Approved);
 				if (_configuration.HasRecaptcha)
                 {
-					recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
-                    if (!recaptchaSuccess)
+                    if (!_recaptcha.ValidateRecaptcha(this))
                     {
 						Logger.Information("Failed Account Recover Post Recaptcha failed by requester {@requester}", requester);
-						return View(model);
+						return View("Recover", model);
                     }
                 }
 				if (user != null)
                 {
 					user.PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
-                    user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(15);
+                    user.PasswordResetExpiryDateUtc = DateTime.UtcNow.AddMinutes(15);
                     // Send recovery email with link to recover password form
-                    string emailBody = EmailTemplates.ChangePasswordPendingBodyText(user.FirstName, user.LastName,  _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
-                    string emailSubject = string.Format("{0} - Complete the password recovery process", _configuration.ApplicationName);
+                    string emailBody = EmailTemplates.ChangePasswordPendingBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.PasswordResetToken);
+                    string emailSubject = $"{_configuration.ApplicationName} - Complete the password recovery process";
                     _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-                    user.UserLogs.Add(new UserLog() { Description = "Password reset link generated and sent" });
+                    user.UserLogs.Add(new UserLog { Description = "Password reset link generated and sent" });
                     await _context.SaveChangesAsync();
                 }
 				else
@@ -350,7 +355,7 @@ namespace SecurityEssentials.Controllers
 			}
 			else
 			{
-				_appSensor.InspectModelStateErrors(this);
+				AppSensor.InspectModelStateErrors(this);
 			}
 			return View("RecoverSuccess");
 
@@ -358,13 +363,13 @@ namespace SecurityEssentials.Controllers
 
         [AllowAnonymous]
 		[HttpGet]
-		[AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+		[AllowXRequestsEveryXSeconds(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
 		public ActionResult RecoverPassword()
         {
             var passwordResetToken = Request.QueryString["PasswordResetToken"] ?? "";
-			var requester = _userIdentity.GetRequester(this);
+			var requester = UserIdentity.GetRequester(this);
 
-			var user = _context.User.Include("SecurityQuestionLookupItem").Where(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiry > DateTime.UtcNow).FirstOrDefault();
+			var user = _context.User.Include("SecurityQuestionLookupItem").SingleOrDefault(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiryDateUtc > DateTime.UtcNow);
             if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
@@ -394,12 +399,12 @@ namespace SecurityEssentials.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [AllowXRequestsEveryXSecondsAttribute(Name = "RecoverPassword", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel recoverPasswordModel)
+        public async Task<ActionResult> RecoverPasswordAsync(RecoverPasswordViewModel recoverPasswordModel)
         {
-            var user = _context.User.Where(u => u.Id == recoverPasswordModel.Id).FirstOrDefault();
+            var user = _context.User.SingleOrDefault(u => u.Id == recoverPasswordModel.Id);
 			var id = recoverPasswordModel.Id;
-			var requester = _userIdentity.GetRequester(this);
-			_appSensor.ValidateFormData(this, new List<string>() { "UserName", "SecurityAnswer", "Password", "ConfirmPassword", "Id", "PasswordResetToken" });
+			var requester = UserIdentity.GetRequester(this);
+			AppSensor.ValidateFormData(this, new List<string> { "UserName", "SecurityAnswer", "Password", "ConfirmPassword", "Id", "PasswordResetToken" });
 			if (user == null)
             {
                 HandleErrorInfo error = new HandleErrorInfo(new Exception("INFO: The user is either not valid, not approved or not active"), "Account", "RecoverPassword");
@@ -412,12 +417,11 @@ namespace SecurityEssentials.Controllers
 				Logger.Information("Failed Account RecoverPassword Post, account user id {id} is not approved or active by requester {@requester}", id, requester);
 				return View("Error", error);
             }
-            string encryptedSecurityAnswer = "";
-            _encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
-                    _configuration.EncryptionIterationCount, recoverPasswordModel.SecurityAnswer, out encryptedSecurityAnswer);
-            if (user.SecurityAnswer != encryptedSecurityAnswer)
+	        string decryptedSecurityAnswer;
+	        _encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out decryptedSecurityAnswer);
+	        if (recoverPasswordModel.SecurityAnswer != decryptedSecurityAnswer)
             {
-                ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
+				ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
 				Logger.Information("Failed Account RecoverPassword Post, security answer is incorrect by requester {@requester}", requester);
 				return View("RecoverPassword", recoverPasswordModel);
             }
@@ -436,10 +440,11 @@ namespace SecurityEssentials.Controllers
 			{
 				if (ModelState.IsValid)
 				{
-					var result = await _userManager.ChangePasswordAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
+					var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
 					if (result.Succeeded)
 					{
 						_context.SaveChanges();
+						_httpCache.RemoveFromCache(string.Concat("MustChangePassword-", user.Id));
 						await _userManager.LogOnAsync(user.UserName, false);
 						Logger.Information("Successful RecoverPassword Post by requester {@requester}", requester);
 						return View("RecoverPasswordSuccess");
@@ -454,7 +459,7 @@ namespace SecurityEssentials.Controllers
 				else
 				{
 					ModelState.AddModelError("", "Password change was not successful");
-					_appSensor.InspectModelStateErrors(this);
+					AppSensor.InspectModelStateErrors(this);
 				}
 			}
 			else
@@ -465,11 +470,11 @@ namespace SecurityEssentials.Controllers
 
 		}
 
-		[SEAuthorize]
+		[SeAuthorize]
 		[HttpGet]
         public ActionResult ChangeSecurityInformation()
         {
-            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == Consts.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel("", _configuration.HasRecaptcha, securityQuestions);
             return View(changeSecurityInformationViewModel);
         }
@@ -477,12 +482,12 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "ChangeSecurityInformation", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> ChangeSecurityInformation(ChangeSecurityInformationViewModel model)
+        [AllowXRequestsEveryXSeconds(Name = "ChangeSecurityInformation", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        public async Task<ActionResult> ChangeSecurityInformationAsync(ChangeSecurityInformationViewModel model)
         {
             string errorMessage = "";
-			var requester = _userIdentity.GetRequester(this);
-			_appSensor.ValidateFormData(this, new List<string>() { "SecurityQuestionLookupItemId", "SecurityAnswer", "SecurityAnswerConfirm", "Password" });
+			var requester = UserIdentity.GetRequester(this);
+			AppSensor.ValidateFormData(this, new List<string> { "SecurityQuestionLookupItemId", "SecurityAnswer", "SecurityAnswerConfirm", "Password" });
 			if (ModelState.IsValid)
             {
                 var recaptchaSuccess = true;
@@ -490,20 +495,21 @@ namespace SecurityEssentials.Controllers
                 {
 					recaptchaSuccess = _recaptcha.ValidateRecaptcha(this);
                 }
-                var logonResult = await _userManager.TryLogOnAsync(_userIdentity.GetUserName(this), model.Password);
+                var logonResult = await _userManager.TryLogOnAsync(UserIdentity.GetUserName(this), model.Password);
 				if (recaptchaSuccess)
 				{
 					if (logonResult.Success)
 					{
 						if (model.SecurityAnswer == model.SecurityAnswerConfirm)
 						{
-							var user = _context.User.Where(u => u.UserName == logonResult.UserName).FirstOrDefault();
-							string encryptedSecurityAnswer = "";
-							_encryption.Encrypt(_configuration.EncryptionPassword, user.Salt,
-									_configuration.EncryptionIterationCount, model.SecurityAnswer, out encryptedSecurityAnswer);
+							var user = _context.User.First(u => u.UserName == logonResult.UserName);
+							string encryptedSecurityAnswer;
+							string encryptedSecurityAnswerSalt;
+							_encryption.Encrypt(_configuration.EncryptionPassword, _configuration.EncryptionIterationCount, model.SecurityAnswer, out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
 							user.SecurityAnswer = encryptedSecurityAnswer;
+							user.SecurityAnswerSalt = encryptedSecurityAnswerSalt;
 							user.SecurityQuestionLookupItemId = model.SecurityQuestionLookupItemId;
-							user.UserLogs.Add(new UserLog() { Description = "User Changed Security Information" });
+							user.UserLogs.Add(new UserLog { Description = "User Changed Security Information" });
 							await _context.SaveChangesAsync();
 
 							// Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
@@ -526,20 +532,21 @@ namespace SecurityEssentials.Controllers
 				}
 				else
 				{
-					_appSensor.InspectModelStateErrors(this);
+					AppSensor.InspectModelStateErrors(this);
 				}
 			}
-            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == Consts.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var changeSecurityInformationViewModel = new ChangeSecurityInformationViewModel(errorMessage, _configuration.HasRecaptcha, securityQuestions);
-            return View(changeSecurityInformationViewModel);
+            return View("ChangeSecurityInformation", changeSecurityInformationViewModel);
 
-        }
+
+		}
 
         [AllowAnonymous]
 		[HttpGet]
         public ActionResult Register()
         {
-            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+            var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == Consts.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var registerViewModel = new RegisterViewModel("", _configuration.HasRecaptcha, "", new User(), securityQuestions);
             return View(registerViewModel);
         }
@@ -547,15 +554,14 @@ namespace SecurityEssentials.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [AllowXRequestsEveryXSecondsAttribute(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
-        public async Task<ActionResult> Register(FormCollection collection)
+        [AllowXRequestsEveryXSeconds(Name = "Register", ContentName = "TooManyRequests", Requests = 2, Seconds = 60)]
+        public async Task<ActionResult> RegisterAsync(FormCollection collection)
         {
-            var user = new User();
-            var password = collection["Password"].ToString();
-            var confirmPassword = collection["ConfirmPassword"].ToString();
-			_appSensor.ValidateFormData(this, new List<string>() { "Password", "ConfirmPassword", "User.FirstName", "User.LastName", "User.UserName",
-				"User.SecurityQuestionLookupItemId", "User.SecurityAnswer" });
-			var requester = _userIdentity.GetRequester(this);
+	        var user = new User();
+	        var password = collection["Password"];
+	        var confirmPassword = collection["ConfirmPassword"];
+			AppSensor.ValidateFormData(this, new List<string> { "Password", "ConfirmPassword", "User.FirstName", "User.LastName", "User.UserName", "User.SecurityQuestionLookupItemId", "User.SecurityAnswer" });
+			var requester = UserIdentity.GetRequester(this);
 			if (ModelState.IsValid)
             {
                 var propertiesToUpdate = new[]
@@ -576,23 +582,24 @@ namespace SecurityEssentials.Controllers
                             user.SecurityQuestionLookupItemId, user.SecurityAnswer);
                         if (result.Succeeded || result.Errors.Any(e => e == "Username already registered"))
                         {
-                            user = _context.User.Where(u => u.UserName == user.UserName).First();
-                            // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                            string emailBody = "";
-                            string emailSubject = "";
+							user = _context.User.First(u => u.UserName == user.UserName);
+							// Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
+	                        string emailBody;
+	                        string emailSubject;
                             if (result.Succeeded)
                             {
-                                emailSubject = string.Format("{0} - Complete your registration", _configuration.ApplicationName);
+	                            emailSubject = $"{_configuration.ApplicationName} - Complete your registration";
                                 emailBody = EmailTemplates.RegistrationPendingBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl, user.EmailConfirmationToken);
+	                            Logger.Information("Successful Account Register Post for username {userName} by requester {@requester}", userName, requester);
                             }
-                            else
+							else
                             {
-                                emailSubject = string.Format("{0} - Duplicate Registration", _configuration.ApplicationName);
+	                            emailSubject = $"{_configuration.ApplicationName} - Duplicate Registration";
                                 emailBody = EmailTemplates.RegistrationDuplicatedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl);
-                            }
+	                            Logger.Information("Duplicate Account Register Post for username {userName} by requester {@requester}", userName, requester);
+							}
 
-                            _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { user.UserName }, null, null, emailSubject, emailBody, true);
-							Logger.Information("Successful Account Register Post for username {userName} by user {@requester}", userName, requester);
+							_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
 							return View("RegisterSuccess");
                         }
                         else
@@ -610,22 +617,23 @@ namespace SecurityEssentials.Controllers
             }
 			else
 			{
-				_appSensor.InspectModelStateErrors(this);
+				AppSensor.InspectModelStateErrors(this);
 			}
-			var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == CONSTS.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
+			var securityQuestions = _context.LookupItem.Where(l => l.LookupTypeId == Consts.LookupTypeId.SecurityQuestion && l.IsHidden == false).OrderBy(o => o.Ordinal).ToList();
             var registerViewModel = new RegisterViewModel(confirmPassword, _configuration.HasRecaptcha, password, user, securityQuestions);
-            return View(registerViewModel);
+            return View("Register", registerViewModel);
 
         }
 
         [HttpGet]
 		public ActionResult Landing()
         {
-            var currentUserId = _userIdentity.GetUserId(this);
+            var currentUserId = UserIdentity.GetUserId(this);
             var users = _context.User.Where(u => u.Id == currentUserId);
-            if (users.ToList().Count == 0) return new HttpNotFoundResult();
-            var user = users.FirstOrDefault();
-            var activityLogs = user.UserLogs.OrderByDescending(d => d.DateCreated);
+	        // Usually means user is not logged on
+	        if (users.ToList().Count == 0) return RedirectToAction("Index", "Home");
+	        var user = users.Single();
+            var activityLogs = user.UserLogs.OrderByDescending(d => d.CreatedDateUtc);
             UserLog lastAccountActivity = null;
             if (activityLogs.ToList().Count > 1)
             {
@@ -636,7 +644,7 @@ namespace SecurityEssentials.Controllers
 
         #region Helper Functions
 
-        private void AddErrors(SEIdentityResult result)
+        private void AddErrors(SeIdentityResult result)
         {
             foreach (var error in result.Errors)
             {
@@ -654,7 +662,7 @@ namespace SecurityEssentials.Controllers
             {
 				if (!string.IsNullOrEmpty(returnUrl))
 				{
-					var requester = _userIdentity.GetRequester(this);
+					var requester = UserIdentity.GetRequester(this);
 					Logger.Information("Logon redirect attempted to redirect to external site {returnUrl}, by requester {@requester}", returnUrl, requester);
 				}
 				return RedirectToAction("Landing", "Account");

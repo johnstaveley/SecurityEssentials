@@ -1,0 +1,45 @@
+﻿@model SecurityEssentials.ViewModel.RemoveRoleViewModel
+@{
+    ViewBag.Title = "Remove Administrator";
+    ViewBag.Active = "Admin";
+}
+<ul class="breadcrumb">
+    <li>@Html.ActionLink(string.Format("Edit User {0}", Model.User.UserName), "Edit", "User", new { id = Model.User.Id }, null)</li>
+    <li class="active">Remove Admin Permission</li>
+</ul>
+
+<h1>Remove a system Administrator</h1>
+<hr />
+@using (Html.BeginForm("RemoveAdmin", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary(true)
+    if (Model.IsOwnProfile)
+    {
+        <div class="row">
+            <div class="col-md-12 alert alert-warning">As you are modifying your own profile, you will be required to log back in again after you confirm this action</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">&nbsp;</div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-4"><span class="labelBold">User Name</span></div>
+        <div class="col-md-4"><span id="UserName">@Html.DisplayFor(model => model.User.UserName)</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">Are you sure you want to remove the system administrator from this user? They will no longer have access to all system and user management functions</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary btn-danger" /></div>
+    </div>
+    @Html.AntiForgeryToken()
+}
+
+@section scripts {
+}

@@ -1,21 +1,23 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using NUnit.Framework;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
+
 	[Binding]
 	public class HomePageSteps
 	{
 		[Given(@"I am taken to the homepage")]
 		[When(@"I am taken to the homepage")]
 		public void ThenIAmTakenToTheHomepage()
-		{			
-            var homePage = ScenarioContext.Current.GetPage<HomePage>();
+		{
+			var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			Assert.IsTrue(homePage.IsCurrentPage);
 		}
 
-        [Given(@"I click register in the title bar")]
+		[Given(@"I click register in the title bar")]
 		public void GivenIClickRegisterInTheTitleBar()
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
@@ -23,12 +25,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		}
 
 		[When(@"I click the login link in the navigation bar")]
-        [Given(@"I click the login link in the navigation bar")]
+		[Given(@"I click the login link in the navigation bar")]
 		public void GivenIClickLogin()
 		{
 			var homePage = ScenarioContext.Current.GetPage<HomePage>();
 			homePage.ClickLogin();
-
 		}
 
 		[Given(@"I delete all cookies from the cache")]
@@ -37,7 +38,5 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			var driver = FeatureContext.Current.GetWebDriver();
 			driver.Manage().Cookies.DeleteAllCookies();
 		}
-
-
 	}
 }

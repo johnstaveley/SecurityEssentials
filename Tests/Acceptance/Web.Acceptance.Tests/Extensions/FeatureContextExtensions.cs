@@ -1,17 +1,17 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenQA.Selenium;
-using TechTalk.SpecFlow;
-using System.Threading;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
 	public static class FeatureContextExtensions
 	{
 
-		public const string LOGIN_ATTEMPTS = "Login_Attempts";
+		public const string LoginAttempts = "Login_Attempts";
 
 		public static void SetWebDriver(this FeatureContext fc, IWebDriver webDriver)
 		{
@@ -41,31 +41,31 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 
 		private static List<DateTime> GetLoginAttempts(this FeatureContext featureContext)
 		{
-			List<DateTime> loginAttempts = null;
-			if (!featureContext.TryGetValue<List<DateTime>>(LOGIN_ATTEMPTS, out loginAttempts))
+			List<DateTime> loginAttempts;
+			if (!featureContext.TryGetValue(LoginAttempts, out loginAttempts))
 			{
 				SetLoginAttempts(featureContext, new List<DateTime>());
 			}
-			return featureContext.Get<List<DateTime>>(LOGIN_ATTEMPTS);
+			return featureContext.Get<List<DateTime>>(LoginAttempts);
 		}
 
 		public static void WaitForLoginAttempt(this FeatureContext featureContext)
 		{
-			var loginAttempts = GetLoginAttempts(featureContext);
+			List<DateTime> loginAttempts;
 			do
 			{
 				Thread.Sleep(5000);
 				loginAttempts = GetLoginAttempts(featureContext);
 				Trace.WriteLine("Waiting 5 seconds for logon attempt");
 			}
-			while (loginAttempts.Where(a => a > DateTime.UtcNow.AddSeconds(-62)).Count() >= 2);
+			while (loginAttempts.Count(a => a > DateTime.UtcNow.AddSeconds(-65)) >= 2);
 			loginAttempts.Add(DateTime.UtcNow);
 			SetLoginAttempts(featureContext, loginAttempts);
 		}
 
 		private static void SetLoginAttempts(this FeatureContext featureContext, List<DateTime> value)
 		{
-			featureContext.Set<List<DateTime>>(value, LOGIN_ATTEMPTS);
+			featureContext.Set(value, LoginAttempts);
 		}
 
 	}

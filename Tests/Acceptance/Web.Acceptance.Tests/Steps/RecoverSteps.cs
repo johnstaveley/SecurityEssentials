@@ -1,8 +1,9 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using NUnit.Framework;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class RecoverSteps

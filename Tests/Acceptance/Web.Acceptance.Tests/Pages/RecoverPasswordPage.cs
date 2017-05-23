@@ -1,34 +1,23 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using System;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class RecoverPasswordPage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
+		private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		private IWebElement ConfirmPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("ConfirmPassword")); }
-		}
+		private IWebElement ConfirmPassword => GetVisibleWebElement(By.Id("ConfirmPassword"));
 
-		private IWebElement SecurityAnswer
-		{
-			get { return this.GetVisibleWebElement(By.Id("SecurityAnswer")); }
-		}
+		private IWebElement SecurityAnswer => GetVisibleWebElement(By.Id("SecurityAnswer"));
 
-		private IWebElement RecoverButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+		private IWebElement RecoverButton => GetVisibleWebElement(By.Id("submit"));
 
 		public RecoverPasswordPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.RECOVER_PASSWORD)
@@ -53,7 +42,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						SecurityAnswer.SendKeys(row[1]);
 						break;
 					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
+						throw new Exception($"Field {row[0]} not defined");
 				}
 			}
 		}
@@ -65,7 +54,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 
 		public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string passwordResetToken)
 		{
-			var userUri = new Uri(baseUri, string.Format("Account/RecoverPassword?PasswordResetToken={0}", passwordResetToken));
+			var userUri = new Uri(baseUri, $"Account/RecoverPassword?PasswordResetToken={passwordResetToken}");
 			webDriver.Navigate().GoToUrl(userUri);
 			var homePage = new HomePage(webDriver, baseUri);
 			PageFactory.InitElements(webDriver, homePage);

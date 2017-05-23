@@ -1,0 +1,41 @@
+﻿@model SecurityEssentials.Model.User
+@{
+    ViewBag.Title = "Delete User";
+    ViewBag.Active = "Admin";
+}
+<ul class="breadcrumb">
+    <li>@Html.ActionLink(string.Format("Edit User {0}", Model.UserName), "Edit", "User", new { id = Model.Id }, null)</li>
+    <li class="active">Delete User</li> 
+</ul>
+
+<h1>Delete this user</h1>
+<hr />
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-warning">@ViewBag.Message</div>
+}
+@using (Html.BeginForm("Delete", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="row">
+        <div class="col-md-4"><span class="labelBold">User Name</span></div>
+        <div class="col-md-4"><span id="UserName">@Html.DisplayFor(model => model.UserName)</span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">You can only delete this user if they do not have any activity on the system. Are you sure you want to delete this user?</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary btn-danger" /></div>
+    </div>
+    @Html.AntiForgeryToken()
+}
+
+@section scripts {
+}

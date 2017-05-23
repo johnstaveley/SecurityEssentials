@@ -1,7 +1,8 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class RegisterPageSteps
@@ -14,13 +15,11 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 			registerPage.ClickSubmit();
 		}
 
-        [Given(@"I enter the following registration details:")]
-        public void GivenIEnterTheFollowingRegistrationDetails(Table table)
-        {
-            var registerPage = ScenarioContext.Current.GetPage<RegisterPage>();
-            registerPage.EnterDetails(table);
-        }
-
-
+		[Given(@"I enter the following registration details:")]
+		public void GivenIEnterTheFollowingRegistrationDetails(Table table)
+		{
+			var registerPage = ScenarioContext.Current.GetPage<RegisterPage>();
+			registerPage.EnterDetails(table);
+		}
 	}
 }

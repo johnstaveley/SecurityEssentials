@@ -1,7 +1,8 @@
-﻿using SecurityEssentials.Acceptance.Tests.Web.Pages;
+﻿using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 	[Binding]
 	public class RecoverPasswordSteps
@@ -24,10 +25,8 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
 		[Given(@"I navigate to the password reset link with token '(.*)'")]
 		public void GivenINavigateToPasswordResetLinkWithToken(string passwordResetToken)
 		{
-			var recoverPasswordPage = RecoverPasswordPage.NavigateToPage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri(), passwordResetToken);
-			
+			RecoverPasswordPage.NavigateToPage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri(), passwordResetToken);
+
 		}
-
-
 	}
 }

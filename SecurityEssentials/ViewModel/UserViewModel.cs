@@ -1,34 +1,25 @@
-﻿using System;
-using System.Web.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using SecurityEssentials.Core.Constants;
 using SecurityEssentials.Model;
 
 namespace SecurityEssentials.ViewModel
 {
 
-    public class UserViewModel
+	public class UserViewModel
     {
 
-        #region Declarations
+		public bool IsAccessingUserAnAdmin { get; set; }
+	    public bool IsCurrentUserAnAdmin { get; set; }
+	    public User User { get; set; }
+	    public bool IsOwnProfile { get; set; }
 
-		public bool IsAdministrator { get; set; }
-        public User User { get; set; }
-        public bool IsOwnProfile { get; set; }
+	    public UserViewModel(int currentUserId, bool isAccessingUserAnAdmin, User user)
+	    {
+		    IsOwnProfile = currentUserId == user.Id;
+		    IsAccessingUserAnAdmin = isAccessingUserAnAdmin;
+		    IsCurrentUserAnAdmin = user.UserRoles.Any(a => a.RoleId == Consts.Roles.Admin);
+		    User = user;
+	    }
 
-        #endregion
-
-        #region Constructor
-
-        public UserViewModel(int currentUserId, bool isAdministrator, User user)
-        {
-            if (currentUserId == user.Id) IsOwnProfile = true; else IsOwnProfile = false;
-			IsAdministrator = isAdministrator;
-            User = user;
-
-        }
-
-        #endregion
-
-    }
+	}
 }

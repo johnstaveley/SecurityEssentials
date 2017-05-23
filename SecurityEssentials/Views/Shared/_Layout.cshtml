@@ -12,91 +12,73 @@
     <meta name="description" content="Security Essentials Project" />
 </head>
 <body>
-    <header>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+    <header role="Banner">
+        <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+    </header>
+    <nav class="navbar navbar-default navbar-inverse nav-primary" id="navBarContainer" role="navigation" aria-label="site">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation" aria-controls="navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="~/Home/">Security Essentials</a>
             </div>
-            <div class="float-right">
-                <section id="login">
-                    @Html.Partial("_LoginPartial")
-                </section>
-                <nav class="navbar navbar-default" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <div class="collapsed navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav nav-pills" role="menu">
+                    <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
+                        <a id="home" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true">
+                            Home @if (ViewBag.Active == "Home")
+                            { <text><span class='sr-only'>(current)</span></text> }<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             @if (Request.IsAuthenticated)
                             {
-                                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "pull-right" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <ul class="nav nav-pills">
-                                        <li role="presentation">Logged on as @User.Identity.Name</li>
-                                        <li role="presentation"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                                    </ul>
-                                }
+                                <li>@Html.ActionLink("Landing", "Landing", "Account")</li>
                             }
-                            <ul class="nav nav-pills">
-                                <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        @if (Request.IsAuthenticated)
-                                        {
-                                            <li>@Html.ActionLink("Home", "Landing", "Home")</li>
-                                        }
-                                        else
-                                        {
-                                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                                        }
-                                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                                    </ul>
-                                </li>
-                                @if (Request.IsAuthenticated)
+                            <li>@Html.ActionLink("About", "About", "Home", null, new { Id = "about" })</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home", null, new { Id = "contact" })</li>
+                        </ul>
+                    </li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
+                            <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true">
+                                Admin @if (ViewBag.Active == "Admin")
+                                { <text><span class='sr-only'>(current)</span></text> }<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                @if (User.IsInRole("Admin"))
                                 {
-                                    <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
-                                        <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
-                                        <ul class="dropdown-menu">
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <li>@Html.ActionLink("Manage Users", "Index", "User", null, new { Id = "manageUsers" })</li>
-                                            }
-                                            <li>@Html.ActionLink("Manage Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, new { Id = "manageAccount" })</li>
-                                            <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id="changePassword" })</li>
-                                            <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changeEmailAddress" })</li>
-                                            <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", new { Id = User.Identity.GetUserId() }, new { Id = "changeSecurityInformation" })</li>
-                                            <li>@Html.ActionLink("Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, new { Id = "accountLog" })</li>
-                                        </ul>
-
-                                    </li>
-                                }
+                                    <li>@Html.ActionLink("System Log", "Index", "Log", null, new { Id = "log" })</li>
+                                    <li>@Html.ActionLink("Manage Users", "Index", "User", null, new {Id = "manageUsers"})</li>
+                                    <li class="divider" role="separator"></li>
+}
+                                <li>@Html.ActionLink("Manage My Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, new { Id = "manageAccount" })</li>
+                                <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changePassword" })</li>
+                                <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changeEmailAddress" })</li>
+                                <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", null, new { Id = "changeSecurityInformation" })</li>
+                                <li>@Html.ActionLink("View Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, new { Id = "accountLog" })</li>
                             </ul>
+                        </li>         }
+                    @Html.Partial("_LoginPartial")
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </header>
-    <div id="body">
-        @RenderSection("featured", required: false)
-        <section class="content-wrapper main-content clear-fix">
-            @RenderBody()
-        </section>
-    </div>
-    <footer>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p>&copy; @DateTime.Now.Year - Security Essentials Project</p>
-            </div>
-        </div>
+    <main id="mainContent" class="container body-content" role="main">
+        @RenderBody()
+    </main>
+    <hr />
+    <footer role="contentinfo">
+        <nav class="navbar navbar-light bg-faded" id="bottomNav" role="navigation" aria-label="site">
+            <p>&copy; @DateTime.Now.Year - Security Essentials Project</p>
+        </nav>
     </footer>
 
     @Scripts.Render("~/bundles/jquery")

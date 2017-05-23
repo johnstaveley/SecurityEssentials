@@ -1,17 +1,15 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using TechTalk.SpecFlow;
+using System;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class ChangeEmailAddressConfirmPage
-	{		
-				
+	{
+
 		public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri, string newUserNameToken)
 		{
-			var userUri = new Uri(baseUri, string.Format("Account/ChangeEmailAddressConfirm?NewEmailAddressToken={0}", newUserNameToken));
+			var userUri = new Uri(baseUri, $"Account/ChangeEmailAddressConfirmAsync?NewEmailAddressToken={newUserNameToken}");
 			webDriver.Navigate().GoToUrl(userUri);
 			var homePage = new HomePage(webDriver, baseUri);
 			PageFactory.InitElements(webDriver, homePage);

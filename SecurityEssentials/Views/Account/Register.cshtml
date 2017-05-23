@@ -4,48 +4,74 @@
     ViewBag.Active = "Home";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h1>@ViewBag.Title.</h1>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
+@using (Html.BeginForm("RegisterAsync", "Account", FormMethod.Post, new { @class = "container", role = "form", autocomplete = "off" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+    <p>Create a new account.</p>
     <hr />
-    @Html.ValidationSummary()
+    @Html.ValidationSummary(true)
     <div class="row">
-        @Html.LabelFor(m => m.User.UserName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.UserName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">&nbsp;</div>
     </div>
     <div class="row">
-        @Html.LabelFor(m => m.User.FirstName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.FirstName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.LabelFor(m => m.User.UserName, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.TextBoxFor(m => m.User.UserName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.UserName)</div>
     </div>
     <div class="row">
-        @Html.LabelFor(m => m.User.LastName, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.TextBoxFor(m => m.User.LastName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">&nbsp;</div>
     </div>
     <div class="row">
-        @Html.LabelFor(m => m.User.SecurityQuestionLookupItemId, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">
-            @Html.DropDownListFor(model => model.User.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })
-        </div>
+        <div class="col-md-4">@Html.LabelFor(m => m.User.FirstName, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.TextBoxFor(m => m.User.FirstName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.FirstName)</div>
     </div>
     <div class="row">
-        @Html.LabelFor(m => m.User.SecurityAnswer, new { @class = "col-md-4 control-label" })
-        <div class="col-md-8">@Html.PasswordFor(m => m.User.SecurityAnswer, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+        <div class="col-md-4">&nbsp;</div>
     </div>
     <div class="row">
-        <label class="col-md-4 control-label" for="Password">Password</label>
-        <div class="col-md-8">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off" })
-        </div>
+        <div class="col-md-4">@Html.LabelFor(m => m.User.LastName, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.TextBoxFor(m => m.User.LastName, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.LastName)</div>
     </div>
     <div class="row">
-        <label class="col-md-4 control-label" for="ConfirmPassword">Confirm Password</label>
-        <div class="col-md-8">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "off" })
-        </div>
+        <div class="col-md-4">&nbsp;</div>
     </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.User.SecurityQuestionLookupItemId, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.DropDownListFor(model => model.User.SecurityQuestionLookupItemId, Model.SecurityQuestions, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.SecurityQuestionLookupItemId)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.LabelFor(m => m.User.SecurityAnswer, new { @class = "control-label" })</div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.User.SecurityAnswer, new { @class = "form-control", autocomplete = "off", maxlength = 40 })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.SecurityAnswer)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><label class="control-label" for="Password">Password</label></div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.Password)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><label class="control-label" for="ConfirmPassword">Confirm Password</label></div>
+        <div class="col-md-4">@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "off" })</div>
+        <div class="col-md-4">@Html.ValidationMessageFor(model => model.ConfirmPassword)</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <hr />
     if (Model.HasRecaptcha)
     {
         <div class="row">
@@ -66,7 +92,5 @@
         </div>
     </div>
 }
-
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }

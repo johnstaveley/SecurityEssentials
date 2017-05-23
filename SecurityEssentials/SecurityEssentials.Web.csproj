@@ -155,6 +155,15 @@
       <HintPath>..\packages\Serilog.Sinks.PeriodicBatching.2.1.0\lib\net45\Serilog.Sinks.PeriodicBatching.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SimpleInjector, Version=4.0.7.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.0.7\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web, Version=4.0.7.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.4.0.7\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=4.0.7.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.4.0.7\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -249,28 +258,36 @@
   <ItemGroup>
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DependencyInjection.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\SecurityControllerBase.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WebPageContentController.cs" />
     <Compile Include="Core\AppConfiguration.cs" />
     <Compile Include="Core\AppSensor.cs" />
+    <Compile Include="Core\Attributes\AccountManagementAttribute.cs" />
     <Compile Include="Core\Attributes\AppSensorFilter.cs" />
     <Compile Include="Core\Attributes\AuthorizeAttribute.cs" />
     <Compile Include="Core\Attributes\ExceptionHandlerAttribute.cs" />
+    <Compile Include="Core\Attributes\NoCacheAttribute.cs" />
     <Compile Include="Core\Constants\AppSensorDetectionPointKind.cs" />
     <Compile Include="Core\Constants\Consts.cs" />
+    <Compile Include="Core\Constants\PasswordExpiryStrategyKind.cs" />
     <Compile Include="Core\DatabaseIntialiser.cs" />
     <Compile Include="Core\EmailTemplates.cs" />
+    <Compile Include="Core\HttpCache.cs" />
     <Compile Include="Core\IAppSensor.cs" />
     <Compile Include="Core\Identity\HashStrategyKind.cs" />
     <Compile Include="Core\Identity\IAppUserStore.cs" />
+    <Compile Include="Core\IHttpCache.cs" />
     <Compile Include="Core\Requester.cs" />
     <Compile Include="Core\Services.cs" />
     <Compile Include="Core\Encryption.cs" />
@@ -296,8 +313,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Core\SEContext.cs" />
+    <Compile Include="Core\SeContext.cs" />
     <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\PreviousPassword.cs" />
     <Compile Include="ViewModel\RecoverViewModels.cs" />
     <Compile Include="ViewModel\ExternalLogOnViewModel.cs" />
     <Compile Include="ViewModel\LocalPasswordViewModel.cs" />
@@ -315,6 +333,8 @@
     <Compile Include="ViewModel\LandingViewModel.cs" />
     <Compile Include="ViewModel\ChangeSecurityInformationViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\RemoveRoleViewModel.cs" />
+    <Compile Include="ViewModel\UserLogViewModel.cs" />
     <Compile Include="ViewModel\UsersViewModel.cs" />
     <Compile Include="ViewModel\ChangeEmailAddressViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
@@ -1108,8 +1128,14 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Error\_NotFound.cshtml" />
     <Content Include="Views\Error\_Index.cshtml" />
-    <Content Include="Views\Error\Forbiddden.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
     <Content Include="Views\Error\_Forbidden.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\MakeAdmin.cshtml" />
+    <Content Include="Views\User\RemoveAdmin.cshtml" />
+    <Content Include="Views\User\ResetPassword.cshtml" />
+    <Content Include="Views\WebPageContent\TooManyRequests.cshtml" />
+    <Content Include="Views\Log\Index.cshtml" />
     <None Include="Web.PAT.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

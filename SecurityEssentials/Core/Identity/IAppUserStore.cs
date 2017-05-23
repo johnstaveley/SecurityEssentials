@@ -16,5 +16,6 @@ namespace SecurityEssentials.Core.Identity
 		Task<ClaimsIdentity> CreateIdentityAsync(User user, string authenticationType);
 
 		Task<IdentityResult> ChangePasswordFromTokenAsync(int userId, string passwordResetToken, string newPassword);
+		Task<IdentityResult> ResetPasswordAsync(int userId, string newPassword, string actioningUserName);
 	}
 }

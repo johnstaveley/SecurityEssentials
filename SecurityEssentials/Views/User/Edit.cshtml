@@ -4,119 +4,296 @@
     ViewBag.Active = "Admin";
 }
 
-<div class="reports-wrapper">
-    <div class="scrollable">
-        <div class="max-width">
-            <h4>Edit User</h4>
-            <div>
-                <div>
-                    <div>
-                        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.ValidationSummary(true)
-                            @Html.HiddenFor(model => model.User.Id)
-                            @Html.HiddenFor(model => model.IsOwnProfile)
-                            @Html.HiddenFor(model => model.IsAdministrator)
-if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
-                            {
-                                <div class="form-group">
-                                    <div class="alert alert-info" id="statusMessage">@ViewBag.StatusMessage</div>
-                                </div>
-}
+<ul class="breadcrumb">
+    <li class="active">Edit User @Model.User.UserName</li>
+</ul>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.UserName)
-                                <span id="User_UserName">@Html.DisplayFor(model => model.User.UserName)</span>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.Title)
-                                @Html.TextBoxFor(model => model.User.Title, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.Title)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.FirstName)
-                                @Html.TextBoxFor(model => model.User.FirstName, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.FirstName)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.LastName)
-                                @Html.TextBoxFor(model => model.User.LastName, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.LastName)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.TelNoWork)
-                                @Html.TextBoxFor(model => model.User.TelNoWork, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.TelNoWork)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.TelNoHome)
-                                @Html.TextBoxFor(model => model.User.TelNoHome, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.TelNoHome)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.TelNoMobile)
-                                @Html.TextBoxFor(model => model.User.TelNoMobile, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.TelNoMobile)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.Town)
-                                @Html.TextBoxFor(model => model.User.Town, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.Town)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.Postcode)
-                                @Html.TextBoxFor(model => model.User.Postcode, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.Postcode)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.SkypeName)
-                                @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.User.SkypeName)
-                            </div>if (User.IsInRole("Admin"))
-                            {
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.User.EmailVerified)
-                                    @Html.CheckBoxFor(model => model.User.EmailVerified)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.User.Approved)
-                                    @Html.CheckBoxFor(model => model.User.Approved)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.User.Enabled)
-                                    @Html.CheckBoxFor(model => model.User.Enabled)
-                                </div>
-}
-                            else
-                            {
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.User.EmailVerified)
-                                    @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
-                                </div>
-}
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.PasswordLastChangedDate)
-                                @Model.User.PasswordLastChangedDate.ToLocalTime()
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.User.DateCreated)
-                                @Model.User.DateCreated.ToLocalTime()
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">&nbsp;</div>
-                                <div class="col-md-2">@Html.ActionLink("Cancel", "Index", "User")</div>
-                                <div class="col-md-2"><input id="submit" type="submit" value="Save" class="btn btn-primary btn-block" /></div>
-                            </div>
-                                @Html.AntiForgeryToken()
-}
-                    </div>
+<h1>Edit User</h1>
+<hr />
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.User.Id)
+    @Html.HiddenFor(model => model.IsOwnProfile)
+    @Html.HiddenFor(model => model.IsCurrentUserAnAdmin)
+    if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+    {
+        <div class="alert alert-info" id="statusMessage">@ViewBag.StatusMessage</div>
+    }
 
-                </div>
+    if (Model.IsAccessingUserAnAdmin)
+    {
+        <div class="row">
+            <div class="col-md-4">@Html.LabelFor(model => model.User.UserName)</div>
+            <div class="col-md-4">@Html.TextBoxFor(model => model.User.UserName, new { @class = "form-control" })</div>
+            <div class="col-md-4">@Html.ValidationMessageFor(model => model.User.UserName)</div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <span class="labelBold">Email Address</span>
+            </div>
+            <div class="col-md-4">
+                <span id="User_UserName">@Html.DisplayFor(model => model.User.UserName)</span>
             </div>
         </div>
+    }
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.Title)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.Title, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.Title)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.FirstName)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.FirstName, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.FirstName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.LastName)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.LastName, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.LastName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.TelNoWork)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.TelNoWork, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.TelNoWork)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.TelNoHome)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.TelNoHome, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.TelNoHome)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.TelNoMobile)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.TelNoMobile, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.TelNoMobile)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.Town)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.Town, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.Town)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.Postcode)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.Postcode, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.Postcode)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(model => model.User.SkypeName)
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(model => model.User.SkypeName, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.ValidationMessageFor(model => model.User.SkypeName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+
+    if (User.IsInRole("Admin"))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.User.EmailVerified)
+            </div>
+            <div class="col-md-4">
+                @Html.CheckBoxFor(model => model.User.EmailVerified)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.User.Approved)
+            </div>
+            <div class="col-md-4">
+                @Html.CheckBoxFor(model => model.User.Approved)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.User.Enabled)
+            </div>
+            <div class="col-md-4">
+                @Html.CheckBoxFor(model => model.User.Enabled)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">&nbsp;</div>
+        </div>
+
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.User.EmailVerified)
+            </div>
+            <div class="col-md-4">
+                @Html.DisplayFor(model => model.User.EmailVerified, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">&nbsp;</div>
+        </div>
+
+    }
+    <div class="row">
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-2">@Html.ActionLink("Cancel", "Landing", "Account")</div>
+        <div class="col-md-2"><input id="submit" type="submit" value="Save" class="btn btn-primary btn-block" /></div>
+    </div>
+    <hr />
+    <hr />
+    if (Model.IsAccessingUserAnAdmin)
+    {
+        <h2>Admin Functions</h2>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.ActionLink("Reset Password", "ResetPassword", "User", new { id = Model.User.Id }, new { id = "resetPassword" })
+            </div>
+            @if (!Model.IsOwnProfile) {
+                <div class="col-md-4">
+                    @Html.ActionLink("Delete User", "Delete", "User", new { id = Model.User.Id }, new { id = "deleteUser" })
+                </div>
+            }
+        </div>
+    }
+    if (Model.IsCurrentUserAnAdmin)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row" id="textIndicatingUserIsAnAdmin">
+            <div class="col-md-4">This user is a system administrator</div>
+            <div class="col-md-4">
+                @if (Model.IsAccessingUserAnAdmin)
+                {
+                    @Html.ActionLink("Remove Administrator Privilege", "RemoveAdmin", "User", new { id = Model.User.Id }, new { id = "removeAdmin" })
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        if (Model.IsAccessingUserAnAdmin)
+        {
+            <div class="row">
+                <div class="col-md-4">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    @Html.ActionLink("Make User an Administrator", "MakeAdmin", "User", new { id = Model.User.Id }, new { id = "makeAdmin" })
+                </div>
+            </div>
+        }
+    }
+
+    <h2>Status Information</h2>
+    <p>@Html.ActionLink("View User Logs", "Log", "User", new { id = Model.User.Id }, new { id = "log" })</p>
+    <hr />
+    <div class="row">
+        <div class="col-md-4"><span class="labelBold">Password Last Changed Date</span></div>
+        <div class="col-md-4">@Model.User.PasswordLastChangedDateUtc.ToLocalTime()</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><span class="labelBold">Created Date</span></div>
+        <div class="col-md-4">@Model.User.CreatedDateUtc.ToLocalTime()</div>
+    </div>
+    @Html.AntiForgeryToken()
+}
+
 @section scripts {
-    @Scripts.Render("~/bundles/user")
-    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/app/edituser.js"></script>
 }

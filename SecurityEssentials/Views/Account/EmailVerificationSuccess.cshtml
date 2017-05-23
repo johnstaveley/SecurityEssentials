@@ -3,16 +3,15 @@
     ViewBag.Active = "Home";
 }
 
-
-    <div>
-        <div class="row">
-            <div class="col-md-12"><h2>Verification success</h2></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">Your email has been successfully verified<br /><br/></div>
-        </div>        
-        <div class="row">
-            <div class="col-md-12">Click @Html.ActionLink("Here to Logon", "LogOn", "Account")</div>
-        </div>        
+<div>
+    <div class="row">
+        <div class="col-md-12"><h1>Verification success</h1></div>
     </div>
+    <div class="row">
+        <div class="col-md-12">Your email has been successfully verified. You may now logon<br /><br/></div>
+    </div>        
+    <div class="row">
+        <div class="col-md-12">Click @Html.ActionLink("Here to Login", "LogOn", "Account")</div>
+    </div>        
+</div>
 

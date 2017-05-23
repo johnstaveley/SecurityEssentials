@@ -1,28 +1,29 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SecurityEssentials.Acceptance.Tests.Menus;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class HomePage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
-		private IWebElement Register
-		{
-			get { return this.GetVisibleWebElement(By.Id("registerLink")); }
-		}
-
-		private IWebElement Login
-		{
-			get { return this.GetVisibleWebElement(By.Id("loginLink")); }
-		}
-
+		private IWebElement Login => GetVisibleWebElement(By.Id("loginLink"));
+		private List<IWebElement> WebPageContent => Driver.FindElements(By.ClassName("contentCell")).ToList();
+		private IWebElement Register => GetVisibleWebElement(By.Id("registerLink"));
 		public HomePage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.HOME)
 		{
 			MenuBar = new MenuBar(webDriver, baseUri);
+		}
+
+		public List<string> GetWebPageContent()
+		{
+			return WebPageContent.Select(a => a.Text).ToList();
 		}
 
 		public static HomePage NavigateToPage(IWebDriver webDriver, Uri baseUri)

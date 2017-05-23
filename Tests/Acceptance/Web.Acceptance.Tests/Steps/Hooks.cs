@@ -1,13 +1,16 @@
-﻿using System;
-using System.Configuration;
-using System.Drawing.Imaging;
+﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Support.Extensions;
-using SecurityEssentials.Acceptance.Tests.Web.Extensions;
+using SecurityEssentials.Acceptance.Tests.Extensions;
+using SecurityEssentials.Acceptance.Tests.Utility;
+using System;
+using System.Configuration;
+using System.Drawing.Imaging;
+using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
@@ -64,10 +67,16 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 
 		}
 
-		[AfterFeature]
-		public static void AfterFeature()
+		[AfterTestRun]
+		public static void AfterTestRun()
 		{
 			if (FeatureContext.Current.HasWebDriver()) FeatureContext.Current.GetWebDriver().Quit();
+			if (bool.Parse(ConfigurationManager.AppSettings["RestoreDatabaseAfterTests"]))
+			{
+				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseTeardown.sql");
+				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.LookupRestore.sql");
+				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseRestore.sql");
+			}
 		}
 
 		[AfterScenario]
@@ -78,8 +87,14 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				string fileName = $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.png";
 				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ImageFormat.Png);
 			}
-		}
+		}		
 
+		[AfterScenario("CheckForErrors")]
+		public static void CheckForErrors()
+		{
+			var errors = SeDatabase.GetSystemErrors();
+			Assert.That(errors.Count, Is.EqualTo(0), $"Expected No errors but found error(s) {string.Join(", ", errors.Select(a => a.Message).ToArray())}");
+		}
 
 	}
 }

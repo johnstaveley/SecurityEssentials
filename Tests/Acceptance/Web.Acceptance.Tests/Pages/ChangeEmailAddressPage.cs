@@ -1,29 +1,20 @@
 ﻿using System;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class ChangeEmailAddressPage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
-		
-		private IWebElement NewUserName
-		{
-			get { return this.GetVisibleWebElement(By.Id("NewEmailAddress")); }
-		}
+		private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		private IWebElement ChangeButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+		private IWebElement NewUserName => GetVisibleWebElement(By.Id("NewEmailAddress"));
+
+		private IWebElement ChangeButton => GetVisibleWebElement(By.Id("submit"));
 
 		public ChangeEmailAddressPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.CHANGE_EMAIL_ADDRESS)
@@ -46,7 +37,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						Password.SendKeys(row[1]);
 						break;
 					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
+						throw new Exception($"Field {row[0]} not defined");
 				}
 			}
 		}
@@ -54,7 +45,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 		public void ClickSubmit()
 		{
 			ChangeButton.Click();
-		}		
+		}
 
 	}
 

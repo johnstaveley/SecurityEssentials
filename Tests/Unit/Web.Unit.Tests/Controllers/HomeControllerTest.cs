@@ -1,44 +1,37 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
+﻿using SecurityEssentials.Controllers;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityEssentials.Controllers;
+using System.Web.Routing;
+using NUnit.Framework;
 using Rhino.Mocks;
 using SecurityEssentials.Core;
-using SecurityEssentials.Core.Identity;
-using SecurityEssentials.Unit.Tests.TestDbSet;
-using SecurityEssentials.Model;
-using System.Collections.Generic;
-using SecurityEssentials.ViewModel;
-using System.Threading.Tasks;
-using System.Web.Routing;
-using System.Web;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-    [TestClass]
+	[TestFixture]
     public class HomeControllerTest : BaseControllerTest
-    {
+	{
+		private IAppSensor _appSensor;
+		private HomeController _sut;
 
-        private HomeController _sut;
-
-        [TestInitialize]
+        [SetUp]
         public void Setup()
         {
-            base.BaseSetup();
-            _sut = new HomeController();
-            _sut.Url = new UrlHelper(new RequestContext(_httpContext, new RouteData()), new RouteCollection());
-            _sut.ControllerContext = new ControllerContext(_httpContext, new RouteData(), _sut);
+            BaseSetup();
+	        _appSensor = MockRepository.GenerateMock<IAppSensor>();
+			_sut = new HomeController(UserIdentity, _appSensor)
+	        {
+		        Url = new UrlHelper(new RequestContext(HttpContext, new RouteData()), new RouteCollection())
+	        };
+	        _sut.ControllerContext = new ControllerContext(HttpContext, new RouteData(), _sut);
         }
 
-        [TestCleanup]
+        [TearDown]
         public void Teardown()
         {
-            base.VerifyAllExpectations();
+            VerifyAllExpectations();
         }
 
-        [TestMethod]
+        [Test]
         public void When_About_Then_ViewReturned()
         {
 
@@ -51,7 +44,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             AssertViewResultReturned(result, "About");
         }
 
-        [TestMethod]
+        [Test]
         public void When_Contact_Then_ViewReturned()
         {
 
@@ -66,7 +59,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
         }
 
-        [TestMethod]
+        [Test]
         public void When_Index_Then_ViewReturned()
         {
 

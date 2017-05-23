@@ -1,40 +1,26 @@
-﻿using System;
-using OpenQA.Selenium;
-using TechTalk.SpecFlow;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using System;
+using SecurityEssentials.Acceptance.Tests.Menus;
+using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class ChangeSecurityInformationPage : BasePage
 	{
 
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
-		private IWebElement Password
-		{
-			get { return this.GetVisibleWebElement(By.Id("Password")); }
-		}
+		private IWebElement Password => GetVisibleWebElement(By.Id("Password"));
 
-		private SelectElement SecurityQuestion
-		{
-			get { return new SelectElement(this.GetVisibleWebElement(By.Id("SecurityQuestionLookupItemId"))); }
-		}
+		private SelectElement SecurityQuestion => new SelectElement(GetVisibleWebElement(By.Id("SecurityQuestionLookupItemId")));
 
-		private IWebElement SecurityAnswer
-		{
-			get { return this.GetVisibleWebElement(By.Id("SecurityAnswer")); }
-		}
+		private IWebElement SecurityAnswer => GetVisibleWebElement(By.Id("SecurityAnswer"));
 
-		private IWebElement SecurityAnswerConfirm
-		{
-			get { return this.GetVisibleWebElement(By.Id("SecurityAnswerConfirm")); }
-		}
+		private IWebElement SecurityAnswerConfirm => GetVisibleWebElement(By.Id("SecurityAnswerConfirm"));
 
-		private IWebElement SubmitButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+		private IWebElement SubmitButton => GetVisibleWebElement(By.Id("submit"));
 
 		public ChangeSecurityInformationPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.CHANGE_SECURITY_INFORMATION)
@@ -62,7 +48,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						SecurityAnswerConfirm.SendKeys(row[1]);
 						break;
 					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
+						throw new Exception($"Field {row[0]} not defined");
 				}
 			}
 		}

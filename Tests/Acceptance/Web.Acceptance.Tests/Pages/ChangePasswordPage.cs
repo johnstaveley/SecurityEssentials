@@ -1,38 +1,24 @@
 ﻿using System;
 using OpenQA.Selenium;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using TechTalk.SpecFlow;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Pages
+namespace SecurityEssentials.Acceptance.Tests.Pages
 {
 	public class ChangePasswordPage : BasePage
 	{
-		public MenuBar MenuBar { get; private set; }
+		public MenuBar MenuBar { get; }
 
-		private IWebElement CurrentPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("OldPassword")); }
-		}
+		private IWebElement CurrentPassword => GetVisibleWebElement(By.Id("OldPassword"));
 
-		private IWebElement NewPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("NewPassword")); }
-		}
+		private IWebElement NewPassword => GetVisibleWebElement(By.Id("NewPassword"));
 
-		private IWebElement ConfirmNewPassword
-		{
-			get { return this.GetVisibleWebElement(By.Id("ConfirmPassword")); }
-		}
+		private IWebElement ConfirmNewPassword => GetVisibleWebElement(By.Id("ConfirmPassword"));
 
-		private IWebElement StatusMessage
-		{
-			get { return this.GetVisibleWebElement(By.Id("statusMessage")); }
-		}
+		private IWebElement StatusMessage => GetVisibleWebElement(By.Id("statusMessage"));
 
-		private IWebElement SubmitButton
-		{
-			get { return this.GetVisibleWebElement(By.Id("submit")); }
-		}
+		private IWebElement SubmitButton => GetVisibleWebElement(By.Id("submit"));
 
 		public ChangePasswordPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.CHANGE_PASSWORD)
@@ -57,7 +43,7 @@ namespace SecurityEssentials.Acceptance.Tests.Web.Pages
 						ConfirmNewPassword.SendKeys(row[1]);
 						break;
 					default:
-						throw new Exception(string.Format("Field {0} not defined", row[0]));
+						throw new Exception($"Field {row[0]} not defined");
 				}
 			}
 		}

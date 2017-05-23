@@ -17,13 +17,16 @@ To set up the project take the following steps:
 
 	2.2) Set in web.config HasEmailConfigured = true
 
-3) if you deploy this into production make sure you remove the test users from the databaseInitializer
+3) If you deploy this into production make sure you remove the test users from the databaseInitializer
 
+4) Apply the NoCache attribute to any controllers which have sensitive data
+
+5) Search for TODO in code to see further actions which could be taken
 
 Notes
 ---------------
 
-In order to get the acceptance tests running on my CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefpx 64bit, you will need to replace this with the 64 bit version
+In order to get the acceptance tests running on the CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefox 64bit, you will need to replace this with the 64 bit version
 
 Known Issues
 ------------
