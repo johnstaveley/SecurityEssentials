@@ -9,7 +9,6 @@ using SecurityEssentials.Acceptance.Tests.Extensions;
 using SecurityEssentials.Acceptance.Tests.Utility;
 using System;
 using System.Configuration;
-using System.Drawing.Imaging;
 using System.Linq;
 using TechTalk.SpecFlow;
 
@@ -59,7 +58,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 						throw new Exception($"Unable to set browser type {webBrowserType}");
 				}
 			}
-			webDriver.Manage().Timeouts().ImplicitlyWait(new TimeSpan(0, 0, 5));
+			webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 			FeatureContext.Current.SetWebDriver(webDriver);
 
 			var baseUri = new Uri(ConfigurationManager.AppSettings["WebServerUrl"]);
@@ -90,7 +89,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
 			{
 				string fileName = $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.png";
-				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ImageFormat.Png);
+				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
 			}
 		}		
 
