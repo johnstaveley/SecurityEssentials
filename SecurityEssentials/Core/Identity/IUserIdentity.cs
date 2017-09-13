@@ -15,6 +15,7 @@ namespace SecurityEssentials.Core.Identity
 		string GetClientIpAddress(HttpRequestBase request);
 
 		Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null);
+	    void RemoveAntiForgeryCookie(Controller controller);
 
-	}
+    }
 }

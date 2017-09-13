@@ -10,10 +10,10 @@ namespace SecurityEssentials.Core
 	{
 		public void Init(HttpApplication context)
 		{
-			context.PreSendRequestHeaders += context_PreSendRequestHeaders;
+			context.PreSendRequestHeaders += Context_PreSendRequestHeaders;
 		}
 
-		void context_PreSendRequestHeaders(object sender, EventArgs e)
+		private void Context_PreSendRequestHeaders(object sender, EventArgs e)
 		{
 			// SECURE: Prevent site being viewed in an iFrame
 			HttpContext.Current.Response.Headers.Add("X-Frame-Options", "Deny");

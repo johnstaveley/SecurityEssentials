@@ -12,7 +12,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
-using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
@@ -759,6 +758,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			// Arrange
 			_formsAuth.Expect(a => a.SignOut());
 			HttpSession.Expect(h => h.Abandon());
+			UserIdentity.Expect(a => a.RemoveAntiForgeryCookie(Arg<Controller>.Is.Anything));
 
 			// Act
 			var result = _sut.LogOff();

@@ -22,9 +22,9 @@ namespace SecurityEssentials.Controllers
 	    private readonly IRecaptcha _recaptcha;
 	    private readonly IServices _services;
 	    private readonly ISeContext _context;
-	    private readonly IUserManager _userManager;	
+	    private readonly IUserManager _userManager;
 
-        public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISeContext context, IHttpCache httpCache, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
+		public AccountController(IAppSensor appSensor, IAppConfiguration configuration, IEncryption encryption, IFormsAuth formsAuth, ISeContext context, IHttpCache httpCache, IUserManager userManager, IRecaptcha recaptcha, IServices services, IUserIdentity userIdentity) : base(userIdentity, appSensor)
         {
 			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 	        _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -45,6 +45,7 @@ namespace SecurityEssentials.Controllers
 			_userManager.SignOut();
 			Logger.Debug("Entered Account Logoff Post");
 			Session.Abandon();
+			UserIdentity.RemoveAntiForgeryCookie(this);
 			return RedirectToAction("LogOn", "Account");
 		}
 

@@ -10,33 +10,33 @@ using System.Security.Cryptography;
 
 namespace SecurityEssentials.Core.Identity
 {
-    public class UserIdentity : IUserIdentity
-    {
+	public class UserIdentity : IUserIdentity
+	{
 
-        public int GetUserId(Controller controller)
-        {
-            return Convert.ToInt32(controller.User.Identity.GetUserId());
+		public int GetUserId(Controller controller)
+		{
+			return Convert.ToInt32(controller.User.Identity.GetUserId());
 
-        }
-        public string GetUserName(Controller controller)
-        {
-            return controller.User.Identity.Name;
-        }
+		}
+		public string GetUserName(Controller controller)
+		{
+			return controller.User.Identity.Name;
+		}
 
-        public bool IsUserInRole(Controller controller, string role)
-        {
-            return controller.User.IsInRole(role);
-        }
+		public bool IsUserInRole(Controller controller, string role)
+		{
+			return controller.User.IsInRole(role);
+		}
 
 		public Requester GetRequester(Controller controller, AppSensorDetectionPointKind? appSensorDetectionPointKind = null)
 		{
-			return new Requester()
+			return new Requester
 			{
-				IpAddress = this.GetClientIpAddress(controller.Request),
-				LoggedOnUser = this.GetUserName(controller),
-				LoggedOnUserId = this.GetUserId(controller),
+				IpAddress = GetClientIpAddress(controller.Request),
+				LoggedOnUser = GetUserName(controller),
+				LoggedOnUserId = GetUserId(controller),
 				AppSensorDetectionPoint = appSensorDetectionPointKind,
-				SessionId = (controller.HttpContext.Session == null ? "" : GetHashSha256(controller.HttpContext.Session.SessionID))
+				SessionId = GetHashSha256(controller.HttpContext.Session.SessionID)
 			};
 		}
 
@@ -46,6 +46,7 @@ namespace SecurityEssentials.Core.Identity
 			{
 				var userHostAddress = request.UserHostAddress;
 
+				if (string.IsNullOrEmpty(userHostAddress)) return "0.0.0.0";
 				// Attempt to parse.  If it fails, we catch below and return "0.0.0.0"
 				// Could use TryParse instead, but I wanted to catch all exceptions
 				IPAddress.Parse(userHostAddress);
@@ -101,9 +102,25 @@ namespace SecurityEssentials.Core.Identity
 			string hashString = string.Empty;
 			foreach (byte x in hash)
 			{
-				hashString += String.Format("{0:x2}", x);
+				hashString += $"{x:x2}";
 			}
 			return hashString;
 		}
+
+		/// <summary>
+		/// SECURE: Remove any remaining cookies including Anti-CSRF cookie
+		/// </summary>
+		public void RemoveAntiForgeryCookie(Controller controller)
+		{
+			string[] allCookies = controller.Request.Cookies.AllKeys;
+			foreach (string cookie in allCookies)
+			{
+				if (controller.Response.Cookies[cookie] != null && cookie == "__RequestVerificationToken")
+				{
+					controller.Response.Cookies[cookie].Expires = DateTime.Now.AddDays(-1);
+				}
+			}
+		}
+
 	}
 }
