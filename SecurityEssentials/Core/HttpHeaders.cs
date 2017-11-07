@@ -21,7 +21,7 @@ namespace SecurityEssentials.Core
 			HttpContext.Current.Response.Headers.Add("Referrer-Policy", "origin");
 #if DEBUG
 			// SECURE: Enable Content security policy
-			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src: 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; ");
+			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; ");
 #else
 			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src: https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; ");
 #endif
