@@ -20,7 +20,7 @@ using System.Web.Script.Serialization;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-	public abstract class BaseControllerTest
+	public abstract class BaseControllerTest : IDisposable
 	{
 
 		protected ISeContext Context;
@@ -261,6 +261,23 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 				new HttpResponse(new StringWriter())
 			);
 		}
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				// Supressing IDisposable issue
+			}
+		}
 
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		~BaseControllerTest()
+		{
+			Dispose(false);
+		}
 	}
 }
