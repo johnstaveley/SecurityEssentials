@@ -170,22 +170,22 @@ namespace SecurityEssentials.Controllers
 			var previousUserName = user.UserName;
 			var propertiesToUpdate = new List<string>
 			{
-				"FirstName", "LastName", "TelNoHome", "TelNoMobile", "TelNoWork", "Title",
-				"Town","Postcode", "SkypeName"
+				"User.FirstName", "User.LastName", "User.TelNoHome", "User.TelNoMobile", "User.TelNoWork", "User.Title",
+				"User.Town","User.Postcode", "User.SkypeName"
 			};
-			var expectedFields = new List<string> { "IsAccessingUserAnAdmin", "IsOwnProfile", "IsCurrentUserAnAdmin", "User.Id" };
+			var expectedFields = new List<string> { "IsOwnProfile", "IsCurrentUserAnAdmin", "User.Id" };
 			if (isAdmin)
 			{
-				if (currentUserId != user.Id)
+				if (!isOwnProfile)
 				{
 					// Otherwise these fields will be disabled on the front page
-					propertiesToUpdate.AddRange(new List<string> { "Approved", "EmailVerified", "Enabled" });
+					propertiesToUpdate.AddRange(new List<string> { "User.Approved", "User.EmailVerified", "User.Enabled" });
 				}
-				propertiesToUpdate.AddRange(new List<string> { "UserName" });
+				propertiesToUpdate.AddRange(new List<string> { "User.UserName" });
 			}
 			propertiesToUpdate.ForEach(a => expectedFields.Add(a));
 			AppSensor.ValidateFormData(this, expectedFields);
-			if (TryUpdateModel(user, "User", propertiesToUpdate.ToArray(), collection))
+			if (TryUpdateModel(user, "User", propertiesToUpdate.Select(a => a.Replace("User.", "")).ToArray(), collection))
 			{
 				if (_context.User.Any(a => a.Id != user.Id && user.UserName == a.UserName))
 				{

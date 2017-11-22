@@ -170,7 +170,7 @@
         <div class="col-md-4">&nbsp;</div>
     </div>
 
-    if (User.IsInRole("Admin"))
+    if (User.IsInRole("Admin") && !Model.IsOwnProfile)
     {
         <div class="row">
             <div class="col-md-4">
