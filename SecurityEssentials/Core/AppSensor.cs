@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using Serilog.Core;
 
 namespace SecurityEssentials.Core
 {
@@ -43,7 +42,7 @@ namespace SecurityEssentials.Core
 					requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae10;
 				}
 				var additionalFormKeys = string.Join(",", additionalKeys);
-				Log.Information("{@controllerName} {@methodName} {@httpMethod} additional form keys {additionalFormKeys} sent by requester {@requester}",
+				Log.Information("AppSensor {@controllerName} {@methodName} {@httpMethod} additional form keys {additionalFormKeys} sent by requester {@requester}",
 					controllerName, methodName, httpMethod, additionalFormKeys, requester);
 			}
 			// Check if any fields are missing from request
@@ -56,7 +55,7 @@ namespace SecurityEssentials.Core
 					requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Ae11;
 				}
 				var missingFormKeys = string.Join(",", missingKeys);
-				Log.Information("{@controllerName} {@methodName} {@httpMethod} missing form keys {missingFormKeys} sent by requester {@requester}", 
+				Log.Information("AppSensor {@controllerName} {@methodName} {@httpMethod} missing form keys {missingFormKeys} sent by requester {@requester}", 
 					controllerName, methodName, httpMethod, missingFormKeys, requester);
 			}
 			//// Check for potential SQL Injection Comments
@@ -68,7 +67,7 @@ namespace SecurityEssentials.Core
 			//		if (Regex.Match(valueSent, @"\*!?|\*|[';]--|--[\s\r\n\v\f]|(?:--[^-]*?-)|([^\-&])#.*?[\s\r\n\v\f]|;?\\x00").Success)
 			//		{
 			//			var requester = _userIdentity.GetRequester(controller, AppSensorDetectionPointKind.CIE1);
-			//			_logger.Information("{@controllerName} {@methodName} {@httpMethod} SQL injection sent in form submission {@valueSent} by requester {@requester}",
+			//			_logger.Information("AppSensor {@controllerName} {@methodName} {@httpMethod} SQL injection sent in form submission {@valueSent} by requester {@requester}",
 			//				controllerName, methodName, httpMethod, valueSent, requester);
 			//		}
 
@@ -125,7 +124,7 @@ namespace SecurityEssentials.Core
 						requester.AppSensorDetectionPoint = AppSensorDetectionPointKind.Re7;
 					}
 				}
-				Log.Information("Failed {@controllerName} {@methodName} {@httpMethod} validation bypass {errorMessage} attempted by user {@requester}", controllerName, methodName, httpMethod, errorMessage, requester);
+				Log.Information("AppSensor Failed {@controllerName} {@methodName} {@httpMethod} validation bypass {errorMessage} attempted by user {@requester}", controllerName, methodName, httpMethod, errorMessage, requester);
 			}
 		}
 

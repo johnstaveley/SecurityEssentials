@@ -58,6 +58,11 @@ namespace SecurityEssentials.Acceptance.Tests.Utility
 			SeContext seContext = new SeContext();
 			return seContext.Log.Where(a => a.Level == "Error").ToList();
 		}
+		public static List<Log> GetAppSensorErrors()
+		{
+			SeContext seContext = new SeContext();
+			return seContext.Log.Where(a => a.Level == "Information" && a.Message.StartsWith("AppSensor")).ToList();
+		}
 		public static List<Log> GetCspWarnings()
 		{
 			SeContext seContext = new SeContext();
