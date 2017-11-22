@@ -98,6 +98,8 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		{
 			var errors = SeDatabase.GetSystemErrors();
 			Assert.That(errors.Count, Is.EqualTo(0), $"Expected No errors but found error(s) {string.Join(", ", errors.Select(a => a.Message).ToArray())}");
+			var cspWarnings = SeDatabase.GetCspWarnings();
+			Assert.That(cspWarnings.Count, Is.EqualTo(0), $"Expected No Csp Warnings but found warnings(s) {string.Join(", ", cspWarnings.Select(a => a.Message).ToArray())}");
 		}
 
 	}

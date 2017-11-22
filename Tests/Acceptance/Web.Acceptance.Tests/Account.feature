@@ -15,12 +15,12 @@ Scenario: When I enter correct login details I am taken to the landing page
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |  
 	And I navigate to the website
 	And I am taken to the homepage
-	And I click the login link in the navigation bar
+	And I click the login link in the navigation bar 
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
 	| UserName | user@test.net     |
-	| Password | x12a;pP02icdjshER |
+	| Password | x12a;pP02icdjshER | 
 	When I click the login button
 	Then I am navigated to the 'Landing' page
 	And the following last activity message is shown: 'the last activity logged against your account was'

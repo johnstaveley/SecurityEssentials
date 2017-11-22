@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-###Created by John Staveley - Last update 13/09/2017
+###Created by John Staveley - Last update 22/11/2017
 
 ##Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -45,8 +45,9 @@ Other threats it protects against and features:
 * Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
-* Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards
+* Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy reporting
 * Forces user to change their password if their password has expired
 * Professionally pentested
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
+Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status

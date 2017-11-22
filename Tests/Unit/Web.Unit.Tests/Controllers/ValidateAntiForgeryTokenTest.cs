@@ -22,6 +22,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			var allControllerActions = allControllerTypes.SelectMany(type => type.GetMethods());
 
 			var failingActions = allControllerActions
+				.Where(method => !(method.Name == "CspReporting" && method.DeclaringType.Name == "SecurityController"))
 				.Where(method => Attribute.GetCustomAttribute(method, action) != null)
 				.Where(method => Attribute.GetCustomAttribute(method, typeof(ValidateAntiForgeryTokenAttribute)) == null)
 				.ToList();

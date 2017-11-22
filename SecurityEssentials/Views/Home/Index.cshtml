@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 13/09/2017</h4>
+                <h4>Created by John Staveley - Last updated 22/11/2017</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -60,11 +60,12 @@
                     <li>Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame</li>
                     <li>Form overposting: Example given of how to avoid this</li>
                     <li>Acceptance tests for key functionality</li>
-                    <li>Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards</li>
+                    <li>Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards and content security policy violations</li>
                     <li>Professionally pentested</li>
                 </ul>
             </p>
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.md in project for more information</p>
+            <p>Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: <a href="https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status">https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status</a></p>
             <p>
                 <h2>Steps to secure your website on the server</h2>
                 When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
