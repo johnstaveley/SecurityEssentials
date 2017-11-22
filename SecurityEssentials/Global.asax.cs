@@ -5,6 +5,7 @@ using SecurityEssentials.Core.Identity;
 using Serilog;
 using System;
 using System.Configuration;
+using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Helpers;
