@@ -13,15 +13,23 @@ namespace SecurityEssentials.Controllers
 
 		[HttpPost]
 		[AllowXRequestsEveryXSeconds(Name = "CspReporting", ContentName = "TooManyRequests", Requests = 15, Seconds = 60)]
-		public JsonResult CspReporting([ModelBinder(typeof(JsonCspModelBinder))] CspHolder data)
+		public JsonResult CspReporting([ModelBinder(typeof(JsonModelBinder<CspHolder>))] CspHolder data)
 		{
 			Serilog.Log.Logger.Warning("Content Security Policy Violation {@CspReport}", data.CspReport);
 			return Json(new {success = true});
 		}
 		
+		[HttpPost]
+		[AllowXRequestsEveryXSeconds(Name = "HpkpReporting", ContentName = "TooManyRequests", Requests = 15, Seconds = 60)]
+		public JsonResult HpkpReporting([ModelBinder(typeof(JsonModelBinder<HpkpReport>))] HpkpReport data)
+		{
+			Serilog.Log.Logger.Warning("Http Public Key Pinning Violation {@data}", data);
+			return Json(new { success = true });
+		}
+		
 	}
 
-	internal class JsonCspModelBinder : IModelBinder
+	internal class JsonModelBinder<T> : IModelBinder where T : class 
 	{
 		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
 		{
@@ -32,10 +40,9 @@ namespace SecurityEssentials.Controllers
 			var settings = new JsonSerializerSettings
 			{
 				MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-				DateParseHandling = DateParseHandling.None
-				
+				DateParseHandling = DateParseHandling.None				
 			};
-			return JsonConvert.DeserializeObject<CspHolder>(json, settings);
+			return JsonConvert.DeserializeObject<T>(json, settings);
 		}
 	}
 }

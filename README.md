@@ -45,7 +45,7 @@ Other threats it protects against and features:
 * Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
-* Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy reporting
+* Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 * Forces user to change their password if their password has expired
 * Professionally pentested
 
