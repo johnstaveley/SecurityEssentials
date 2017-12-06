@@ -45,7 +45,7 @@ namespace SecurityEssentials
 				context.Database.Initialize(true);
 			}
 			Log.Logger = new LoggerConfiguration()
-				.WriteTo.MSSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString(), "Logs")
+				.WriteTo.MSSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString(), "Logs", batchPostingLimit: int.Parse(ConfigurationManager.AppSettings["LoggingBatchPostingLimit"]))
 				.MinimumLevel.Debug()
 				.CreateLogger();
 			Log.Information("Application started");

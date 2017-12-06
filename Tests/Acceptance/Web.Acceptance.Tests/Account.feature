@@ -7,7 +7,7 @@ Feature: Account
 Background: 
 	Given I delete all cookies from the cache 
 	And I clear down the database
-	And I have the standard set of lookups
+	And I have the standard set of lookups 
 
 Scenario: When I enter correct login details I am taken to the landing page
 	Given the following users are setup in the database:

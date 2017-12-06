@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using SecurityEssentials.Acceptance.Tests.Pages;
+using SecurityEssentials.Model;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Extensions
@@ -12,7 +13,17 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		public const string KeyHttpHeaders = "Http_Headers";
 		public const string KeyHash = "Hash";
 		public const string KeySalt = "Salt";
+		public const string CspReport = "CspReport";
 
+		public static CspReport GetCspReport(this ScenarioContext scenarioContext)
+		{
+			return scenarioContext.Get<CspReport>(CspReport);
+		}
+
+		public static void SetCspReport(this ScenarioContext scenarioContext, CspReport cspReport)
+		{
+			scenarioContext.Set(cspReport, CspReport);
+		}
 		public static IEnumerable<Tuple<string, string>> GetHttpHeaders(this ScenarioContext scenarioContext)
 		{
 			return scenarioContext.Get<IEnumerable<Tuple<string, string>>>(KeyHttpHeaders);

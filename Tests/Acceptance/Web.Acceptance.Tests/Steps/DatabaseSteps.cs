@@ -191,13 +191,37 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				userRoles.Add(userRole);
 			}
 			SeDatabase.SetUserRoles(userRoles);
-		}		
+		}
+		[Then(@"I have (.*) content security policy violation in the system")]
+		public void ThenIHaveContentSecurityPolicyViolationInTheSystem(int expectedNumberOfCspViolations)
+		{
+			var cspViolations = SeDatabase.GetCspWarnings();
+			Repeater.DoOrTimeout(() =>
+			{
+				cspViolations = SeDatabase.GetCspWarnings();
+				return cspViolations.Count == expectedNumberOfCspViolations;
+			}, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(2));
+			Assert.That(cspViolations.Count, Is.EqualTo(expectedNumberOfCspViolations), $"Was not able to find {expectedNumberOfCspViolations} csp violations in the logs");
+		}
+		[Then(@"I have a log in the system matching the following:")]
+		public void ThenIHaveALogInTheSystemMatchingTheFollowing(Table table)
+		{
+			var logModel = table.CreateInstance<LogModel>();
+			var logs = SeDatabase.GetLogs();
+			Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1);
+		}
 
+		[Then(@"I have the following logs in the system:")]
+		public void ThenIHaveTheFollowingLogsInTheSystem(Table table)
+		{
+			var logs = SeDatabase.GetLogs();
+			table.CompareToSet(logs);
+		}
 		[Then(@"I have the following user logs in the system:")]
 		public void ThenIHaveTheFollowingUserLogsInTheSystem(Table table)
 		{
-			var actualAuditEdits = SeDatabase.GetUserLogs();
-			table.CompareToSet(actualAuditEdits);
+			var userLogs = SeDatabase.GetUserLogs();
+			table.CompareToSet(userLogs);
 		}
 
 		[Given(@"I have the standard set of lookups")]

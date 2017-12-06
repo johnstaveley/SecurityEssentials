@@ -1,5 +1,4 @@
-﻿@CheckForErrors
-Feature: Security
+﻿Feature: Security
 	In order to avoid information disclosure
 	As a pen tester
 	I want to be sure the application has the correct security settings and behaviour
@@ -7,8 +6,28 @@ Feature: Security
 Background:
 	Given I delete all cookies from the cache 
 	And I clear down the database
-	And I have the standard set of lookups
+	And I have the standard set of lookups 
 
+Scenario: The web application will log a content security policy violation
+	Given I have a content security policy violation with details:
+	| Field             | Value                                       |
+	| BlockedUri        | http://myevilsite.com/stealdetails/capture/ |
+	| DocumentUri       | http://mysite.com/innocentpage/             |
+	| LineNumber        | 1                                           |
+	| Referrer          |                                             |
+	| OriginalPolicy    | default-src http://localhost:4845           |
+	| ScriptSample      | #modernizr{font:0/0 a}#modernizr:after{c... |
+	| SourceFile        | http://mysite.com/innocentpage/             |
+	| ViolatedDirective | default-src http://mysite.com               | 
+	When I post the content security policy violation to the website
+	And I wait 2 seconds
+	Then I have 1 content security policy violation in the system  
+	And I have a log in the system matching the following:
+	| Field   | Value                                                     |  
+	| Level   | Warning                                                   |
+	| Message | BlockedUri: "http://myevilsite.com/stealdetails/capture/" |
+
+@CheckForErrors
 Scenario: The web application will return the correct security headers
 	When I call http get on the website
 	Then the response headers will contain: 
@@ -16,13 +35,14 @@ Scenario: The web application will return the correct security headers
 	| X-Frame-Options        | Deny          |
 	| X-Content-Type-Options | nosniff       |
 	| X-XSS-Protection       | 1; mode=block |
-	| Referrer-Policy        | origin        | 
+	| Referrer-Policy        | origin        |  
 	And the response headers will not contain:
 	| Key                 |
 	| X-AspNet-Version    | 
 	| X-AspNetMvc-Version |
 	| Server              |
  
+@CheckForErrors
 Scenario: The application will prevent a brute force login attempt
 	Given I navigate to the website
 	And I am taken to the homepage
@@ -63,6 +83,7 @@ Scenario: The application will prevent a brute force login attempt
 	And I wait 2 seconds
 	Then an error message is shown 'You have requested this resource too many times in the last 60 seconds.'
 
+@CheckForErrors
 Scenario: A user with an expired password is redirected to the change password page until they change the password
 	Given the following users are setup in the database:
 	| UserName       | Title | FirstName | LastName | Password        | SecurityQuestion                    | SecurityAnswer | IsAdmin | Approved | Enabled | WorkTelephoneNumber | HomeTelephoneNumber | MobileTelephoneNumber | Town | Postcode | SkypeName | PasswordExpiryDate |

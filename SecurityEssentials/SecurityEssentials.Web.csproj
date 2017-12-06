@@ -305,7 +305,7 @@
     <Compile Include="Core\OrderByExtensions.cs" />
     <Compile Include="Core\Recaptcha.cs" />
     <Compile Include="Core\Identity\SecuredPassword.cs" />
-    <Compile Include="Core\Attributes\ThrottleAttribute.cs" />
+    <Compile Include="Core\Attributes\AllowXRequestsEveryXSeconds.cs" />
     <Compile Include="Core\Attributes\ValidateHttpAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

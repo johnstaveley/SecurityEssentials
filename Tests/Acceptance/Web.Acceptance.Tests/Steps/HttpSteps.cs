@@ -22,8 +22,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			var response = HttpWeb.Get(ConfigurationManager.AppSettings["WebServerUrl"]);
 			var headers = Enumerable
 				.Range(0, response.Headers.Count)
-				.SelectMany(i => response.Headers.GetValues(i)
-					.Select(v => Tuple.Create(response.Headers.GetKey(i), v)));
+				.Select(v => Tuple.Create(response.Headers[v].Name, response.Headers[v].Value.ToString()));
 			ScenarioContext.Current.SetHttpHeaders(headers);
 		}
 
@@ -38,7 +37,6 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				var actualHeader = actualHeaders.First(a => a.Item1 == expectedHeader.Key);
 				Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, "Header values do not match");
 			}
-
 		}
 
 		[Then(@"the response headers will not contain:")]
