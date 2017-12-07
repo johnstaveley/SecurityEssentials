@@ -203,6 +203,18 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			}, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(2));
 			Assert.That(cspViolations.Count, Is.EqualTo(expectedNumberOfCspViolations), $"Was not able to find {expectedNumberOfCspViolations} csp violations in the logs");
 		}
+		[Then(@"I have (.*) http public key pinning violation in the system")]
+		public void ThenIHaveHttpPublicKeyPinningViolationInTheSystem(int expectedNumberOfHpkpViolations)
+		{
+			var hpkpWarnings = SeDatabase.GetHpkpWarnings();
+			Repeater.DoOrTimeout(() =>
+			{
+				hpkpWarnings = SeDatabase.GetHpkpWarnings();
+				return hpkpWarnings.Count == expectedNumberOfHpkpViolations;
+			}, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(2));
+			Assert.That(hpkpWarnings.Count, Is.EqualTo(expectedNumberOfHpkpViolations), $"Was not able to find {expectedNumberOfHpkpViolations} hpkp violations in the logs");
+		}
+
 		[Then(@"I have a log in the system matching the following:")]
 		public void ThenIHaveALogInTheSystemMatchingTheFollowing(Table table)
 		{

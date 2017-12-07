@@ -14,15 +14,23 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		public const string KeyHash = "Hash";
 		public const string KeySalt = "Salt";
 		public const string CspReport = "CspReport";
+		public const string HpkpReport = "HpkpReport";
 
 		public static CspReport GetCspReport(this ScenarioContext scenarioContext)
 		{
 			return scenarioContext.Get<CspReport>(CspReport);
 		}
-
 		public static void SetCspReport(this ScenarioContext scenarioContext, CspReport cspReport)
 		{
 			scenarioContext.Set(cspReport, CspReport);
+		}
+		public static HpkpReport GetHpkpReport(this ScenarioContext scenarioContext)
+		{
+			return scenarioContext.Get<HpkpReport>(HpkpReport);
+		}
+		public static void SetHpkpReport(this ScenarioContext scenarioContext, HpkpReport hpkpReport)
+		{
+			scenarioContext.Set(hpkpReport, HpkpReport);
 		}
 		public static IEnumerable<Tuple<string, string>> GetHttpHeaders(this ScenarioContext scenarioContext)
 		{

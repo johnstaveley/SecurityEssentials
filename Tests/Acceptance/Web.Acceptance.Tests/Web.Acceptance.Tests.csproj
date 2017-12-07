@@ -120,6 +120,7 @@
     <Compile Include="Menus\MenuBar.cs" />
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
+    <Compile Include="Model\HpkpModel.cs" />
     <Compile Include="Model\CspModel.cs" />
     <Compile Include="Model\DescriptionViewModel.cs" />
     <Compile Include="Model\HttpHeader.cs" />

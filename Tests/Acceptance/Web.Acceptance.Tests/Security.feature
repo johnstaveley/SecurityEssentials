@@ -27,6 +27,26 @@ Scenario: The web application will log a content security policy violation
 	| Level   | Warning                                                   |
 	| Message | BlockedUri: "http://myevilsite.com/stealdetails/capture/" |
 
+Scenario: The web application will log a http public key pinning violation
+	Given I have a http public key pinning violation with details:
+	| Field                              | Value                            |
+	| DateTime                           | 2017-12-07                       |
+	| HostName                           | http://mysite.com/               | 
+	| Port                               | 8080                             |
+	| ExpirationDate                     | 2018-12-01                       |
+	| IncludeSubDomains                  | True                             |
+	| NotedHostName                      |                                  |
+	| ServedCertificateChainDelimited    | pem1,pem2,pem3                   |
+	| ValidatedCertificateChainDelimited | pem1,pem2,pem4                   |
+	| KnownPinsDelimited                 | known-pin1,known-pin2,known-pin3 |
+	When I post the http public key pinning violation to the website
+	And I wait 2 seconds
+	Then I have 1 http public key pinning violation in the system  
+	And I have a log in the system matching the following:
+	| Field   | Value                          |
+	| Level   | Warning                        |
+	| Message | HostName: "http://mysite.com/" |
+
 @CheckForErrors
 Scenario: The web application will return the correct security headers
 	When I call http get on the website

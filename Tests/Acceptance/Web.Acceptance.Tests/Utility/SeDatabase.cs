@@ -68,6 +68,11 @@ namespace SecurityEssentials.Acceptance.Tests.Utility
 			SeContext seContext = new SeContext();
 			return seContext.Log.Where(a => a.Level == "Warning" && a.Message.StartsWith("Content Security Policy Violation")).ToList();
 		}
+		public static List<Log> GetHpkpWarnings()
+		{
+			SeContext seContext = new SeContext();
+			return seContext.Log.Where(a => a.Level == "Warning" && a.Message.StartsWith("Http Public Key Pinning Violation")).ToList();
+		}
 		public static List<Log> GetLogs()
 		{
 			SeContext seContext = new SeContext();

@@ -312,7 +312,7 @@
     </Compile>
     <Compile Include="Core\SeContext.cs" />
     <Compile Include="Model\HpkpReport.cs" />
-    <Compile Include="Model\CsrReport.cs" />
+    <Compile Include="Model\CspReport.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\PreviousPassword.cs" />
     <Compile Include="ViewModel\RecoverViewModels.cs" />
