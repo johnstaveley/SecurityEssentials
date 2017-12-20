@@ -1,11 +1,12 @@
 # Security Essentials MVC Project Template
 
-###Created by John Staveley - Last update 22/11/2017
+###Created by John Staveley - Last update 20/12/2017
 
 ##Introduction
-This Mvc solution was adapted from the standard MVC4 template in VS 2015, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
 ##Security Enhancements
+This list is based on the OWASP Top 10 2013
 * SQL Injection: It uses Entity Framework ORM
 * Weak account management: 
 	+ Uses claims based auth
@@ -45,9 +46,14 @@ Other threats it protects against and features:
 * Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
-* Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 * Forces user to change their password if their password has expired
 * Professionally pentested
+
+##OWASP Top 10 2017
+The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
+* A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected
+* A8 - Insecure Deserialisation. Only affects Java applications
+* A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
 Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status
