@@ -4,6 +4,7 @@ using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Configuration;
+using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace SecurityEssentials.Acceptance.Tests.Web.Menus
 {

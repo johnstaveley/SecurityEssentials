@@ -1,10 +1,9 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SecurityEssentials.Acceptance.Tests.Menus;
+using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {

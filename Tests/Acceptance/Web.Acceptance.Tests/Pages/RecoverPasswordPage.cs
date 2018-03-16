@@ -1,9 +1,8 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 using TechTalk.SpecFlow;
+using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {

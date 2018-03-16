@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
 using System;
+using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {

@@ -52,9 +52,6 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 					case "Internet Explorer":
 						webDriver = new InternetExplorerDriver();
 						break;
-					case "PhantomJS":
-						webDriver = new PhantomJSDriver();
-						break;
 					default:
 						throw new Exception($"Unable to set browser type {webBrowserType}");
 				}

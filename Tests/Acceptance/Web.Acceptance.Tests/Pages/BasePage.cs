@@ -1,10 +1,11 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SecurityEssentials.Acceptance.Tests.Utility;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using SecurityEssentials.Acceptance.Tests.Utility;
+using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
