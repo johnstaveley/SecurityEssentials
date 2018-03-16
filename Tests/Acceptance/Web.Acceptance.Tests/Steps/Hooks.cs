@@ -27,15 +27,16 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			IWebDriver webDriver;
 			if (!string.IsNullOrEmpty(webBrowserProxy))
 			{
-				FirefoxProfile profile = new FirefoxProfile();
-				var proxy = new Proxy
-				{
-					HttpProxy = webBrowserProxy,
-					FtpProxy = webBrowserProxy,
-					SslProxy = webBrowserProxy
+				var firefoxOptions = new FirefoxOptions
+				{ 
+					Proxy = new Proxy
+					{
+						HttpProxy = webBrowserProxy,
+						FtpProxy = webBrowserProxy,
+						SslProxy = webBrowserProxy
+					}
 				};
-				profile.SetProxyPreferences(proxy);
-				webDriver = new FirefoxDriver(profile);
+				webDriver = new FirefoxDriver(firefoxOptions);
 			}
 			else
 			{

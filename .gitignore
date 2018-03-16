@@ -190,3 +190,4 @@ ModelManifest.xml
 /SecurityEssentials/Config/PrivateAppSettings.config
 /SecurityEssentials/Config/PrivateMailSettings.config
 *.ide
+/.vs/SecurityEssentials/v15
