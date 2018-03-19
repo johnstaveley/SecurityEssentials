@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-###Created by John Staveley - Last update 16/03/2018
+###Created by John Staveley - Last update 19/03/2018
 
 ##Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.

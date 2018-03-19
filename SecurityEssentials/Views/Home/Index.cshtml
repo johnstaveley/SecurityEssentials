@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 16/03/2018</h4>
+                <h4>Created by John Staveley - Last updated 19/03/2018</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -77,11 +77,11 @@
                 <h2>Steps to secure your website on the server</h2>
                 When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
                 <ul>
-                    <li>Apply a good SSL policy on the server: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
-                    <li>Configure your server to avoid a Poodle downgrade attack</li>
+                    <li>Apply a good SSL policy on the server: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a> e.g. Configure your server to avoid a Poodle downgrade attack</li>
                     <li>Enable retail mode on the production server</li>
                     <li>Patch the server up to the hilt</li>
                     <li>Register for HSTS preload</li>
+                    <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
                 </ul>
             </p>
             <p>
