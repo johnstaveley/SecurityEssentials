@@ -26,7 +26,7 @@ namespace SecurityEssentials.Core
 			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; report-uri /Security/CspReporting");
 #endif
 			HttpContext.Current.Response.Headers.Add("X-Content-Type-Options", "nosniff"); // SECURE: Prevent site being displayed in a different format in older browsers c.f. https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-			HttpContext.Current.Response.Headers.Add("X-XSS-Protection", "1; mode=block"); // SECURE: Enable browsers anti-XSS protection https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+			HttpContext.Current.Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=/Security/CspReporting"); // SECURE: Enable browsers anti-XSS protection and report any violations  https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
 #if DEBUG
 			HttpContext.Current.Response.Headers.Add("Strict-Transport-Security", "max-age=0; includeSubDomains"); // Remove HSTS header for debug
 			HttpContext.Current.Response.Headers.Add("Public-Key-Pins", "max-age=0; includeSubDomains"); // Remove public key pinning for debug
