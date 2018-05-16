@@ -31,10 +31,15 @@ namespace SecurityEssentials.Controllers
 			Response.TrySkipIisCustomErrors = true;
 			var appSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.Re1;
 			// TODO: Determine if path exists, if so RE2, otherwise RE1
-			Requester requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
-			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
-			Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			return result;
+	        var currentExecutionFilePath = Request.CurrentExecutionFilePath;
+	        if (!currentExecutionFilePath.Contains("favicon"))
+	        {
+		        Requester requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
+		        Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}",
+			        currentExecutionFilePath, requester);
+	        }
+
+	        return result;
 		}
 
 		// GET: Error
