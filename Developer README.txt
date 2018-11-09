@@ -32,7 +32,7 @@ Known Issues
 ------------
 
 If you use the Argon2 hashing algorithm then it will make use of an unmanaged dll called libargon2.dll. This needs to be put in the path (e.g. C:/Windows/SysWOW64/) for any executing code (either the web application or a CI server running the Argon2 unit tests). If you find a way around this restriction using unmanaged code then please let me know. 
-Argon2 tests fail in resharper/teamcity but pass in visual studio
+Argon2 tests fail unless this is the case so they have been ignored.
 
 Resources
 ---------

@@ -57,4 +57,3 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 * A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
-Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status
