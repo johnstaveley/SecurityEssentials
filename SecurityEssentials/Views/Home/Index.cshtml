@@ -52,6 +52,9 @@
                     </li>
                     <li>Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role</li>
                     <li>CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller</li>
+                    <ul>
+                        <li>Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token</li>
+                    </ul>
                     <li>Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated</li>
                     <li>Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4</li>
                 </ol>
