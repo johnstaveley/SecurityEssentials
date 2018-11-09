@@ -50,7 +50,7 @@ Other threats it protects against and features:
 * Forces user to change their password if their password has expired
 * Professionally pentested
 
-##OWASP Top 10 2017
+## OWASP Top 10 2017
 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
 * A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected
 * A8 - Insecure Deserialisation. Only affects Java applications
