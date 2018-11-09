@@ -22,7 +22,7 @@ Scenario: As an admin I can manage my users
 	And I enter the following login data:
 	| Field    | Value            |
 	| UserName | admin@test.net   | 
-	| Password | 654dfhjeritjJDFK |
+	| Password | 654dfhjeritjJDFK | 
 	And I click the login button
 	And I am navigated to the 'Landing' page
 	And I select Admin -> Manage Users from the menu

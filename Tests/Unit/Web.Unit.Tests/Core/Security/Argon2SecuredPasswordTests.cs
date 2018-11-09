@@ -5,7 +5,7 @@ using SecurityEssentials.Core.Identity;
 namespace SecurityEssentials.Unit.Tests.Core.Security
 {
 	// TODO: Does not run on CI server, can't find library
-	[TestFixture]
+	[TestFixture, Ignore("Requires dlls to be installed in path")]
 	public class Argon2SecuredPasswordTests
 	{
 

@@ -16,7 +16,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 	And I navigate to the website
 	And I am taken to the homepage
 	And I click the login link in the navigation bar 
-	And I am navigated to the 'login' page
+	And I am navigated to the 'login' page 
 	And I enter the following login data:
 	| Field    | Value             |
 	| UserName | user@test.net     |

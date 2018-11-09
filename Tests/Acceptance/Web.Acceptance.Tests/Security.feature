@@ -14,7 +14,7 @@ Scenario: The web application will log a content security policy violation
 	| BlockedUri        | http://myevilsite.com/stealdetails/capture/ |
 	| DocumentUri       | http://mysite.com/innocentpage/             |
 	| LineNumber        | 1                                           |
-	| Referrer          |                                             |
+	| Referrer          |                                             | 
 	| OriginalPolicy    | default-src http://localhost:4845           |
 	| ScriptSample      | #modernizr{font:0/0 a}#modernizr:after{c... |
 	| SourceFile        | http://mysite.com/innocentpage/             |

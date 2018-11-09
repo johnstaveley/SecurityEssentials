@@ -3,7 +3,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Support.Extensions;
 using SecurityEssentials.Acceptance.Tests.Extensions;
 using SecurityEssentials.Acceptance.Tests.Utility;
@@ -42,7 +41,12 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			{
 				switch (webBrowserType)
 				{
-					case "Chrome":
+				    case "Headless Chrome":
+				        ChromeOptions options = new ChromeOptions();
+				        options.AddArguments("--headless", "--disable-infobars", "--disable-extensions");
+				        webDriver = new ChromeDriver(options);
+				        break;
+                    case "Chrome":
 						webDriver = new ChromeDriver();
 						break;
 					case "FireFox":
