@@ -31,7 +31,7 @@ namespace SecurityEssentials.Controllers
         [AllowXRequestsEveryXSeconds(Name = "CtReporting", ContentName = "TooManyRequests", Requests = 15, Seconds = 60)]
         public JsonResult CtReporting([ModelBinder(typeof(JsonModelBinder<CtHolder>))] CtHolder data)
         {
-            Serilog.Log.Logger.Warning("Certificate Transparency Violation {@data}", data);
+            Serilog.Log.Logger.Warning("Certificate Transparency Violation {@data}", data.CtReport);
             return Json(new { success = true });
         }
     }
