@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 09/11/2018</h4>
+                <h4>Created by John Staveley - Last updated 13/02/2019</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -68,7 +68,7 @@
                 <h4>OWASP Top 10 2017</h4>
                 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
                 <ul>
-                    <li>A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected</li>
+                    <li>A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected. However if it did this only applies to .Net 4.5 and earlier.</li>
                     <li>A8 - Insecure Deserialisation. Only affects Java applications</li>
                     <li>A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations</li>
                 </ul>
@@ -84,6 +84,7 @@
                     <li>Patch the server up to the hilt</li>
                     <li>Register for HSTS preload</li>
                     <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
+                    <li>Register SPF DNS record for sending email</li>
                 </ul>
             </p>
             <p>

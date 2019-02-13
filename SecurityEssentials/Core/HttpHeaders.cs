@@ -29,7 +29,6 @@ namespace SecurityEssentials.Core
 			HttpContext.Current.Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=/Security/CspReporting"); // SECURE: Enable browsers anti-XSS protection and report any violations  https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
 			// SECURE: Public key pinning to be deprecated, do not use: http://www.zdnet.com/article/google-chrome-is-backing-away-from-public-key-pinning-and-heres-why/
 			HttpContext.Current.Response.Headers.Add("Public-Key-Pins", "max-age=0; includeSubDomains"); // Remove public key pinning 
-			//HttpContext.Current.Response.Headers.Add("Public-Key-Pins", "pin-sha256=\"<primary key>\"; pin-sha256=\"<backup key>\"; max-age=10000; includeSubDomains  report-uri /Security/HpkpReporting");
 #if DEBUG
 			HttpContext.Current.Response.Headers.Add("Strict-Transport-Security", "max-age=0; includeSubDomains"); // Remove HSTS header for debug
 #else

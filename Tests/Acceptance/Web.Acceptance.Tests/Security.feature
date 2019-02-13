@@ -19,7 +19,7 @@ Scenario: The web application will log a content security policy violation
 	| ScriptSample      | #modernizr{font:0/0 a}#modernizr:after{c... |
 	| SourceFile        | http://mysite.com/innocentpage/             |
 	| ViolatedDirective | default-src http://mysite.com               | 
-	When I post the content security policy violation to the website
+	When I post the content security policy violation to the website 
 	And I wait 2 seconds
 	Then I have 1 content security policy violation in the system  
 	And I have a log in the system matching the following:

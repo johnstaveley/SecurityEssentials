@@ -21,7 +21,7 @@ Scenario: As an admin I can manage my users
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
 	| Field    | Value            |
-	| UserName | admin@test.net   | 
+	| UserName | admin@test.net   |  
 	| Password | 654dfhjeritjJDFK | 
 	And I click the login button
 	And I am navigated to the 'Landing' page

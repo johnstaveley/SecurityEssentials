@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 09/11/2018
+### Created by John Staveley - Last updated 13/02/2019
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -52,7 +52,7 @@ Other threats it protects against and features:
 
 ## OWASP Top 10 2017
 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
-* A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected
+* A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected. However if it did this only applies to .Net 4.5 and earlier.
 * A8 - Insecure Deserialisation. Only affects Java applications
 * A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 
