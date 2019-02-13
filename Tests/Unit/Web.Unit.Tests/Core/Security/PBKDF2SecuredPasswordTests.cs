@@ -108,7 +108,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		public void Given_PasswordVerifiesIsNull_Then_ThrowsException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				{ var result = new SecuredPassword(null, HashStrategyKind.Pbkdf25009Iterations); }
+                {
+                    new SecuredPassword(null, HashStrategyKind.Pbkdf25009Iterations);
+                }
 			);
 		}
 
@@ -123,8 +125,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 			var securedPassword = new SecuredPassword(password, HashStrategyKind.Pbkdf25009Iterations);
 			var storedSalt = Convert.ToBase64String(securedPassword.Salt);
 			var storedHash = Convert.ToBase64String(securedPassword.Hash);
-			System.Diagnostics.Debug.WriteLine(string.Format("salt for password {0} is {1}", password, storedSalt));
-			System.Diagnostics.Debug.WriteLine(string.Format("hash for password {0} is {1}", password, storedHash));
+			System.Diagnostics.Debug.WriteLine($"salt for password {password} is {storedSalt}");
+			System.Diagnostics.Debug.WriteLine($"hash for password {password} is {storedHash}");
 
 		}
 

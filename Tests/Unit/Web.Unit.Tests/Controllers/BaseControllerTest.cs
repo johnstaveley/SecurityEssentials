@@ -35,8 +35,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		protected string TestFirstName = "Bob";
 		protected string TestUserName = "testuserName@test.net";
 		protected int TestUserId = 5;
-		protected int TestSuperUserId = 52;
-		protected const int TestDeliveryNetworkId = 14;
 		protected DateTime LastAccountActivity = DateTime.Parse("2016-05-10");
 
 		protected void BaseSetup()
@@ -92,26 +90,6 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 					new UserLog { Id = 1, CreatedDateUtc = LastAccountActivity, Description = "did old stuff" }
 				}
 			};
-		}
-
-		protected void StubAdminUser(bool isEnabled)
-		{
-			var id = new Random().Next(50, 10000);
-			var user = new User
-			{
-				Id = id,
-				Enabled = isEnabled,
-				Approved = true,
-				EmailVerified = true,
-				FirstName = "Admin",
-				LastName = "User",
-				UserName = $"admin.user{id}@test.net",
-				SecurityQuestionLookupItemId = 1,
-				SecurityQuestionLookupItem = new LookupItem { Id = 1, Description = "test question" },
-				SecurityAnswer = EncryptedSecurityAnswer
-			};
-			var userRole = new UserRole { Id = id, RoleId = Consts.Roles.Admin, User = user };
-			Context.UserRole.Add(userRole);
 		}
 
 		public dynamic AssertJsonResultReturned(ActionResult actionResult)

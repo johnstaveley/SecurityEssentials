@@ -6,12 +6,10 @@ using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 using System.Reflection;
 using System.Web.Mvc;
-using Serilog;
-using Serilog.Core;
 
 namespace SecurityEssentials.App_Start
 {
-	public static class DependencyInjection
+    public static class DependencyInjection
 	{
 
 		public static Container Container;

@@ -1,13 +1,12 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class RegisterPage : BasePage
+    public class RegisterPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

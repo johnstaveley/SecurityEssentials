@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
-using Newtonsoft.Json.Serialization;
 
 namespace SecurityEssentials
 {
-	public static class WebApiConfig
+    public static class WebApiConfig
 	{
 		public static void Register(HttpConfiguration config)
 		{

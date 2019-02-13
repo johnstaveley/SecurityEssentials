@@ -1,13 +1,12 @@
 ﻿using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using SecurityEssentials.Acceptance.Tests.Menus;
 using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
-using SecurityEssentials.Acceptance.Tests.Menus;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class LogPage : BasePage
+    public class LogPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 		private IWebElement Grid => GetVisibleWebElement(By.Id("grid"));

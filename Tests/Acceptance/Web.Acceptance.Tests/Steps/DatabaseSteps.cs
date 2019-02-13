@@ -15,7 +15,7 @@ using User = SecurityEssentials.Model.User;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class DatabaseSteps
 	{
 

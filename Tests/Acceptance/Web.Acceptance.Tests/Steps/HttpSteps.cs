@@ -11,7 +11,7 @@ using TechTalk.SpecFlow.Assist;
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 
-	[Binding]
+    [Binding]
 	public class HttpSteps
 	{
 
@@ -29,7 +29,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		[Then(@"the response headers will contain:")]
 		public void ThenTheResponseHeadersWillContain(Table table)
 		{
-			var actualHeaders = ScenarioContext.Current.GetHttpHeaders();
+			var actualHeaders = ScenarioContext.Current.GetHttpHeaders().ToList();
 			var expectedHeaders = table.CreateSet<HttpHeader>();
 			foreach (var expectedHeader in expectedHeaders)
 			{
@@ -42,7 +42,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		[Then(@"the response headers will not contain:")]
 		public void ThenTheResponseHeadersWillNotContain(Table table)
 		{
-			var actualHeaders = ScenarioContext.Current.GetHttpHeaders();
+			var actualHeaders = ScenarioContext.Current.GetHttpHeaders().ToList();
 			var excludedHeaders = table.CreateSet<HttpHeader>();
 			foreach (var excludedHeader in excludedHeaders)
 			{

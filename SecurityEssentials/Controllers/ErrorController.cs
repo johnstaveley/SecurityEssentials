@@ -61,15 +61,12 @@ namespace SecurityEssentials.Controllers
 			Response.TrySkipIisCustomErrors = true;
 			Requester requester = UserIdentity.GetRequester(this);
 			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
-			if (Server.GetLastError() is HttpAntiForgeryException)
-			{
-				Logger.Information("Forbidden request, attempted CSRF {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			}
-			else
-			{
-				Logger.Information("Forbidden request {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			}
-			return result;
+            Logger.Information(
+                Server.GetLastError() is HttpAntiForgeryException
+                    ? "Forbidden request, attempted CSRF {currentExecutionFilePath} accessed by user {@requester}"
+                    : "Forbidden request {currentExecutionFilePath} accessed by user {@requester}",
+                currentExecutionFilePath, requester);
+            return result;
 		}
 
 		// GET: Error

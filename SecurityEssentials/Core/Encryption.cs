@@ -40,10 +40,7 @@ namespace SecurityEssentials.Core
 		/// <returns>Success boolean</returns>
 		public bool Decrypt(string password, string salt, int iterationCount, string input, out string output)
 		{
-
-			byte[] bytKey;
-			byte[] bytIv;
-			CreateKey(password, salt, iterationCount, out bytKey, out bytIv);
+            CreateKey(password, salt, iterationCount, out var bytKey, out var bytIv);
 			ICryptoTransform decryptor = _encryptionAlgorithm.CreateDecryptor(bytKey, bytIv);
 			var cipher = Convert.FromBase64String(input);
 
@@ -95,10 +92,8 @@ namespace SecurityEssentials.Core
 		{
 
 			if (input == null) input = "";
-			byte[] bytKey;
-			byte[] bytIv;
-			salt = GenerateRandomSalt(encryptionPassword);
-			CreateKey(encryptionPassword, salt, iterationCount, out bytKey, out bytIv);
+            salt = GenerateRandomSalt(encryptionPassword);
+			CreateKey(encryptionPassword, salt, iterationCount, out var bytKey, out var bytIv);
 			using (MemoryStream stream = new MemoryStream())
 			{
 				using (ICryptoTransform encryptor = _encryptionAlgorithm.CreateEncryptor(bytKey, bytIv))
@@ -124,15 +119,15 @@ namespace SecurityEssentials.Core
 		/// <param name="iterationCount">The number of iterations of the encryption algorithm used to encrypt data</param>
 		/// <param name="salt">The salt used in addition to the encryption key</param>
 		/// <param name="key">Returned encryption key to use when encrypting the data</param>
-		/// <param name="IV">Returned Initialization vector to use when encrypting the data</param>
-		private void CreateKey(string password, string salt, int iterationCount, out byte[] key, out byte[] IV)
+		/// <param name="iv">Returned Initialization vector to use when encrypting the data</param>
+		private void CreateKey(string password, string salt, int iterationCount, out byte[] key, out byte[] iv)
 		{
 
 			Byte[] saltBytes = System.Text.Encoding.Unicode.GetBytes(salt);
 			Rfc2898DeriveBytes rfc2898DeriveBytes =
 				new Rfc2898DeriveBytes(password, saltBytes) { IterationCount = iterationCount };
 			key = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.KeySize / 8);
-			IV = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.BlockSize / 8);
+			iv = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.BlockSize / 8);
 
 		}
 

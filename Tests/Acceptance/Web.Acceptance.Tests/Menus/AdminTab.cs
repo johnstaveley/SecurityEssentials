@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using SecurityEssentials.Acceptance.Tests.Pages;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using System;
 using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 

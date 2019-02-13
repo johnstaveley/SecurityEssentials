@@ -9,7 +9,7 @@ namespace SecurityEssentials.Core
 	    int AccountManagementMaximumFailedLogonAttempts { get; }
 	    bool AccountManagementRegisterAutoApprove { get; }
 	    string ApplicationName { get; }
-	    string DefaultCCEmailAddress { get; }
+	    string DefaultCcEmailAddress { get; }
 	    string DefaultFromEmailAddress { get; }
 	    HashStrategyKind DefaultHashStrategy { get; }
 	    int EncryptionIterationCount { get; }

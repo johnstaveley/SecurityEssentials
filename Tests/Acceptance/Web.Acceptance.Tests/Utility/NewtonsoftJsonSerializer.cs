@@ -1,11 +1,11 @@
 ﻿namespace SecurityEssentials.Acceptance.Tests.Utility
 {
-	using Newtonsoft.Json;
-	using System.IO;
+    using Newtonsoft.Json;
+    using System.IO;
 
-	namespace SecurityEssentials.Acceptance.Tests.Utility
-	{
-		public class NewtonsoftJsonSerializer : RestSharp.Serializers.ISerializer
+    namespace SecurityEssentials.Acceptance.Tests.Utility
+    {
+        public class NewtonsoftJsonSerializer : RestSharp.Serializers.ISerializer
 		{
 			private readonly  JsonSerializer _serializer;
 
@@ -16,8 +16,8 @@
 
 			public string ContentType
 			{
-				get { return "application/json"; }
-				set { }
+				get => "application/json";
+                set { }
 			}
 
 			public string DateFormat { get; set; }

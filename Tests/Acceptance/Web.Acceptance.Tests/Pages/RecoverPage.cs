@@ -1,12 +1,11 @@
 ﻿using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class RecoverPage : BasePage
+    public class RecoverPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

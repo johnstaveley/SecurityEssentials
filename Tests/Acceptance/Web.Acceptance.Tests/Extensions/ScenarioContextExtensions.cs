@@ -71,8 +71,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 
 		public static bool HasPage<T>(this ScenarioContext scenarioContext) where T : BasePage
 		{
-			T page;
-			return scenarioContext.TryGetValue(out page);
+            return scenarioContext.TryGetValue(out T _);
 		}
 
 	}

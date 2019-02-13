@@ -1,22 +1,22 @@
-﻿using SecurityEssentials.Core.Identity;
+﻿using SecurityEssentials.Core.Constants;
+using SecurityEssentials.Core.Identity;
 using System;
 using System.Configuration;
-using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Core
 {
 
-	/// <summary>
-	/// 
-	/// </summary>
-	public class AppConfiguration : IAppConfiguration
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AppConfiguration : IAppConfiguration
     {
 
 	    public bool AccountManagementCheckFailedLogonAttempts { get; }
 	    public int AccountManagementMaximumFailedLogonAttempts { get; }
 	    public bool AccountManagementRegisterAutoApprove { get; }
 	    public string ApplicationName { get; }
-	    public string DefaultCCEmailAddress { get; }
+	    public string DefaultCcEmailAddress { get; }
 	    public string DefaultFromEmailAddress { get; }
 	    public string EncryptionPassword { get; }
 	    public int EncryptionIterationCount { get; }
@@ -38,7 +38,7 @@ namespace SecurityEssentials.Core
 	        AccountManagementMaximumFailedLogonAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["AccountManagementMaximumFailedLogonAttempts"]);
 	        AccountManagementRegisterAutoApprove = Convert.ToBoolean(ConfigurationManager.AppSettings["AccountManagementRegisterAutoApprove"]);
 	        ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
-	        DefaultCCEmailAddress = (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["DefaultCCEmailAddress"]) ? null : ConfigurationManager.AppSettings["DefaultCCEmailAddress"]);
+	        DefaultCcEmailAddress = (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["DefaultCCEmailAddress"]) ? null : ConfigurationManager.AppSettings["DefaultCCEmailAddress"]);
 	        DefaultFromEmailAddress = ConfigurationManager.AppSettings["DefaultFromEmailAddress"];
 	        DefaultHashStrategy = (HashStrategyKind)Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
 	        EmailHost = ConfigurationManager.AppSettings["EmailHost"];

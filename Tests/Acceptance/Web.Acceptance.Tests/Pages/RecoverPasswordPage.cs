@@ -6,7 +6,7 @@ using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class RecoverPasswordPage : BasePage
+    public class RecoverPasswordPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

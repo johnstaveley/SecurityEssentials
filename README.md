@@ -46,6 +46,7 @@ Other threats it protects against and features:
 
 * Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame
 * Form overposting: Example given of how to avoid this
+* Feature Policy set in the browser disallows by default features used in the browser such as camera, sync-xhr etc
 * Acceptance tests for key functionality
 * Forces user to change their password if their password has expired
 * Professionally pentested

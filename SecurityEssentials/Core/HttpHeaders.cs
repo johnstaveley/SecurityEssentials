@@ -19,9 +19,12 @@ namespace SecurityEssentials.Core
 			HttpContext.Current.Response.Headers.Add("X-Frame-Options", "Deny");
 			// SECURE: Can effectively prevent information being inadvertently leaked to other websites
 			HttpContext.Current.Response.Headers.Add("Referrer-Policy", "origin");
+            // SECURE Turn off features that can be used in the browser by default
+            HttpContext.Current.Response.Headers.Add("Feature-Policy",
+                "geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none'");
 #if DEBUG
-			// SECURE: Enable Content security policy with reporting
-			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; report-uri /Security/CspReporting");
+               // SECURE: Enable Content security policy with reporting
+               HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; report-uri /Security/CspReporting");
 #else			
 			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; report-uri /Security/CspReporting");
 #endif
@@ -32,8 +35,8 @@ namespace SecurityEssentials.Core
 #if DEBUG
 			HttpContext.Current.Response.Headers.Add("Strict-Transport-Security", "max-age=0; includeSubDomains"); // Remove HSTS header for debug
 #else
-// SECURE: Enforce any further requests after initial request to be made over TLS
-			HttpContext.Current.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+// SECURE: Enforce any further requests after initial request to be made over TLS, register for HSTS pre-load
+			HttpContext.Current.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
 #endif
 			HttpContext.Current.Response.Headers.Remove("Server"); // SECURE: Remove server information disclosure
 		}

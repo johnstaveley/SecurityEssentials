@@ -5,7 +5,7 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class UserEditPage : BasePage
+    public class UserEditPage : BasePage
 	{
 
 		public MenuBar MenuBar { get; }

@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SecurityEssentials.Acceptance.Tests.Extensions;
 using SecurityEssentials.Acceptance.Tests.Pages;
 using SecurityEssentials.Acceptance.Tests.Utility;
+using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class ChangeSecurityInformationSteps
 	{
 

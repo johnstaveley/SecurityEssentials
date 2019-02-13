@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using OpenQA.Selenium;
 using SecurityEssentials.Acceptance.Tests.Menus;
 using SecurityEssentials.Acceptance.Tests.Model;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {

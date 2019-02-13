@@ -1,6 +1,6 @@
 ﻿using Recaptcha.Web;
-using System;
 using Recaptcha.Web.Mvc;
+using System;
 using System.Web.Mvc;
 
 namespace SecurityEssentials.Core

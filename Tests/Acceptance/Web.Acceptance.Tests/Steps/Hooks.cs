@@ -13,7 +13,7 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class Hooks
 	{
 

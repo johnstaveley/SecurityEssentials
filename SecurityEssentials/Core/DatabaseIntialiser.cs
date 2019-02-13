@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SecurityEssentials.Core
 {
-	public class SeDatabaseIntialiser : CreateDatabaseIfNotExists<SeContext>
+    public class SeDatabaseIntialiser : CreateDatabaseIfNotExists<SeContext>
 	{
 
 		protected override void Seed(SeContext context)
