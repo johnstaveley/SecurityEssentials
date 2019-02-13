@@ -3,7 +3,7 @@
 namespace SecurityEssentials.Model
 {
 
-	public class HpkpReport
+    public class HpkpReport
 	{
 		/// <summary>
 		/// 

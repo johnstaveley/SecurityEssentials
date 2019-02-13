@@ -2,7 +2,7 @@
 
 namespace SecurityEssentials.Model
 {
-	public class CspHolder
+    public class CspHolder
 	{
 		[JsonProperty(PropertyName = "csp-report")]
 		public CspReport CspReport { get; set; }

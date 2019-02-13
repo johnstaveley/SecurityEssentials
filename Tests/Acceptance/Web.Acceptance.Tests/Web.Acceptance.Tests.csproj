@@ -132,6 +132,7 @@
     <Compile Include="Menus\MenuBar.cs" />
     <Compile Include="Menus\AdminTab.cs" />
     <Compile Include="Menus\TabTitles.cs" />
+    <Compile Include="Model\CtModel.cs" />
     <Compile Include="Model\HpkpModel.cs" />
     <Compile Include="Model\CspModel.cs" />
     <Compile Include="Model\DescriptionViewModel.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Utility\Repeater.cs" />
     <Compile Include="Utility\HttpWeb.cs" />
     <Compile Include="Utility\SeDatabase.cs" />
+    <Compile Include="Utility\TextParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Account.feature">

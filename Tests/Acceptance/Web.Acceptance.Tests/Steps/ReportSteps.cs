@@ -6,6 +6,7 @@ using SecurityEssentials.Acceptance.Tests.Utility;
 using SecurityEssentials.Model;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -51,6 +52,27 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             };
             ScenarioContext.Current.SetHpkpReport(hpkpReport);
         }
+        [Given(@"I have a certificate policy violation with details:")]
+        public void GivenIHaveACertificatePolicyViolationWithDetails(Table table)
+        {
+            var ctInstance = table.CreateInstance<CtModel>();
+            var ctReport = new CtReport
+            {
+                FailureDate = TextParser.ConvertDescriptionToDate(ctInstance.FailureDate),
+                EffectiveExpirationDate = TextParser.ConvertDescriptionToDate(ctInstance.ExpirationDate),
+                HostName = ctInstance.HostName,
+                Port = ctInstance.Port
+            };
+            ScenarioContext.Current.SetCtReport(ctReport);
+        }
+        [Given(@"I have the following certificate policy violation scts:")]
+        public void GivenIHaveTheFollowingCertificatePolicyViolationScts(Table table)
+        {
+            var ctReport = ScenarioContext.Current.GetCtReport();
+            var scts = table.CreateSet<Sct>();
+            ctReport.Scts = scts.ToArray();
+            ScenarioContext.Current.SetCtReport(ctReport);
+        }
 
         [When(@"I post the content security policy violation to the website")]
         public void WhenIPostTheContentSecurityPolicyViolationToTheWebsite()
@@ -67,6 +89,15 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             var hpkpReport = ScenarioContext.Current.GetHpkpReport();
             var url = $"{ConfigurationManager.AppSettings["WebServerUrl"]}Security/HpkpReporting/";
             var response = HttpWeb.PostJsonStream(url, hpkpReport);
+            Assert.That(response.ResponseStatus, Is.EqualTo(ResponseStatus.Completed));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+        [When(@"I post the certificate policy violation to the website")]
+        public void WhenIPostTheCertificatePolicyViolationToTheWebsite()
+        {
+            var ctReport = ScenarioContext.Current.GetCtReport();
+            var url = $"{ConfigurationManager.AppSettings["WebServerUrl"]}Security/CtReporting/";
+            var response = HttpWeb.PostJsonStream(url, new CtHolder { CtReport = ctReport });
             Assert.That(response.ResponseStatus, Is.EqualTo(ResponseStatus.Completed));
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }

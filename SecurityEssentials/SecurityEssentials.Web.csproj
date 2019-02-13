@@ -291,6 +291,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Core\SeContext.cs" />
+    <Compile Include="Model\CtReport.cs" />
     <Compile Include="Model\HpkpReport.cs" />
     <Compile Include="Model\CspReport.cs" />
     <Compile Include="Model\Log.cs" />

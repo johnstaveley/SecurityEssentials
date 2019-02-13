@@ -35,6 +35,7 @@
                         <ul>
                             <li>Incorporation of the WPL AntiXSS library to encode all output</li>
                             <li>Enforce the location of the scripts the browser can run using a content security policy header</li>
+                            <li>Feature Policy disallows features used in the browser such as camera, sync-xhr etc</li>
                             <li>Enables browser's anti-xss capabilities by sending the XSS-Protection header</li>
                         </ul>
                     </li>
@@ -62,7 +63,6 @@
                 <ul>
                     <li>Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame</li>
                     <li>Form overposting: Example given of how to avoid this</li>
-                    <li>Feature Policy set in the browser disallows by default features used in the browser such as camera, sync-xhr etc</li>
                     <li>Acceptance tests for key functionality</li>
                     <li>Professionally pentested</li>
                 </ul>
@@ -74,7 +74,6 @@
                     <li>A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations</li>
                 </ul>
             </p>
-
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.md in project for more information</p>
             <p>
                 <h2>Steps to secure your website on the server</h2>
@@ -83,9 +82,10 @@
                     <li>Apply a good SSL policy on the server: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a> e.g. Configure your server to avoid a Poodle downgrade attack</li>
                     <li>Enable retail mode on the production server</li>
                     <li>Patch the server up to the hilt</li>
-                    <li>Register for HSTS preload, here: https://hstspreload.appspot.com/ (This requires your site is published)</li>
+                    <li>Register for HSTS preload here: https://hstspreload.appspot.com/ (This requires your site is published with TLS)</li>
                     <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
                     <li>Register SPF DNS record for sending email</li>
+                    <li>Set Expect-CT header to enforce</li>
                 </ul>
             </p>
             <p>

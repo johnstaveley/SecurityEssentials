@@ -26,6 +26,7 @@ This list is based on the OWASP Top 10 2013
 * XSS:
 	+ Incorporation of the WPL AntiXSS library to encode all output
 	+ Enforce the location of the scripts the browser can run using a content security policy header
+	+ Feature Policy disallows features used in the browser such as camera, sync-xhr etc
 	+ Enables browser's anti-xss capabilities by sending the XSS-Protection header
 * Insecure direct object references: In user edit page it checks the user is entitled to be there
 * Security misconfiguration: Doesn't turn on anything you don't really need
@@ -46,7 +47,6 @@ Other threats it protects against and features:
 
 * Clickjacking: Disallow site appearing in frame by applying header and disallowing site from being opened in an iFrame
 * Form overposting: Example given of how to avoid this
-* Feature Policy set in the browser disallows by default features used in the browser such as camera, sync-xhr etc
 * Acceptance tests for key functionality
 * Forces user to change their password if their password has expired
 * Professionally pentested

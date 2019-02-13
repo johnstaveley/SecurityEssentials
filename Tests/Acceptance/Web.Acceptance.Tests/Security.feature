@@ -47,15 +47,36 @@ Scenario: The web application will log a http public key pinning violation
 	| Level   | Warning                        |
 	| Message | HostName: "http://mysite.com/" |
 
+Scenario: The web application will log a certificate policy violation
+	Given I have a certificate policy violation with details:
+	| Field          | Value              |
+	| FailureDate    | [Now]              |
+	| ExpirationDate | [1 Month From Now] |
+	| HostName       | example.com        |
+	| Port           | 8080               |
+	| Source         | web                |
+	And I have the following certificate policy violation scts:
+	| SerialisedSct | Source        | Status | Version |
+	| ABCDEFG       | tls-extension | valid  | 1       |
+	| CDEFGHIJ      | tls-extension | valid  | 2       |
+	When I post the certificate policy violation to the website
+	And I wait 2 seconds
+	Then I have 1 certificate policy violation in the system  
+	And I have a log in the system matching the following:
+	| Field   | Value                   |
+	| Level   | Warning                 |
+	| Message | HostName: "example.com" |
+
 @CheckForErrors
 Scenario: The web application will return the correct security headers
 	When I call http get on the website
 	Then the response headers will contain: 
-	| Key                    | Value                                        |
-	| X-Frame-Options        | Deny                                         |
-	| X-Content-Type-Options | nosniff                                      |
-	| X-XSS-Protection       | 1; mode=block; report=/Security/CspReporting |
-	| Referrer-Policy        | origin                                       |
+	| Key                    | Value                                                                                                                                                                                |
+	| X-Frame-Options        | Deny                                                                                                                                                                                 |
+	| X-Content-Type-Options | nosniff                                                                                                                                                                              |
+	| X-XSS-Protection       | 1; mode=block; report=/Security/CspReporting                                                                                                                                         |
+	| Referrer-Policy        | origin                                                                                                                                                                               |
+	| Feature-Policy         | geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none' |
 	And the response headers will not contain:
 	| Key                 |
 	| X-AspNet-Version    | 
