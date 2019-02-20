@@ -45,17 +45,14 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		{
 			return scenarioContext.Get<IEnumerable<Tuple<string, string>>>(KeyHttpHeaders);
 		}
-
 		public static void SetHttpHeaders(this ScenarioContext scenarioContext, IEnumerable<Tuple<string, string>> value)
 		{
 			scenarioContext.Set(value, KeyHttpHeaders);
 		}
-
 		public static string GetHash(this ScenarioContext scenarioContext)
 		{
 			return scenarioContext.Get<string>(KeyHash);
 		}
-
 		public static void SetSalt(this ScenarioContext scenarioContext, string value)
 		{
 			scenarioContext.Set(value, KeySalt);
