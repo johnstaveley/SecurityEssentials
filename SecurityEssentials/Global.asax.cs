@@ -5,7 +5,7 @@ using SecurityEssentials.Core.Identity;
 using Serilog;
 using System;
 using System.Configuration;
-using System.Net.Http.Formatting;
+using System.Globalization; // Leave this in for release build
 using System.Security.Claims;
 using System.Web;
 using System.Web.Helpers;
@@ -13,15 +13,13 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Microsoft.AspNet.Identity;
-using Serilog.Core;
 
 namespace SecurityEssentials
 {
-	// Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-	// visit http://go.microsoft.com/?LinkId=9394801
+    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
+    // visit http://go.microsoft.com/?LinkId=9394801
 
-	public class MvcApplication : HttpApplication
+    public class MvcApplication : HttpApplication
 	{
 
 		protected void Application_Start()

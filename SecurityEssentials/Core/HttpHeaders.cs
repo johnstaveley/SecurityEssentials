@@ -24,9 +24,9 @@ namespace SecurityEssentials.Core
                 "geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none'");
 #if DEBUG
                // SECURE: Enable Content security policy with reporting
-               HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; report-uri /Security/CspReporting");
+               HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; report-uri /Security/CspReporting");
 #else
-			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; report-uri /Security/CspReporting");
+			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-ancestors https:; form-action https:; base-uri https:; report-uri /Security/CspReporting");
 #endif
 #if DEBUG
             // SECURE: Enable Expect-CT header with reporting

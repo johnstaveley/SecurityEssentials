@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 13/02/2019
+### Created by John Staveley - Last updated 26/02/2019
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -25,7 +25,7 @@ This list is based on the OWASP Top 10 2013
 	+ Unit tests for password hashing and authorization attributes
 * XSS:
 	+ Incorporation of the WPL AntiXSS library to encode all output
-	+ Enforce the location of the scripts the browser can run using a content security policy header
+	+ Enforce the location of the scripts/assets/actions the browser can run using a content security policy header
 	+ Feature Policy disallows features used in the browser such as camera, sync-xhr etc
 	+ Enables browser's anti-xss capabilities by sending the XSS-Protection header
 * Insecure direct object references: In user edit page it checks the user is entitled to be there
