@@ -16,7 +16,7 @@ Background:
 
 @PAT
 Scenario: As an admin I can manage my users
-	Given I navigate to the website
+	Given I navigate to the website 
 	And I click the login link in the navigation bar 
 	And I am navigated to the 'Login' page
 	And I enter the following login data:

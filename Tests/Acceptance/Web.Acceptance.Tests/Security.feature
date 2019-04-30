@@ -15,8 +15,8 @@ Scenario: The web application will log a content security policy violation
 	| DocumentUri       | http://mysite.com/innocentpage/             |
 	| LineNumber        | 1                                           |
 	| Referrer          |                                             | 
-	| OriginalPolicy    | default-src http://localhost:4845           |
-	| ScriptSample      | #modernizr{font:0/0 a}#modernizr:after{c... |
+	| OriginalPolicy    | default-src http://localhost:4845           | 
+	| ScriptSample      | #modernizr{font:0/0 a}#modernizr:after{c... | 
 	| SourceFile        | http://mysite.com/innocentpage/             |
 	| ViolatedDirective | default-src http://mysite.com               | 
 	When I post the content security policy violation to the website 
@@ -71,20 +71,21 @@ Scenario: The web application will log a certificate policy violation
 Scenario: The web application will return the correct security headers
 	When I call http get on the website
 	Then the response headers will contain: 
-	| Key                    | Value                                                                                                                                                                                |
-	| X-Frame-Options        | Deny                                                                                                                                                                                 |
-	| X-Content-Type-Options | nosniff                                                                                                                                                                              |
-	| X-XSS-Protection       | 1; mode=block; report=/Security/CspReporting                                                                                                                                         |
-	| Referrer-Policy        | origin                                                                                                                                                                               |
-	| Feature-Policy         | geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none' |
+	| Key                     | Value                                                                                                                                                                                                                                                                                       |
+	| X-Frame-Options         | Deny                                                                                                                                                                                                                                                                                        |
+	| X-Content-Type-Options  | nosniff                                                                                                                                                                                                                                                                                     |
+	| X-XSS-Protection        | 1; mode=block; report=/Security/CspReporting                                                                                                                                                                                                                                                |
+	| Referrer-Policy         | origin                                                                                                                                                                                                                                                                                      |
+	| Feature-Policy          | geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none'                                                                                                        |
+	| Content-Security-Policy | default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting |
 	And the response headers will not contain:
 	| Key                 |
 	| X-AspNet-Version    | 
 	| X-AspNetMvc-Version |
-	| Server              |
+	| Server              | 
  
 @CheckForErrors
-Scenario: The application will prevent a brute force login attempt
+Scenario: The application will prevent a brute force login attempt 
 	Given I navigate to the website
 	And I am taken to the homepage
 	And I click the login link in the navigation bar

@@ -9,8 +9,8 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 26/02/2019</h4>
-                This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013).
+                <h4>Created by John Staveley - Last updated 30/04/2019</h4>
+                This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013/2017).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
                     <li>Weak account management: 
@@ -85,7 +85,7 @@
                     <li>Register for HSTS preload here: https://hstspreload.appspot.com/ (This requires your site is published with TLS)</li>
                     <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
                     <li>Register SPF DNS record for sending email</li>
-                    <li>Set Expect-CT header to enforce</li>
+                    <li>Set Expect-CT header to enforce who is allowed to issue TLS certificates</li>
                 </ul>
             </p>
             <p>
@@ -96,6 +96,7 @@
 	                <li>Patch the server!</li>
 	                <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
                     <li>Check the logs for repeated security violation attempts and block users if required</li>
+                    <li>Check your CSP against <a href="https://csp-evaluator.withgoogle.com/" target="_blank">https://csp-evaluator.withgoogle.com/</a></li>
                 </ul>
             </p>
             <p><h2>How your build process can ensure you remain secure over time</h2>

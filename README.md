@@ -1,12 +1,12 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 26/02/2019
+### Created by John Staveley - Last updated 30/04/2019
 
 ## Introduction
-This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+This Mvc solution was adapted from the standard MVC4 template in VS 2019, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
 ## Security Enhancements
-This list is based on the OWASP Top 10 2013
+This list is based on the OWASP Top 10 2013/2017
 * SQL Injection: It uses Entity Framework ORM
 * Weak account management: 
 	+ Uses claims based auth

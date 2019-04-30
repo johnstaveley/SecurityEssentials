@@ -13,11 +13,11 @@ Scenario: When I enter correct login details I am taken to the landing page
 	Given the following users are setup in the database:
 	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |  
-	And I navigate to the website
+	And I navigate to the website 
 	And I am taken to the homepage
 	And I click the login link in the navigation bar 
 	And I am navigated to the 'login' page 
-	And I enter the following login data: 
+	And I enter the following login data:  
 	| Field    | Value             |
 	| UserName | user@test.net     |
 	| Password | x12a;pP02icdjshER | 
@@ -195,7 +195,7 @@ Scenario: I can change my password
 	| User Logged On   |
 	| Password changed |
 	| User Logged Off  |
-	And I have 1 entry(ies) in the password history table
+	And I have 1 entry(ies) in the password history table 
 	# And I am logged off
 	# And an email is sent
 

@@ -191,3 +191,7 @@ ModelManifest.xml
 /SecurityEssentials/Config/PrivateMailSettings.config
 *.ide
 /.vs/SecurityEssentials/v15
+/.vs/SecurityEssentials/config/applicationhost.config
+/.vs/SecurityEssentials/v16/Server/sqlite3/db.lock
+/.vs/SecurityEssentials/v16/Server/sqlite3/storage.ide-shm
+/.vs/SecurityEssentials/v16/Server/sqlite3/storage.ide-wal
