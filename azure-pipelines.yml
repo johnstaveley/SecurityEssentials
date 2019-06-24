@@ -33,7 +33,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     pathtoCustomTestAdapters: 'packages/NUnit3TestAdapter.3.13.0/build/net35/'
-    testAssemblyVer2: '**\SecurityEssentials.Unit.Tests
-      !**\*TestAdapter.dll
-      !**\obj\**'
+    testAssemblyVer2: '**\\SecurityEssentials.Unit.Tests
+      !**\\*TestAdapter.dll
+      !**\\obj\\**'
     searchFolder: '$(System.DefaultWorkingDirectory)'
