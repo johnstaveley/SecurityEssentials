@@ -28,7 +28,8 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: Run Unit tests@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    pathtoCustomTestAdapters: '../../packages/NUnit3TestAdapter.3.13.0/build/net35/'
