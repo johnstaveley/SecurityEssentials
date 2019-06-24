@@ -11,9 +11,8 @@ To set up the project take the following steps:
     style-src 'unsafe-inline'
 
 2) Enable mail to be sent
-	2.1) Create a file Config/PrivateMailSettings.config with your values here:
-
-	<network host="localhost" port="25" defaultCredentials="true" />
+	2.1) Update your mail settings in web.config here:
+	<smtp host="localhost" port="25" defaultCredentials="true" />
 
 	2.2) Set in web.config HasEmailConfigured = true
 
