@@ -22,6 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Acceptance.Tests", "Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7F5BA8B3-D2CD-4B77-BFBB-201BB5E0CF71}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 		Developer README.txt = Developer README.txt
 		README.md = README.md
 	EndProjectSection
@@ -67,5 +68,8 @@ Global
 		{D710B6F1-E786-4E82-B92E-98AACA955F50} = {C4100ED1-7C81-4B0E-8EA9-24264764DE22}
 		{BE375AC1-572D-4EC6-BD6F-A841C67E04C5} = {CCD62364-6792-41E8-A501-7F4D43AF8CD2}
 		{8E3FF9F2-3785-4969-AC8E-BB81134C3310} = {D710B6F1-E786-4E82-B92E-98AACA955F50}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {155679A0-759A-4CC4-BB50-09BD82119C4C}
 	EndGlobalSection
 EndGlobal
