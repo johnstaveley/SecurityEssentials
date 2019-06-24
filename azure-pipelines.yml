@@ -32,4 +32,4 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    pathtoCustomTestAdapters: '../../packages/NUnit3TestAdapter.3.13.0/build/net35/'
+    pathtoCustomTestAdapters: '../packages/NUnit3TestAdapter.3.13.0/build/net35/'
