@@ -20,12 +20,12 @@ steps:
   inputs:
     versionSpec: 4.4.1
 
-- task: NuGetCommand@2
+- task: NuGetCommand@1
   displayName: 'Restore NuGet Packages'
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
+- task: VSBuild@2
   displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
@@ -33,7 +33,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: VSTest@3
   displayName: 'Run Unit tests'
   inputs:
     platform: '$(buildPlatform)'
