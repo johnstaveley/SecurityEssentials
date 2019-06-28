@@ -38,7 +38,7 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    pathtoCustomTestAdapters: '$(build.sourcesdirectory)/src/packages/NUnit3TestAdapter.3.13.0/build/net35/'
+    pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.13.0/build/net35/'
     testAssemblyVer2: |
       **\SecurityEssentials.Unit.Tests.dll
       !**\*TestAdapter.dll
