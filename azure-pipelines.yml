@@ -48,7 +48,6 @@ steps:
     codeCoverageEnabled: true
     diagnosticsEnabled: True
 
-steps:
 - task: PublishSymbols@2
   displayName: 'Publish symbols path'
   inputs:
