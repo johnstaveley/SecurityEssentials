@@ -15,17 +15,17 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@0
+- task: NuGetToolInstaller@1
   displayName: 'Use NuGet 4.4.1'
   inputs:
     versionSpec: 4.4.1
 
-- task: NuGetCommand@1
+- task: NuGetCommand@2
   displayName: 'Restore NuGet Packages'
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@2
+- task: VSBuild@1
   displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
@@ -33,7 +33,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@3
+- task: VSTest@2
   displayName: 'Run Unit tests'
   inputs:
     platform: '$(buildPlatform)'
@@ -48,3 +48,10 @@ steps:
     codeCoverageEnabled: true
     diagnosticsEnabled: True
 
+steps:
+- task: PublishSymbols@2
+  displayName: 'Publish symbols path'
+  inputs:
+    SearchPattern: '**\bin\**\*.pdb'
+    PublishSymbols: false
+  continueOnError: true
