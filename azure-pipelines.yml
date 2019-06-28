@@ -16,12 +16,17 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.4.1'
+  inputs:
+    versionSpec: 4.4.1
 
 - task: NuGetCommand@2
+  displayName: 'Restore NuGet Packages'
   inputs:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
+  displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -29,12 +34,17 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
+  displayName: 'Run Unit tests'
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    testSelector: 'testAssemblies'
-    pathtoCustomTestAdapters: 'packages/NUnit3TestAdapter.3.13.0/build/net35/'
-    testAssemblyVer2: '**\SecurityEssentials.Unit.Tests.dll
+    pathtoCustomTestAdapters: '$(build.sourcesdirectory)/src/packages/NUnit3TestAdapter.3.13.0/build/net35/'
+    testAssemblyVer2: |
+      **\SecurityEssentials.Unit.Tests.dll
       !**\*TestAdapter.dll
       !**\obj\**'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    searchFolder: '$(Build.SourcesDirectory)'
+    runInParallel: true
+    codeCoverageEnabled: true
+    diagnosticsEnabled: True
+
