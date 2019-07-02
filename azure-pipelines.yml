@@ -63,7 +63,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
   inputs:
-    SourceFolder: '$(build.sourcesdirectory)\src\packages\NUnit3TestAdapter.3.13.0\'
+    SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.13.0\'
     TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.13.0\'
 
 - task: PublishBuildArtifacts@1
