@@ -49,10 +49,10 @@ steps:
     diagnosticsEnabled: True
 
 - task: CopyFiles@2
-  displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
+  displayName: 'Copy Test Adapter to $(build.stagingdirectory)'
   inputs:
     SourceFolder: '$(build.sourcesdirectory)\src\packages\NUnit3TestAdapter.3.13.0\'
-    TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.13.0\'
+    TargetFolder: '$(build.stagingdirectory)\Tests\NUnit3TestAdapter.3.13.0\'
   enabled: false
 
 - task: PublishSymbols@2
@@ -65,5 +65,5 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
+    PathtoPublish: '$(build.stagingdirectory)'
 
