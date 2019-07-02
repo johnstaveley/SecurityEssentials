@@ -48,6 +48,11 @@ steps:
     codeCoverageEnabled: true
     diagnosticsEnabled: True
 
+- task: PublishSymbols@1
+  displayName: 'Publish symbols path'
+  inputs:
+    SearchPattern: '**\bin\**\*.pdb'
+
 - task: CopyFiles@2
   displayName: 'Copy Application Files to: $(build.artifactstagingdirectory)'
   inputs:
@@ -60,14 +65,6 @@ steps:
   inputs:
     SourceFolder: '$(build.sourcesdirectory)\src\packages\NUnit3TestAdapter.3.13.0\'
     TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.13.0\'
-  enabled: false
-
-- task: PublishSymbols@2
-  displayName: 'Publish symbols path'
-  inputs:
-    SearchPattern: '**\bin\**\*.pdb'
-    PublishSymbols: false
-  continueOnError: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
