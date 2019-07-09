@@ -3,6 +3,9 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
+trigger:
+  - master
+
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
@@ -12,8 +15,6 @@ stages:
 - stage: Build
   jobs:
   - job: Build
-    trigger:
-      - master
     pool:
       vmImage: 'windows-latest'
     steps:
