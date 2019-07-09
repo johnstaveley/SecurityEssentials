@@ -31,10 +31,15 @@ namespace SecurityEssentials.Controllers
 			Response.TrySkipIisCustomErrors = true;
 			var appSensorDetectionPoint = Core.Constants.AppSensorDetectionPointKind.Re1;
 			// TODO: Determine if path exists, if so RE2, otherwise RE1
-			Requester requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
-			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
-			Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			return result;
+	        var currentExecutionFilePath = Request.CurrentExecutionFilePath;
+	        if (!currentExecutionFilePath.Contains("favicon"))
+	        {
+		        Requester requester = UserIdentity.GetRequester(this, appSensorDetectionPoint);
+		        Logger.Information("Unknown route {currentExecutionFilePath} accessed by user {@requester}",
+			        currentExecutionFilePath, requester);
+	        }
+
+	        return result;
 		}
 
 		// GET: Error
@@ -56,15 +61,12 @@ namespace SecurityEssentials.Controllers
 			Response.TrySkipIisCustomErrors = true;
 			Requester requester = UserIdentity.GetRequester(this);
 			var currentExecutionFilePath = Request.CurrentExecutionFilePath;
-			if (Server.GetLastError() is HttpAntiForgeryException)
-			{
-				Logger.Information("Forbidden request, attempted CSRF {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			}
-			else
-			{
-				Logger.Information("Forbidden request {currentExecutionFilePath} accessed by user {@requester}", currentExecutionFilePath, requester);
-			}
-			return result;
+            Logger.Information(
+                Server.GetLastError() is HttpAntiForgeryException
+                    ? "Forbidden request, attempted CSRF {currentExecutionFilePath} accessed by user {@requester}"
+                    : "Forbidden request {currentExecutionFilePath} accessed by user {@requester}",
+                currentExecutionFilePath, requester);
+            return result;
 		}
 
 		// GET: Error

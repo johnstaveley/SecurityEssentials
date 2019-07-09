@@ -9,11 +9,12 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 19/03/2018</h4>
-                This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013).
+                <h4>Created by John Staveley - Last updated 28/06/2019</h4>
+                This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013/2017).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
-                    <li>Weak account management: 
+                    <li>
+                        Weak account management:
                         <ul>
                             <li>Uses claims based authorization</li>
                             <li>Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified</li>
@@ -31,16 +32,19 @@
                             <li>Unit tests for password hashing and authorization attributes</li>
                         </ul>
                     </li>
-                    <li>XSS:
+                    <li>
+                        XSS:
                         <ul>
                             <li>Incorporation of the WPL AntiXSS library to encode all output</li>
-                            <li>Enforce the location of the scripts the browser can run using a content security policy header</li>
+                            <li>Enforce the location of the scripts/assets/actions the browser can run using a content security policy header</li>
+                            <li>Feature Policy disallows features used in the browser such as camera, sync-xhr etc</li>
                             <li>Enables browser's anti-xss capabilities by sending the XSS-Protection header</li>
                         </ul>
                     </li>
                     <li>Insecure direct object references: In user edit page it checks the user is entitled to be there</li>
                     <li>Security misconfiguration: Doesn't turn on anything you don't really need</li>
-                    <li>Sensitive data exposure: 
+                    <li>
+                        Sensitive data exposure:
                         <ul>
                             <li>Auto-complete off on registration page</li>
                             <li>Enforces TLS of all data in production through use of web.configs</li>
@@ -52,6 +56,9 @@
                     </li>
                     <li>Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role</li>
                     <li>CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller</li>
+                    <ul>
+                        <li>Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token</li>
+                    </ul>
                     <li>Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated</li>
                     <li>Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4</li>
                 </ol>
@@ -65,14 +72,12 @@
                 <h4>OWASP Top 10 2017</h4>
                 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
                 <ul>
-                    <li>A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected</li>
+                    <li>A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected. However if it did this only applies to .Net 4.5 and earlier.</li>
                     <li>A8 - Insecure Deserialisation. Only affects Java applications</li>
                     <li>A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations</li>
                 </ul>
             </p>
-
             <p>NB: Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.md in project for more information</p>
-            <p>Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: <a href="https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status">https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status</a></p>
             <p>
                 <h2>Steps to secure your website on the server</h2>
                 When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
@@ -80,32 +85,37 @@
                     <li>Apply a good SSL policy on the server: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a> e.g. Configure your server to avoid a Poodle downgrade attack</li>
                     <li>Enable retail mode on the production server</li>
                     <li>Patch the server up to the hilt</li>
-                    <li>Register for HSTS preload</li>
+                    <li>Register for HSTS preload here: https://hstspreload.appspot.com/ (This requires your site is published with TLS)</li>
                     <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
+                    <li>Register SPF DNS record for sending email</li>
+                    <li>Set Expect-CT header to enforce who is allowed to issue TLS certificates</li>
                 </ul>
             </p>
             <p>
                 <h2>How you can ensure your application remains secure over time</h2>
                 <ul>
                     <li>Add unit tests to ensure correct role is applied to functions requiring security such as admin</li>
-	                <li>Run the build process detailed below</li>
-	                <li>Patch the server!</li>
-	                <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
+                    <li>Run the build process detailed below</li>
+                    <li>Patch the server!</li>
+                    <li>Ensure SSL policy remains current: <a href="http://www.ssllabs.com/projects/best-practises/" target="_blank">http://www.ssllabs.com/projects/best-practises/</a></li>
                     <li>Check the logs for repeated security violation attempts and block users if required</li>
+                    <li>Check your CSP against <a href="https://csp-evaluator.withgoogle.com/" target="_blank">https://csp-evaluator.withgoogle.com/</a></li>
                 </ul>
             </p>
-            <p><h2>How your build process can ensure you remain secure over time</h2>
-            Following this process will help prevent security regressions from occurring. As part of your build process you should run all unit and acceptance tests provided with this project, you can also run <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
-            <ul>
-                <li>(Some of) 1, 3, 5, 6, 8, 10 - <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a>, check the report for vulnerabilities</li>
-                <li>2. Account management process - Unit and acceptance tests</li>
-                <li>4. Insecure direct object references - Unit tests</li>
-                <li>7. Missing file level access control - Unit tests</li>
-                <li>8. CSRF - Unit tests and ZAP</li>
-                <li>9. Vulnerable dependencies - <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report for high level vulnerabilities</li>
-                <li>10. Unvalidated redirects and forwards - Unit tests</li>
-            </ul>
+            <p>
+                <h2>How your build process can ensure you remain secure over time</h2>
+                Following this process will help prevent security regressions from occurring. As part of your build process you should run all unit and acceptance tests provided with this project, you can also run <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
+                <ul>
+                    <li>(Some of) 1, 3, 5, 6, 8, 10 - <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a>, check the report for vulnerabilities</li>
+                    <li>2. Account management process - Unit and acceptance tests</li>
+                    <li>4. Insecure direct object references - Unit tests</li>
+                    <li>7. Missing file level access control - Unit tests</li>
+                    <li>8. CSRF - Unit tests and ZAP</li>
+                    <li>9. Vulnerable dependencies - <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report for high level vulnerabilities</li>
+                    <li>10. Unvalidated redirects and forwards - Unit tests</li>
+                </ul>
             </p>
             <p>Created 29/01/2015</p>
+            <img src="https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master" alt="Azure DevOps Build Status Badge" />
         </div>
     </section>

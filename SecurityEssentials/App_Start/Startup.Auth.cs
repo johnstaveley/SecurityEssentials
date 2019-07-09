@@ -1,12 +1,12 @@
-﻿using System;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using System;
 
 namespace SecurityEssentials.App_Start
 {
-	public static partial class Startup
+    public static partial class Startup
 	{
 		// For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
 		public static void ConfigureAuthentication(IAppBuilder app)

@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System.Text;
-using RestSharp.Serializers;
+﻿using RestSharp;
 using SecurityEssentials.Acceptance.Tests.Utility.SecurityEssentials.Acceptance.Tests.Utility;
 
 namespace SecurityEssentials.Acceptance.Tests.Utility
 {
-	public static class HttpWeb
+    public static class HttpWeb
 	{
 
 		public static IRestResponse Get(string url)

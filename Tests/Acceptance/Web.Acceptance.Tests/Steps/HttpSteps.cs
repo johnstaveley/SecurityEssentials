@@ -11,7 +11,7 @@ using TechTalk.SpecFlow.Assist;
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 
-	[Binding]
+    [Binding]
 	public class HttpSteps
 	{
 
@@ -29,24 +29,24 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		[Then(@"the response headers will contain:")]
 		public void ThenTheResponseHeadersWillContain(Table table)
 		{
-			var actualHeaders = ScenarioContext.Current.GetHttpHeaders();
+			var actualHeaders = ScenarioContext.Current.GetHttpHeaders().ToList();
 			var expectedHeaders = table.CreateSet<HttpHeader>();
 			foreach (var expectedHeader in expectedHeaders)
 			{
-				Assert.IsTrue(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key), "Headers do not contain the correct key");
+				Assert.IsTrue(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key), $"Headers do not contain the key '{expectedHeader.Key}'");
 				var actualHeader = actualHeaders.First(a => a.Item1 == expectedHeader.Key);
-				Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, "Header values do not match");
-			}
+                Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, $"Header values do not match for key '{actualHeader.Item1}'");
+            }
 		}
 
 		[Then(@"the response headers will not contain:")]
 		public void ThenTheResponseHeadersWillNotContain(Table table)
 		{
-			var actualHeaders = ScenarioContext.Current.GetHttpHeaders();
+			var actualHeaders = ScenarioContext.Current.GetHttpHeaders().ToList();
 			var excludedHeaders = table.CreateSet<HttpHeader>();
 			foreach (var excludedHeader in excludedHeaders)
 			{
-				Assert.IsFalse(actualHeaders.Any(a => a.Item1 == excludedHeader.Key), "Headers contain a header key when it should not");
+				Assert.IsFalse(actualHeaders.Any(a => a.Item1 == excludedHeader.Key), $"Headers contain a header key '{excludedHeader.Key}' when it should not");
 			}
 		}
 	}

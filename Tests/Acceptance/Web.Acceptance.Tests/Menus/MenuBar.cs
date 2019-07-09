@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 
 namespace SecurityEssentials.Acceptance.Tests.Menus
 {
@@ -10,7 +9,7 @@ namespace SecurityEssentials.Acceptance.Tests.Menus
 	{
 		public HomeTab HomeTab { get; }
 		public AdminTab AdminTab { get; }
-		private IList<BaseTab> Tabs { get; set; }
+		private IList<BaseTab> Tabs { get; }
 
 		public MenuBar(IWebDriver driver, Uri baseUri)
 		{

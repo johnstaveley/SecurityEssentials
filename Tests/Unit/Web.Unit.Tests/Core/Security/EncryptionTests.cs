@@ -36,12 +36,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "John Was here John was here again";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted), "Encryption was not successful");
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted), "Encryption was not successful");
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out output), "Decryption was not successful");
+			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out var output), "Decryption was not successful");
 			Assert.AreEqual(input, output);
 
 		}
@@ -51,12 +48,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "john was here 1234567890!£$%^&**()-_=+[]{}';,./#:@~?><  \\|`¬";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted), "Encryption was not successful");
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted), "Encryption was not successful");
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out output), "Decryption was not successful");
+			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out var output), "Decryption was not successful");
 			Assert.AreEqual(input, output);
 
 		}
@@ -66,12 +60,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted));
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted));
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out output));
+			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out var output));
 			Assert.AreEqual(input, output);
 
 		}
@@ -81,11 +72,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = null;
-			string salt;
-			string encrypted;
-			string output;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted));
-			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out output));
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted));
+			Assert.AreEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount, encrypted, out var output));
 			Assert.AreNotEqual(input, output);
 			Assert.AreEqual("", output);
 
@@ -96,12 +84,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "The quick brown fox jumped over the lazy dog";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted));
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted));
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreNotEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount + 1, encrypted, out output));
+			Assert.AreNotEqual(true, _testDecrypt.Decrypt(_password, salt, _iterationCount + 1, encrypted, out var output));
 			Assert.AreNotEqual(input, output);
 
 		}
@@ -111,12 +96,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "The quick brown fox jumped over the lazy dog";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted));
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted));
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreNotEqual(true, _testDecrypt.Decrypt(_password, $"{salt}1", _iterationCount, encrypted, out output));
+			Assert.AreNotEqual(true, _testDecrypt.Decrypt(_password, $"{salt}1", _iterationCount, encrypted, out var output));
 			Assert.AreNotEqual(input, output);
 
 		}
@@ -126,12 +108,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		{
 
 			string input = "The quick brown fox jumped over the lazy dog";
-			string salt;
-			string output;
-			string encrypted;
-			Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out salt, out encrypted));
+            Assert.AreEqual(true, _testEncrypt.Encrypt(_password, _iterationCount, input, out var salt, out var encrypted));
 			Assert.AreNotEqual(input, encrypted);
-			Assert.AreNotEqual(true, _testDecrypt.Decrypt(string.Format("{0}1", _password), salt, _iterationCount, encrypted, out output));
+			Assert.AreNotEqual(true, _testDecrypt.Decrypt($"{_password}1", salt, _iterationCount, encrypted, out var output));
 			Assert.AreNotEqual(input, output);
 		}
 

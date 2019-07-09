@@ -1,11 +1,10 @@
 ﻿using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class ResetPasswordPage : BasePage
+    public class ResetPasswordPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

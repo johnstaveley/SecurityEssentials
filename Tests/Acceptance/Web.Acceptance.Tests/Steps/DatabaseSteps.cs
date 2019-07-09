@@ -15,7 +15,7 @@ using User = SecurityEssentials.Model.User;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class DatabaseSteps
 	{
 
@@ -214,13 +214,24 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			}, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(2));
 			Assert.That(hpkpWarnings.Count, Is.EqualTo(expectedNumberOfHpkpViolations), $"Was not able to find {expectedNumberOfHpkpViolations} hpkp violations in the logs");
 		}
+        [Then(@"I have (.*) certificate policy violation in the system")]
+        public void ThenIHaveCertificatePolicyViolationInTheSystem(int expectedNumberOfCtViolations)
+        {
+            var ctWarnings = SeDatabase.GetCtWarnings();
+            Repeater.DoOrTimeout(() =>
+            {
+                ctWarnings = SeDatabase.GetCtWarnings();
+                return ctWarnings.Count == expectedNumberOfCtViolations;
+            }, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(2));
+            Assert.That(ctWarnings.Count, Is.EqualTo(expectedNumberOfCtViolations), $"Was not able to find {expectedNumberOfCtViolations} ct violations in the logs");
+        }
 
-		[Then(@"I have a log in the system matching the following:")]
+        [Then(@"I have a log in the system matching the following:")]
 		public void ThenIHaveALogInTheSystemMatchingTheFollowing(Table table)
 		{
 			var logModel = table.CreateInstance<LogModel>();
 			var logs = SeDatabase.GetLogs();
-			Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1);
+			Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1, "Log does not match message");
 		}
 
 		[Then(@"I have the following logs in the system:")]

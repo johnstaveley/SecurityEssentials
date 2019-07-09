@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Menus
+namespace SecurityEssentials.Acceptance.Tests.Menus
 {
-	public abstract class BaseTab
+    public abstract class BaseTab
 	{
 		private readonly WebDriverWait _wait;
 		protected readonly IWebDriver Driver;
 		protected readonly Uri BaseUri;
 		private readonly string _menuId;
 		private readonly string _dropdowndId;
-		public string Title { get; private set; }
+		public string Title { get; }
 
 		protected BaseTab(IWebDriver driver, Uri baseUri, string title, string menuId, string dropdownId = null)
 		{

@@ -7,7 +7,7 @@ using PageFactory = SeleniumExtras.PageObjects.PageFactory;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class HomePage : BasePage
+    public class HomePage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

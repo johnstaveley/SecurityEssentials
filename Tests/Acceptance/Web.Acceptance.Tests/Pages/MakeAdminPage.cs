@@ -1,11 +1,10 @@
 ﻿using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
-using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
+using System;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class MakeAdminPage : BasePage
+    public class MakeAdminPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

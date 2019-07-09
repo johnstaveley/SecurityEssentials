@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
 using SecurityEssentials.Acceptance.Tests.Extensions;
-using System;
 using SecurityEssentials.Acceptance.Tests.Pages;
+using System;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
 
-	[Binding]
+    [Binding]
 	public class NavigationSteps
 	{
 		[Given(@"I navigate to the website")]
@@ -222,7 +222,6 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		public void WhenISelectAdmin_ManageUsersFromTheMenu()
 		{
 			var homePage = new HomePage(FeatureContext.Current.GetWebDriver(), FeatureContext.Current.GetBaseUri());
-
 			homePage.MenuBar.AdminTab.GotoManageUsersPage();
 		}
 

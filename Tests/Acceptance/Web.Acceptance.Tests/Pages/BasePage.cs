@@ -14,7 +14,7 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
 		protected readonly WebDriverWait Wait;
 
 		public string PageTitle { get; }
-		protected Uri BaseUri { get; private set; }
+		protected Uri BaseUri { get; }
 		protected IWebDriver Driver { get; }
 		protected TimeSpan WaitInterval { get; }
 

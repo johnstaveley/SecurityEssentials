@@ -1,12 +1,12 @@
 # Security Essentials MVC Project Template
 
-###Created by John Staveley - Last update 19/03/2018
+### Created by John Staveley - Last updated 28/06/2019
 
-##Introduction
-This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.6.1. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+## Introduction
+This Mvc solution was adapted from the standard MVC4 template in VS 2019, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
-##Security Enhancements
-This list is based on the OWASP Top 10 2013
+## Security Enhancements
+This list is based on the OWASP Top 10 2013/2017
 * SQL Injection: It uses Entity Framework ORM
 * Weak account management: 
 	+ Uses claims based auth
@@ -25,7 +25,8 @@ This list is based on the OWASP Top 10 2013
 	+ Unit tests for password hashing and authorization attributes
 * XSS:
 	+ Incorporation of the WPL AntiXSS library to encode all output
-	+ Enforce the location of the scripts the browser can run using a content security policy header
+	+ Enforce the location of the scripts/assets/actions the browser can run using a content security policy header
+	+ Feature Policy disallows features used in the browser such as camera, sync-xhr etc
 	+ Enables browser's anti-xss capabilities by sending the XSS-Protection header
 * Insecure direct object references: In user edit page it checks the user is entitled to be there
 * Security misconfiguration: Doesn't turn on anything you don't really need
@@ -38,6 +39,7 @@ This list is based on the OWASP Top 10 2013
 	+ Removes server information disclosure headers from responses
 * Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role
 * CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller
+    + Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token
 * Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated
 * Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4
 
@@ -49,11 +51,12 @@ Other threats it protects against and features:
 * Forces user to change their password if their password has expired
 * Professionally pentested
 
-##OWASP Top 10 2017
+## OWASP Top 10 2017
 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:
-* A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected
+* A4 - XML External Entities (XXE). This application does not parse XML documents and so would not be affected. However if it did this only applies to .Net 4.5 and earlier.
 * A8 - Insecure Deserialisation. Only affects Java applications
 * A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
-Current issues: SpecFlow scenarios won't regenerate in VS2017. This is an issue with SpecFlow described here: https://github.com/techtalk/SpecFlow/issues/857#thread-subscription-status
+
+[![Build Status](https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master)](https://johnstaveley.visualstudio.com/Security%20Essentials/_build/latest?definitionId=6&branchName=master)

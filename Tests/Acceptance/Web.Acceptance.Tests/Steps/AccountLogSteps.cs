@@ -3,9 +3,9 @@ using SecurityEssentials.Acceptance.Tests.Pages;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
-namespace SecurityEssentials.Acceptance.Tests.Web.Extensions
+namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class AccountLogSteps
 	{
 

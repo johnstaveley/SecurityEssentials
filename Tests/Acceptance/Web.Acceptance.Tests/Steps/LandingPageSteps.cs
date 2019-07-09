@@ -5,7 +5,7 @@ using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class LandingPageSteps
 	{
 		[Then(@"the following last activity message is shown: '(.*)'")]

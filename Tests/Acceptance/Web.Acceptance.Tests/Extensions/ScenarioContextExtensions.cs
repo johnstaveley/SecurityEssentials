@@ -1,20 +1,21 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using SecurityEssentials.Acceptance.Tests.Pages;
 using SecurityEssentials.Model;
+using System;
+using System.Collections.Generic;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Extensions
 {
-	public static class ScenarioContextExtensions
+    public static class ScenarioContextExtensions
 	{
 
 		public const string KeyHttpHeaders = "Http_Headers";
 		public const string KeyHash = "Hash";
 		public const string KeySalt = "Salt";
 		public const string CspReport = "CspReport";
-		public const string HpkpReport = "HpkpReport";
+        public const string CtReport = "CtReport";
+        public const string HpkpReport = "HpkpReport";
 
 		public static CspReport GetCspReport(this ScenarioContext scenarioContext)
 		{
@@ -24,7 +25,15 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		{
 			scenarioContext.Set(cspReport, CspReport);
 		}
-		public static HpkpReport GetHpkpReport(this ScenarioContext scenarioContext)
+        public static CtReport GetCtReport(this ScenarioContext scenarioContext)
+        {
+            return scenarioContext.Get<CtReport>(CtReport);
+        }
+        public static void SetCtReport(this ScenarioContext scenarioContext, CtReport ctReport)
+        {
+            scenarioContext.Set(ctReport, CtReport);
+        }
+        public static HpkpReport GetHpkpReport(this ScenarioContext scenarioContext)
 		{
 			return scenarioContext.Get<HpkpReport>(HpkpReport);
 		}
@@ -36,17 +45,14 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		{
 			return scenarioContext.Get<IEnumerable<Tuple<string, string>>>(KeyHttpHeaders);
 		}
-
 		public static void SetHttpHeaders(this ScenarioContext scenarioContext, IEnumerable<Tuple<string, string>> value)
 		{
 			scenarioContext.Set(value, KeyHttpHeaders);
 		}
-
 		public static string GetHash(this ScenarioContext scenarioContext)
 		{
 			return scenarioContext.Get<string>(KeyHash);
 		}
-
 		public static void SetSalt(this ScenarioContext scenarioContext, string value)
 		{
 			scenarioContext.Set(value, KeySalt);
@@ -71,8 +77,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 
 		public static bool HasPage<T>(this ScenarioContext scenarioContext) where T : BasePage
 		{
-			T page;
-			return scenarioContext.TryGetValue(out page);
+            return scenarioContext.TryGetValue(out T _);
 		}
 
 	}

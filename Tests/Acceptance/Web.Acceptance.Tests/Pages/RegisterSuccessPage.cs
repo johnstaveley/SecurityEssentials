@@ -1,11 +1,10 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using SecurityEssentials.Acceptance.Tests.Menus;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
+using System;
 
 namespace SecurityEssentials.Acceptance.Tests.Pages
 {
-	public class RegisterSuccessPage : BasePage
+    public class RegisterSuccessPage : BasePage
 	{
 		public MenuBar MenuBar { get; }
 

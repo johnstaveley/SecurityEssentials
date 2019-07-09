@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace SecurityEssentials.Core
 {
-	public class AppSensor : IAppSensor
+    public class AppSensor : IAppSensor
 	{
 
 		private readonly IUserIdentity _userIdentity;

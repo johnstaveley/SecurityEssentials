@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using SecurityEssentials.Acceptance.Tests.Web.Menus;
 using System;
 using SecurityEssentials.Acceptance.Tests.Menus;
 

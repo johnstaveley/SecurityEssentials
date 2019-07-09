@@ -418,8 +418,8 @@ namespace SecurityEssentials.Controllers
 				Logger.Information("Failed Account RecoverPassword Post, account user id {id} is not approved or active by requester {@requester}", id, requester);
 				return View("Error", error);
             }
-	        string decryptedSecurityAnswer;
-	        _encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out decryptedSecurityAnswer);
+
+            _encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out var decryptedSecurityAnswer);
 	        if (recoverPasswordModel.SecurityAnswer != decryptedSecurityAnswer)
             {
 				ModelState.AddModelError("SecurityAnswer", "The security answer is incorrect");
@@ -504,9 +504,7 @@ namespace SecurityEssentials.Controllers
 						if (model.SecurityAnswer == model.SecurityAnswerConfirm)
 						{
 							var user = _context.User.First(u => u.UserName == logonResult.UserName);
-							string encryptedSecurityAnswer;
-							string encryptedSecurityAnswerSalt;
-							_encryption.Encrypt(_configuration.EncryptionPassword, _configuration.EncryptionIterationCount, model.SecurityAnswer, out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+                            _encryption.Encrypt(_configuration.EncryptionPassword, _configuration.EncryptionIterationCount, model.SecurityAnswer, out var encryptedSecurityAnswerSalt, out var encryptedSecurityAnswer);
 							user.SecurityAnswer = encryptedSecurityAnswer;
 							user.SecurityAnswerSalt = encryptedSecurityAnswerSalt;
 							user.SecurityQuestionLookupItemId = model.SecurityQuestionLookupItemId;
@@ -634,9 +632,9 @@ namespace SecurityEssentials.Controllers
 	        // Usually means user is not logged on
 	        if (users.ToList().Count == 0) return RedirectToAction("Index", "Home");
 	        var user = users.Single();
-            var activityLogs = user.UserLogs.OrderByDescending(d => d.CreatedDateUtc);
+            var activityLogs = user.UserLogs.OrderByDescending(d => d.CreatedDateUtc).ToList();
             UserLog lastAccountActivity = null;
-            if (activityLogs.ToList().Count > 1)
+            if (activityLogs.Count > 1)
             {
                 lastAccountActivity = activityLogs.Skip(1).FirstOrDefault();
             }

@@ -6,7 +6,7 @@ using TechTalk.SpecFlow.Assist;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-	[Binding]
+    [Binding]
 	public class LogSteps
 	{
 

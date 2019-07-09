@@ -84,9 +84,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Arrange
 			StubReceivedAjaxRequest(isAjaxRequest);
+		    HttpRequest.Stub(a => a.CurrentExecutionFilePath).Return("");
 
-			// Act
-			var result = _sut.NotFound();
+            // Act
+            var result = _sut.NotFound();
 
 			// Assert
 			AssertViewOrPartialResultReturned(result, isAjaxRequest, expectedView);

@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Web;
 using System.Web.Optimization;
 
 namespace SecurityEssentials
 {
-	public class BundleConfig
+    public class BundleConfig
 	{
 		// For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
 		public static void RegisterBundles(BundleCollection bundles)
 		{
-			if (bundles == null) throw new ArgumentNullException("bundles");
+			if (bundles == null) throw new ArgumentNullException(nameof(bundles));
 
 			// Clear all items from the default ignore list to allow minified CSS and JavaScript files to be included in debug mode
 			bundles.IgnoreList.Clear();

@@ -36,7 +36,7 @@ namespace SecurityEssentials.Core.Attributes
 				}
 				else
 				{
-					Log.Logger.Information("Failed XSS attempt on controller {controller} and action {action} by requester {@requester}", controller, action, requester);
+					Log.Logger.Information("Error on controller {controller} and action {action} by requester {@requester}", controller, action, requester);
 #if !DEBUG
 					filterContext.Result = new RedirectResult("/Error/Index/");
 					filterContext.ExceptionHandled = true;

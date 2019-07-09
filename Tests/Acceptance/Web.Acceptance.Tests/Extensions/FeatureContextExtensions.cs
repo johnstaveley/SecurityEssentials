@@ -20,8 +20,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 
 		public static bool HasWebDriver(this FeatureContext fc)
 		{
-			IWebDriver webDriver;
-			return fc.TryGetValue(out webDriver);
+            return fc.TryGetValue(out IWebDriver webDriver);
 		}
 
 		public static IWebDriver GetWebDriver(this FeatureContext fc)
@@ -41,8 +40,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 
 		private static List<DateTime> GetLoginAttempts(this FeatureContext featureContext)
 		{
-			List<DateTime> loginAttempts;
-			if (!featureContext.TryGetValue(LoginAttempts, out loginAttempts))
+            if (!featureContext.TryGetValue(LoginAttempts, out List<DateTime> _))
 			{
 				SetLoginAttempts(featureContext, new List<DateTime>());
 			}
@@ -58,7 +56,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 				loginAttempts = GetLoginAttempts(featureContext);
 				Trace.WriteLine("Waiting 5 seconds for logon attempt");
 			}
-			while (loginAttempts.Count(a => a > DateTime.UtcNow.AddSeconds(-65)) >= 2);
+			while (loginAttempts.Count(a => a > DateTime.UtcNow.AddSeconds(-62)) >= 2);
 			loginAttempts.Add(DateTime.UtcNow);
 			SetLoginAttempts(featureContext, loginAttempts);
 		}
