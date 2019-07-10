@@ -25,7 +25,7 @@
   <ItemGroup>
     <Content Include="PostDeploy.ps1" />
     <Content Include="Website.json" />
-    <Content Include="WebSite.integration.parameters.json" />
+    <Content Include="WebSite.qa.parameters.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>

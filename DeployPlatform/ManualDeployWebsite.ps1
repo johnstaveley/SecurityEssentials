@@ -1,24 +1,108 @@
 #Requires -Version 3.0
 
 Param(
-    [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] $ResourceGroupName = 'SecurityEssentials',
-    [switch] $UploadArtifacts,
-    [string] $StorageAccountName,
-    [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
-    [string] $TemplateFile = 'azuredeploy.json',
-    [string] $TemplateParametersFile = 'azuredeploy.parameters.json',
-    [string] $ArtifactStagingDirectory = '.',
-    [string] $DSCSourceFolder = 'DSC',
-    [switch] $ValidateOnly
+    [string] $ResourceGroupLocation = 'UKSouth',
+	[string] $SiteName = 'SecurityEssentials',
+	[string] $EnvironmentName = 'QA',
+    [string] $TemplateFile = 'Website.json',
+    [string] $TemplateParametersFile = 'WebSite.qa.parameters.json',
+	[Parameter(Mandatory=$true)]
+	[string] $SubscriptionId,
+    [Parameter(Mandatory=$true)]
+    [string] $SqlAdminPassword,
+    [switch] $ValidateOnly = $False
 )
 
 try {
     [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent("VSAzureTools-$UI$($host.name)".replace(' ','_'), '3.0.0')
 } catch { }
 
+[string] $ResourceGroupName = $SiteName + '-' + $EnvironmentName
+[string] $siteNameLowercase = $SiteName.ToLower();
+[string] $vaultName = $siteNameLowerCase + $EnvironmentName.ToLower()
+[string] $keyVaultDiagnosticsName = $siteNameLowerCase + $EnvironmentName.ToLower() + 'diagnostics'
+
+# Use Disconnect-AzureRmAccount first if not pointing at correct subscription
+if ((Get-AzureRmContext) -eq $null -or [string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
+    Write-Host "Logging in...";
+    Login-AzureRmAccount 
+}
+
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3
+
+# Select subscription
+Write-Host "Selecting subscription '$SubscriptionId'"
+Select-AzureRmSubscription -SubscriptionID $SubscriptionId -ErrorAction Stop
+Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop
+
+# Create or check for existing resource group
+$resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
+if(!$resourceGroup)
+{
+    Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation
+    Start-Sleep(5) # Give it some time to create the resource group
+}
+else{
+    Write-Host "Using existing resource group '$resourceGroupName'";
+}
+
+# Create the storage accounts if they don't already exist
+$vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnet'
+$vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
+if ($vNetStorageAccount -eq $null) {
+	Write-Host "Creating Storage Account '$vNetStorageAccountName' in $resourceGroupName" 
+    $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $ResourceGroupLocation -EnableHttpsTrafficOnly $True
+} else {
+	Write-Host "Storage Account '$vNetStorageAccountName' in $resourceGroupName already exists" 
+}
+
+$storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
+$storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
+if ($storageAccount -eq $null) {
+	Write-Host "Creating Storage Account '$storageAccountName' in $resourceGroupName" 
+    $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $ResourceGroupLocation -EnableHttpsTrafficOnly $True
+} else {
+	Write-Host "Storage Account '$storageAccountName' in $resourceGroupName already exists" 
+}
+
+ipconfig /flushdns
+Sleep 2
+
+# create key vault
+Write-Host "Checking key Vault" 
+$matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
+if ($matchingVaults -eq $null) { 
+    # create vault and enable the key vault for template deployment
+    Write-Host "Creating Vault '$vaultName' in $resourceGroupName" 
+    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $ResourceGroupLocation -enabledfortemplatedeployment
+} else {
+    Write-Host "Vault '$vaultName' in $resourceGroupName already exists" 
+    $vault = $matchingVaults[0]
+}
+
+# Enable logging for key vault
+# TODO: Change AuditEvent to AuditEvent,AllMetrics when the powershell command supports it. In the meantime, set this manually
+Set-AzureRmDiagnosticSetting -ResourceId $vault.ResourceId -StorageAccountId $storageAccount.Id -Enabled $true -Categories AuditEvent -RetentionEnabled $true -RetentionInDays 365 `
+    -Name $keyVaultDiagnosticsName
+
+ipconfig /flushdns
+
+
+# create secure database key if not already present
+$secretKey = 'SqlAzurePassword'
+Write-Host "Checking key Vault $vaultName for secret $secretKey" 
+$matchingSecrets = Get-AzureKeyVaultSecret -VaultName $vaultName -ErrorAction Stop | Where-Object { $_.Name -eq $secretKey }
+if ($matchingSecrets -eq $null) { 
+	Write-Host "Settings '$secretKey' in vault $vaultName" 
+    $secret = ConvertTo-SecureString -string $SqlAdminPassword -asplaintext -force
+	Write-Host "."
+    Set-AzureKeyVaultSecret -VaultName $vaultName -name $secretKey -SecretValue $secret -ErrorAction Stop
+    Sleep 5
+} else {
+    Write-Host "Secret key '$secretKey' already exists in vault $vaultName" 
+}
 
 function Format-ValidationOutput {
     param ($ValidationOutput, [int] $Depth = 0)
@@ -26,79 +110,13 @@ function Format-ValidationOutput {
     return @($ValidationOutput | Where-Object { $_ -ne $null } | ForEach-Object { @('  ' * $Depth + ': ' + $_.Message) + @(Format-ValidationOutput @($_.Details) ($Depth + 1)) })
 }
 
-$OptionalParameters = New-Object -TypeName Hashtable
 $TemplateFile = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $TemplateFile))
 $TemplateParametersFile = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $TemplateParametersFile))
-
-if ($UploadArtifacts) {
-    # Convert relative paths to absolute paths if needed
-    $ArtifactStagingDirectory = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $ArtifactStagingDirectory))
-    $DSCSourceFolder = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, $DSCSourceFolder))
-
-    # Parse the parameter file and update the values of artifacts location and artifacts location SAS token if they are present
-    $JsonParameters = Get-Content $TemplateParametersFile -Raw | ConvertFrom-Json
-    if (($JsonParameters | Get-Member -Type NoteProperty 'parameters') -ne $null) {
-        $JsonParameters = $JsonParameters.parameters
-    }
-    $ArtifactsLocationName = '_artifactsLocation'
-    $ArtifactsLocationSasTokenName = '_artifactsLocationSasToken'
-    $OptionalParameters[$ArtifactsLocationName] = $JsonParameters | Select -Expand $ArtifactsLocationName -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
-    $OptionalParameters[$ArtifactsLocationSasTokenName] = $JsonParameters | Select -Expand $ArtifactsLocationSasTokenName -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
-
-    # Create DSC configuration archive
-    if (Test-Path $DSCSourceFolder) {
-        $DSCSourceFilePaths = @(Get-ChildItem $DSCSourceFolder -File -Filter '*.ps1' | ForEach-Object -Process {$_.FullName})
-        foreach ($DSCSourceFilePath in $DSCSourceFilePaths) {
-            $DSCArchiveFilePath = $DSCSourceFilePath.Substring(0, $DSCSourceFilePath.Length - 4) + '.zip'
-            Publish-AzureRmVMDscConfiguration $DSCSourceFilePath -OutputArchivePath $DSCArchiveFilePath -Force -Verbose
-        }
-    }
-
-    # Create a storage account name if none was provided
-    if ($StorageAccountName -eq '') {
-        $StorageAccountName = 'stage' + ((Get-AzureRmContext).Subscription.SubscriptionId).Replace('-', '').substring(0, 19)
-    }
-
-    $StorageAccount = (Get-AzureRmStorageAccount | Where-Object{$_.StorageAccountName -eq $StorageAccountName})
-
-    # Create the storage account if it doesn't already exist
-    if ($StorageAccount -eq $null) {
-        $StorageResourceGroupName = 'ARM_Deploy_Staging'
-        New-AzureRmResourceGroup -Location "$ResourceGroupLocation" -Name $StorageResourceGroupName -Force
-        $StorageAccount = New-AzureRmStorageAccount -StorageAccountName $StorageAccountName -Type 'Standard_LRS' -ResourceGroupName $StorageResourceGroupName -Location "$ResourceGroupLocation"
-    }
-
-    # Generate the value for artifacts location if it is not provided in the parameter file
-    if ($OptionalParameters[$ArtifactsLocationName] -eq $null) {
-        $OptionalParameters[$ArtifactsLocationName] = $StorageAccount.Context.BlobEndPoint + $StorageContainerName
-    }
-
-    # Copy files from the local storage staging location to the storage account container
-    New-AzureStorageContainer -Name $StorageContainerName -Context $StorageAccount.Context -ErrorAction SilentlyContinue *>&1
-
-    $ArtifactFilePaths = Get-ChildItem $ArtifactStagingDirectory -Recurse -File | ForEach-Object -Process {$_.FullName}
-    foreach ($SourcePath in $ArtifactFilePaths) {
-        Set-AzureStorageBlobContent -File $SourcePath -Blob $SourcePath.Substring($ArtifactStagingDirectory.length + 1) `
-            -Container $StorageContainerName -Context $StorageAccount.Context -Force
-    }
-
-    # Generate a 4 hour SAS token for the artifacts location if one was not provided in the parameters file
-    if ($OptionalParameters[$ArtifactsLocationSasTokenName] -eq $null) {
-        $OptionalParameters[$ArtifactsLocationSasTokenName] = ConvertTo-SecureString -AsPlainText -Force `
-            (New-AzureStorageContainerSASToken -Container $StorageContainerName -Context $StorageAccount.Context -Permission r -ExpiryTime (Get-Date).AddHours(4))
-    }
-}
-
-# Create the resource group only when it doesn't already exist
-if ((Get-AzureRmResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocation -Verbose -ErrorAction SilentlyContinue) -eq $null) {
-    New-AzureRmResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocation -Verbose -Force -ErrorAction Stop
-}
 
 if ($ValidateOnly) {
     $ErrorMessages = Format-ValidationOutput (Test-AzureRmResourceGroupDeployment -ResourceGroupName $ResourceGroupName `
                                                                                   -TemplateFile $TemplateFile `
-                                                                                  -TemplateParameterFile $TemplateParametersFile `
-                                                                                  @OptionalParameters)
+                                                                                  -TemplateParameterFile $TemplateParametersFile)
     if ($ErrorMessages) {
         Write-Output '', 'Validation returned the following errors:', @($ErrorMessages), '', 'Template is invalid.'
     }
@@ -111,7 +129,6 @@ else {
                                        -ResourceGroupName $ResourceGroupName `
                                        -TemplateFile $TemplateFile `
                                        -TemplateParameterFile $TemplateParametersFile `
-                                       @OptionalParameters `
                                        -Force -Verbose `
                                        -ErrorVariable ErrorMessages
     if ($ErrorMessages) {

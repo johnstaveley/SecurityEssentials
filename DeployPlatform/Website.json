@@ -1,8 +1,713 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
-  "variables": {},
-  "resources": [],
+  "parameters": {
+    "adminEmailAddress": {
+      "type": "string"
+    },
+    "autoScaleMaxInstanceCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Describes maximum instance count of app service applied through auto scale"
+      }
+    },
+    "databaseEdition": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "databaseMaxSizeBytes": {
+      "type": "string",
+      "defaultValue": "5368709120"
+    },
+    "databaseServiceLevelObjective": {
+      "type": "string",
+      "defaultValue": "S0",
+      "allowedValues": [ "Basic", "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "P1", "P2", "P3" ],
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      }
+    },
+    "developerIpAddress": {
+      "type": "string"
+    },
+    "environmentName": {
+      "type": "string",
+      "allowedValues": [
+        "integration",
+        "qa",
+        "production"
+      ]
+    },
+    "hostNameSslStates": {
+      "type": "array"
+    },
+    "servicePlanSkuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "metadata": {
+        "description": "Describes plan's instance count"
+      }
+    },
+    "servicePlanSkuTier": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Free",
+        "Basic",
+        "Standard",
+        "Premium",
+        "PremiumV2"
+      ]
+    },
+    "servicePlanSkuSize": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [ "F1", "D1", "B1", "B2", "B3", "S0", "S1", "S2", "S3", "P1", "P2", "P3", "P4", "P1v2" ]
+    },
+    "servicePlanSkuFamily": {
+      "type": "string",
+      "defaultValue": "F",
+      "allowedValues": [ "F", "D", "B", "S", "P", "Pv2" ]
+    },
+    "siteName": {
+      "type": "string"
+    },
+    "sqlserverAdminLoginUserName": {
+      "type": "string"
+    },
+    "sqlserverAdminLoginPassword": {
+      "type": "securestring",
+      "defaultValue": "Not Specified"
+    }
+  },
+  "variables": {
+    "alertActionGroupName": "[concat(parameters('siteName'), parameters('environmentName'), '-emailadmin')]",
+    "applicationInsightsName": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "autoScalingName": "[concat(parameters('siteName'), parameters('environmentName'), '-', parameters('siteName'), '-', parameters('environmentName'))]",
+    "developerIpAddressArray": [
+      {
+        "value": "[parameters('developerIpAddress')]",
+        "action": "Allow"
+      }
+    ],
+    "firewallRuleAllowAllWindowsAzureIpsName": "AllowAllWindowsAzureIps",
+    "firewallRuleAllowAllWindowsAzureIps": "0.0.0.0",
+    "networkSecurityGroupsFrontEndName": "[concat(parameters('siteName'), parameters('environmentName'), '-frontend')]",
+    "serverFarmName": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "sqlserverName": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "storageAccountIdVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameVNet'))]",
+    "storageAccountNameVNet": "[concat(parameters('siteName'), parameters('environmentName'), 'vnet')]",
+    "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameNonVNet'))]",
+    "storageAccountNameNonVNet": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "virtualNetworkName": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "webDatabaseName": "[concat(parameters('siteName'), parameters('environmentName'), '/', parameters('siteName'), parameters('environmentName'))]",
+    "webDatabase": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "webSiteName": "[concat(parameters('siteName'), parameters('environmentName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2014-04-01",
+      "name": "[variables('applicationInsightsName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "West Europe",
+      "tags": {
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]": "Resource",
+        "displayName": "Application Insights"
+      },
+      "properties": {
+        "ApplicationId": "[variables('webSiteName')]"
+      }
+    },
+    {
+      "type": "Microsoft.Insights/actionGroups",
+      "apiVersion": "2018-03-01",
+      "name": "[variables('alertActionGroupName')]",
+      "tags": {
+        "displayName": "Alerts Action Group"
+      },
+      "location": "global",
+      "properties": {
+        "groupShortName": "Email Admin",
+        "enabled": true,
+        "smsReceivers": [],
+        "emailReceivers": [
+          {
+            "name": "Administrator",
+            "emailAddress": "[parameters('adminEmailAddress')]"
+          }
+        ],
+        "webhookReceivers": []
+      },
+      "dependsOn": [
+        "[resourceId('microsoft.insights/components', variables('applicationInsightsName'))]"
+      ]
+    },
+    {
+      "type": "microsoft.insights/autoscalesettings",
+      "name": "[variables('autoScalingName')]",
+      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
+      "apiVersion": "2014-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": { "displayName": "App Service Auto Scaling" },
+      "scale": null,
+      "properties": {
+        "profiles": [
+          {
+            "name": "Default",
+            "capacity": {
+              "minimum": "1",
+              "maximum": "[parameters('autoScaleMaxInstanceCount')]",
+              "default": "1"
+            },
+            "rules": [
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricNamespace": "",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT10M",
+                  "timeAggregation": "Average",
+                  "operator": "GreaterThan",
+                  "threshold": 80
+                },
+                "scaleAction": {
+                  "direction": "Increase",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT10M"
+                }
+              },
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricNamespace": "",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT1H",
+                  "timeAggregation": "Average",
+                  "operator": "LessThan",
+                  "threshold": 60
+                },
+                "scaleAction": {
+                  "direction": "Decrease",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT1H"
+                }
+              }
+            ]
+          }
+        ],
+        "enabled": true,
+        "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
+        "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "kind": "v12.0,user",
+      "name": "[variables('webDatabaseName')]",
+      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
+      "tags": { "displayName": "Database" },
+      "apiVersion": "2014-04-01-preview",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "edition": "[parameters('databaseEdition')]",
+        "status": "Online",
+        "serviceLevelObjective": "[parameters('databaseServiceLevelObjective')]",
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": "[parameters('databaseMaxSizeBytes')]",
+        "requestedServiceObjectiveName": "[parameters('databaseServiceLevelObjective')]",
+        "sampleName": null,
+        "elasticPoolName": null,
+        "containmentState": 2,
+        "readScale": "Disabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
+      "name": "[concat(variables('webDatabaseName'), '/Default')]",
+      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
+      "tags": { "displayName": "Database Backup" },
+      "apiVersion": "2017-03-01-preview",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "weeklyRetention": "P5W",
+        "monthlyRetention": "P12M",
+        "yearlyRetention": "P5Y",
+        "weekOfYear": "22"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), variables('webDatabase'))]"
+      ]
+    },
+
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "tags": { "displayName": "ServerFarm" },
+      "sku": {
+        "name": "[parameters('servicePlanSkuSize')]",
+        "tier": "[parameters('servicePlanSkuTier')]",
+        "size": "[parameters('servicePlanSkuSize')]",
+        "family": "[parameters('servicePlanSkuFamily')]",
+        "capacity": "[parameters('servicePlanSkuCapacity')]"
+      },
+      "kind": "app",
+      "name": "[variables('serverFarmName')]",
+      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
+      "apiVersion": "2016-09-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "name": "[variables('serverFarmName')]",
+        "numberOfWorkers": 4
+      },
+      "dependsOn": []
+    },
+    {
+      "name": "[variables('sqlserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "tags": { "displayName": "SQL Server" },
+      "apiVersion": "2014-04-01-preview",
+      "properties": {
+        "administratorLogin": "[parameters('sqlserverAdminLoginUserName')]",
+        "administratorLoginPassword": "[parameters('sqlserverAdminLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "type": "firewallRules",
+          "apiVersion": "2014-04-01",
+          "location": "[resourceGroup().location]",
+          "name": "[variables('firewallRuleAllowAllWindowsAzureIpsName')]",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))]"
+          ]
+        },
+        {
+          "type": "firewallRules",
+          "kind": "v12.0",
+          "name": "[parameters('developerIpAddress')]",
+          "apiVersion": "2014-04-01",
+          "location": "[resourceGroup().location]",
+          "scale": null,
+          "properties": {
+            "startIpAddress": "84.92.41.8",
+            "endIpAddress": "84.92.41.8"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/auditingSettings",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sqlserverName'), '/Default')]",
+      "tags": { "displayName": "SQL Server Auditing Policy" },
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "state": "Enabled",
+        "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').PrimaryEndpoints.Blob]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').keys[0].value]",
+        "storageAccountSubscriptionId": "[subscription().subscriptionId]",
+        "auditActionsAndGroups": null,
+        "isStorageSecondaryKeyInUse": false,
+        "retentionDays": 365
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/securityAlertPolicies",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sqlServerName'), '/Default')]",
+      "tags": { "displayName": "SQL Server Security Alert Policies" },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "disabledAlerts": [
+          ""
+        ],
+        "emailAddresses": [
+          "[parameters('adminEmailAddress')]"
+        ],
+        "emailAccountAdmins": true,
+        "retentionDays": 200,
+        "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
+      "apiVersion": "2018-06-01-preview",
+      "name": "[concat(variables('sqlServerName'), '/Default')]",
+      "tags": { "displayName": "SQL Server vulnerability Assessment" },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]"
+      ],
+      "properties": {
+        "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+        "recurringScans": {
+          "isEnabled": true,
+          "emailSubscriptionAdmins": true,
+          "emails": [
+            "[parameters('adminEmailAddress')]"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_GRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[variables('storageAccountNameVNet')]",
+      "tags": { "displayName": "Storage VNet" },
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "ipRules": "[variables('developerIpAddressArray')]",
+          "defaultAction": "Deny",
+          "virtualNetworkRules": [
+            {
+              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'frontend')]",
+              "action": "Allow"
+            }
+          ]
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[variables('storageAccountNameNonVNet')]",
+      "tags": { "displayName": "Storage NonVNet" },
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": "[variables('developerIpAddressArray')]",
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Cool"
+      },
+      "dependsOn": []
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('webSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms/', variables('serverFarmName'))]",
+        "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('serverFarmName'))]": "empty",
+        "displayName": "Website"
+      },
+      "properties": {
+        "enabled": true,
+        "name": "[variables('webSiteName')]",
+        "hostNameSslStates": "[parameters('hostNameSslStates')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
+        "siteConfig": {
+          "AlwaysOn": true,
+          "ftpsState": "Disabled"
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+          ],
+          "properties": {
+            "ApplicationInsightsKey": "[reference(concat('microsoft.insights/components/', variables('applicationInsightsName'))).InstrumentationKey]",
+            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountNameNonVNet'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountNameNonVNet'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
+            "alwaysOn": true,
+            "minTlsVersion": "1.2",
+            "ftpsState": "Disabled",
+            "httpsOnly": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2018-12-01",
+      "name": "[variables('networkSecurityGroupsFrontEndName')]",
+      "tags": { "displayName": "Network Security Group" },
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "resourceGuid": "5919ef29-e37e-4333-82ca-ccc9e076c5f2",
+        "securityRules": [
+          {
+            "name": "Web",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [
+                "80",
+                "443"
+              ],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          }
+        ],
+        "defaultSecurityRules": [
+          {
+            "name": "AllowVnetInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Allow inbound traffic from all VMs in VNET",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 65000,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "AllowAzureLoadBalancerInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Allow inbound traffic from azure load balancer",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "AzureLoadBalancer",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 65001,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "DenyAllInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Deny all inbound traffic",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 65500,
+              "direction": "Inbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "AllowVnetOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 65000,
+              "direction": "Outbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "AllowInternetOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Allow outbound traffic from all VMs to Internet",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "Internet",
+              "access": "Allow",
+              "priority": 65001,
+              "direction": "Outbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          },
+          {
+            "name": "DenyAllOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
+            "properties": {
+              "description": "Deny all outbound traffic",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 65500,
+              "direction": "Outbound",
+              "sourcePortRanges": [],
+              "destinationPortRanges": [],
+              "sourceAddressPrefixes": [],
+              "destinationAddressPrefixes": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2018-12-01",
+      "name": "[variables('virtualNetworkName')]",
+      "tags": { "displayName": "Virtual Network" },
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupsFrontEndName'))]"
+      ],
+      "properties": {
+        "resourceGuid": "a16d4f1c-5648-4752-8cbe-5b68ffaea00b",
+        "addressSpace": {
+          "addressPrefixes": [
+            "192.168.0.0/23"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "frontend",
+            "properties": {
+              "addressPrefix": "192.168.0.0/26",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupsFrontEndName'))]"
+              },
+              "serviceAssociationLinks": [],
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
+              "delegations": [
+                {
+                  "name": "webapp",
+                  "properties": {
+                    "serviceName": "Microsoft.Web/serverFarms",
+                    "actions": [
+                      "Microsoft.Network/virtualNetworks/subnets/action"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false,
+        "enableVmProtection": false
+      }
+    }
+  ],
   "outputs": {}
 }
