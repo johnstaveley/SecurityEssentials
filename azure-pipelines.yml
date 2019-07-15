@@ -77,6 +77,13 @@ stages:
 - stage: Test
   dependsOn: Build
   jobs:
-  - job: Test
-    steps:
-    - script: echo Test
+  - deployment: DeployWeb
+    pool:
+      vmImage: 'windows-latest'
+    # creates an environment if it doesn’t exist
+    environment: 'integration'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Test
