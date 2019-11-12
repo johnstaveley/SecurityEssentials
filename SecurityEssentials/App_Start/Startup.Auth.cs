@@ -30,7 +30,7 @@ namespace SecurityEssentials.App_Start
 					}
 				},
 				ExpireTimeSpan = TimeSpan.FromMinutes(30),
-				SlidingExpiration = true
+				SlidingExpiration = true,
 			});
 			//// Use a cookie to temporarily store information about a user logging in with a third party login provider
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

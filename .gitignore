@@ -200,3 +200,5 @@ ModelManifest.xml
 /.vs/SecurityEssentials/v16/Server/sqlite3/storage.ide-wal
 /.vs/SecurityEssentials/v16/TestStore/0/000-0000.testlog
 /.vs/SecurityEssentials/v16/TestStore/0/testlog.manifest
+/.vs/SecurityEssentials/DesignTimeBuild/.dtbcache
+*.dtbcache

@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 28/06/2019
+### Created by John Staveley - Last updated 12/11/2019
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2019, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -40,6 +40,7 @@ This list is based on the OWASP Top 10 2013/2017
 * Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role
 * CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller
     + Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token
+	+ Uses SameSite Lax attribute on session cookie
 * Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated
 * Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4
 

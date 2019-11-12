@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 28/06/2019</h4>
+                <h4>Created by John Staveley - Last updated 12/11/2019</h4>
                 This Mvc solution was adapted from the standard MVC4 template in VS 2017, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013/2017).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -58,6 +58,7 @@
                     <li>CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller</li>
                     <ul>
                         <li>Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token</li>
+                        <li>Uses SameSite Lax attribute on session cookie</li>
                     </ul>
                     <li>Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated</li>
                     <li>Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4</li>

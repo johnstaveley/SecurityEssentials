@@ -140,6 +140,8 @@ namespace SecurityEssentials
 		{
 			// SECURE: Adding a variable to session keeps the session id constant between requests which is useful for logging and identifying a user between requests
 			HttpContext.Current.Session.Add("__MyAppSession", string.Empty);
+			// SECURE: Counter CSRF using SameSite https://www.sjoerdlangkemper.nl/2016/04/14/preventing-csrf-with-samesite-cookie-attribute/
+            HttpContext.Current.Response.Cookies["ASP.NET_SessionId"].SameSite = SameSiteMode.Lax;
 		}
 
 	}
