@@ -74,3 +74,16 @@ stages:
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
 
+- stage: Test
+  dependsOn: Build
+  jobs:
+  - deployment: DeployWeb
+    pool:
+      vmImage: 'windows-latest'
+    # creates an environment if it doesn’t exist
+    environment: 'integration'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Test
