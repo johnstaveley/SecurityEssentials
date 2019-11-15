@@ -3,7 +3,7 @@
 ### Created by John Staveley - Last updated 15/11/2019
 
 ## Introduction
-This Mvc solution was adapted from the standard MVC4 template in VS 2019, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
 ## Security Enhancements
 This list is based on the OWASP Top 10 2013/2017
@@ -61,7 +61,7 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
 
 ## How the incorporated build process ensures you remain secure over time.
-This solution comes with azure-pipelines.yml. Running this in Azure Devops ensures the following:
+This solution comes with azure-pipelines.yml build and test script. Running this in Azure Devops ensures the following:
 * 2. Account management process - Partially checked using Unit tests
 * 4. Insecure direct object references - Partially checked using Unit tests
 * 7. Missing file level access control - Partially checked using Unit tests
