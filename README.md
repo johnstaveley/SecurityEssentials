@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 12/11/2019
+### Created by John Staveley - Last updated 15/11/2019
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC4 template in VS 2019, MVC5, .net 4.7.2. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -59,5 +59,14 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 * A10 - Insufficient Logging and Monitoring. Extensive logging on security violations using Serilog which can be used by an operator to detect an attacker. Covers Account management, XSS, Form overposting, CSRF, unvalidated requests and forwards, content security policy and http public key pinning violations
 
 ***Note:** Runs on SQL Express and IIS Express, requires mail server and recaptcha (optional) set up. See readme.txt in project for more information*
+
+## How the incorporated build process ensures you remain secure over time.
+This solution comes with azure-pipelines.yml. Running this in Azure Devops ensures the following:
+* 2. Account management process - Partially checked using Unit tests
+* 4. Insecure direct object references - Partially checked using Unit tests
+* 7. Missing file level access control - Partially checked using Unit tests
+* 8. CSRF - Partially checked using Unit tests
+* 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report in Azure Devops, stored as a build artefact for vulnerabilities in your dependencies. This can also be set to fail the build</li>
+* 10. Unvalidated redirects and forwards - Partially checked using Unit tests
 
 [![Build Status](https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master)](https://johnstaveley.visualstudio.com/Security%20Essentials/_build/latest?definitionId=6&branchName=master)

@@ -52,6 +52,7 @@ stages:
         diagnosticsEnabled: True
 
     - task: dependency-check-build-task@5
+      displayName: 'OWASP Dependency Checker'
       inputs:
         projectName: 'Security Essentials'
         scanPath: '$(build.stagingDirectory)/**/bin'
@@ -93,3 +94,4 @@ stages:
         deploy:
           steps:
           - script: echo Test
+    # TODO: Deploy an instance to Azure and then run integration tests against it
