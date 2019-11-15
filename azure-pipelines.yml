@@ -32,7 +32,7 @@ stages:
       displayName: 'Build solution'
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:OutDir=$(build.stagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
+        msbuildArgs: '/p:OutDir=/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
     
@@ -50,6 +50,12 @@ stages:
         runInParallel: true
         codeCoverageEnabled: true
         diagnosticsEnabled: True
+
+    - task: dependency-check-build-task@5
+      inputs:
+        projectName: 'Security Essentials'
+        scanPath: '$(build.stagingDirectory)/**/bin'
+        format: 'HTML'         
 
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
@@ -80,7 +86,7 @@ stages:
   - deployment: DeployWeb
     pool:
       vmImage: 'windows-latest'
-    # creates an environment if it doesn’t exist
+    # creates an environment if it doesnâ€™t exist
     environment: 'integration'
     strategy:
       runOnce:
