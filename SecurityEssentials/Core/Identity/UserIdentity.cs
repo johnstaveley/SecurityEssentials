@@ -36,7 +36,7 @@ namespace SecurityEssentials.Core.Identity
 				LoggedOnUser = GetUserName(controller),
 				LoggedOnUserId = GetUserId(controller),
 				AppSensorDetectionPoint = appSensorDetectionPointKind,
-				SessionId = GetHashSha256(controller.HttpContext.Session.SessionID)
+				SessionHash = GetHashSha256(controller.HttpContext.Session.SessionID)
 			};
 		}
 
