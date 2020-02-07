@@ -66,19 +66,14 @@ namespace SecurityEssentials.Core.Identity
                         Lanes = 5,
                         Threads = Environment.ProcessorCount,
                         Password = passwordBytes,
-                        Salt = _salt, // >= 8 bytes if not null
-//                        Secret = secret, // from somewhere
-                        //AssociatedData = associatedData, // from somewhere
-                        HashLength = 20 // >= 4
+                        Salt = _salt, 
+                        HashLength = 20
                     };
                     var argon2A = new Argon2(config);
                     using(SecureArray<byte> hashArgon = argon2A.Hash())
                     {
                         _hash = Encoding.ASCII.GetBytes(config.EncodeString(hashArgon.Buffer));
                     }
-					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					//_salt = PasswordHasher.GenerateSalt(256);
-					//_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
 					break;
 			}
 			IsValid = true;
@@ -114,9 +109,7 @@ namespace SecurityEssentials.Core.Identity
                         Lanes = 5,
                         Threads = Environment.ProcessorCount,
                         Password = passwordBytes,
-                        Salt = _salt, // >= 8 bytes if not null
-//                        Secret = secret, // from somewhere
-                        //AssociatedData = associatedData, // from somewhere
+                        Salt = _salt,
                         HashLength = 20 // >= 4
                     };
                     var argon2A = new Argon2(config);
@@ -124,8 +117,6 @@ namespace SecurityEssentials.Core.Identity
                     {
                         _hash = Encoding.ASCII.GetBytes(config.EncodeString(hashArgon.Buffer));
                     }
-					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					//_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
 					break;
 			}
 			IsValid = true;
@@ -184,9 +175,6 @@ namespace SecurityEssentials.Core.Identity
                     {
                         hashB?.Dispose();
                     }
-					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					//newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
-					//IsValid = newKey.SequenceEqual(hash);
 					break;
 			}
 			

@@ -56,7 +56,7 @@ Scenario: When I enter valid registration details I can register a new user
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
 	| Field                | Value                              |
-	| Username             | test@test.net                       |
+	| Username             | test@test.net                      |
 	| FirstName            | Tester1                            |
 	| LastName             | Tester2                            |
 	| SecurityQuestion     | What is your mother's maiden name? |
@@ -76,7 +76,7 @@ Scenario: When I enter valid registration details I can register a new user
 @PAT
 Scenario: When I enter registration details which are currently being used I am advised of registration success
 	Given the following users are setup in the database:
-	| UserName     | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
+	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
 	And I click register in the title bar

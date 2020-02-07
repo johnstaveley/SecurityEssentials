@@ -1,6 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SecurityEssentials.Core.Identity;
+using System;
 
 namespace SecurityEssentials.Unit.Tests.Core.Security
 {
