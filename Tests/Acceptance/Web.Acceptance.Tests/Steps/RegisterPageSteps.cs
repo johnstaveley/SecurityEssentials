@@ -7,7 +7,6 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 	[Binding]
 	public class RegisterPageSteps
 	{
-
 		[When(@"I submit my registration details")]
 		public void WhenISubmitMyRegistrationDetails()
 		{

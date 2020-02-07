@@ -597,7 +597,6 @@ namespace SecurityEssentials.Controllers
                                 emailBody = EmailTemplates.RegistrationDuplicatedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName, _configuration.WebsiteBaseUrl);
 	                            Logger.Information("Duplicate Account Register Post for username {userName} by requester {@requester}", userName, requester);
 							}
-
 							_services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
 							return View("RegisterSuccess");
                         }

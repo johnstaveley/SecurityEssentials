@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 15/11/2019
+### Created by John Staveley - Last updated 07/02/2020
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -10,14 +10,14 @@ This list is based on the OWASP Top 10 2013/2017
 * SQL Injection: It uses Entity Framework ORM
 * Weak account management: 
 	+ Uses claims based auth
-	+ Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified
-	+ Enforces a strong password - Bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters, bans use of previous N passwords
+	+ Uses the strong hash PBKDF2 with an adaptable number of iterations, also the Argon2 hashing routine is available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified
+	+ Enforces a strong password - Checks for previously pwned passwords, bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters, bans use of previous N passwords
 	+ Has a water tight account management process
 	+ Prevents anti-enumeration through well designed system messages
 	+ Logs account activity which can be checked by the user to see if there is any illicit activity
 	+ Emails on key account events and gives anti-phishing advice
-	+ Verifies email by sending an email to the specified address
-	+ Re-verifies email when requesting a change of email
+	+ Verifies user's email address by sending an email to the specified address
+	+ Re-verifies user's email address when requesting a change of email
 	+ Prevents brute force of logon
 	+ Prevents brute force of registration or password reset through anti-throttling and CAPTCHA (optional)
 	+ Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm

@@ -53,6 +53,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="ByteDev.PwnedPasswords, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ByteDev.PwnedPasswords.2.0.1\lib\netstandard2.0\ByteDev.PwnedPasswords.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetOpenAuth.AspNet, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotNetOpenAuth.AspNet.4.3.4.13329\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
@@ -335,6 +338,7 @@
     <Compile Include="Core\IAppSensor.cs" />
     <Compile Include="Core\Identity\HashStrategyKind.cs" />
     <Compile Include="Core\Identity\IAppUserStore.cs" />
+    <Compile Include="Core\Identity\PwnedPasswordValidator.cs" />
     <Compile Include="Core\IHttpCache.cs" />
     <Compile Include="Core\Requester.cs" />
     <Compile Include="Core\Services.cs" />

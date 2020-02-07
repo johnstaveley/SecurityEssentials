@@ -31,7 +31,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 @PAT
 Scenario: When I enter incorrect login details then a warning is displayed
 	Given the following users are setup in the database:
-	| UserName     | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
+	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
 	And I am taken to the homepage
@@ -39,10 +39,10 @@ Scenario: When I enter incorrect login details then a warning is displayed
 	And I am navigated to the 'login' page
 	And I enter the following login data:
 	| Field    | Value             |
-	| UserName | user@test.net      |
+	| UserName | user@test.net     |
 	| Password | y12a;pP02icdjshET |
 	When I click the login button
-	Then The following errors are displayed:
+	Then The following errors are displayed on the 'Login' page:
 	| Field                                        |
 	| Invalid credentials or the account is locked |
 	And I have the following user logs in the system:
@@ -55,14 +55,14 @@ Scenario: When I enter valid registration details I can register a new user
 	And I click register in the title bar
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
-	| Field                | Value                              |
-	| Username             | test@test.net                      |
-	| FirstName            | Tester1                            |
-	| LastName             | Tester2                            |
-	| SecurityQuestion     | What is your mother's maiden name? |
-	| SecurityAnswer       | Bloggs                             |
-	| Password             | Test456789                         |
-	| ConfirmPassword      | Test456789                         |
+	| Field            | Value                              |
+	| Username         | test@test.net                      |
+	| FirstName        | Tester1                            |
+	| LastName         | Tester2                            |
+	| SecurityQuestion | What is your mother's maiden name? |
+	| SecurityAnswer   | Bloggs                             |
+	| Password         | Test456789££2123435                |
+	| ConfirmPassword  | Test456789££2123435                |
 	When I submit my registration details
 	Then I am navigated to the 'Register Success' page
 	And I have the following user logs in the system:
@@ -71,7 +71,30 @@ Scenario: When I enter valid registration details I can register a new user
 	And I have the following users in the system:
 	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
 	| test@test.net | Pbkdf28000Iterations | True    | True     | False         | Tester1   | Tester2  |
+	And I wait 20 seconds
 	#And I receive a registration email
+
+Scenario: When I enter valid registration details with a pwned password, an error is displayed
+	Given I navigate to the website
+	And I click register in the title bar
+	And I am navigated to the 'Register' page
+	And I enter the following registration details:
+	| Field            | Value                              |
+	| Username         | test@test.net                      |
+	| FirstName        | Tester1                            |
+	| LastName         | Tester2                            |
+	| SecurityQuestion | What is your mother's maiden name? |
+	| SecurityAnswer   | Bloggs                             |
+	| Password         | Password12345                      |
+	| ConfirmPassword  | Password12345                      |
+	When I submit my registration details
+	Then The following errors are displayed on the 'Register' page:
+	| Field                                                                           |
+	| Your password has previously been found in a data breach, please choose another |
+	And I have the following user logs in the system:
+	| Description     |
+	And I have the following users in the system:
+	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
 
 @PAT
 Scenario: When I enter registration details which are currently being used I am advised of registration success
@@ -82,14 +105,14 @@ Scenario: When I enter registration details which are currently being used I am 
 	And I click register in the title bar
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
-	| Field                | Value                               |
-	| Username             | user@test.net                        |
-	| FirstName            | Standard2                           |
-	| LastName             | User2                               |
-	| SecurityQuestion     | What is the name of your first pet? |
-	| SecurityAnswer       | Mr Miggins                          |
-	| Password             | x12a;pP02icdjshER                   |
-	| ConfirmPassword      | x12a;pP02icdjshER                   |
+	| Field            | Value                               |
+	| Username         | user@test.net                       |
+	| FirstName        | Standard2                           |
+	| LastName         | User2                               |
+	| SecurityQuestion | What is the name of your first pet? |
+	| SecurityAnswer   | Mr Miggins                          |
+	| Password         | x12a;pP02icdjshER                   |
+	| ConfirmPassword  | x12a;pP02icdjshER                   |
 	When I submit my registration details
 	Then I am navigated to the 'Register Success' page
 	And I have the following users in the system:
@@ -102,7 +125,7 @@ Scenario: When I enter registration details which are currently being used I am 
 @PAT @Smoke
 Scenario: When I attempt password recovery using a valid account I am notified of success
 	Given the following users are setup in the database:
-	| UserName     | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
+	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
 	And I click the login link in the navigation bar
@@ -243,7 +266,7 @@ Scenario: When I click on a valid change email address link, I change my email a
 	| samuel@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
 	And the user 'samuel@test.net' has the new email address token and expiry cleared
 	And I have the following user logs in the system:
-	| Description                                                                           |
+	| Description                                                                             |
 	| Change email address request confirmed to change from user4@test.net to samuel@test.net |
 	#And I receive an email notifying me of the email address change
 	#And The new email address receives an email notifying of the change

@@ -9,6 +9,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 
 		[Given(@"I wait (.*) seconds")]
 		[When(@"I wait (.*) seconds")]
+        [Then(@"I wait (.*) seconds")]
 		public void GivenIWaitSeconds(int waitInSeconds)
 		{
 			Thread.Sleep(waitInSeconds * 1000);

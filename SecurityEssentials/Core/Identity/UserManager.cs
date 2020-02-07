@@ -21,6 +21,7 @@ namespace SecurityEssentials.Core.Identity
 		private readonly IAppConfiguration _configuration;
 		private readonly IEncryption _encryption;
 		private readonly IServices _services;
+		private readonly IPwnedPasswordValidator _pwnedPasswordValidator;
 		private readonly string _passwordValidityRegex = @"^.*(?=.{8,100})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).*$";
 		private readonly string _passwordGoodEntropyRegex = @"^(?!.*(.)\1{2})(.*?){3,29}$";
 
@@ -30,11 +31,12 @@ namespace SecurityEssentials.Core.Identity
 			set => _authenticationManager = value;
 		}
 
-		public AppUserManager(IAppConfiguration configuration, ISeContext context, IEncryption encryption, IServices services, IAppUserStore<User> userStore)
+		public AppUserManager(IAppConfiguration configuration, ISeContext context, IEncryption encryption, IPwnedPasswordValidator pwnedPasswordValidator, IServices services, IAppUserStore<User> userStore)
 		{
 			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 			_encryption = encryption ?? throw new ArgumentNullException(nameof(encryption));
+            _pwnedPasswordValidator = pwnedPasswordValidator ?? throw new ArgumentNullException(nameof(pwnedPasswordValidator));
 			_services = services ?? throw new ArgumentNullException(nameof(services));
 			_userStore = userStore ?? throw new ArgumentNullException(nameof(userStore));
 		}
@@ -49,7 +51,7 @@ namespace SecurityEssentials.Core.Identity
 			{
 				return new SeIdentityResult("Illegal security question");
 			}
-			var result = ValidatePassword(new User(), password, new List<string>() { firstName, lastName, securityAnswer });
+			var result = await ValidatePassword(new User(), password, new List<string> { firstName, lastName, securityAnswer });
 			if (result.Succeeded)
 			{
 
@@ -162,7 +164,7 @@ namespace SecurityEssentials.Core.Identity
 			string decryptedSecurityAnswer;
 			_encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out decryptedSecurityAnswer);
 			var bannedWords = new List<string> { user.FirstName, user.LastName, decryptedSecurityAnswer };
-			var passwordValidationResult = ValidatePassword(user, newPassword, bannedWords);
+			var passwordValidationResult = await ValidatePassword(user, newPassword, bannedWords);
 			if (passwordValidationResult.Succeeded)
 			{
 				var result = await _userStore.ChangePasswordFromTokenAsync(userId, token, newPassword);
@@ -178,10 +180,9 @@ namespace SecurityEssentials.Core.Identity
 		public async Task<SeIdentityResult> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
 		{
 			var user = await FindUserByIdAsync(userId);
-			string decryptedSecurityAnswer;
-			_encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out decryptedSecurityAnswer);
+            _encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out var decryptedSecurityAnswer);
 			var bannedWords = new List<string> { user.FirstName, user.LastName, decryptedSecurityAnswer };
-			var result = ValidatePassword(user, newPassword, bannedWords);
+			var result = await ValidatePassword(user, newPassword, bannedWords);
 			if (result.Succeeded)
 			{
 				var output = await _userStore.ChangePasswordAsync(userId, oldPassword, newPassword);
@@ -197,7 +198,7 @@ namespace SecurityEssentials.Core.Identity
 		public async Task<SeIdentityResult> ResetPasswordAsync(int userId, string actioningUserName)
 		{
 			var user = await FindUserByIdAsync(userId);
-			var newPassword = GenerateSecurePassword(user);
+			var newPassword = await GenerateSecurePassword(user);
 			var result = await _userStore.ResetPasswordAsync(userId, newPassword, actioningUserName);
 			if (result.Succeeded)
 			{
@@ -217,24 +218,21 @@ namespace SecurityEssentials.Core.Identity
 		/// <param name="password">The proposed new password</param>
 		/// <param name="bannedWords">A list of words the password should not contain</param>
 		/// <returns></returns>
-		public SeIdentityResult ValidatePassword(User user, string password, List<string> bannedWords)
+		public async Task<SeIdentityResult> ValidatePassword(User user, string password, List<string> bannedWords)
 		{
 			if (string.IsNullOrEmpty(password) || Regex.Matches(password, _passwordValidityRegex).Count == 0)
 			{
 				return new SeIdentityResult(Consts.UserManagerMessages.PasswordValidityMessage);
 			}
-
 			if (Regex.Matches(password, _passwordGoodEntropyRegex).Count == 0)
 			{
 				return new SeIdentityResult("Your password cannot repeat the same character or digit more than 3 times consecutively, please choose another");
 			}
-
 			var badPassword = _context.LookupItem.FirstOrDefault(l => l.LookupTypeId == Consts.LookupTypeId.BadPassword && l.Description.ToLower() == password.ToLower());
 			if (badPassword != null)
 			{
 				return new SeIdentityResult("Your password is on a list of easy to guess passwords, please choose another");
 			}
-
 			foreach (string bannedWord in bannedWords.Where(a => !string.IsNullOrWhiteSpace(a)))
 			{
 				if (password.IndexOf(bannedWord, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -262,10 +260,15 @@ namespace SecurityEssentials.Core.Identity
 					}
 				}
 			}
+            var pwnedPassword = await _pwnedPasswordValidator.Validate(password);
+            if (pwnedPassword.IsPwned)
+            {
+                return new SeIdentityResult("Your password has previously been found in a data breach, please choose another");
+            }
 			return new SeIdentityResult();
 		}
 
-		public string GenerateSecurePassword(User user)
+		public async Task<string> GenerateSecurePassword(User user)
 		{
 			SeIdentityResult identityResult;
 			int iterations = 0;
@@ -274,7 +277,7 @@ namespace SecurityEssentials.Core.Identity
 			{
 				iterations++;
 				newPassword = System.Web.Security.Membership.GeneratePassword(10, 2);
-				identityResult = ValidatePassword(user, newPassword, new List<string>());
+				identityResult = await ValidatePassword(user, newPassword, new List<string>());
 				if (iterations > 50) throw new Exception("Unable to complete operation generate secured password");
 			} while (!identityResult.Succeeded);
 			return newPassword;

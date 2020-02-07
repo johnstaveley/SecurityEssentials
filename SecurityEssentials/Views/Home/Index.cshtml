@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by John Staveley - Last updated 15/11/2019</h4>
+                <h4>Created by John Staveley - Last updated 07/02/2020</h4>
                 This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013/2017).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -17,14 +17,14 @@
                         Weak account management:
                         <ul>
                             <li>Uses claims based authorization</li>
-                            <li>Uses the strong hash PBKDF2 with an adaptable number of iterations with the experimental Argon2 hashing routine available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified</li>
-                            <li>Enforces a strong password - Bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters</li>
+                            <li>Uses the strong hash PBKDF2 with an adaptable number of iterations, also the Argon2 hashing routine is available, new hashing algorithms can be added as better ones are identified or existing ones have weaknesses identified</li>
+                            <li>Enforces a strong password - Checks for previously pwned passwords, bans weak passwords, enforces minimum password strength, allows special characters, bans too many repeated characters</li>
                             <li>Has a water tight account management process</li>
                             <li>Prevents anti-enumeration through well designed messages</li>
                             <li>Logs account activity which can be checked by the user to see if there is any illicit activity</li>
                             <li>Emails on key account events and gives anti-phishing advice</li>
-                            <li>Verifies email by sending an email to the specified address</li>
-                            <li>Re-verifies email when requesting a change of email</li>
+                            <li>Verifies user's email address by sending an email to the specified address</li>
+                            <li>Re-verifies user's email address when requesting a change of email</li>
                             <li>Prevents brute force of logon</li>
                             <li>Prevents brute force of registration or password reset through anti-throttling and CAPTCHA</li>
                             <li>Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm</li>

@@ -16,10 +16,7 @@ namespace SecurityEssentials.Core.Identity
 
 
 		private readonly string[] _commonlyUsedUserNames = { "administrator", "admin", "test" };
-
-		public IPasswordHasher PasswordHasher { get; set; }
-		public IIdentityValidator<string> PasswordValidator { get; set; }
-		private ISeContext _context { get; set; }
+        private ISeContext _context { get; set; }
 		private IAppConfiguration _configuration { get; }
 
 		public UserStore(ISeContext context, IAppConfiguration configuration)
@@ -239,7 +236,7 @@ namespace SecurityEssentials.Core.Identity
 			user.PasswordResetToken = null;
 			user.FailedLogonAttemptCount = 0;
 			user.PasswordExpiryDateUtc = DateTime.UtcNow; // User must change their password on next logon
-			user.UserLogs.Add(new UserLog() { Description = $"User had password reset sent out via email by {actioningUserName}" });
+			user.UserLogs.Add(new UserLog { Description = $"User had password reset sent out via email by {actioningUserName}" });
 			await _context.SaveChangesAsync();
 			return IdentityResult.Success;
 		}
@@ -271,10 +268,10 @@ namespace SecurityEssentials.Core.Identity
 			var passwordExpiryStrategy = _configuration.PasswordExpiryStrategy;
 			switch (passwordExpiryStrategy)
 			{
-				case (PasswordExpiryStrategyKind.DontRequireChanges):
+				case PasswordExpiryStrategyKind.DontRequireChanges:
 					user.PasswordExpiryDateUtc = null;
 					break;
-				case (PasswordExpiryStrategyKind.ChangeEvery1Month):
+				case PasswordExpiryStrategyKind.ChangeEvery1Month:
 					user.PasswordExpiryDateUtc = DateTime.UtcNow.AddMonths(1);
 					break;
 				default:

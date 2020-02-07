@@ -35,6 +35,7 @@ namespace SecurityEssentials.App_Start
 			container.Register<IUserManager, AppUserManager>(Lifestyle.Scoped);
 			container.Register<ISeContext, SeContext>(Lifestyle.Scoped);
 			container.Register<IHttpCache, HttpCache>(Lifestyle.Scoped);
+            container.Register<IPwnedPasswordValidator, PwnedPasswordValidator>(Lifestyle.Scoped);
 
 			// 3. Optionally verify the container's configuration.
 			container.Verify();

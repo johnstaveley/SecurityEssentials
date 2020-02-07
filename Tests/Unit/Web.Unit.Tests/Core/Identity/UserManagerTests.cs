@@ -24,6 +24,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		IAppConfiguration _configuration;
 		IEncryption _encryption;
 		ISeContext _context;
+		IPwnedPasswordValidator _pwnedPasswordValidator;
 		private IServices _services;
 		IAppUserStore<User> _userStore;
 		List<string> _bannedWords;
@@ -45,13 +46,15 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_services = MockRepository.GenerateMock<IServices>();
 			_userStore = MockRepository.GenerateMock<IAppUserStore<User>>();
 			_bannedWords = new List<string> { "First Name", "SurName", "My Town", "My PostCode" };
-			_sut = new AppUserManager(_configuration, _context, _encryption, _services, _userStore);
+            _pwnedPasswordValidator = MockRepository.GenerateMock<IPwnedPasswordValidator>();
+			_sut = new AppUserManager(_configuration, _context, _encryption, _pwnedPasswordValidator, _services, _userStore);
 		}
 
 		[TearDown]
 		public void MyTestCleanup()
 		{
 			_encryption.VerifyAllExpectations();
+            _pwnedPasswordValidator.VerifyAllExpectations();
 			_services.VerifyAllExpectations();
 			_userStore.VerifyAllExpectations();
 		}
@@ -67,6 +70,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			string decryptedSecurityAnswer = "blah";
 			_encryption.Expect(a => a.Decrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(decryptedSecurityAnswer).Dummy)).Return(true);
 			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "encryptedblah" }));
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto{ IsPwned = false, Count = 0 }));
 
 			// Act
 			var result = await _sut.ChangePasswordAsync(userId, oldPassword, newPassword);
@@ -99,7 +103,6 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			// Assert
 			Assert.IsFalse(result.Succeeded);
 			_userStore.AssertWasNotCalled(a => a.ChangePasswordAsync(userId, oldPassword, newPassword));
-
 		}
 
 		[Test]
@@ -113,6 +116,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_encryption.Expect(a => a.Decrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(decryptedSecurityAnswer).Dummy)).Return(true);
 			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "encryptedblah" }));
 			_userStore.Expect(a => a.ChangePasswordFromTokenAsync(userId, token, newPassword)).Return(Task.FromResult(new IdentityResult()));
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto{ IsPwned = false, Count = 0 }));
 
 			// Act
 			var result = await _sut.ChangePasswordFromTokenAsync(userId, token, newPassword);
@@ -138,6 +142,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			string decryptedSecurityAnswer = "blah";
 			_encryption.Expect(a => a.Decrypt(Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything, out Arg<string>.Out(decryptedSecurityAnswer).Dummy)).Return(true);
 			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "encryptedblah" }));
+
 			// Act
 			var result = await _sut.ChangePasswordFromTokenAsync(userId, token, newPassword);
 
@@ -156,6 +161,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			_userStore.Expect(a => a.FindByIdAsync(userId)).Return(Task.FromResult(new User() { FirstName = "Bob", LastName = "Joseph", SecurityAnswer = "blah" }));
 			_userStore.Expect(a => a.ResetPasswordAsync(Arg<int>.Is.Equal(userId), Arg<string>.Is.Anything, Arg<string>.Is.Equal(actioningUserName))).Return(Task.FromResult(IdentityResult.Success));
 			_services.Expect(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return(true);
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto{ IsPwned = false, Count = 0 }));
 
 			// Act
 			var result = await _sut.ResetPasswordAsync(userId, actioningUserName);
@@ -204,6 +210,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var userName = "bob@bob.net";
 			_userStore.Expect(a => a.FindByNameAsync(userName)).Return(Task.FromResult<User>(null));
 			_userStore.Expect(a => a.CreateAsync(Arg<User>.Is.Anything)).Return(Task.FromResult(0));
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto{ IsPwned = false, Count = 0 }));
 
 			// Act
 			var result = await _sut.CreateAsync(userName, "bob", "the bod", "Secure1HJ", "Secure1HJ", 142, "Jo was my mother");
@@ -276,14 +283,14 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[Test]
-		public void Given_ValidPassword_When_ValidatePassword_Then_Success()
+		public async Task Given_ValidPassword_When_ValidatePassword_Then_Success()
 		{
-
 			// Arrange
 			var password = "MyNewPassword1";
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto{ IsPwned = false, Count = 0 }));
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			Assert.IsTrue(result.Succeeded);
@@ -295,7 +302,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		[TestCase(HashStrategyKind.Pbkdf25009Iterations)]
 		[TestCase(HashStrategyKind.Pbkdf28000Iterations)]
 		[TestCase(HashStrategyKind.Argon2WorkCost), Ignore("Requires dlls to be loaded into path")]
-		public void Given_UserIsReusingAPassword_When_ValidatePassword_Then_ErrorReturned(HashStrategyKind hashStrategy)
+		public async Task Given_UserIsReusingAPassword_When_ValidatePassword_Then_ErrorReturned(HashStrategyKind hashStrategy)
 		{
 
 			// Arrange
@@ -306,12 +313,12 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			{
 				PreviousPasswords = new List<PreviousPassword>
 				{
-					new PreviousPassword() { Hash = Convert.ToBase64String(previousPassword.Hash), Salt = Convert.ToBase64String(previousPassword.Salt), HashStrategy = previousPassword.HashStrategy}
+					new PreviousPassword { Hash = Convert.ToBase64String(previousPassword.Hash), Salt = Convert.ToBase64String(previousPassword.Salt), HashStrategy = previousPassword.HashStrategy}
 				}
 			};
 
 			// Act
-			var result = _sut.ValidatePassword(user, password, _bannedWords);
+			var result = await _sut.ValidatePassword(user, password, _bannedWords);
 
 			// Assert
 			Assert.That(result.Succeeded, Is.False);
@@ -321,9 +328,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[Test]
-		public void Given_UserIsReusingCurrentPassword_When_ValidatePassword_Then_ErrorReturned()
+		public async Task Given_UserIsReusingCurrentPassword_When_ValidatePassword_Then_ErrorReturned()
 		{
-
 			// Arrange
 			var password = "MyNewPassword2";
 			var currentPassword = new SecuredPassword(password, HashStrategyKind.Pbkdf28000Iterations);
@@ -336,7 +342,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			};
 
 			// Act
-			var result = _sut.ValidatePassword(user, password, _bannedWords);
+			var result = await _sut.ValidatePassword(user, password, _bannedWords);
 
 			// Assert
 			Assert.That(result.Succeeded, Is.False);
@@ -346,88 +352,95 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[Test]
-		public void Given_PasswordContainsSpecialCharacters_When_ValidatePassword_Then_Succeeds()
+		public async Task Given_PasswordContainsSpecialCharacters_When_ValidatePassword_Then_Succeeds()
 		{
-
 			// Arrange
 			var password = "*&^%$£\"!aAb2";
+			_pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto { IsPwned = false, Count = 0 }));
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			Assert.IsTrue(result.Succeeded);
 			Assert.AreEqual(0, result.Errors.Count());
 		}
+        [Test]
+        public async Task Given_PasswordIsPwned_When_ValidatePassword_Then_Succeeds()
+        {
+            // Arrange
+            var password = "*&^%$£\"!aAb2";
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto { IsPwned = true, Count = 1 }));
 
+            // Act
+            var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
+
+            // Assert
+            AssertValidationResultFailed(result, "Your password has previously been found in a data breach, please choose another");
+        }
 		[Test]
-		public void Given_PasswordContainsUserInformation_When_ValidatePassword_Then_Fails()
+		public async Task Given_PasswordContainsUserInformation_When_ValidatePassword_Then_Fails()
 		{
-
 			// Arrange
 			var password = "First Name1";
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			AssertValidationResultFailed(result, "personal information");
-
 		}
 
 		[Test]
-		public void Given_PasswordContainsConsecutivelyRepeatedCharacters_When_ValidatePassword_Then_Fails()
+		public async Task Given_PasswordContainsConsecutivelyRepeatedCharacters_When_ValidatePassword_Then_Fails()
 		{
-
 			// Arrange
 			var password = "L7s8xvdooo123O";
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			AssertValidationResultFailed(result, "repeat the same character or digit more than 3 times consecutively");
-
 		}
 
 		[Test]
-		public void Given_PasswordIsKnownBadPassword_When_ValidatePassword_Then_Fails()
+		public async Task Given_PasswordIsKnownBadPassword_When_ValidatePassword_Then_Fails()
 		{
-
 			// Arrange
 			var password = "LetMeIn123";
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			AssertValidationResultFailed(result, "password is on a list of easy to guess passwords");
 		}
 
 		[Test]
-		public void Given_PasswordDoesNotMeetMinimumComplexity_When_ValidatePassword_Then_Fails()
+		public async Task Given_PasswordDoesNotMeetMinimumComplexity_When_ValidatePassword_Then_Fails()
 		{
-
 			// Arrange
 			var password = "aidhjthejfhgkfhds";
 
 			// Act
-			var result = _sut.ValidatePassword(new User(), password, _bannedWords);
+			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
 			AssertValidationResultFailed(result, "password must consist of 8 characters, digits or special characters and must contain at least 1 uppercase, 1 lowercase and 1 numeric value");
 		}
 
 		[Test]
-		public void When_GenerateSecurePassword_Then_NewPasswordIsReturned()
+		public async Task When_GenerateSecurePassword_Then_NewPasswordIsReturned()
 		{
+			// Arrange
+            _pwnedPasswordValidator.Expect(a => a.Validate(Arg<string>.Is.Anything)).Return(Task.FromResult(new PwnedPasswordDto { IsPwned = false, Count = 0 }));
 
 			// Act
-			var result = _sut.GenerateSecurePassword(new User());
+			var result = await _sut.GenerateSecurePassword(new User());
 
 			// Assert
 			Assert.That(result.Length, Is.GreaterThan(9));
-
 		}
 
 		private void AssertValidationResultFailed(SeIdentityResult result, string errorMessageContains)
