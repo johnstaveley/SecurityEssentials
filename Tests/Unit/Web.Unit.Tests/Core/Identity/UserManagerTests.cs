@@ -294,7 +294,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		[Test]
 		[TestCase(HashStrategyKind.Pbkdf25009Iterations)]
 		[TestCase(HashStrategyKind.Pbkdf28000Iterations)]
-		[TestCase(HashStrategyKind.Argon248KWorkCost), Ignore("Requires dlls to be loaded into path")]
+		[TestCase(HashStrategyKind.Argon2WorkCost), Ignore("Requires dlls to be loaded into path")]
 		public void Given_UserIsReusingAPassword_When_ValidatePassword_Then_ErrorReturned(HashStrategyKind hashStrategy)
 		{
 

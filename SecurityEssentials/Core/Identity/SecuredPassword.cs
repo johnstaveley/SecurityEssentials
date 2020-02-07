@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Isopoh.Cryptography.Argon2;
+using Isopoh.Cryptography.SecureArray;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
-using Liphsoft.Crypto.Argon2;
 using System.Text;
 
 namespace SecurityEssentials.Core.Identity
@@ -22,6 +23,7 @@ namespace SecurityEssentials.Core.Identity
 		public byte[] Hash => _hash;
 
 		public HashStrategyKind HashStrategy => _hashStrategy;
+        private static readonly RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create();
 
 		/// <summary>
 		/// Number of iterations, work cost etc
@@ -51,10 +53,32 @@ namespace SecurityEssentials.Core.Identity
 						_hash = deriveBytes.GetBytes(_saltSize);
 					}
 					break;
-				case HashStrategyKind.Argon248KWorkCost:
-					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					_salt = PasswordHasher.GenerateSalt(256);
-					_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
+				case HashStrategyKind.Argon2WorkCost:
+                    byte[] passwordBytes = Encoding.UTF8.GetBytes(plainPassword);
+                    _salt = new byte[_saltSize];
+                    RandomNumberGenerator.GetBytes(_salt); 
+                    var config = new Argon2Config
+                    {
+                        Type = Argon2Type.DataIndependentAddressing,
+                        Version = Argon2Version.Nineteen,
+                        TimeCost = 10,
+                        MemoryCost = (int) _hashingParameter,
+                        Lanes = 5,
+                        Threads = Environment.ProcessorCount,
+                        Password = passwordBytes,
+                        Salt = _salt, // >= 8 bytes if not null
+//                        Secret = secret, // from somewhere
+                        //AssociatedData = associatedData, // from somewhere
+                        HashLength = 20 // >= 4
+                    };
+                    var argon2A = new Argon2(config);
+                    using(SecureArray<byte> hashArgon = argon2A.Hash())
+                    {
+                        _hash = Encoding.ASCII.GetBytes(config.EncodeString(hashArgon.Buffer));
+                    }
+					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
+					//_salt = PasswordHasher.GenerateSalt(256);
+					//_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), _salt));
 					break;
 			}
 			IsValid = true;
@@ -79,9 +103,29 @@ namespace SecurityEssentials.Core.Identity
 						_hash = deriveBytes.GetBytes(_saltSize);
 					}
 					break;
-				case HashStrategyKind.Argon248KWorkCost:
-					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
+				case HashStrategyKind.Argon2WorkCost:
+                    byte[] passwordBytes = Encoding.UTF8.GetBytes(plainPassword);
+                    var config = new Argon2Config
+                    {
+                        Type = Argon2Type.DataIndependentAddressing,
+                        Version = Argon2Version.Nineteen,
+                        TimeCost = 10,
+                        MemoryCost = (int) _hashingParameter,
+                        Lanes = 5,
+                        Threads = Environment.ProcessorCount,
+                        Password = passwordBytes,
+                        Salt = _salt, // >= 8 bytes if not null
+//                        Secret = secret, // from somewhere
+                        //AssociatedData = associatedData, // from somewhere
+                        HashLength = 20 // >= 4
+                    };
+                    var argon2A = new Argon2(config);
+                    using(SecureArray<byte> hashArgon = argon2A.Hash())
+                    {
+                        _hash = Encoding.ASCII.GetBytes(config.EncodeString(hashArgon.Buffer));
+                    }
+					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
+					//_hash = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
 					break;
 			}
 			IsValid = true;
@@ -106,10 +150,43 @@ namespace SecurityEssentials.Core.Identity
 						IsValid = newKey.SequenceEqual(hash);
 					}
 					break;
-				case HashStrategyKind.Argon248KWorkCost:
-					var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
-					newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
-					IsValid = newKey.SequenceEqual(hash);
+				case HashStrategyKind.Argon2WorkCost:
+                    SecureArray<byte> hashB = null;
+                    try
+                    {
+                        var passwordBytes = Encoding.ASCII.GetBytes(plainPassword);
+                        var configOfPasswordToVerify = new Argon2Config 
+						{ 
+                            Type = Argon2Type.DataIndependentAddressing,
+                            Version = Argon2Version.Nineteen,
+                            TimeCost = 10,
+                            MemoryCost = (int) _hashingParameter,
+                            Lanes = 5,
+                            Threads = Environment.ProcessorCount,
+                            Salt = _salt, 
+                            Password = passwordBytes,
+							HashLength = 20
+                        };
+						var hashString = Encoding.ASCII.GetString(_hash);
+                        if (configOfPasswordToVerify.DecodeString(hashString, out hashB) && hashB != null)
+                        {
+                            var argon2ToVerify = new Argon2(configOfPasswordToVerify);
+                            using(var hashToVerify = argon2ToVerify.Hash())
+                            {
+                                if (!hashB.Buffer.Where((b, i) => b != hashToVerify[i]).Any())
+                                {
+                                    IsValid = true;
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        hashB?.Dispose();
+                    }
+					//var argon2Hasher = new PasswordHasher(memoryCost: _hashingParameter);
+					//newKey = Encoding.ASCII.GetBytes(argon2Hasher.Hash(Encoding.ASCII.GetBytes(plainPassword), salt));
+					//IsValid = newKey.SequenceEqual(hash);
 					break;
 			}
 			
@@ -129,9 +206,9 @@ namespace SecurityEssentials.Core.Identity
 					_hashingParameter = 8000;
 					_saltSize = 256;
 					break;
-				case HashStrategyKind.Argon248KWorkCost:
-					_hashingParameter = 48000;
-					_saltSize = 0;
+				case HashStrategyKind.Argon2WorkCost:
+					_hashingParameter = 32768;
+					_saltSize = 256;
 					break;
 				default:
 					throw new ArgumentException($"hashStrategy {hashStrategy} is not defined");
