@@ -41,7 +41,7 @@ stages:
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.15.1/build/net35/'
+        pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
         testAssemblyVer2: |
           **\SecurityEssentials.Unit.Tests.dll
           !**\*TestAdapter.dll
@@ -73,8 +73,8 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
       inputs:
-        SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.15.1\'
-        TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.15.1\'
+        SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
+        TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
     
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'

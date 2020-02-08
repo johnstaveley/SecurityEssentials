@@ -11,6 +11,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		public void WhenISubmitMyRegistrationDetails()
 		{
 			var registerPage = ScenarioContext.Current.GetPage<RegisterPage>();
+            FeatureContext.Current.WaitForRegistrationAttempt();
 			registerPage.ClickSubmit();
 		}
 

@@ -12,6 +12,7 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 	{
 
 		public const string LoginAttempts = "Login_Attempts";
+        public const string RegistrationAttempts = "Registration_Attempts";
 
 		public static void SetWebDriver(this FeatureContext fc, IWebDriver webDriver)
 		{
@@ -65,6 +66,34 @@ namespace SecurityEssentials.Acceptance.Tests.Extensions
 		{
 			featureContext.Set(value, LoginAttempts);
 		}
+
+        private static List<DateTime> GetRegistrationAttempts(this FeatureContext featureContext)
+        {
+            if (!featureContext.TryGetValue(RegistrationAttempts, out List<DateTime> _))
+            {
+                SetRegistrationAttempts(featureContext, new List<DateTime>());
+            }
+            return featureContext.Get<List<DateTime>>(RegistrationAttempts);
+        }
+
+        public static void WaitForRegistrationAttempt(this FeatureContext featureContext)
+        {
+            List<DateTime> registrationAttempts;
+            do
+            {
+                Thread.Sleep(5000);
+                registrationAttempts = GetRegistrationAttempts(featureContext);
+                Trace.WriteLine("Waiting 5 seconds for registration attempt");
+            }
+            while (registrationAttempts.Count(a => a > DateTime.UtcNow.AddSeconds(-62)) >= 1);
+            registrationAttempts.Add(DateTime.UtcNow);
+            SetRegistrationAttempts(featureContext, registrationAttempts);
+        }
+
+        private static void SetRegistrationAttempts(this FeatureContext featureContext, List<DateTime> value)
+        {
+            featureContext.Set(value, RegistrationAttempts);
+        }
 
 	}
 

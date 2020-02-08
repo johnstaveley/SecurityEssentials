@@ -71,7 +71,6 @@ Scenario: When I enter valid registration details I can register a new user
 	And I have the following users in the system:
 	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
 	| test@test.net | Pbkdf28000Iterations | True    | True     | False         | Tester1   | Tester2  |
-	And I wait 20 seconds
 	#And I receive a registration email
 
 Scenario: When I enter valid registration details with a pwned password, an error is displayed
