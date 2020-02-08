@@ -27,12 +27,6 @@ Notes
 
 In order to get the acceptance tests running on the CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefox 64bit, you will need to replace this with the 64 bit version
 
-Known Issues
-------------
-
-If you use the Argon2 hashing algorithm then it will make use of an unmanaged dll called libargon2.dll. This needs to be put in the path (e.g. C:/Windows/SysWOW64/) for any executing code (either the web application or a CI server running the Argon2 unit tests). If you find a way around this restriction using unmanaged code then please let me know. 
-Argon2 tests fail unless this is the case so they have been ignored.
-
 Resources
 ---------
 
