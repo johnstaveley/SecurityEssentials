@@ -55,7 +55,7 @@ stages:
       displayName: 'OWASP Dependency Checker'
       inputs:
         projectName: 'Security Essentials'
-        scanPath: '$(build.sourcesdirectory)/**/bin'
+        scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'         
 
     - task: PublishSymbols@1
