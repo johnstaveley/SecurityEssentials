@@ -46,7 +46,7 @@ stages:
           **\SecurityEssentials.Unit.Tests.dll
           !**\*TestAdapter.dll
           !**\obj\**'
-        searchFolder: '$(Build.SourcesDirectory)'
+        searchFolder: '$(build.sourcesdirectory)'
         runInParallel: true
         codeCoverageEnabled: true
         diagnosticsEnabled: True
@@ -55,7 +55,7 @@ stages:
       displayName: 'OWASP Dependency Checker'
       inputs:
         projectName: 'Security Essentials'
-        scanPath: '$(build.stagingDirectory)/**/bin'
+        scanPath: '$(build.sourcesdirectory)/**/bin'
         format: 'HTML'         
 
     - task: PublishSymbols@1
