@@ -55,12 +55,20 @@
                         </ul>
                     </li>
                     <li>Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role</li>
-                    <li>CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller</li>
-                    <ul>
-                        <li>Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token</li>
-                        <li>Uses SameSite Lax attribute on session cookie</li>
-                    </ul>
-                    <li>Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated</li>
+                    <li>
+                        CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller
+                        <ul>
+                            <li>Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token</li>
+                            <li>Uses SameSite Lax attribute on session cookie</li>
+                        </ul>
+                    </li>
+                    <li>Using components with known vulnerabilities:
+                        <ul>
+                            <li>.Net framework is the latest version and all NuGet packages kept updated</li>
+                            <li>Binaries are scanned using OWASP Dependency checker on checkin</li>
+                            <li>All components are scanned using Whitesource bolt on checkin for finding open source vulnerabilities</li>
+                        </ul>    
+                    </li>
                     <li>Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4</li>
                 </ol>
                 Other threats it protects against and features:

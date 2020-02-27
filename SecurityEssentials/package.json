@@ -1,0 +1,24 @@
+{
+  "name": "securityessentials",
+  "version": "1.0.0",
+  "description": "An Mvc template with a higher base level security",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnstaveley/SecurityEssentials.git"
+  },
+  "keywords": [
+    "Mvc",
+    "C#",
+    "Security"
+  ],
+  "author": "John Staveley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnstaveley/SecurityEssentials/issues"
+  },
+  "homepage": "https://github.com/johnstaveley/SecurityEssentials#readme"
+}
