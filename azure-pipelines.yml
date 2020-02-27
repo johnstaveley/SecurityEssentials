@@ -58,6 +58,10 @@ stages:
         scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'         
 
+    - task: WhiteSource Bolt@20
+      inputs:
+        cwd: '$(System.DefaultWorkingDirectory)'
+        
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
       inputs:
