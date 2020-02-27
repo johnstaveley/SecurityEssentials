@@ -2,6 +2,7 @@
 using Rhino.Mocks;
 using SecurityEssentials.Controllers;
 using SecurityEssentials.Core;
+using SecurityEssentials.Core.Attributes;
 using SecurityEssentials.Core.Identity;
 using SecurityEssentials.Model;
 using SecurityEssentials.ViewModel;
@@ -15,7 +16,7 @@ using System.Web.Routing;
 
 namespace SecurityEssentials.Unit.Tests.Controllers
 {
-    [TestFixture]
+	[TestFixture]
 	public class AccountControllerTest : BaseControllerTest
 	{
 
@@ -60,6 +61,14 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			_recaptcha.VerifyAllExpectations();
 			_services.VerifyAllExpectations();
 		}
+
+        [Test]
+        public void When_ControllerCreated_Then_IsDecoratedWithNoCache()
+        {
+            var type = _sut.GetType();
+            var attributes = type.GetCustomAttributes(typeof(NoCacheAttribute), true);
+            Assert.IsTrue(attributes.Any(), "No NoCache Attribute found");
+        }
 
 		[Test]
 		public void Given_PreviousUserActivity_When_LandingGet_Then_LastActivityDisplayed()

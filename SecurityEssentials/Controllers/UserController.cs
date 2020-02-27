@@ -15,6 +15,7 @@ namespace SecurityEssentials.Controllers
 {
 
 	[SeAuthorize]
+    [NoCache]
 	public class UserController : SecurityControllerBase
 	{
 

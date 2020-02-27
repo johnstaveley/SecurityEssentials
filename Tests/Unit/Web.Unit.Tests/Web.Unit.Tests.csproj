@@ -183,6 +183,7 @@
     <Compile Include="Controllers\ThrottlingTest.cs" />
     <Compile Include="Controllers\BaseControllerTest.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Controllers\WebPageContentControllerTest.cs" />
     <Compile Include="Controllers\UserControllerTest.cs" />
     <Compile Include="Controllers\ValidateAntiForgeryTokenTest.cs" />
     <Compile Include="AppSensorTest.cs" />

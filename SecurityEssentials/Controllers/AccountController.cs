@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace SecurityEssentials.Controllers
 {
+	[NoCache]
 	public class AccountController : SecurityControllerBase
     {
 
