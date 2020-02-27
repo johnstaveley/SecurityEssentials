@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by John Staveley - Last updated 27/02/2020
+### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 27/02/2020
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -69,6 +69,7 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 This solution comes with azure-pipelines.yml build and test script. Running this in Azure Devops ensures the following:
 * 2. Account management process - Partially checked using Unit tests
 * 4. Insecure direct object references - Partially checked using Unit tests
+* 6. NoCache checked using Unit tests
 * 7. Missing file level access control - Partially checked using Unit tests
 * 8. CSRF - Partially checked using Unit tests
 * 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
