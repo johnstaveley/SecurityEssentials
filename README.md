@@ -41,7 +41,10 @@ This list is based on the OWASP Top 10 2013/2017
 * CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller
     + Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token
 	+ Uses SameSite Lax attribute on session cookie
-* Using components with known vulnerabilities: .Net framework is the latest version and all NuGet packages kept updated
+* Using components with known vulnerabilities: 
+    + .Net framework is the latest version and all NuGet packages kept updated
+	+ Binaries are scanned using OWASP Dependency checker on checkin
+	+ All components are scanned using Whitesource bolt on checkin for finding open source vulnerabilities
 * Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4
 
 Other threats it protects against and features:
@@ -66,7 +69,7 @@ This solution comes with azure-pipelines.yml build and test script. Running this
 * 4. Insecure direct object references - Partially checked using Unit tests
 * 7. Missing file level access control - Partially checked using Unit tests
 * 8. CSRF - Partially checked using Unit tests
-* 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a>, check the report in Azure Devops, stored as a build artefact for vulnerabilities in your dependencies. This can also be set to fail the build</li>
+* 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for vulnerabilities in your dependencies. This can also be set to fail the build</li>
 * 10. Unvalidated redirects and forwards - Partially checked using Unit tests
 
 [![Build Status](https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master)](https://johnstaveley.visualstudio.com/Security%20Essentials/_build/latest?definitionId=6&branchName=master)

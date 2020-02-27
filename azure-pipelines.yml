@@ -1,5 +1,6 @@
 # Build and test ASP.NET projects.
-# NB: Needs OWASP Dependency checker task which has to be added to Azure Devops from the marketplace
+# NB: Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
+# Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
