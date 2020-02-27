@@ -3,10 +3,12 @@
     ViewBag.Title = "Remove Administrator";
     ViewBag.Active = "Admin";
 }
-<ul class="breadcrumb">
-    <li>@Html.ActionLink(string.Format("Edit User {0}", Model.User.UserName), "Edit", "User", new { id = Model.User.Id }, null)</li>
-    <li class="active">Remove Admin Permission</li>
-</ul>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink(string.Format("Edit User {0}", Model.User.UserName), "Edit", "User", new { id = Model.User.Id }, null)</li>
+        <li class="breadcrumb-item active">Remove Admin Permission</li>
+    </ol>
+</nav>
 
 <h1>Remove a system Administrator</h1>
 <hr />
@@ -36,7 +38,7 @@
         <div class="col-md-12">&nbsp;</div>
     </div>
     <div class="row">
-        <div class="col-md-2 col-md-offset-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary btn-danger" /></div>
+        <div class="col-md-2 offset-md-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary btn-danger" /></div>
     </div>
     @Html.AntiForgeryToken()
 }

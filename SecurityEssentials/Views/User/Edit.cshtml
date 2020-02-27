@@ -4,9 +4,11 @@
     ViewBag.Active = "Admin";
 }
 
-<ul class="breadcrumb">
-    <li class="active">Edit User @Model.User.UserName</li>
-</ul>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Edit User @Model.User.UserName</li>
+    </ol>
+</nav>
 
 <h1>Edit User</h1>
 <hr />
@@ -228,7 +230,6 @@
         <div class="col-md-2"><input id="submit" type="submit" value="Save" class="btn btn-primary btn-block" /></div>
     </div>
     <hr />
-    <hr />
     if (Model.IsAccessingUserAnAdmin)
     {
         <h2>Admin Functions</h2>
@@ -236,7 +237,8 @@
             <div class="col-md-4">
                 @Html.ActionLink("Reset Password", "ResetPassword", "User", new { id = Model.User.Id }, new { id = "resetPassword" })
             </div>
-            @if (!Model.IsOwnProfile) {
+            @if (!Model.IsOwnProfile)
+            {
                 <div class="col-md-4">
                     @Html.ActionLink("Delete User", "Delete", "User", new { id = Model.User.Id }, new { id = "deleteUser" })
                 </div>

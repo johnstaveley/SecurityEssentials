@@ -60,6 +60,7 @@ stages:
         format: 'HTML'         
 
     - task: WhiteSource Bolt@20
+      displayName: 'Whitesource bolt'
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         

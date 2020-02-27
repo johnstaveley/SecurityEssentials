@@ -87,6 +87,7 @@ Scenario: The web application will return the correct security headers
 @CheckForErrors
 Scenario: The application will prevent a brute force login attempt 
 	Given I navigate to the website
+	And I maximise the browser window
 	And I am taken to the homepage
 	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
@@ -132,6 +133,7 @@ Scenario: A user with an expired password is redirected to the change password p
 	| user1@test.net | Mr    | Needs     | Approval | zasXX8576jFj123 | What is the name of your first pet? | Beatrix        | false   | true     | true    | 0123                | 0456                | 0789                  | town | postcode | skype     | [Expired]          |
 	And the user 'user1@test.net' has the password expiry date set
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:

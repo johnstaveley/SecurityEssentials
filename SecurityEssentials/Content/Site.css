@@ -87,10 +87,6 @@ input[type="checkbox"].input-validation-error {
     left: 50%;
 }
 
-#navBarContainer {
-    margin-top: 45px;
-}
-
 /* Override bootstrap styles */
 a:focus, a:hover {
     outline-color: #000000;
@@ -104,3 +100,6 @@ a:focus, a:hover {
     outline-style: dotted;
 }
 
+.pull-right {
+    float: right;
+}

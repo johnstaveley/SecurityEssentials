@@ -15,6 +15,7 @@ Scenario: When I enter correct login details I am taken to the landing page
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |  
 	And I navigate to the website 
 	And I am taken to the homepage
+	And I maximise the browser window
 	And I click the login link in the navigation bar 
 	And I am navigated to the 'login' page 
 	And I enter the following login data:  
@@ -35,6 +36,7 @@ Scenario: When I enter incorrect login details then a warning is displayed
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
 	And I am taken to the homepage
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'login' page
 	And I enter the following login data:
@@ -52,6 +54,7 @@ Scenario: When I enter incorrect login details then a warning is displayed
 @PAT @Smoke
 Scenario: When I enter valid registration details I can register a new user
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click register in the title bar
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
@@ -75,6 +78,7 @@ Scenario: When I enter valid registration details I can register a new user
 
 Scenario: When I enter valid registration details with a pwned password, an error is displayed
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click register in the title bar
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
@@ -101,6 +105,7 @@ Scenario: When I enter registration details which are currently being used I am 
 	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
+	And I maximise the browser window
 	And I click register in the title bar
 	And I am navigated to the 'Register' page
 	And I enter the following registration details:
@@ -127,6 +132,7 @@ Scenario: When I attempt password recovery using a valid account I am notified o
 	| UserName      | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website	
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I click recover password
@@ -148,6 +154,7 @@ Scenario: When I attempt password recovery using a valid account I am notified o
 @PAT
 Scenario: When I attempt password recovery using an invalid account I am notified of success
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I click recover password
@@ -168,6 +175,7 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	And I have 0 entry(ies) in the password history table
 	And I navigate to the password reset link with token '83ababb4-a0c1-4f2c-8593-32dd40b920d2'
 	And I am navigated to the 'Recover Password' page
+	And I maximise the browser window
 	And I enter the following recover password data:
 	| Field            | Value            |
 	| SecurityAnswer   | Mr Miggins       |
@@ -194,6 +202,7 @@ Scenario: I can change my password
 	And I have 0 entry(ies) in the password history table
 	And I make a note of the password and salt for 'user3@test.net'
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -227,6 +236,7 @@ Scenario: I can change my email address
 	| UserName       | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user5@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -277,6 +287,7 @@ Scenario: I can change my security information
 	| user3@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I make a note of the security information and salt for user 'user3@test.net'
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -311,6 +322,7 @@ Scenario: I can view my user activity log information
 	| UserName       | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |
 	| user3@test.net | Standard  | User     | x12a;pP02icdjshER | What is the name of your first pet? | Mr Miggins     |                    |                     |                 |                      |                                  |
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:

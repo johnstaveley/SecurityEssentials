@@ -39,8 +39,8 @@ namespace SecurityEssentials
 
 			// CSS Styles
 			bundles.Add(new StyleBundle("~/Content/css").Include(
-				"~/Content/site.css",
-				"~/Content/bootstrap.css"
+				    "~/Content/bootstrap.css",
+                    "~/Content/site.css"
 				));
 			bundles.Add(new StyleBundle("~/Content/kendo/2014.1.318/kendoui").Include(
 				"~/Content/kendo/2014.1.318/kendo.common.min.css",

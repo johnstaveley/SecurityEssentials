@@ -17,6 +17,7 @@ Background:
 @PAT
 Scenario: As an admin I can manage my users
 	Given I navigate to the website 
+	And I maximise the browser window
 	And I click the login link in the navigation bar 
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -54,6 +55,7 @@ Scenario: I can change my account information
 	And the following user roles are setup in the system for user 'user3@test.net'
 	| Description |
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -90,6 +92,7 @@ Scenario: I can change my account information
 
 Scenario: I can add the administrator privilege
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -124,6 +127,7 @@ Scenario: I can remove the administrator privilege
 	| UserName       | FirstName | LastName | Password        | SecurityQuestion                    | SecurityAnswer | IsAdmin | Approved | Enabled |
 	| user3@test.net | User      | Three    | zasXX8576jFj123 | What is the name of your first pet? | Beatrix        | true    | true     | true    |
 	And I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:
@@ -156,6 +160,7 @@ Scenario: I can remove the administrator privilege
 
 Scenario: As an admin I can reset a user's password
 	Given I navigate to the website
+	And I maximise the browser window
 	And I have 0 entry(ies) in the password history table
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
@@ -189,6 +194,7 @@ Scenario: As an admin I can reset a user's password
 
 Scenario: As an admin I can delete a user
 	Given I navigate to the website
+	And I maximise the browser window
 	And I click the login link in the navigation bar
 	And I am navigated to the 'Login' page
 	And I enter the following login data:

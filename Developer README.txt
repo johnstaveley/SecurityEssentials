@@ -22,6 +22,8 @@ To set up the project take the following steps:
 
 5) Search for TODO in code to see further actions which could be taken
 
+6) When creating a build pipeline for your company, ensure you add in the extensions mentioned in azure-pipelines.yml
+
 Notes
 ---------------
 

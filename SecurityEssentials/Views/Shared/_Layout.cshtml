@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title - Security Essentials Project</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -13,61 +13,52 @@
 </head>
 <body>
     <a href="#mainContent" class="skip-link">Skip to main content</a>
-    <header role="Banner">
-        <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
-    </header>
-    <nav class="navbar navbar-default navbar-inverse nav-primary" id="navBarContainer" role="navigation" aria-label="site">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation" aria-controls="navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="~/Home/">Security Essentials</a>
-            </div>
-            <div class="collapsed navbar-collapse" id="navbar-collapse-1">
-                <ul class="nav nav-pills" role="menu">
-                    <li class="@(ViewBag.Active == "Home" ? "active dropdown" : "dropdown")">
-                        <a id="home" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true">
-                            Home @if (ViewBag.Active == "Home")
-                            { <text><span class='sr-only'>(current)</span></text> }<span class="caret"></span>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navBarContainer" role="navigation" aria-label="site">
+        <a class="navbar-brand" href="#">Security Essentials</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-controls="navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="navbar-nav mr-auto" role="menu">
+                <li class="@(ViewBag.Active == "Home" ? "navitem dropdown active" : "dropdown navitem")">
+                    <a id="home" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                        Home @if (ViewBag.Active == "Home")
+                        {<text><span class='sr-only'>(current)</span></text>}<span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" role="menu">
+                        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                        @if (Request.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Landing", "Landing", "Account", null, new { @class = "nav-link" })
+                        }
+                        @Html.ActionLink("About", "About", "Home", null, new { Id = "about", @class = "nav-link" })
+                        @Html.ActionLink("Contact", "Contact", "Home", null, new { Id = "contact", @class = "nav-link" })
+                    </div>
+                </li>
+                @if (Request.IsAuthenticated)
+                {
+                    <li class="@(ViewBag.Active == "Admin" ? "navitem dropdown active" : "navitem dropdown")">
+                        <a id="admin" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                            Admin @if (ViewBag.Active == "Admin")
+                            {<text><span class='sr-only'>(current)</span></text>}<span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            @if (Request.IsAuthenticated)
+                        <div class="dropdown-menu" role="menu" aria-labelledby="admin">
+                            @if (User.IsInRole("Admin"))
                             {
-                                <li>@Html.ActionLink("Landing", "Landing", "Account")</li>
+                                @Html.ActionLink("System Log", "Index", "Log", null, new { Id = "log", @class = "nav-link" })
+                                @Html.ActionLink("Manage Users", "Index", "User", null, new { Id = "manageUsers", @class = "nav-link" })
+                                <div class="dropdown-divider"></div>
                             }
-                            <li>@Html.ActionLink("About", "About", "Home", null, new { Id = "about" })</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home", null, new { Id = "contact" })</li>
-                        </ul>
+                            @Html.ActionLink("Manage My Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, new { Id = "manageAccount", @class = "nav-link" })
+                            @Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changePassword", @class = "nav-link" })
+                            @Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changeEmailAddress", @class = "nav-link" })
+                            @Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", null, new { Id = "changeSecurityInformation", @class = "nav-link" })
+                            @Html.ActionLink("View Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, new { Id = "accountLog", @class = "nav-link" })
+                        </div>
                     </li>
-                    @if (Request.IsAuthenticated)
-                    {
-                        <li class="@(ViewBag.Active == "Admin" ? "active dropdown" : "dropdown")">
-                            <a id="admin" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true">
-                                Admin @if (ViewBag.Active == "Admin")
-                                { <text><span class='sr-only'>(current)</span></text> }<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <li>@Html.ActionLink("System Log", "Index", "Log", null, new { Id = "log" })</li>
-                                    <li>@Html.ActionLink("Manage Users", "Index", "User", null, new {Id = "manageUsers"})</li>
-                                    <li class="divider" role="separator"></li>
-}
-                                <li>@Html.ActionLink("Manage My Account", "Edit", "User", new { Id = User.Identity.GetUserId() }, new { Id = "manageAccount" })</li>
-                                <li>@Html.ActionLink("Change Password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changePassword" })</li>
-                                <li>@Html.ActionLink("Change Email", "ChangeEmailAddress", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id = "changeEmailAddress" })</li>
-                                <li>@Html.ActionLink("Change Security Information", "ChangeSecurityInformation", "Account", null, new { Id = "changeSecurityInformation" })</li>
-                                <li>@Html.ActionLink("View Account Log", "Log", "User", new { Id = User.Identity.GetUserId() }, new { Id = "accountLog" })</li>
-                            </ul>
-                        </li>         }
-                    @Html.Partial("_LoginPartial")
-                </ul>
-            </div>
+                }
+            </ul>
+            @Html.Partial("_LoginPartial")
         </div>
     </nav>
 
@@ -82,7 +73,7 @@
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
+    @*@Scripts.Render("~/bundles/jqueryui")*@
     @Scripts.Render("~/bundles/antiforgerytoken")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

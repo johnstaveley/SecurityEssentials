@@ -3,11 +3,12 @@
     ViewBag.Title = "Make Administrator";
     ViewBag.Active = "Admin";
 }
-<ul class="breadcrumb">
-    <li>@Html.ActionLink(string.Format("Edit User {0}", Model.UserName), "Edit", "User", new { id = Model.Id }, null)</li>
-    <li class="active">Add Administrator Permission</li>
-</ul>
-
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink(string.Format("Edit User {0}", Model.UserName), "Edit", "User", new { id = Model.Id }, null)</li>
+        <li class="breadcrumb-item active">Add Administrator Permission</li>
+    </ol>
+</nav>
 
 <h1>Make a user a system Administrator</h1>
 <hr />
@@ -29,7 +30,7 @@
         <div class="col-md-4">&nbsp;</div>
     </div>
     <div class="row">
-        <div class="col-md-2 col-md-offset-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary" /></div>
+        <div class="col-md-2 offset-md-8"><input id="submit" type="submit" value="Confirm" class="btn btn-block btn-primary" /></div>
     </div>
     @Html.AntiForgeryToken()
 }
