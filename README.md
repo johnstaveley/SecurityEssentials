@@ -3,7 +3,7 @@
 ### Created by John Staveley - Last updated 27/02/2020
 
 ## Introduction
-This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
 
 ## Security Enhancements
 This list is based on the OWASP Top 10 2013/2017
@@ -37,6 +37,8 @@ This list is based on the OWASP Top 10 2013/2017
 	+ Turns off verbose errors and trace in production
 	+ Removes unnecessary headers which indicate .net framework version
 	+ Removes server information disclosure headers from responses
+	+ Do not publish package.json file which IIS will do by default
+	+ NoCache header applied to any controller which publishes user sensitive data, unit tests for same
 * Missing Function Level Access Control: Sensitive functions decorated with Authorize and Role attributes. Unit tests to ensure admin functions require the admin role
 * CSRF: Ensures anti-forgery token is used on all Post/Put/Ajax operations by checking through use of a base controller
     + Unit tests to ensure all state changing mvc or web api methods validate an anti forgery token
