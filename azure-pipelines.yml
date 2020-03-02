@@ -116,8 +116,6 @@ stages:
       - msbuild
       - visualstudio
       - vstest
-    # creates an environment if it doesn’t exist
-    environment: 'integration'
     steps:
       - task: AzureResourceGroupDeployment@2
         displayName: 'Deploy Azure Resource Group'
