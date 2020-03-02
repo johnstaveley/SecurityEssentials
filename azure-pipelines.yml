@@ -13,6 +13,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   ApprovalEmailAddresses: '(CHANGEME)'
+  ArmTemplateParameterFile: 'WebSite.qa.parameters.json'
   AzureLocation: '(CHANGEME)'
   AzureSubscription: '(CHANGEME)' # Same as ResourceGroup?
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
@@ -23,7 +24,7 @@ stages:
   jobs:
   - job: Build
     pool:
-      name: Hosted VS2019
+      name: Hosted VS2017
       timeoutInMinutes: 180
       demands:
       - msbuild

@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>AnyCPU</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Live|AnyCPU">
+      <Configuration>Live</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|AnyCPU">
       <Configuration>Release</Configuration>
       <Platform>AnyCPU</Platform>
@@ -24,6 +28,7 @@
   <!-- vertag<:>end -->
   <ItemGroup>
     <Content Include="PostDeploy.ps1" />
+    <Content Include="WebSite.int.parameters.json" />
     <Content Include="Website.json" />
     <Content Include="WebSite.qa.parameters.json" />
     <None Include="Deployment.targets">
