@@ -104,7 +104,7 @@ stages:
   - job: Approve deployment
     pool: server
     steps:
-      - task: ManualIntervention@8
+    - task: ManualIntervention@8
       displayName: 'Approve deployment to test'
       inputs:
         instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
