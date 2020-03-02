@@ -11,6 +11,12 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  ApprovalEmailAddresses: '(CHANGEME)'
+  AzureLocation: '(CHANGEME)'
+  AzureSubscription: '(CHANGEME)' # Same as ResourceGroup?
+  Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
+  ResourceGroup: '(CHANGEME)'
+
 
 stages: 
 - stage: Build
@@ -92,7 +98,11 @@ stages:
   jobs:
   - deployment: DeployWeb
     pool:
-      vmImage: 'windows-latest'
+      name: Hosted VS2017
+      demands:
+      - msbuild
+      - visualstudio
+      - vstest  
     # creates an environment if it doesn’t exist
     environment: 'integration'
     strategy:
@@ -102,7 +112,15 @@ stages:
           - task: ManualIntervention@8
             displayName: 'Approve deployment to test'
             inputs:
-              instructions: 'Approve this step to continue deploying to test and running acceptance tests'
-              emailRecipients: 'john@staveley.org'    
-          - script: echo Test
+              instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
+              emailRecipients: '$(ApprovalEmailAddresses)'
+          - task: AzureResourceGroupDeployment@2
+            displayName: 'Deploy Azure Resource Group'
+            inputs:
+              azureSubscription: '$(AzureSubscription)'
+              resourceGroupName: '$(ResourceGroup)'
+              location: '$(AzureLocation)'
+              csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
+              csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
+              deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
