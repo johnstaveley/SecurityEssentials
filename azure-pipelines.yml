@@ -1,6 +1,10 @@
 # Build and test ASP.NET projects.
 # NB: Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
-# Variables marked (CHANGEME) need to be set up in Azure Devops Variables tab
+# NB: Variables need to be set up in Azure Devops Variables tab:
+#       ApprovalEmailAddresses - email addresses for the approval steps
+#       AzureLocation - location of azure data centre e.g. UKWest
+#       AzureSubscription - Azure Devops service connection approved to deploy to Azure under your subscription
+#       ResourceGroup - Name of resource group to deploy to
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
@@ -12,12 +16,8 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  ApprovalEmailAddresses: '(CHANGEME)'
-  ArmTemplateParameterFile: 'WebSite.qa.parameters.json'
-  AzureLocation: '(CHANGEME)'
-  AzureSubscription: '(CHANGEME)' # Same as ResourceGroup?
+  ArmTemplateParameterFile: 'WebSite.int.parameters.json'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
-  ResourceGroup: '(CHANGEME)'
 
 stages: 
 - stage: Build
