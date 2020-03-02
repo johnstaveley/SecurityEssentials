@@ -1,5 +1,6 @@
 # Build and test ASP.NET projects.
 # NB: Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
+# Variables marked (CHANGEME) need to be set up in Azure Devops Variables tab
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
@@ -17,13 +18,17 @@ variables:
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
   ResourceGroup: '(CHANGEME)'
 
-
 stages: 
 - stage: Build
   jobs:
   - job: Build
     pool:
-      vmImage: 'windows-latest'
+      name: Hosted VS2019
+      timeoutInMinutes: 180
+      demands:
+      - msbuild
+      - visualstudio
+      - vstest
     steps:
     - task: NuGetToolInstaller@1
       displayName: 'Use NuGet 4.4.1'
@@ -96,6 +101,14 @@ stages:
 - stage: Test
   dependsOn: Build
   jobs:
+  - job: Approve deployment
+    pool: server
+    steps:
+      - task: ManualIntervention@8
+      displayName: 'Approve deployment to test'
+      inputs:
+        instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
+        emailRecipients: '$(ApprovalEmailAddresses)'
   - deployment: DeployWeb
     pool:
       name: Hosted VS2017
@@ -107,13 +120,7 @@ stages:
     environment: 'integration'
     strategy:
       runOnce:
-        deploy:
-          steps:
-          - task: ManualIntervention@8
-            displayName: 'Approve deployment to test'
-            inputs:
-              instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
-              emailRecipients: '$(ApprovalEmailAddresses)'
+        deploy:          
           - task: AzureResourceGroupDeployment@2
             displayName: 'Deploy Azure Resource Group'
             inputs:
