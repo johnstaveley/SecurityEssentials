@@ -99,5 +99,10 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: ManualIntervention@8
+            displayName: 'Approve deployment to test'
+            inputs:
+              instructions: 'Approve this step to continue deploying to test and running acceptance tests'
+              emailRecipients: 'john@staveley.org'    
           - script: echo Test
     # TODO: Deploy an instance to Azure and then run integration tests against it
