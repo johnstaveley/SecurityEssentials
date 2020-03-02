@@ -109,7 +109,7 @@ stages:
       inputs:
         instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
         emailRecipients: '$(ApprovalEmailAddresses)'
-  - deployment: DeployWeb
+  - job: Deploy to server
     pool:
       name: Hosted VS2017
       demands:
@@ -118,16 +118,14 @@ stages:
       - vstest
     # creates an environment if it doesn’t exist
     environment: 'integration'
-    strategy:
-      runOnce:
-        deploy:
-        - task: AzureResourceGroupDeployment@2
-          displayName: 'Deploy Azure Resource Group'
-          inputs:
-            azureSubscription: '$(AzureSubscription)'
-            resourceGroupName: '$(ResourceGroup)'
-            location: '$(AzureLocation)'
-            csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
-            csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
-            deploymentOutputs: ArmTemplateOutput
+    steps:
+      - task: AzureResourceGroupDeployment@2
+        displayName: 'Deploy Azure Resource Group'
+        inputs:
+          azureSubscription: '$(AzureSubscription)'
+          resourceGroupName: '$(ResourceGroup)'
+          location: '$(AzureLocation)'
+          csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
+          csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
+          deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
