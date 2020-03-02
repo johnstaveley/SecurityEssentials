@@ -101,7 +101,7 @@ stages:
 - stage: Test
   dependsOn: Build
   jobs:
-  - job: Approve deployment
+  - job: Approve_Deployment
     pool: server
     steps:
     - task: ManualIntervention@8
@@ -109,7 +109,7 @@ stages:
       inputs:
         instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
         emailRecipients: '$(ApprovalEmailAddresses)'
-  - job: Deploy to server
+  - job: Deploy_To_Server
     pool:
       name: Hosted VS2017
       demands:
