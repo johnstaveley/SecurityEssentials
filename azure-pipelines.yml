@@ -102,14 +102,14 @@ stages:
 - stage: Test
   dependsOn: Build
   jobs:
-  - job: Approve_Deployment
-    pool: server
-    steps:
-      - task: ManualIntervention@8
-        displayName: 'Approve deployment to test'
-        inputs:
-          instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
-          emailRecipients: '$(ApprovalEmailAddresses)'
+  #- job: Approve_Deployment
+  #  pool: server
+  #  steps:
+  #  - task: ManualIntervention@8
+  #    displayName: 'Approve deployment to test'
+  #    inputs:
+  #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
+  #      emailRecipients: '$(ApprovalEmailAddresses)'
   - job: Deploy_To_Server
     pool:
       name: Hosted VS2017
@@ -118,13 +118,14 @@ stages:
       - visualstudio
       - vstest
     steps:
-      - task: AzureResourceGroupDeployment@2
-        displayName: 'Deploy Azure Resource Group'
-        inputs:
-          azureSubscription: '$(AzureSubscription)'
-          resourceGroupName: '$(ResourceGroup)'
-          location: '$(AzureLocation)'
-          csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
-          csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
-          deploymentOutputs: ArmTemplateOutput
+    - task: AzureResourceGroupDeployment@2
+      displayName: 'Deploy Azure Resource Group'
+      enabled: false
+      inputs:
+        azureSubscription: '$(AzureSubscription)'
+        resourceGroupName: '$(ResourceGroup)'
+        location: '$(AzureLocation)'
+        csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
+        csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
+        deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
