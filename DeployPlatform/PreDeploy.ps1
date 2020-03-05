@@ -107,7 +107,6 @@ if ($matchingVaults -eq $null) {
     $vault = $matchingVaults[0]
 }
 
-
 # Enable logging for key vault
 # TODO: Change AuditEvent to AuditEvent,AllMetrics when the powershell command supports it. In the meantime, set this manually
 Set-AzureRmDiagnosticSetting -ResourceId $vault.ResourceId -StorageAccountId $storageAccount.Id -Enabled $true -Categories AuditEvent -RetentionEnabled $true -RetentionInDays 365 `
@@ -126,7 +125,6 @@ if ($matchingSecrets -eq $null) {
 } else {
     Write-Host "Secret key '$secretKey' already exists in vault $vaultName" 
 }
-
 
 # https://api.cloudflare.com/#zone-list-zones
 #Write-Host ("Get CloudFlare Zone")
