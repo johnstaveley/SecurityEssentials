@@ -6,16 +6,18 @@
 #   Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
 # Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
 # Variables need to be set up in Azure Devops Variables tab:
-#   ApprovalEmailAddresses - email addresses for the approval steps
+#   AdminEmailAddresses - email addresses for the approval steps
 #   AzureLocation - location of azure data centre e.g. UKWest
 #   CloudFlareAuthEmail - Username for Cloudflare
 #   CloudFlareUserServiceKey - Password for Cloudflare
 #   CloudFlareZoneName - Zone id in Cloudflare
+#   DeveloperIpAddress - IP address of any developer that needs to access the backend database
 #   EnvironmentName - environment short hand, e.g. int, qa, uat, prod
 #   ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 #   ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 #   SiteName - name of the website to set up e.g. SecurityEssentials
 #   SqlAdminPassword - admin password for sql azure
+#   SqlAdminUserName - admin username for sql azure
 #   SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions 
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Run the deployment once, then go into Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the principal from Azure Devops
@@ -129,7 +131,7 @@ stages:
   #    displayName: 'Approve deployment to test'
   #    inputs:
   #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
-  #      emailRecipients: '$(ApprovalEmailAddresses)'
+  #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
     pool:
       name: Hosted VS2017
@@ -153,5 +155,6 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
+        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddress $(DeveloperIpAddress) -sqlserverAdminLoginUserName $(SqlAdminUserName)
         deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
