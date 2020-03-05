@@ -70,9 +70,8 @@ if(!$resourceGroup)
 else{
     Write-Host "Using existing resource group '$resourceGroupName'";
 }
-
 # Create the storage accounts if they don't already exist
-$vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnet'
+$vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnt'
 $vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
 if ($vNetStorageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$vNetStorageAccountName' in $resourceGroupName" 
