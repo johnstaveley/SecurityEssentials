@@ -55,6 +55,7 @@ Set-StrictMode -Version 3
 [string] $vaultName = $siteNameLowerCase + $EnvironmentName.ToLower()
 $cloudFlareBaseUrl = 'https://api.cloudflare.com/client/v4/'
 $cloudFlareHeaders = @{"Content-Type"= "application/json; charset=utf-8"; 'X-Auth-Key' = $CloudFlareUserServiceKey; 'X-Auth-Email' = $CloudFlareAuthEmail}
+[string] $keyVaultDiagnosticsName = $siteNameLowerCase + $EnvironmentName.ToLower() + 'diagnostics'
 
 # Select subscription
 Write-Host "Selecting subscription '$SubscriptionId'"
