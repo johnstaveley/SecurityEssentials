@@ -8,12 +8,13 @@ using SecurityEssentials.Acceptance.Tests.Extensions;
 using SecurityEssentials.Acceptance.Tests.Utility;
 using System;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
-    [Binding]
+	[Binding]
 	public class Hooks
 	{
 
@@ -23,6 +24,8 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 
 			var webBrowserProxy = ConfigurationManager.AppSettings["WebBrowserProxy"];
 			var webBrowserType = ConfigurationManager.AppSettings["WebBrowserType"];
+			var timeoutMinutes = int.Parse(ConfigurationManager.AppSettings["TimeoutMinutes"]);
+			var waitIntervalSeconds = Convert.ToInt32(ConfigurationManager.AppSettings["WaitIntervalSeconds"]);
 			IWebDriver webDriver;
 			if (!string.IsNullOrEmpty(webBrowserProxy))
 			{
@@ -41,14 +44,15 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			{
 				switch (webBrowserType)
 				{
-				    case "Headless Chrome":
-				        ChromeOptions options = new ChromeOptions();
-				        options.AddArguments("--headless", "--disable-infobars", "--disable-extensions");
-				        webDriver = new ChromeDriver(options);
+					case "Chrome":
+					case "Headless Chrome":
+				        ChromeOptions chromeOptions = new ChromeOptions();
+						if (webBrowserType == "Headless Chrome")
+						{
+							chromeOptions.AddArguments("--headless", "--disable-infobars", "--disable-extensions", "--test-type", "--allow-insecure-localhost");
+						}
+						webDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), chromeOptions, TimeSpan.FromMinutes(timeoutMinutes));
 				        break;
-                    case "Chrome":
-						webDriver = new ChromeDriver();
-						break;
 					case "FireFox":
 						webDriver = new FirefoxDriver();
 						break;
@@ -60,7 +64,8 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 						throw new Exception($"Unable to set browser type {webBrowserType}");
 				}
 			}
-			webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+			webDriver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 0, waitIntervalSeconds);
+			webDriver.Manage().Timeouts().PageLoad = new TimeSpan(0, 0, waitIntervalSeconds * 3);
 			FeatureContext.Current.SetWebDriver(webDriver);
 
 			var baseUri = new Uri(ConfigurationManager.AppSettings["WebServerUrl"]);
@@ -82,6 +87,17 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseTeardown.sql");
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.LookupRestore.sql");
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseRestore.sql");
+			}
+			if (Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]) && Directory.Exists(ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]))
+			{
+				var screenshots = Directory.GetFiles(ConfigurationManager.AppSettings["TestScreenCaptureDirectory"], "*.png")
+					.Select(a => new FileInfo(a))
+					.Where(b => b.CreationTimeUtc < DateTime.UtcNow.AddDays(-1))
+					.ToList();
+				foreach (var screenshot in screenshots)
+				{
+					screenshot.Delete();
+				}
 			}
 		}
 

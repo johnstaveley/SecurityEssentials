@@ -66,13 +66,15 @@ stages:
 
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         projectName: 'Security Essentials'
         scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'         
 
-    - task: WhiteSource Bolt@20
+    - task: WhiteSource Bolt@20      
       displayName: 'Whitesource bolt'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
@@ -99,7 +101,7 @@ stages:
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- stage: Test
+- stage: Acceptance_Tests
   dependsOn: Build
   jobs:
   #- job: Approve_Deployment
@@ -126,8 +128,7 @@ stages:
         ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
         azurePowerShellVersion: LatestVersion
     - task: AzureResourceGroupDeployment@2
-      displayName: 'Deploy Azure Resource Group'
-      enabled: false
+      displayName: 'Deploy Azure Assets'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
