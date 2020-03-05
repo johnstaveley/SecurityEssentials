@@ -36,7 +36,9 @@ Param(
     [Parameter(Mandatory=$true)]
     [string] $CloudFlareUserServiceKey,
 	[Parameter(Mandatory=$true)]
-    [string] $CloudFlareZoneName
+    [string] $CloudFlareZoneName,
+    [Parameter(Mandatory=$true)]
+    [string] $SqlAdminPassword
 )
 
 if ((Get-AzureRmContext) -eq $null -or [string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
@@ -103,6 +105,27 @@ if ($matchingVaults -eq $null) {
     Write-Host "Vault '$vaultName' in $resourceGroupName already exists" 
     $vault = $matchingVaults[0]
 }
+
+
+# Enable logging for key vault
+# TODO: Change AuditEvent to AuditEvent,AllMetrics when the powershell command supports it. In the meantime, set this manually
+Set-AzureRmDiagnosticSetting -ResourceId $vault.ResourceId -StorageAccountId $storageAccount.Id -Enabled $true -Categories AuditEvent -RetentionEnabled $true -RetentionInDays 365 `
+    -Name $keyVaultDiagnosticsName
+
+# create secure database key if not already present
+$secretKey = 'SqlAzurePassword'
+Write-Host "Checking key Vault $vaultName for secret $secretKey" 
+$matchingSecrets = Get-AzureKeyVaultSecret -VaultName $vaultName -ErrorAction Stop | Where-Object { $_.Name -eq $secretKey }
+if ($matchingSecrets -eq $null) { 
+	Write-Host "Settings '$secretKey' in vault $vaultName" 
+    $secret = ConvertTo-SecureString -string $SqlAdminPassword -asplaintext -force
+	Write-Host "."
+    Set-AzureKeyVaultSecret -VaultName $vaultName -name $secretKey -SecretValue $secret -ErrorAction Stop
+    Sleep 5
+} else {
+    Write-Host "Secret key '$secretKey' already exists in vault $vaultName" 
+}
+
 
 # https://api.cloudflare.com/#zone-list-zones
 #Write-Host ("Get CloudFlare Zone")

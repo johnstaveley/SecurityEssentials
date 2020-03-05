@@ -13,6 +13,7 @@
 #   ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 #   ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 #   SiteName - name of the website to set up e.g. SecurityEssentials
+#   SqlAdminPassword - admin password for sql azure
 #   SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions 
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 
@@ -119,7 +120,7 @@ stages:
   #    inputs:
   #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
   #      emailRecipients: '$(ApprovalEmailAddresses)'
-  - job: Deploy_To_Server
+  - job: Deploy_To_Integration
     pool:
       name: Hosted VS2017
       demands:
@@ -132,7 +133,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PreDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName) -SqlAdminPassword $(SqlAdminPassword)'
         azurePowerShellVersion: LatestVersion
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Assets'
@@ -141,6 +142,6 @@ stages:
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\template.json'
-        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\$(ArmTemplateParameterFile)'
+        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
         deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
