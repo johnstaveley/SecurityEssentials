@@ -2,13 +2,15 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 # NB: 
+# Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection.
+#   Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
 # Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
 # Variables need to be set up in Azure Devops Variables tab:
 #   ApprovalEmailAddresses - email addresses for the approval steps
 #   AzureLocation - location of azure data centre e.g. UKWest
-#   CloudFlareAuthEmail - Username for cloudflare
-#   CloudFlareUserServiceKey - Password for cloudflare
-#   CloudFlareZoneName - Zone id in cloudflare
+#   CloudFlareAuthEmail - Username for Cloudflare
+#   CloudFlareUserServiceKey - Password for Cloudflare
+#   CloudFlareZoneName - Zone id in Cloudflare
 #   EnvironmentName - environment short hand, e.g. int, qa, uat, prod
 #   ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 #   ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
@@ -16,6 +18,7 @@
 #   SqlAdminPassword - admin password for sql azure
 #   SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions 
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
+# Run the deployment once, then go into Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the principal from Azure Devops
 
 trigger:
   - master
@@ -24,7 +27,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  ArmTemplateParameterFile: 'WebSite.int.parameters.json'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
 
 stages: 
@@ -57,6 +59,12 @@ stages:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
     
+    - task: FileTransform@2
+      displayName: 'Transform settings for Acceptance tests'
+      inputs:
+        folderPath: '$(build.sourcesdirectory)'
+        xmlTransformationRules: '-transform **\Web.Acceptance.Tests\App.Integration.config -xml **\Web.Acceptance.Tests\bin\**\SecurityEssentials.Acceptance.Tests.dll.config'    
+
     - task: VSTest@2
       displayName: 'Run Unit tests'
       inputs:
@@ -141,7 +149,7 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
-        csmFile: '$(build.sourcesdirectory)\DeployPlatform\template.json'
+        csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
         deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it

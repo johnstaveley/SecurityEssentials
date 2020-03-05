@@ -35,7 +35,6 @@
       <Visible>False</Visible>
     </None>
     <Content Include="PreDeploy.ps1" />
-    <Content Include="ManualDeployWebsite.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>

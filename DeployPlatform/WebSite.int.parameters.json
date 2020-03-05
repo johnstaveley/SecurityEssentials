@@ -4,7 +4,7 @@
   "parameters": {
     "adminEmailAddress": { "value": "<Change Me>" },
     "developerIpAddress": { "value": "<Change Me>" },
-    "environmentName": { "value": "qa" },
+    "environmentName": { "value": "int" },
     "hostNameSslStates": {
       "value": []
     },
@@ -13,7 +13,7 @@
     "servicePlanSkuFamily": { "value": "S" },
     "servicePlanSkuCapacity": { "value": 1 },
     "siteName": { "value": "securityessentials" },
-    "sqlserverAdminLoginUserName": { "value": "<Change Me>" },
+    "sqlserverAdminLoginUserName": { "value": "<ChangeMe>" },
     "sqlserverAdminLoginPassword": {
       "reference": {
         "keyVault": {
