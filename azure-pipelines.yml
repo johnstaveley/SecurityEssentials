@@ -3,7 +3,7 @@
 # NB: Variables need to be set up in Azure Devops Variables tab:
 #       ApprovalEmailAddresses - email addresses for the approval steps
 #       AzureLocation - location of azure data centre e.g. UKWest
-#       AzureSubscription - Azure Devops service connection approved to deploy to Azure under your subscription
+#       ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops
 #       ResourceGroup - Name of resource group to deploy to
 # Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Add steps that publish symbols, save build artifacts, deploy, and more:
@@ -118,10 +118,17 @@ stages:
       - visualstudio
       - vstest
     steps:
+      - task: AzurePowerShell@3
+        displayName: 'Pre Deployment'
+        inputs:
+          azureSubscription: '$(ServiceConnection)'
+          ScriptPath: '$(build.sourcesdirectory)\src\Deploy\PreDeploy.ps1'
+          ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
+          azurePowerShellVersion: LatestVersion
       - task: AzureResourceGroupDeployment@2
         displayName: 'Deploy Azure Resource Group'
         inputs:
-          azureSubscription: '$(AzureSubscription)'
+          azureSubscription: '$(ServiceConnection)'
           resourceGroupName: '$(ResourceGroup)'
           location: '$(AzureLocation)'
           csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
