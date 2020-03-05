@@ -1,13 +1,20 @@
 # Build and test ASP.NET projects.
-# NB: Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
-# NB: Variables need to be set up in Azure Devops Variables tab:
-#       ApprovalEmailAddresses - email addresses for the approval steps
-#       AzureLocation - location of azure data centre e.g. UKWest
-#       ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops
-#       ResourceGroup - Name of resource group to deploy to
-# Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+# NB: 
+# Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
+# Variables need to be set up in Azure Devops Variables tab:
+#   ApprovalEmailAddresses - email addresses for the approval steps
+#   AzureLocation - location of azure data centre e.g. UKWest
+#   CloudFlareAuthEmail - Username for cloudflare
+#   CloudFlareUserServiceKey - Password for cloudflare
+#   CloudFlareZoneName - Zone id in cloudflare
+#   EnvironmentName - environment short hand, e.g. int, qa, uat, prod
+#   ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
+#   ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
+#   SiteName - name of the website to set up e.g. SecurityEssentials
+#   SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions 
+# Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 
 trigger:
   - master
@@ -124,7 +131,7 @@ stages:
       displayName: 'Pre Deployment'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\src\Deploy\PreDeploy.ps1'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PreDeploy.ps1'
         ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
         azurePowerShellVersion: LatestVersion
     - task: AzureResourceGroupDeployment@2
@@ -133,7 +140,7 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
-        csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
-        csmParametersFile: '$(build.sourcesdirectory)\src\Deploy\$(ArmTemplateParameterFile)'
+        csmFile: '$(build.sourcesdirectory)\DeployPlatform\template.json'
+        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\$(ArmTemplateParameterFile)'
         deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
