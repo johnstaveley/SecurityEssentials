@@ -129,7 +129,7 @@ stages:
       displayName: 'Deploy Azure Resource Group'
       enabled: false
       inputs:
-          azureSubscription: '$(ServiceConnection)'
+        azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\src\Deploy\template.json'
