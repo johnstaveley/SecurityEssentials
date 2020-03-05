@@ -123,7 +123,7 @@ stages:
         inputs:
           azureSubscription: '$(ServiceConnection)'
           ScriptPath: '$(build.sourcesdirectory)\src\Deploy\PreDeploy.ps1'
-          ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
+          ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
           azurePowerShellVersion: LatestVersion
       - task: AzureResourceGroupDeployment@2
         displayName: 'Deploy Azure Resource Group'
