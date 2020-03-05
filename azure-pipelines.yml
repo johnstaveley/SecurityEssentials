@@ -132,7 +132,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PreDeploy.ps1'
-        ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName)'
         azurePowerShellVersion: LatestVersion
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Assets'

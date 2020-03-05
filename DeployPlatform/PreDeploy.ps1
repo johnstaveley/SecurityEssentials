@@ -1,8 +1,10 @@
 <#
 .SYNOPSIS
-    .
+    Carries out pre deployment steps for deployment of site Security Essentials
 .DESCRIPTION
-    .
+    Carries out the following functions:
+    Creates the resource group, blob storage and key vault in Azure
+    Sets up secure keys in the key vault
 .PARAMETER Path
     The path to the .
 .PARAMETER LiteralPath
@@ -20,19 +22,21 @@
 #>
 Param(
 	[Parameter(Mandatory=$true)]
-	[string] $EnvironmentName, # = 'Integration',
+	[string] $AzureLocation,
 	[Parameter(Mandatory=$true)]
-	[string] $SiteName, # = 'SecurityEssentials',
+	[string] $EnvironmentName,
+	[Parameter(Mandatory=$true)]
+	[string] $SiteName,
     [Parameter(Mandatory=$true)]
-    [string] $SiteBaseUrl, # = 'SecurityEssentials.co.uk'
+    [string] $SiteBaseUrl,
 	[Parameter(Mandatory=$true)]
-	[string] $SubscriptionId, # You can find this by going into the Azure Portal and typing Subscriptions in the search bar
+	[string] $SubscriptionId,
     [Parameter(Mandatory=$true)]
     [string] $CloudFlareAuthEmail,
     [Parameter(Mandatory=$true)]
     [string] $CloudFlareUserServiceKey,
 	[Parameter(Mandatory=$true)]
-    [string] $CloudFlareZoneName # = 'SecurityEssentials.co.uk'
+    [string] $CloudFlareZoneName
 )
 
 if ((Get-AzureRmContext) -eq $null -or [string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
@@ -59,8 +63,8 @@ Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop
 $resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
 if(!$resourceGroup)
 {
-    Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation
+    Write-Host "Creating resource group '$resourceGroupName' in location '$AzureLocation'";
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $AzureLocation
     Start-Sleep(5) # Give it some time to create the resource group
 }
 else{
@@ -72,7 +76,7 @@ $vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vne
 $vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
 if ($vNetStorageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$vNetStorageAccountName' in $resourceGroupName" 
-    $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $ResourceGroupLocation -EnableHttpsTrafficOnly $True
+    $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$vNetStorageAccountName' in $resourceGroupName already exists" 
 }
@@ -81,7 +85,7 @@ $storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
 $storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
 if ($storageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$storageAccountName' in $resourceGroupName" 
-    $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $ResourceGroupLocation -EnableHttpsTrafficOnly $True
+    $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$storageAccountName' in $resourceGroupName already exists" 
 }
@@ -95,7 +99,7 @@ $matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq
 if ($matchingVaults -eq $null) { 
     # create vault and enable the key vault for template deployment
     Write-Host "Creating Vault '$vaultName' in $resourceGroupName" 
-    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $ResourceGroupLocation -enabledfortemplatedeployment
+    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment
 } else {
     Write-Host "Vault '$vaultName' in $resourceGroupName already exists" 
     $vault = $matchingVaults[0]
