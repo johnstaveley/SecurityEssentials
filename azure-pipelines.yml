@@ -4,7 +4,7 @@
 # NB: 
 # Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection.
 #   Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
-# Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
+# Needs OWASP Dependency checker, White source bolt and Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace
 # Variables need to be set up in Azure Devops Variables tab:
 #   AdminEmailAddresses - email addresses for the approval steps
 #   AzureLocation - location of azure data centre e.g. UKSouth
@@ -98,6 +98,12 @@ stages:
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
+    - task: AzSKARMTemplateChecker@4
+    displayName: 'AzSK Arm Template Checker'
+      inputs:
+        ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
+        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
+
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
       inputs:
