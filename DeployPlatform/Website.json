@@ -334,14 +334,18 @@
       "type": "Microsoft.Sql/servers/auditingSettings",
       "apiVersion": "2017-03-01-preview",
       "name": "[concat(variables('sqlserverName'), '/Default')]",
-      "tags": { "displayName": "SQL Server Auditing Policy" },
+      "tags": { "displayName": "SQL Server Auditing Settings" },
       "location": "[resourceGroup().location]",
       "properties": {
         "state": "Enabled",
         "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').PrimaryEndpoints.Blob]",
         "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').keys[0].value]",
         "storageAccountSubscriptionId": "[subscription().subscriptionId]",
-        "auditActionsAndGroups": null,
+        "auditActionsAndGroups": [
+          "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+          "FAILED_DATABASE_AUTHENTICATION_GROUP",
+          "BATCH_COMPLETED_GROUP"
+        ],
         "isStorageSecondaryKeyInUse": false,
         "retentionDays": 365
       },
@@ -380,7 +384,8 @@
       "tags": { "displayName": "SQL Server vulnerability Assessment" },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
-        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]"
+        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]",
+        "[concat('Microsoft.Sql/servers/', variables('sqlServerName'), '/securityAlertPolicies/Default')]"
       ],
       "properties": {
         "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
