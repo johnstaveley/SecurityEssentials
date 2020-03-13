@@ -41,9 +41,9 @@
     "environmentName": {
       "type": "string",
       "allowedValues": [
-        "integration",
+        "int",
         "qa",
-        "production"
+        "prod"
       ]
     },
     "hostNameSslStates": {
@@ -87,6 +87,9 @@
     "sqlserverAdminLoginPassword": {
       "type": "securestring",
       "defaultValue": "Not Specified"
+    },
+    "subscriptionId": {
+      "type": "string"
     }
   },
   "variables": {

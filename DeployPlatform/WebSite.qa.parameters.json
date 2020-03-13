@@ -2,8 +2,8 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminEmailAddress": { "value": "<Change Me>" },
-    "developerIpAddress": { "value": "<Change Me>" },
+    "adminEmailAddress": { "value": "<ChangeMe>" },
+    "developerIpAddress": { "value": "<ChangeMe>" },
     "environmentName": { "value": "qa" },
     "hostNameSslStates": {
       "value": []
@@ -13,14 +13,15 @@
     "servicePlanSkuFamily": { "value": "S" },
     "servicePlanSkuCapacity": { "value": 1 },
     "siteName": { "value": "securityessentials" },
-    "sqlserverAdminLoginUserName": { "value": "<Change Me>" },
+    "sqlserverAdminLoginUserName": { "value": "<ChangeMe>" },
     "sqlserverAdminLoginPassword": {
       "reference": {
         "keyVault": {
-          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/SecurityEssentials-QA/providers/Microsoft.KeyVault/vaults/securityessentialsqa')]"
+          "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/SecurityEssentials-QA/providers/Microsoft.KeyVault/vaults/securityessentialsqa')]"
         },
         "secretName": "SqlAzurePassword"
       }
-    }
+    },
+    "subscriptionId": { "value": "<ChangeMe>" }
   }
 }

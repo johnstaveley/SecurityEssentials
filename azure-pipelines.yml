@@ -155,6 +155,6 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddress $(DeveloperIpAddress) -sqlserverAdminLoginUserName $(SqlAdminUserName)
+        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddress $(DeveloperIpAddress) -sqlserverAdminLoginUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
         deploymentOutputs: ArmTemplateOutput
     # TODO: Deploy an instance to Azure and then run integration tests against it
