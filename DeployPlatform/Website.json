@@ -108,7 +108,7 @@
     "serverFarmName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "sqlserverName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "storageAccountIdVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameVNet'))]",
-    "storageAccountNameVNet": "[concat(parameters('siteName'), parameters('environmentName'), 'vnet')]",
+    "storageAccountNameVNet": "[concat(parameters('siteName'), parameters('environmentName'), 'vnt')]",
     "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameNonVNet'))]",
     "storageAccountNameNonVNet": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "virtualNetworkName": "[concat(parameters('siteName'), parameters('environmentName'))]",
