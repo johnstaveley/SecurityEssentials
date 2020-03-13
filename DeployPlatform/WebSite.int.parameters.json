@@ -17,7 +17,7 @@
     "sqlserverAdminLoginPassword": {
       "reference": {
         "keyVault": {
-          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.KeyVault/vaults/securityessentialsint')]"
+          "id": "[concat('/subscriptions/a0d704f5-f3ad-49cb-ad02-bda68d45ed1f/resourceGroups/SecurityEssentials-Int/providers/Microsoft.KeyVault/vaults/securityessentialsint')]"
         },
         "secretName": "SqlAzurePassword"
       }
