@@ -7,7 +7,7 @@
 # Needs OWASP Dependency checker and White source bolt tasks which have to be added to Azure Devops from the marketplace
 # Variables need to be set up in Azure Devops Variables tab:
 #   AdminEmailAddresses - email addresses for the approval steps
-#   AzureLocation - location of azure data centre e.g. UKWest
+#   AzureLocation - location of azure data centre e.g. UKSouth
 #   CloudFlareAuthEmail - Username for Cloudflare
 #   CloudFlareUserServiceKey - Password for Cloudflare
 #   CloudFlareZoneName - Zone id in Cloudflare
