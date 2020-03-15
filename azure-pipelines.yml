@@ -99,7 +99,7 @@ stages:
         cwd: '$(System.DefaultWorkingDirectory)'
         
     - task: AzSKARMTemplateChecker@4
-    displayName: 'AzSK Arm Template Checker'
+      displayName: 'AzSK Arm Template Checker'
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
@@ -163,4 +163,12 @@ stages:
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
         overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddress $(DeveloperIpAddress) -sqlserverAdminLoginUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
         deploymentOutputs: ArmTemplateOutput
+    - task: AzurePowerShell@3
+      displayName: 'Teardown'
+      inputs:
+        azureSubscription: '$(ServiceConnection)'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Teardown.ps1'
+        ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId)'
+        azurePowerShellVersion: LatestVersion
+
     # TODO: Deploy an instance to Azure and then run integration tests against it
