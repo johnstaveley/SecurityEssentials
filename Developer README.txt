@@ -28,5 +28,5 @@ Notes
 ---------------
 
 In order to get the acceptance tests running on the CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefox 64bit, you will need to replace this with the 64 bit version
-Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs
+Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
