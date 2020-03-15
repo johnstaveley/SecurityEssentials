@@ -1,28 +1,7 @@
 # Build and test ASP.NET projects.
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-# NB: 
-# Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection.
-#   Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
-# Needs OWASP Dependency checker, White source bolt and Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace
-# Variables need to be set up in Azure Devops Variables tab:
-#   AppServiceName - Name of the app service resource in Azure
-#   AdminEmailAddresses - email addresses for the approval steps
-#   AzureLocation - location of azure data centre e.g. UKSouth
-#   CloudFlareAuthEmail - Username for Cloudflare
-#   CloudFlareUserServiceKey - Password for Cloudflare
-#   CloudFlareZoneName - Zone id in Cloudflare
-#   DeveloperIpAddress - IP address of any developer that needs to access the backend database
-#   EnvironmentName - environment short hand, e.g. int, qa, uat, prod
-#   ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
-#   ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
-#   SiteName - name of the website to set up e.g. SecurityEssentials
-#   SqlAdminPassword - admin password for sql azure
-#   SqlAdminUserName - admin username for sql azure
-#   SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions 
-# Whitesource bolt needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
-# Run the deployment once, then go into Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the principal from Azure Devops
-#   Repeat the above but add yourself as a user with all permissions
+# NB: For instructions on how to setup secure automated builds, goto Developer README.md
 
 trigger:
   - master
@@ -169,6 +148,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy website'
+      enabled: false # TODO: Not working yet. Package not found
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -185,7 +165,7 @@ stages:
       # TODO: Deploy an instance to Azure and then run integration tests against it
 
     - task: AzurePowerShell@3
-      displayName: 'Teardown'
+      displayName: 'Teardown Azure Resources'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'
