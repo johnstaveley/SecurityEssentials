@@ -162,10 +162,11 @@ stages:
         ExcludeFilesFromAppDataFlag: true
         enableXmlTransform: true
 
-      # TODO: Deploy an instance to Azure and then run integration tests against it
+      # TODO: Run integration tests against deployed instance
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
+      condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'

@@ -36,10 +36,10 @@ if($resourceGroup) {
 	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $appServicePlanName -ResourceType Microsoft.Web/serverfarms -Force 
 	Write-Host("Removing Sql Server $sqlServerName from resource group $resourceGroupName")
 	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $sqlServerName -ResourceType Microsoft.Sql/servers -Force
-	Write-Host("Removing Network security group $networkSecurityGroupName from resource group $resourceGroupName")
-	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $networkSecurityGroupName -ResourceType Microsoft.Network/networkSecurityGroups -Force
 	Write-Host("Removing Virtual network $virtualNetworkName from resource group $resourceGroupName")
 	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $virtualNetworkName -ResourceType Microsoft.Network/virtualNetworks -Force
+	Write-Host("Removing Network security group $networkSecurityGroupName from resource group $resourceGroupName")
+	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $networkSecurityGroupName -ResourceType Microsoft.Network/networkSecurityGroups -Force
 	Write-Host("Removing Application Insights $applicationInsightsName from resource group $resourceGroupName")
 	Remove-AzureRmResource -ResourceGroupName $resourceGroupName -ResourceName $applicationInsightsName -ResourceType Microsoft.Insights/components -Force
 } else {

@@ -26,7 +26,7 @@ To set up the project take the following steps:
 
 Azure Devops Setup
 ------------------
-* Create a build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
+* Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
 * Create the following pipeline variables as follows:
 	+ AppServiceName - Name of the app service resource in Azure
 	+ AdminEmailAddresses - email addresses for the approval steps
