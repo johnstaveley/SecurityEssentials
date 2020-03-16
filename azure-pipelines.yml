@@ -134,7 +134,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: SecurityEssentials.Web.zip'
       inputs:
-        artifact: drop/SecurityEssentials.Web.zip
+        artifact: drop
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment'
