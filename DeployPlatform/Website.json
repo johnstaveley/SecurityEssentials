@@ -283,17 +283,7 @@
       "location": "[resourceGroup().location]",
       "scale": null,
       "properties": {
-        "name": "[variables('serverFarmName')]",
-        "numberOfWorkers": 4,
-        "siteConfig": {
-          "connectionStrings": [
-            {
-              "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlserverAdminLoginUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlserverAdminLoginPassword'), ';')]",
-              "type": 1
-            }
-          ]
-        }
+        "name": "[variables('serverFarmName')]"
       },
       "dependsOn": []
     },
@@ -505,7 +495,15 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
         "siteConfig": {
           "AlwaysOn": true,
-          "ftpsState": "Disabled"
+          "ftpsState": "Disabled",
+          "remoteDebuggingEnabled": false,
+          "connectionStrings": [
+            {
+              "name": "DefaultConnection",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlserverAdminLoginUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlserverAdminLoginPassword'), ';')]",
+              "type": 1
+            }
+          ]
         }
       },
       "resources": [
