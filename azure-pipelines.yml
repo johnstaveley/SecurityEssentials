@@ -38,7 +38,7 @@ stages:
       displayName: 'Build solution'
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:PackageLocation=$(build.artifactstagingdirectory) /p:OutDir=$(build.artifactstagingdirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
+        msbuildArgs: '/p:PackageLocation=$(Build.ArtifactStagingDirectory) /p:OutDir=$(Build.ArtifactStagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
     
@@ -93,23 +93,23 @@ stages:
         SearchPattern: '**\bin\**\*.pdb'
     
     - task: CopyFiles@2
-      displayName: 'Copy Application Files to: $(build.artifactstagingdirectory)'
+      displayName: 'Copy Application Files to: $(Build.ArtifactStagingDirectory)'
       enabled: false # TODO: Removed
       inputs:
         SourceFolder: '$(Build.sourcesdirectory)'
         Contents: '**\\bin\\$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
-        TargetFolder: '$(Build.artifactstagingdirectory)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
     
     - task: CopyFiles@2
-      displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
+      displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
       inputs:
         SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
-        TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\Tests\NUnit3TestAdapter.3.16.1\'
     
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'
       inputs:
-        pathtoPublish: '$(Build.artifactstagingdirectory)'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: drop
 
 - stage: Acceptance_Tests
@@ -155,7 +155,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
-        Package: '$(build.artifactstagingdirectory)/**/*.zip'
+        Package: '$(Build.ArtifactStagingDirectory)/**/SecurityEssentials.Web.zip'
         ScriptType: 'Inline Script'
         InlineScript: |
           del /Q .\Web.*.config
@@ -169,7 +169,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      #condition: always()
+      condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'
