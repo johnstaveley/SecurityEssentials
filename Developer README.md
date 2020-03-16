@@ -28,11 +28,11 @@ Azure Devops Setup
 ------------------
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
 * Create the following pipeline variables as follows:
-	+ AppServiceName - Name of the app service resource in Azure
-	+ AdminEmailAddresses - email addresses for the approval steps
+	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
+	+ AdminEmailAddresses - email addresses for notifications and alerts
 	+ AzureLocation - location of azure data centre e.g. UKSouth
 	+ CloudFlareAuthEmail - Username for Cloudflare
-	+ CloudFlareUserServiceKey - Password for Cloudflare
+	+ CloudFlareUserServiceKey - Service Key for Cloudflare
 	+ CloudFlareZoneName - Zone id in Cloudflare
 	+ DeveloperIpAddress - IP address of any developer that needs to access the backend database
 	+ EnvironmentName - environment short hand, e.g. int, qa, uat, prod
@@ -46,7 +46,7 @@ Azure Devops Setup
 	+ OWASP Dependency checker
 	+ White source bolt. This needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 	+ Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace	
-* Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection.
+* Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection. This is to allow control of the Resource Group in Azure by Azure Devops
 * In Azure
 	+ Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
 * Run the deployment once, this will fail but create the key vault. 
