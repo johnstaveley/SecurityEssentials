@@ -34,7 +34,7 @@ Azure Devops Setup
 	+ CloudFlareAuthEmail - Username for Cloudflare
 	+ CloudFlareUserServiceKey - Service Key for Cloudflare
 	+ CloudFlareZoneName - Zone id in Cloudflare
-	+ DeveloperIpAddress - IP address of any developer that needs to access the backend database
+	+ DeveloperIpAddresses - Comma delimited list of IP addresses of any developers that need access to the backend database
 	+ EnvironmentName - environment short hand, e.g. int, qa, uat, prod
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
@@ -61,4 +61,5 @@ Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/az
 	Azure_SQLDatabase_AuthZ_Use_AAD_Admin - switched off because we don't run an AD server
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - switched off because threat detection is enabled at the server level and so doesn't need to be enabled at the database level
 	Azure_AppService_BCDR_Use_Multiple_Instances - ok to have 1 instance for the integration
+	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as it has its own user database
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md

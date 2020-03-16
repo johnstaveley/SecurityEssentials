@@ -35,7 +35,7 @@
         "description": "Describes the performance level for Edition"
       }
     },
-    "developerIpAddress": {
+    "DeveloperIpAddresses": {
       "type": "string"
     },
     "environmentName": {
@@ -98,7 +98,7 @@
     "autoScalingName": "[concat(parameters('siteName'), parameters('environmentName'), '-', parameters('siteName'), '-', parameters('environmentName'))]",
     "developerIpAddressArray": [
       {
-        "value": "[parameters('developerIpAddress')]",
+        "value": "[parameters('DeveloperIpAddresses')]",
         "action": "Allow"
       }
     ],
@@ -335,8 +335,8 @@
           "location": "[resourceGroup().location]",
           "scale": null,
           "properties": {
-            "startIpAddress": "[parameters('developerIpAddress')]",
-            "endIpAddress": "[parameters('developerIpAddress')]"
+            "startIpAddress": "[parameters('DeveloperIpAddresses')]",
+            "endIpAddress": "[parameters('DeveloperIpAddresses')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
