@@ -244,6 +244,21 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ],
+      "resources": [
+        {
+          "name": "[concat(variables('webDatabaseName'), '/current')]",
+          "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+            "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), variables('webDatabase'))]"
+          ],
+          "location": null,
+          "apiVersion": "2014-04-01",
+          "properties": {
+            "status": "Enabled"
+          }
+        }
       ]
     },
     {
@@ -303,7 +318,7 @@
           "type": "firewallRules",
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
-          "name": "[variables('firewallRuleAllowAllWindowsAzureIpsName')]",
+          "name": "firewallRuleAllowAllWindowsAzureIpsName",
           "properties": {
             "endIpAddress": "0.0.0.0",
             "startIpAddress": "0.0.0.0"
@@ -315,13 +330,13 @@
         {
           "type": "firewallRules",
           "kind": "v12.0",
-          "name": "[parameters('developerIpAddress')]",
+          "name": "firewallRuleAllowDeveloperIpAddress",
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
           "scale": null,
           "properties": {
-            "startIpAddress": "84.92.41.8",
-            "endIpAddress": "84.92.41.8"
+            "startIpAddress": "[parameters('developerIpAddress')]",
+            "endIpAddress": "[parameters('developerIpAddress')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
@@ -498,6 +513,7 @@
           "ftpsState": "Disabled",
           "remoteDebuggingEnabled": false,
           "webSocketsEnabled": false,
+          "netFrameworkVersion": "v4.7",
           "connectionStrings": [
             {
               "name": "DefaultConnection",

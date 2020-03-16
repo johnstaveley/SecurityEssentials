@@ -83,9 +83,9 @@ stages:
       enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
-        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
+        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.prod.parameters.json'
         TreatAsPassed: true # TODO: Remove this once rules are understood and exceptions added
-        ExcludeControlIds: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin'
+        ExcludeControlIds: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin,Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server'
 
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'

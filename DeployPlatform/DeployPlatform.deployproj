@@ -29,6 +29,7 @@
   <ItemGroup>
     <Content Include="PostDeploy.ps1" />
     <Content Include="TearDown.ps1" />
+    <Content Include="WebSite.prod.parameters.json" />
     <Content Include="WebSite.int.parameters.json" />
     <Content Include="Website.json" />
     <Content Include="WebSite.qa.parameters.json" />
