@@ -497,6 +497,7 @@
           "AlwaysOn": true,
           "ftpsState": "Disabled",
           "remoteDebuggingEnabled": false,
+          "webSocketsEnabled": false,
           "connectionStrings": [
             {
               "name": "DefaultConnection",
