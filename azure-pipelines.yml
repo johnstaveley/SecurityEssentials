@@ -131,6 +131,11 @@ stages:
       - visualstudio
       - vstest
     steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Artifacts: drop'
+      inputs:
+        artifact: drop
+
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment'
       inputs:
@@ -169,7 +174,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      condition: always()
+      #condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'
