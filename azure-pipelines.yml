@@ -175,7 +175,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PostDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses $($DeveloperIpAddresses)'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses $(DeveloperIpAddresses)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
