@@ -169,11 +169,20 @@ stages:
         RemoveAdditionalFilesFlag: true
         ExcludeFilesFromAppDataFlag: true
         enableXmlTransform: true
+    
+    - task: AzurePowerShell@3
+      displayName: 'Post Deployment steps'
+      inputs:
+        azureSubscription: '$(AzureSubscription)'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PostDeploy.ps1'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddress $($DeveloperIpAddress)'
+        azurePowerShellVersion: LatestVersion
 
       # TODO: Run integration tests against deployed instance
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
+      enabled: false # TODO: Removed
       #condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
