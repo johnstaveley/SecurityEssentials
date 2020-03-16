@@ -132,9 +132,9 @@ stages:
       - vstest
     steps:
     - task: DownloadPipelineArtifact@2
-      displayName: 'Download Artifacts: drop'
+      displayName: 'Download Artifacts: SecurityEssentials.Web.zip'
       inputs:
-        artifact: drop
+        artifact: drop/SecurityEssentials.Web.zip
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment'
@@ -160,7 +160,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
-        Package: '$(Build.ArtifactStagingDirectory)/**/SecurityEssentials.Web.zip'
+        Package: '$(Pipeline.Workspace)/**/SecurityEssentials.Web.zip'
         ScriptType: 'Inline Script'
         InlineScript: |
           del /Q .\Web.*.config
