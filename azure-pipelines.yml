@@ -152,7 +152,7 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddress $(DeveloperIpAddress) -sqlserverAdminLoginUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
+        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlserverAdminLoginUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3
@@ -175,7 +175,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PostDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddress $($DeveloperIpAddress)'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses $($DeveloperIpAddresses)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
