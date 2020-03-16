@@ -173,7 +173,7 @@ stages:
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
       inputs:
-        azureSubscription: '$(AzureSubscription)'
+        azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PostDeploy.ps1'
         ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddress $($DeveloperIpAddress)'
         azurePowerShellVersion: LatestVersion
