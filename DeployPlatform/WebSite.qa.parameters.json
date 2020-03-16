@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminEmailAddress": { "value": "<ChangeMe>" },
-    "DeveloperIpAddresses": { "value": "<ChangeMe>" },
+    "developerIpAddresses": { "value": "<ChangeMe>" },
     "environmentName": { "value": "qa" },
     "hostNameSslStates": {
       "value": []
