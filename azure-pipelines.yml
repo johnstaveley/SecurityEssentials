@@ -38,7 +38,7 @@ stages:
       displayName: 'Build solution'
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:OutDir=$(build.stagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
+        msbuildArgs: '/p:PackageLocation=$(build.artifactstagingdirectory) /p:OutDir=$(build.artifactstagingdirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
     
@@ -80,7 +80,7 @@ stages:
         
     - task: AzSKARMTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
+      #enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
@@ -96,9 +96,9 @@ stages:
       displayName: 'Copy Application Files to: $(build.artifactstagingdirectory)'
       enabled: false # TODO: Removed
       inputs:
-        SourceFolder: '$(build.sourcesdirectory)'
-        Contents: '**\\bin\\$(BuildConfiguration)\\**'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        SourceFolder: '$(Build.sourcesdirectory)'
+        Contents: '**\\bin\\$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
+        TargetFolder: '$(Build.artifactstagingdirectory)'
     
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
@@ -109,7 +109,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'
       inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+        pathtoPublish: '$(Build.artifactstagingdirectory)'
+        artifactName: drop
 
 - stage: Acceptance_Tests
   dependsOn: Build
@@ -154,7 +155,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
-        Package: '$(build.artifactstagingdirectory)/**/SecurityEssentials.Web.zip'
+        Package: '$(build.artifactstagingdirectory)/**/*.zip'
         ScriptType: 'Inline Script'
         InlineScript: |
           del /Q .\Web.*.config
@@ -168,7 +169,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      condition: always()
+      #condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'
