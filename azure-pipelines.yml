@@ -178,7 +178,24 @@ stages:
         ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddress $($DeveloperIpAddress)'
         azurePowerShellVersion: LatestVersion
 
-      # TODO: Run integration tests against deployed instance
+    - task: VSTest@2
+      displayName: 'Run Acceptance tests'
+      timeoutInMinutes: 60
+      enabled: false # TODO: Removed
+      inputs:
+        testAssemblyVer2: |
+         **\Web.Acceptance.Tests.dll
+         !**\obj\**
+        searchFolder: '$(build.sourcesdirectory)'
+        pathtoCustomTestAdapters: '$(build.sourcesdirectory)\src\packages\NUnit3TestAdapter.3.16.1\build\net35\'
+        runInParallel: false
+        codeCoverageEnabled: false
+        platform: '$(BuildPlatform)'
+        configuration: '$(BuildConfiguration)'
+        diagnosticsEnabled: false
+        uiTests: true
+        minimumExpectedTests: 10
+        testFilterCriteria: 'TestCategory=Smoke'
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'

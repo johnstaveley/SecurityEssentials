@@ -284,7 +284,16 @@
       "scale": null,
       "properties": {
         "name": "[variables('serverFarmName')]",
-        "numberOfWorkers": 4
+        "numberOfWorkers": 4,
+        "siteConfig": {
+          "connectionStrings": [
+            {
+              "name": "DefaultConnection",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlserverAdminLoginUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlserverAdminLoginPassword'), ';')]",
+              "type": 1
+            }
+          ]
+        }
       },
       "dependsOn": []
     },

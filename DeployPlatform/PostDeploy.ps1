@@ -1,13 +1,20 @@
+<#
+.SYNOPSIS
+    Wakes up the site
+.NOTES
+    Author: John Staveley
+    Date:   16/03/2020    
+#>
 Param(
     [string] $AzureLocation,
 	[Parameter(Mandatory=$true)]
-	[string] $EnvironmentName, # = 'QA',
+	[string] $EnvironmentName,
 	[Parameter(Mandatory=$true)]
-    [string] $SiteBaseUrl, # = "securityessentials.com",
+    [string] $SiteBaseUrl,
 	[Parameter(Mandatory=$true)]
     [string] $SiteName,
 	[Parameter(Mandatory=$true)]
-	[string] $ArmTemplateOutput, # = '{"vNetStorageConnectionString":{"type":"String","value":""},"publishProfilePassword":{"type":"String","value":""}}'
+	[string] $ArmTemplateOutput,
 	[string] $CloudFlareIpAddresses,
 	[string] $DeveloperIpAddress
 )
@@ -80,8 +87,8 @@ Start-Sleep($secondsToWait)
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ProgressPreference = 'SilentlyContinue'
 $websiteUrl = "https://" + $SiteBaseUrl
-Write-Host ("Hitting url " + websiteUrl)
-$webRequest = [System.Net.WebRequest]::Create($tenantUrl)
+Write-Host ("Hitting url " + $websiteUrl)
+$webRequest = [System.Net.WebRequest]::Create($websiteUrl)
 $webRequest.Timeout = 5 * 60 * 1000
 $output = $webRequest.GetResponse()
 $ProgressPreference = 'Continue'
