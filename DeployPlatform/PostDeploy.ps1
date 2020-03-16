@@ -16,7 +16,7 @@ Param(
 	[Parameter(Mandatory=$true)]
 	[string] $ArmTemplateOutput,
 	[string] $CloudFlareIpAddresses,
-	[string] $DeveloperIpAddress
+	[string] $DeveloperIpAddresses
 )
 
 [string] $vnetStorageApiKey = ''
@@ -63,16 +63,17 @@ if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
 #}
 
 # Access to the development site should be locked down to developers (NB: These rules are temporarily disabled on deployment)
-if ($DeveloperIpAddress -ne $null) {
-	[PSCustomObject] $scmRulesToAdd = @{ipAddress=$DeveloperIpAddress;action="Allow";priority="100";name="dev1";description="Developer IP Address"}
-	$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
-	$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
-	Write-Host ("Writing IP Address restrictions")
-	$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
-	$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
-	Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
-	Write-Host ("Completed IP Address restrictions")
-}
+#if ($DeveloperIpAddresses -ne '') {
+# TODO: Split $DeveloperIpAddresses into single addresses
+#	[PSCustomObject] $scmRulesToAdd = @{ipAddress=$DeveloperIpAddress;action="Allow";priority="100";name="dev1";description="Developer IP Address"}
+#	$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+#	$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
+#	Write-Host ("Writing IP Address restrictions")
+#	$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
+#	$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
+#	Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+#	Write-Host ("Completed IP Address restrictions")
+#}
 
 #Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")
 #Update-AzureRmStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $vNetStorageAccountName -DefaultAction Deny

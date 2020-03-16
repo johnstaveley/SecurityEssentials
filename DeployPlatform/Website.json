@@ -726,5 +726,30 @@
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "vNetStorageAccountName": {
+      "type": "string",
+      "value": "[variables('storageAccountNameVNet')]"
+    },
+    "vNetStorageApiKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+    },
+    "NonVNetStorageApiKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+    },
+    "AppInsightsInstrumentationKey": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Insights/components', variables('applicationInsightsName')), '2014-04-01').InstrumentationKey]"
+    },
+    "PublishProfilePassword": {
+      "type": "string",
+      "value": "[if(not(equals(parameters('environmentName'), 'development')), list(concat('Microsoft.Web/sites/', variables('webSiteName') ,'/config/publishingcredentials'), '2016-08-01').properties.publishingPassword, '')]"
+    },
+    "SqlserverAdminLoginUserName": {
+      "type": "string",
+      "value": "[parameters('sqlserverAdminLoginUserName')]"
+    }
+  }
 }
