@@ -131,6 +131,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment steps'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -139,6 +140,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
@@ -150,6 +152,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Website to AppService'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -165,6 +168,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
@@ -187,8 +191,8 @@ stages:
          **\SecurityEssentials.Acceptance.Tests.dll
          !**\*TestAdapter.dll
          !**\obj\**
-        searchFolder: '$(System.DefaultWorkingDirectory)/'
-        pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
+        searchFolder: '$(Pipeline.Workspace)/'
+        pathtoCustomTestAdapters: '$(Pipeline.Workspace)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(buildPlatform)'
@@ -200,7 +204,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      enabled: false # TODO: Removed
+      enabled: false # TODO: Removed temporarily to speed up build
       #condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
