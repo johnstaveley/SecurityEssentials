@@ -11,6 +11,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
+  system_accesstoken: $(System.AccessToken) # OAuth token required for test run
 
 stages: 
 - stage: Build
@@ -82,8 +83,8 @@ stages:
       displayName: 'AzSK Arm Template Checker'
       enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
       inputs:
-        ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
-        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\WebSite.prod.parameters.json'
+        ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
+        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
         TreatAsPassed: true # TODO: Remove this once rules are understood and exceptions added
         ExcludeControlIds: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin,Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server'
 
@@ -93,11 +94,10 @@ stages:
         SearchPattern: '**\bin\**\*.pdb'
     
     - task: CopyFiles@2
-      displayName: 'Copy Application Files to: $(Build.ArtifactStagingDirectory)'
-      enabled: false # TODO: Removed
+      displayName: 'Copy Test Application Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
         SourceFolder: '$(Build.sourcesdirectory)'
-        Contents: '**\\bin\\$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
+        Contents: '**\\bin\\$(BuildConfiguration)/**/Web.Acceptance.Tests.*'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
     
     - task: CopyFiles@2
@@ -140,7 +140,7 @@ stages:
       displayName: 'Pre Deployment'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PreDeploy.ps1'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
         ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName) -SqlAdminPassword $(SqlAdminPassword)'
         azurePowerShellVersion: LatestVersion
 
@@ -150,8 +150,8 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
-        csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
-        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
+        csmFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
+        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
         overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
         deploymentOutputs: ArmTemplateOutput
 
@@ -174,14 +174,20 @@ stages:
       displayName: 'Post Deployment steps'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\PostDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses $(DeveloperIpAddresses)'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses ''$(DeveloperIpAddresses)'''
         azurePowerShellVersion: LatestVersion
+
+    - task: AzurePowerShell@3
+      displayName: 'Allow Acceptance tests access to test DB'
+      inputs:
+        azureSubscription: '$(ServiceConnection)'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\EnableAppServiceForTesting.ps1'
+        ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName sqlserver-integration-2r4dzt34x3ry2 -RuleName "UnitTestRule-$(Build.BuildNumber)"'
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
       timeoutInMinutes: 60
-      enabled: false # TODO: Removed
       inputs:
         testAssemblyVer2: |
          **\Web.Acceptance.Tests.dll
@@ -203,7 +209,7 @@ stages:
       #condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\TearDown.ps1'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\TearDown.ps1'
         ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId)'
         azurePowerShellVersion: LatestVersion
 

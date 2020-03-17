@@ -35,7 +35,7 @@ Azure Devops Setup
 	+ CloudFlareUserServiceKey - Service Key for Cloudflare
 	+ CloudFlareZoneName - Zone id in Cloudflare
 	+ DeveloperIpAddresses - Comma delimited list of IP addresses of any developers that need access to the backend database TOOD: This can only accept 1 IP address at the moment
-	+ EnvironmentName - environment short hand, e.g. int, qa, uat, prod
+	+ EnvironmentName - environment short hand, e.g. int, qa, uat, live
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 	+ SiteName - name of the website to set up e.g. SecurityEssentials

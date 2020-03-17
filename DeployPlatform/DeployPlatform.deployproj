@@ -27,16 +27,17 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <Content Include="PostDeploy.ps1" />
-    <Content Include="TearDown.ps1" />
-    <Content Include="WebSite.prod.parameters.json" />
-    <Content Include="WebSite.int.parameters.json" />
-    <Content Include="Website.json" />
-    <Content Include="WebSite.qa.parameters.json" />
+    <Content Include="Scripts\PostDeploy.ps1" />
+    <Content Include="Scripts\TearDown.ps1" />
+    <Content Include="Arm\WebSite.live.parameters.json" />
+    <Content Include="Arm\WebSite.int.parameters.json" />
+    <Content Include="Arm\Website.json" />
+    <Content Include="Arm\WebSite.qa.parameters.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="PreDeploy.ps1" />
+    <Content Include="Scripts\PreDeploy.ps1" />
+    <None Include="Scripts\EnableAppServiceForTesting.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
