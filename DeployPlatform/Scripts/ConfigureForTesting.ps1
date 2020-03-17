@@ -12,6 +12,8 @@ param (
 	[Parameter(Mandatory=$true)]
 	[string] $TestConfigPath,
 	[Parameter(Mandatory=$true)]
+	[string] $SiteBaseUrl
+	[Parameter(Mandatory=$true)]
 	[string] $ResourceGroup, 
 	[Parameter(Mandatory=$true)]
 	[string] $SqlServerName,
@@ -36,14 +38,16 @@ Write-Host ("Eanble Database access for Testing Complete")
 
 Write-Host ("Getting test config file from $TestConfigPath")
 $appConfig = (Get-Content $TestConfigPath) -as [Xml]
-Write-Host('app.config '+ $appConfig.OuterXml)
 $appConfigRoot = $appConfig.get_DocumentElement()
-Write-Host('app.config root '+ $appConfigRoot.OuterXml)
 $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add")
-Write-Host('defaultConnection '+ $defaultConnection.OuterXml)
 [string] $defaultConnectionString = "Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=$SqlAdminPassword"
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=*******")
+
+$appSettings = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
+[string] $webServerUrl = "https://" + $SiteBaseUrl
+Write-Host ("Changing Web Server Url to $webServerUrl")
+$appSettings.SetAttribute("value", $webServerUrl)
 Write-Host($appConfig.OuterXml)
 $appConfig.Save($TestConfigPath)
 
