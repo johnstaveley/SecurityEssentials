@@ -43,6 +43,7 @@ Azure Devops Setup
 	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
 	+ SqlServerName - the name of the sql server to use e.g. securityessentialsint
 	+ SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions
+	+ WebDatabaseName - name of the sql database e.g. securityessentialsint
 * Add the following task types from the Azure Marketplace as follows:
 	+ OWASP Dependency checker
 	+ White source bolt. This needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)

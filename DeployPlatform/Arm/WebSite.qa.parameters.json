@@ -23,6 +23,7 @@
       }
     },
     "sqlserverName": { "value": "<ChangeMe>" },
-    "subscriptionId": { "value": "<ChangeMe>" }
+    "subscriptionId": { "value": "<ChangeMe>" },
+    "webDatabaseName": { "value": "<ChangeMe>" }
   }
 }

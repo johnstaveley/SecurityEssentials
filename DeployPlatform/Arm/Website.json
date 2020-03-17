@@ -93,6 +93,9 @@
     },
     "subscriptionId": {
       "type": "string"
+    },
+    "webDatabaseName": {
+      "type": "string"
     }
   },
   "variables": {
@@ -114,7 +117,7 @@
     "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameNonVNet'))]",
     "storageAccountNameNonVNet": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "virtualNetworkName": "[concat(parameters('siteName'), parameters('environmentName'))]",
-    "webDatabaseName": "[concat(parameters('siteName'), parameters('environmentName'), '/', parameters('siteName'), parameters('environmentName'))]",
+    "webDatabaseNameFull": "[concat(parameters('sqlserverName'), '/', parameters('webDatabaseName'))]",
     "webDatabase": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "webSiteName": "[concat(parameters('siteName'), parameters('environmentName'))]"
   },
@@ -226,7 +229,7 @@
     {
       "type": "Microsoft.Sql/servers/databases",
       "kind": "v12.0,user",
-      "name": "[variables('webDatabaseName')]",
+      "name": "[variables('webDatabaseNameFull')]",
       "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "tags": { "displayName": "Database" },
       "apiVersion": "2014-04-01-preview",
@@ -249,7 +252,7 @@
       ],
       "resources": [
         {
-          "name": "[concat(variables('webDatabaseName'), '/current')]",
+          "name": "[concat(variables('webDatabaseNameFull'), '/current')]",
           "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
@@ -265,7 +268,7 @@
     },
     {
       "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
-      "name": "[concat(variables('webDatabaseName'), '/Default')]",
+      "name": "[concat(variables('webDatabaseNameFull'), '/Default')]",
       "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "tags": { "displayName": "Database Backup" },
       "apiVersion": "2017-03-01-preview",
@@ -519,7 +522,7 @@
           "connectionStrings": [
             {
               "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseNameFull'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
               "type": 1
             }
           ]

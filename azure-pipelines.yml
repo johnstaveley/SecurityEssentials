@@ -148,7 +148,7 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -subscriptionId $(SubscriptionId)
+        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName)
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3
@@ -180,8 +180,8 @@ stages:
       displayName: 'Allow Acceptance tests access to database'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\OpenDatabaseForTesting.ps1'
-        ScriptArguments: '-ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName ''AcceptanceTestRule-$(Build.BuildNumber)'''
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
+        ScriptArguments: '-TestConfigPath ''$(Pipeline.Workspace)/SecurityEssentials.Acceptance.Tests.dll.config'' -ResourceGroup ''$(ResourceGroup)'' -SqlServerName ''$(SqlServerName)'' -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
