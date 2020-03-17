@@ -16,6 +16,8 @@ param (
 Write-Host "Making call to $Address at Resource Group $ResourceGroup, Server Name $ServerName and Rule Name $RuleName"
 $basicAuth = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(("{0}:{1}" -f 'test', $Token)))
 $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
+Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 $result = Invoke-RestMethod -Uri $Address -headers $headers -Method Get
 Write-Host ("IP Address " + $result.value)
 New-AzureRmSqlServerFirewallRule -ResourceGroupName $ResourceGroup -ServerName $ServerName -FirewallRuleName $RuleName -StartIpAddress "$($result.value)" -EndIpAddress "$($result.value)"
+

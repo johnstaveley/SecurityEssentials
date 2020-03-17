@@ -41,6 +41,7 @@ Azure Devops Setup
 	+ SiteName - name of the website to set up e.g. SecurityEssentials
 	+ SqlAdminPassword - admin password for sql azure
 	+ SqlAdminUserName - admin username for sql azure
+	+ SqlServerName - the name of the sql server to use
 	+ SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions
 * Add the following task types from the Azure Marketplace as follows:
 	+ OWASP Dependency checker

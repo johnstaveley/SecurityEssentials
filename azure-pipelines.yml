@@ -175,7 +175,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -$CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -$DeveloperIpAddresses ''$(DeveloperIpAddresses)'''
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -DeveloperIpAddresses ''$(DeveloperIpAddresses)'''
         azurePowerShellVersion: LatestVersion
 
     - task: AzurePowerShell@3
@@ -183,7 +183,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\EnableAppServiceForTesting.ps1'
-        ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName sqlserver-integration-2r4dzt34x3ry2 -RuleName "UnitTestRule-$(Build.BuildNumber)"'
+        ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName "AcceptanceTestRule-$(Build.BuildNumber)"'
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
