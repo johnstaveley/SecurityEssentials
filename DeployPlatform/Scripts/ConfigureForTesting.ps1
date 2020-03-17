@@ -12,7 +12,7 @@ param (
 	[Parameter(Mandatory=$true)]
 	[string] $TestConfigPath,
 	[Parameter(Mandatory=$true)]
-	[string] $SiteBaseUrl
+	[string] $SiteBaseUrl,
 	[Parameter(Mandatory=$true)]
 	[string] $ResourceGroup, 
 	[Parameter(Mandatory=$true)]
