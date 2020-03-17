@@ -87,6 +87,11 @@ stages:
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
         TreatAsPassed: true # TODO: Remove this once rules are understood and exceptions added
         ExcludeControlIds: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin,Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server'
+    - task: CopyFiles@2
+      displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
+        TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
 
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
@@ -182,7 +187,7 @@ stages:
          !**\*TestAdapter.dll
          !**\obj\**
         searchFolder: '$(build.sourcesdirectory)'
-        pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
+        pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(buildPlatform)'
