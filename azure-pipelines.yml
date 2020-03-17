@@ -188,7 +188,7 @@ stages:
          !**\*TestAdapter.dll
          !**\obj\**
         searchFolder: '$(build.sourcesdirectory)'
-        pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/'
+        pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(buildPlatform)'
