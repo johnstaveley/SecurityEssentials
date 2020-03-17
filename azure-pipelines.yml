@@ -64,6 +64,7 @@ stages:
         runInParallel: true
         codeCoverageEnabled: true
         diagnosticsEnabled: true
+        minimumExpectedTests: 10
 
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
