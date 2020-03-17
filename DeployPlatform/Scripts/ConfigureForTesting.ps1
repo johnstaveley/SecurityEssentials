@@ -2,7 +2,8 @@
 .SYNOPSIS
     Enables Azure Devops agent to connect to the sql database
 .DESCRIPTION
-	Calling this function opens a port in the firewall so that the unit tests can change the database state before running integration tests
+	Opens a port in the firewall so that the unit tests can change the database state before running integration tests
+	Changes the connection string for the test so that it points to the test database
 .NOTES
     Author: John Staveley
     Date:   17/03/2020    
@@ -35,11 +36,12 @@ Write-Host ("Eanble Database access for Testing Complete")
 
 Write-Host ("Getting test config file from $TestConfigPath")
 $appConfig = (Get-Content $TestConfigPath) -as [Xml]
+Write-Host($appConfig)
 $appConfigRoot = $appConfig.get_DocumentElement();
 $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add");
 [string] $defaultConnectionString = "Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=$SqlAdminPassword",
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString);
-Write-Host ("Changing connection string to " + $defaultConnectionString)
+Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=*******")
 Write-Host($appConfig)
 $appConfig.Save($TestConfigPath)
 
