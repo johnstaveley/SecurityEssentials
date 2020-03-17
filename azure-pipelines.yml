@@ -94,13 +94,6 @@ stages:
         SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
         TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
 
-    - task: CopyFiles@2
-      displayName: 'Copy Acceptance tests to $(build.artifactstagingdirectory)'
-      inputs:
-        SourceFolder: '$(build.sourcesdirectory)'
-        Contents: '**/Web.Acceptance.Tests/bin/$(BuildConfiguration)/*'
-        TargetFolder: '$(build.artifactstagingdirectory)/Tests/Acceptance/'
-
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
       inputs:
@@ -191,10 +184,10 @@ stages:
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
-         **\Web.Acceptance.Tests.dll
+         **\SecurityEssentials.Acceptance.Tests.dll
          !**\*TestAdapter.dll
          !**\obj\**
-        searchFolder: '$(System.DefaultWorkingDirectory)/Tests/Acceptance/'
+        searchFolder: '$(System.DefaultWorkingDirectory)/'
         pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
