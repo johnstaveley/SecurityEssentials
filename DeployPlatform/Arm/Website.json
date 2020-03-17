@@ -81,6 +81,9 @@
     "siteName": {
       "type": "string"
     },
+    "sqlserverName": {
+      "type": "string"
+    },
     "sqlAdminUserName": {
       "type": "string"
     },
@@ -106,7 +109,6 @@
     "firewallRuleAllowAllWindowsAzureIps": "0.0.0.0",
     "networkSecurityGroupsFrontEndName": "[concat(parameters('siteName'), parameters('environmentName'), '-frontend')]",
     "serverFarmName": "[concat(parameters('siteName'), parameters('environmentName'))]",
-    "sqlserverName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "storageAccountIdVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameVNet'))]",
     "storageAccountNameVNet": "[concat(parameters('siteName'), parameters('environmentName'), 'vnt')]",
     "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameNonVNet'))]",
@@ -243,15 +245,15 @@
         "readScale": "Disabled"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
       ],
       "resources": [
         {
           "name": "[concat(variables('webDatabaseName'), '/current')]",
           "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
           "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
-            "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), variables('webDatabase'))]"
+            "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
+            "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), variables('webDatabase'))]"
           ],
           "location": null,
           "apiVersion": "2014-04-01",
@@ -276,8 +278,8 @@
         "weekOfYear": "22"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), variables('webDatabase'))]"
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), variables('webDatabase'))]"
       ]
     },
 
@@ -303,7 +305,7 @@
       "dependsOn": []
     },
     {
-      "name": "[variables('sqlserverName')]",
+      "name": "[parameters('sqlserverName')]",
       "type": "Microsoft.Sql/servers",
       "location": "[resourceGroup().location]",
       "tags": { "displayName": "SQL Server" },
@@ -324,7 +326,7 @@
             "startIpAddress": "0.0.0.0"
           },
           "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))]"
+            "[resourceId('Microsoft.Sql/servers/', parameters('sqlserverName'))]"
           ]
         },
         {
@@ -339,7 +341,7 @@
             "endIpAddress": "[parameters('developerIpAddresses')]"
           },
           "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+            "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
           ]
         }
       ]
@@ -347,7 +349,7 @@
     {
       "type": "Microsoft.Sql/servers/auditingSettings",
       "apiVersion": "2017-03-01-preview",
-      "name": "[concat(variables('sqlserverName'), '/Default')]",
+      "name": "[concat(parameters('sqlserverName'), '/Default')]",
       "tags": { "displayName": "SQL Server Auditing Settings" },
       "location": "[resourceGroup().location]",
       "properties": {
@@ -364,17 +366,17 @@
         "retentionDays": 365
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet'))]"
       ]
     },
     {
       "type": "Microsoft.Sql/servers/securityAlertPolicies",
       "apiVersion": "2017-03-01-preview",
-      "name": "[concat(variables('sqlServerName'), '/Default')]",
+      "name": "[concat(parameters('sqlServerName'), '/Default')]",
       "tags": { "displayName": "SQL Server Security Alert Policies" },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
         "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]"
       ],
       "properties": {
@@ -394,12 +396,12 @@
     {
       "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
       "apiVersion": "2018-06-01-preview",
-      "name": "[concat(variables('sqlServerName'), '/Default')]",
+      "name": "[concat(parameters('sqlServerName'), '/Default')]",
       "tags": { "displayName": "SQL Server vulnerability Assessment" },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
         "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]",
-        "[concat('Microsoft.Sql/servers/', variables('sqlServerName'), '/securityAlertPolicies/Default')]"
+        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'), '/securityAlertPolicies/Default')]"
       ],
       "properties": {
         "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
@@ -517,7 +519,7 @@
           "connectionStrings": [
             {
               "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
               "type": 1
             }
           ]
@@ -761,10 +763,6 @@
     "PublishProfilePassword": {
       "type": "string",
       "value": "[if(not(equals(parameters('environmentName'), 'development')), list(concat('Microsoft.Web/sites/', variables('webSiteName') ,'/config/publishingcredentials'), '2016-08-01').properties.publishingPassword, '')]"
-    },
-    "SqlserverAdminLoginUserName": {
-      "type": "string",
-      "value": "[parameters('sqlAdminUserName')]"
     }
   }
 }

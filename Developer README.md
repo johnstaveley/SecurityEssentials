@@ -39,9 +39,9 @@ Azure Devops Setup
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 	+ SiteName - name of the website to set up e.g. SecurityEssentials
-	+ SqlAdminPassword - admin password for sql azure
-	+ SqlAdminUserName - admin username for sql azure
-	+ SqlServerName - the name of the sql server to use
+	+ SqlAdminPassword - admin password for sql azure e.g. a secure randomly generated 15 digit password
+	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
+	+ SqlServerName - the name of the sql server to use e.g. securityessentialsint
 	+ SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions
 * Add the following task types from the Azure Marketplace as follows:
 	+ OWASP Dependency checker

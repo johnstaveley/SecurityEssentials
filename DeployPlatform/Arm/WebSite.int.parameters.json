@@ -22,6 +22,7 @@
         "secretName": "SqlAzurePassword"
       }
     },
+    "sqlserverName": { "value": "<ChangeMe>" },
     "subscriptionId": { "value": "<ChangeMe>" }
   }
 }
