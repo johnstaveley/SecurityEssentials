@@ -41,13 +41,7 @@ stages:
         solution: '$(solution)'
         msbuildArgs: '/p:PackageLocation=$(Build.ArtifactStagingDirectory) /p:OutDir=$(Build.ArtifactStagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
         platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    
-    - task: FileTransform@2
-      displayName: 'Transform settings for Acceptance tests'
-      inputs:
-        folderPath: '$(build.sourcesdirectory)'
-        xmlTransformationRules: '-transform **\Web.Acceptance.Tests\App.Integration.config -xml **\Web.Acceptance.Tests\bin\**\SecurityEssentials.Acceptance.Tests.dll.config'    
+        configuration: '$(buildConfiguration)'     
 
     - task: VSTest@2
       displayName: 'Run Unit tests'
@@ -132,7 +126,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment steps'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -141,7 +135,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
@@ -153,7 +147,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Website to AppService'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -169,7 +163,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'

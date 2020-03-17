@@ -44,10 +44,12 @@ $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add")
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=*******")
 
-$appSettings = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
 [string] $webServerUrl = "https://" + $SiteBaseUrl
 Write-Host ("Changing Web Server Url to $webServerUrl")
-$appSettings.SetAttribute("value", $webServerUrl)
+$appSettingWebServerUrl = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
+$appSettingWebServerUrl.SetAttribute("value", $webServerUrl)
+$appSettingTakeScreenShotOnFailure = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TakeScreenShotOnFailure']")
+$appSettingTakeScreenShotOnFailure.SetAttribute("value", "false")
 Write-Host($appConfig.OuterXml)
 $appConfig.Save($TestConfigPath)
 

@@ -258,10 +258,6 @@
       <SubType>Designer</SubType>
       <TransformOnBuild>true</TransformOnBuild>
     </None>
-    <None Include="App.Integration.config">
-      <DependentUpon>App.config</DependentUpon>
-      <IsTransformFile>True</IsTransformFile>
-    </None>
     <None Include="packages.config" />
     <None Include="Security.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
