@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -10,6 +12,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
@@ -80,7 +83,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		}
 
 		[AfterTestRun]
-		public static void AfterTestRun()
+		public static async Task AfterTestRun()
 		{
 			if (bool.Parse(ConfigurationManager.AppSettings["RestoreDatabaseAfterTests"]))
 			{
@@ -88,26 +91,91 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.LookupRestore.sql");
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseRestore.sql");
 			}
-			if (Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]) && Directory.Exists(ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]))
+			// Cleanup screenshot files after 1 day
+			var storage = ConfigurationManager.AppSettings["TestScreenCaptureStorage"];
+			if (Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
 			{
-				var screenshots = Directory.GetFiles(ConfigurationManager.AppSettings["TestScreenCaptureDirectory"], "*.png")
-					.Select(a => new FileInfo(a))
-					.Where(b => b.CreationTimeUtc < DateTime.UtcNow.AddDays(-1))
-					.ToList();
-				foreach (var screenshot in screenshots)
+				Console.WriteLine("Cleaning up screen captures older than 7 days");
+				if (storage.Contains("Endpoint"))
 				{
-					screenshot.Delete();
+					if (CloudStorageAccount.TryParse(storage, out var storageAccount))
+					{
+						CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+						var cloudBlobContainer = cloudBlobClient.GetContainerReference("selenium");
+						await cloudBlobContainer.CreateIfNotExistsAsync();
+						if (await cloudBlobContainer.ExistsAsync())
+						{
+							BlobContinuationToken continuationToken = null;
+							do
+							{
+								var results = await cloudBlobContainer.ListBlobsSegmentedAsync(null, true, BlobListingDetails.All, null, continuationToken, null, null);
+								continuationToken = results.ContinuationToken;
+								foreach (IListBlobItem blobItem in results.Results)
+								{
+									if (blobItem is CloudBlockBlob blob)
+									{
+										if (blob.Properties.LastModified < DateTime.UtcNow.AddDays(-7))
+										{
+											await blob.DeleteIfExistsAsync();
+										}
+									}
+								}
+							} while (continuationToken != null);
+						}
+					}
+				}
+				else
+				{
+					if (Directory.Exists(storage))
+					{
+						var screenshots = Directory.GetFiles(storage, "*.png")
+							.Select(a => new FileInfo(a))
+							.Where(b => b.CreationTimeUtc < DateTime.UtcNow.AddDays(-7))
+							.ToList();
+						foreach (var screenshot in screenshots)
+						{
+							screenshot.Delete();
+						}
+					}
 				}
 			}
 		}
 
 		[AfterScenario]
-		public static void TakeScreenShotIfInError()
+		public static async Task TakeScreenShotIfInError()
 		{
-			if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
+			if (FeatureContext.Current.HasWebDriver())
 			{
-				string fileName = $"{ConfigurationManager.AppSettings["TestScreenCaptureDirectory"]}TestFailure-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.png";
-				FeatureContext.Current.GetWebDriver().TakeScreenshot().SaveAsFile(fileName, ScreenshotImageFormat.Png);
+				var webDriver = FeatureContext.Current.GetWebDriver();
+				if (ScenarioContext.Current.TestError != null && Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
+				{
+					var storage = ConfigurationManager.AppSettings["TestScreenCaptureStorage"];
+					var filename = $"Failure-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.png";
+					Console.WriteLine($"Storing Screenshot of error with filename {filename}");
+					if (!storage.Contains("Endpoint"))
+					{
+						string filePath = $"{storage}{filename}";
+						webDriver.TakeScreenshot().SaveAsFile(filePath, ScreenshotImageFormat.Png);
+					}
+					else
+					{
+						if (webDriver is ITakesScreenshot screenshotDriver)
+						{
+							Screenshot screenshot = screenshotDriver.GetScreenshot();
+							if (CloudStorageAccount.TryParse(storage, out var storageAccount))
+							{
+								CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+								var cloudBlobContainer = cloudBlobClient.GetContainerReference("selenium");
+								await cloudBlobContainer.CreateIfNotExistsAsync();
+								CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
+								var memoryStream = new MemoryStream(screenshot.AsByteArray);
+								memoryStream.Seek(0, SeekOrigin.Begin);
+								await cloudBlockBlob.UploadFromStreamAsync(memoryStream);
+							}
+						}
+					}
+					TestContext.WriteLine("Failed on url " + webDriver.Url);
+				}
 			}
 		}		
 

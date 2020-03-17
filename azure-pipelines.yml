@@ -179,13 +179,14 @@ stages:
       inputs:
         testAssemblyVer2: |
          **\Web.Acceptance.Tests.dll
+         !**\*TestAdapter.dll
          !**\obj\**
         searchFolder: '$(build.sourcesdirectory)'
         pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
-        platform: '$(BuildPlatform)'
-        configuration: '$(BuildConfiguration)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
         diagnosticsEnabled: false
         uiTests: true
         minimumExpectedTests: 10

@@ -1296,9 +1296,6 @@
     <Content Include="Views\User\ResetPassword.cshtml" />
     <Content Include="Views\WebPageContent\TooManyRequests.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
-    <None Include="Web.PAT.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
