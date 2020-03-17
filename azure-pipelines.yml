@@ -183,7 +183,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\OpenDatabaseForTesting.ps1'
-        ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName "AcceptanceTestRule-$(Build.BuildNumber)"'
+        ScriptArguments: '-ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName ''AcceptanceTestRule-$(Build.BuildNumber)'''
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
