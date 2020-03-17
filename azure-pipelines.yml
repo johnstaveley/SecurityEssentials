@@ -152,7 +152,7 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddress $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlserverAdminLoginUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
+        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -subscriptionId $(SubscriptionId)
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3

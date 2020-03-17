@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminEmailAddress": {
+    "adminEmailAddresses": {
       "type": "string"
     },
     "autoScaleMaxInstanceCount": {
@@ -81,10 +81,10 @@
     "siteName": {
       "type": "string"
     },
-    "sqlserverAdminLoginUserName": {
+    "sqlAdminUserName": {
       "type": "string"
     },
-    "sqlserverAdminLoginPassword": {
+    "sqlAdminPassword": {
       "type": "securestring",
       "defaultValue": "Not Specified"
     },
@@ -145,7 +145,7 @@
         "emailReceivers": [
           {
             "name": "Administrator",
-            "emailAddress": "[parameters('adminEmailAddress')]"
+            "emailAddress": "[parameters('adminEmailAddresses')]"
           }
         ],
         "webhookReceivers": []
@@ -309,8 +309,8 @@
       "tags": { "displayName": "SQL Server" },
       "apiVersion": "2014-04-01-preview",
       "properties": {
-        "administratorLogin": "[parameters('sqlserverAdminLoginUserName')]",
-        "administratorLoginPassword": "[parameters('sqlserverAdminLoginPassword')]",
+        "administratorLogin": "[parameters('sqlAdminUserName')]",
+        "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
         "version": "12.0"
       },
       "resources": [
@@ -383,7 +383,7 @@
           ""
         ],
         "emailAddresses": [
-          "[parameters('adminEmailAddress')]"
+          "[parameters('adminEmailAddresses')]"
         ],
         "emailAccountAdmins": true,
         "retentionDays": 200,
@@ -408,7 +408,7 @@
           "isEnabled": true,
           "emailSubscriptionAdmins": true,
           "emails": [
-            "[parameters('adminEmailAddress')]"
+            "[parameters('adminEmailAddresses')]"
           ]
         }
       }
@@ -517,7 +517,7 @@
           "connectionStrings": [
             {
               "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlserverAdminLoginUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlserverAdminLoginPassword'), ';')]",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
               "type": 1
             }
           ]
@@ -764,7 +764,7 @@
     },
     "SqlserverAdminLoginUserName": {
       "type": "string",
-      "value": "[parameters('sqlserverAdminLoginUserName')]"
+      "value": "[parameters('sqlAdminUserName')]"
     }
   }
 }

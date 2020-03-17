@@ -29,7 +29,7 @@ Azure Devops Setup
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
 * Create the following pipeline variables as follows:
 	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
-	+ AdminEmailAddresses - email addresses for notifications and alerts
+	+ AdminEmailAddresses - email addresses for notifications and alerts NB: This can only support 1 email address at the moment
 	+ AzureLocation - location of azure data centre e.g. UKSouth
 	+ CloudFlareAuthEmail - Username for Cloudflare
 	+ CloudFlareUserServiceKey - Service Key for Cloudflare

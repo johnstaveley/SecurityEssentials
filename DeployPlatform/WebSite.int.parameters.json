@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminEmailAddress": { "value": "<ChangeMe>" },
+    "adminEmailAddresses": { "value": "<ChangeMe>" },
     "developerIpAddresses": { "value": "<ChangeMe>" },
     "environmentName": { "value": "int" },
     "hostNameSslStates": {
@@ -13,8 +13,8 @@
     "servicePlanSkuFamily": { "value": "S" },
     "servicePlanSkuCapacity": { "value": 1 },
     "siteName": { "value": "securityessentials" },
-    "sqlserverAdminLoginUserName": { "value": "<ChangeMe>" },
-    "sqlserverAdminLoginPassword": {
+    "sqlAdminUserName": { "value": "<ChangeMe>" },
+    "sqlAdminPassword": {
       "reference": {
         "keyVault": {
           "id": "/subscriptions/a0d704f5-f3ad-49cb-ad02-bda68d45ed1f/resourceGroups/SecurityEssentials-Int/providers/Microsoft.KeyVault/vaults/securityessentialsint"
