@@ -94,6 +94,13 @@ stages:
         SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
         TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
 
+    - task: CopyFiles@2
+      displayName: 'Copy Acceptance tests to $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(build.sourcesdirectory)'
+        Contents: '**/Web.Acceptance.Tests/bin/$(BuildConfiguration)/*'
+        TargetFolder: '$(build.artifactstagingdirectory)/Tests/Acceptance/'
+
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
       inputs:
@@ -125,7 +132,7 @@ stages:
       - vstest
     steps:
     - task: DownloadPipelineArtifact@2
-      displayName: 'Download Artifacts: SecurityEssentials.Web.zip'
+      displayName: 'Download Artifacts: drop'
       inputs:
         artifact: drop
 
@@ -187,7 +194,7 @@ stages:
          **\Web.Acceptance.Tests.dll
          !**\*TestAdapter.dll
          !**\obj\**
-        searchFolder: '$(build.sourcesdirectory)'
+        searchFolder: '$(System.DefaultWorkingDirectory)/Tests/Acceptance/'
         pathtoCustomTestAdapters: '$(System.DefaultWorkingDirectory)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
