@@ -25,6 +25,7 @@ param (
 	)
 
 Write-Host ("Configure for Testing Started")
+
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 #NB: This puts a dependency on the website http://ipinfo.io/json, but it seems to work fine
 $agentIPAddresss = Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
@@ -39,6 +40,7 @@ $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add");
 [string] $defaultConnectionString = "Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=$SqlAdminPassword",
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString);
 Write-Host ("Changing connection string to " + $defaultConnectionString)
+Write-Host($appConfig)
 $appConfig.Save($TestConfigPath)
 
 Write-Host ("Configure for Testing Complete")
