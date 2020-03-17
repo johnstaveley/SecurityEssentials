@@ -36,15 +36,15 @@ Write-Host ("Eanble Database access for Testing Complete")
 
 Write-Host ("Getting test config file from $TestConfigPath")
 $appConfig = (Get-Content $TestConfigPath) -as [Xml]
-Write-Host('app.config '+ $appConfig.Replace("<", "").Replace(">", ""))
+Write-Host('app.config '+ $appConfig.OuterXml)
 $appConfigRoot = $appConfig.get_DocumentElement()
-Write-Host('app.config root '+ $appConfigRoot.Replace("<", "").Replace(">", ""))
+Write-Host('app.config root '+ $appConfigRoot.OuterXml)
 $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add")
-Write-Host('defaultConnection '+ $defaultConnection.Replace("<", "").Replace(">", ""))
+Write-Host('defaultConnection '+ $defaultConnection.OuterXml)
 [string] $defaultConnectionString = "Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=$SqlAdminPassword"
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=*******")
-Write-Host($appConfig.Replace("<", "").Replace(">", ""))
+Write-Host($appConfig.OuterXml)
 $appConfig.Save($TestConfigPath)
 
 Write-Host ("Configure for Testing Complete")
