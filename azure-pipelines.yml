@@ -92,12 +92,6 @@ stages:
       displayName: 'Publish symbols path'
       inputs:
         SearchPattern: '**\bin\**\*.pdb'
-   
-    - task: CopyFiles@2
-      displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
-      inputs:
-        SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)\Tests\NUnit3TestAdapter.3.16.1\'
     
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'
@@ -130,7 +124,7 @@ stages:
         artifact: drop
 
     - task: AzurePowerShell@3
-      displayName: 'Pre Deployment'
+      displayName: 'Pre Deployment steps'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -172,7 +166,7 @@ stages:
         azurePowerShellVersion: LatestVersion
 
     - task: AzurePowerShell@3
-      displayName: 'Allow Acceptance tests access to test DB'
+      displayName: 'Allow Acceptance tests access to database'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\OpenDatabaseForTesting.ps1'
@@ -187,7 +181,7 @@ stages:
          **\Web.Acceptance.Tests.dll
          !**\obj\**
         searchFolder: '$(build.sourcesdirectory)'
-        pathtoCustomTestAdapters: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\build\net35\'
+        pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(BuildPlatform)'
