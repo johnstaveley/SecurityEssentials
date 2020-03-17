@@ -145,7 +145,7 @@ stages:
         azurePowerShellVersion: LatestVersion
 
     - task: AzureResourceGroupDeployment@2
-      displayName: 'Deploy Azure Assets'
+      displayName: 'Deploy Azure Resources'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
@@ -182,7 +182,7 @@ stages:
       displayName: 'Allow Acceptance tests access to test DB'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\EnableAppServiceForTesting.ps1'
+        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\OpenDatabaseForTesting.ps1'
         ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName "AcceptanceTestRule-$(Build.BuildNumber)"'
         azurePowerShellVersion: LatestVersion
 
