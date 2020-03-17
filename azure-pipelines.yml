@@ -156,7 +156,7 @@ stages:
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3
-      displayName: 'Deploy website'
+      displayName: 'Deploy Website to AppService'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -184,6 +184,7 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\EnableAppServiceForTesting.ps1'
         ScriptArguments: '-Address https://johnstaveley.vsdtl.visualstudio.com/DefaultCollection/_apis/vslabs/ipaddress -Token $(System.AccessToken) -ResourceGroup ''$(ResourceGroup)'' -ServerName ''$(SqlServerName)'' -RuleName "AcceptanceTestRule-$(Build.BuildNumber)"'
+        azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
