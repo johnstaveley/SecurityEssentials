@@ -92,14 +92,7 @@ stages:
       displayName: 'Publish symbols path'
       inputs:
         SearchPattern: '**\bin\**\*.pdb'
-    
-    - task: CopyFiles@2
-      displayName: 'Copy Test Application Files to: $(Build.ArtifactStagingDirectory)'
-      inputs:
-        SourceFolder: '$(Build.sourcesdirectory)'
-        Contents: '**\\bin\\$(BuildConfiguration)/**/Web.Acceptance.Tests.*'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    
+   
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
       inputs:
@@ -194,7 +187,7 @@ stages:
          **\Web.Acceptance.Tests.dll
          !**\obj\**
         searchFolder: '$(build.sourcesdirectory)'
-        pathtoCustomTestAdapters: '$(build.sourcesdirectory)\src\packages\NUnit3TestAdapter.3.16.1\build\net35\'
+        pathtoCustomTestAdapters: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\build\net35\'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(BuildPlatform)'

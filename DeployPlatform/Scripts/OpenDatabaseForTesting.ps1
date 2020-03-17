@@ -15,6 +15,7 @@ param (
 	[Parameter(Mandatory=$true)]
 	[string] $RuleName
 	)
+
 Write-Host ("Eanble Database access for Testing")
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 #NB: This puts a dependency on the website http://ipinfo.io/json, but it seems to work fine
