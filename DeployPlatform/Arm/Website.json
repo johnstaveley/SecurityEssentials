@@ -120,7 +120,6 @@
     "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageAccountNonVNetName'))]",
     "virtualNetworkName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "webDatabaseNameFull": "[concat(parameters('sqlserverName'), '/', parameters('webDatabaseName'))]",
-    "webDatabase": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "webSiteName": "[concat(parameters('siteName'), parameters('environmentName'))]"
   },
   "resources": [
@@ -164,7 +163,6 @@
     {
       "type": "microsoft.insights/autoscalesettings",
       "name": "[variables('autoScalingName')]",
-      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "apiVersion": "2014-04-01",
       "location": "[resourceGroup().location]",
       "tags": { "displayName": "App Service Auto Scaling" },
@@ -232,7 +230,6 @@
       "type": "Microsoft.Sql/servers/databases",
       "kind": "v12.0,user",
       "name": "[variables('webDatabaseNameFull')]",
-      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "tags": { "displayName": "Database" },
       "apiVersion": "2014-04-01-preview",
       "location": "[resourceGroup().location]",
@@ -258,7 +255,7 @@
           "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-            "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), variables('webDatabase'))]"
+            "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('webDatabaseName'))]"
           ],
           "location": null,
           "apiVersion": "2014-04-01",
@@ -271,7 +268,6 @@
     {
       "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
       "name": "[concat(variables('webDatabaseNameFull'), '/Default')]",
-      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "tags": { "displayName": "Database Backup" },
       "apiVersion": "2017-03-01-preview",
       "location": "[resourceGroup().location]",
@@ -284,7 +280,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), variables('webDatabase'))]"
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('webDatabaseName'))]"
       ]
     },
 
@@ -300,7 +296,6 @@
       },
       "kind": "app",
       "name": "[variables('serverFarmName')]",
-      "condition": "[not(equals(parameters('environmentName'), 'development'))]",
       "apiVersion": "2016-09-01",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -524,7 +519,7 @@
           "connectionStrings": [
             {
               "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('webDatabaseNameFull'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
               "type": 1
             }
           ]

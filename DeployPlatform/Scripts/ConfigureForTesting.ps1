@@ -3,7 +3,7 @@
     Enables Azure Devops agent to connect to the sql database
 .DESCRIPTION
 	Opens a port in the firewall so that the unit tests can change the database state before running integration tests
-	Changes the connection string for the test so that it points to the test database
+	Changes the connection string and app settings for the acceptance tests
 .NOTES
     Author: John Staveley
     Date:   17/03/2020    
@@ -58,7 +58,6 @@ $TestScreenCaptureStorage = "DefaultEndpointsProtocol=https;AccountName=$Storage
 Write-Host ("Changing TestScreenCaptureStorage to $TestScreenCaptureStorage")
 $appSettingTestScreenCaptureStorage = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TestScreenCaptureStorage']")
 $appSettingTestScreenCaptureStorage.SetAttribute("value", $TestScreenCaptureStorage)
-Write-Host($appConfig.OuterXml)
 $appConfig.Save($TestConfigPath)
 
 Write-Host ("Configure for Testing Complete")
