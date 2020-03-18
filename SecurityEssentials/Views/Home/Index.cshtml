@@ -107,7 +107,7 @@
                 <h2>How the incorporated build process ensures you remain secure over time</h2>
                 This solution comes with azure-pipelines.yml build and test script. Running this in Azure Devops ensures the following:
                 <ul>
-                    <li>2. Account management process - Partially checked using Unit tests</li>
+                    <li>2. Account management process - Partially checked using Unit tests and Acceptance tests</li>
                     <li>4. Insecure direct object references - Partially checked using Unit tests</li>
                     <li>7. Missing file level access control - Partially checked using Unit tests</li>
                     <li>8. CSRF - Partially checked using Unit tests</li>
@@ -119,8 +119,7 @@
                 <h2>How your testing process can ensure you remain secure over time</h2>
                 Following this process will help prevent security regressions from occurring. As part of your build process you should run all acceptance tests provided with this project. You can also run <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
                 <ul>
-                    <li>(Some of) 1, 3, 5, 6, 8, 10 - OWASP Zap, check the report for vulnerabilities</li>
-                    <li>2. Account management process - Acceptance tests</li>
+                    <li>(Some of) 1, 3, 5, 6, 8, 10 - OWASP Zap, check the report for vulnerabilities</li>                    
                     <li>8. CSRF - OWASP ZAP</li>
                 </ul>
             </p>
