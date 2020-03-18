@@ -52,7 +52,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				        ChromeOptions chromeOptions = new ChromeOptions();
 						if (webBrowserType == "Headless Chrome")
 						{
-							chromeOptions.AddArguments("--headless", "--disable-infobars", "--disable-extensions", "--test-type", "--allow-insecure-localhost");
+							chromeOptions.AddArguments("--headless", "--disable-infobars", "--disable-extensions", "--test-type", "--allow-insecure-localhost", "--disable-gpu", "--no-sandbox");
 						}
 						webDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), chromeOptions, TimeSpan.FromMinutes(timeoutMinutes));
 				        break;

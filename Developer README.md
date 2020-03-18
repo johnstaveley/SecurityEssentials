@@ -26,6 +26,8 @@ To set up the project take the following steps:
 
 Azure Devops Setup
 ------------------
+In order to keep your solution secure you should run the acceptance tests on each checkin. Take the following steps to set up an automated build in Azure:
+
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
 * Create the following pipeline variables as follows:
 	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint

@@ -195,7 +195,7 @@ stages:
         diagnosticsEnabled: false
         uiTests: true
         minimumExpectedTests: 10
-        testFilterCriteria: 'TestCategory=Smoke'
+        #testFilterCriteria: 'TestCategory=Smoke'
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
