@@ -91,6 +91,9 @@
       "type": "securestring",
       "defaultValue": "Not Specified"
     },
+    "storageAccountNonVNetName": {
+      "type": "string"
+    },
     "subscriptionId": {
       "type": "string"
     },
@@ -114,8 +117,7 @@
     "serverFarmName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "storageAccountIdVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameVNet'))]",
     "storageAccountNameVNet": "[concat(parameters('siteName'), parameters('environmentName'), 'vnt')]",
-    "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountNameNonVNet'))]",
-    "storageAccountNameNonVNet": "[concat(parameters('siteName'), parameters('environmentName'))]",
+    "storageAccountIdNonVNet": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageAccountNonVNetName'))]",
     "virtualNetworkName": "[concat(parameters('siteName'), parameters('environmentName'))]",
     "webDatabaseNameFull": "[concat(parameters('sqlserverName'), '/', parameters('webDatabaseName'))]",
     "webDatabase": "[concat(parameters('siteName'), parameters('environmentName'))]",
@@ -357,8 +359,8 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "state": "Enabled",
-        "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').PrimaryEndpoints.Blob]",
-        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), '2018-03-01-preview').keys[0].value]",
+        "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), '2018-03-01-preview').PrimaryEndpoints.Blob]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), '2018-03-01-preview').keys[0].value]",
         "storageAccountSubscriptionId": "[subscription().subscriptionId]",
         "auditActionsAndGroups": [
           "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
@@ -370,7 +372,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName'))]"
       ]
     },
     {
@@ -380,7 +382,7 @@
       "tags": { "displayName": "SQL Server Security Alert Policies" },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]"
+        "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccountNonVNetName'))]"
       ],
       "properties": {
         "state": "Enabled",
@@ -392,8 +394,8 @@
         ],
         "emailAccountAdmins": true,
         "retentionDays": 200,
-        "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
-        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+        "storageContainerPath": "[concat('https://', parameters('storageAccountNonVNetName'), '.blob.core.windows.net/vulnerability-assessment/')]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
       }
     },
     {
@@ -403,12 +405,12 @@
       "tags": { "displayName": "SQL Server vulnerability Assessment" },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-        "[resourceId('Microsoft.Storage/StorageAccounts', variables('storageAccountNameNonVNet'))]",
+        "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccountNonVNetName'))]",
         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'), '/securityAlertPolicies/Default')]"
       ],
       "properties": {
-        "storageContainerPath": "[concat('https://', variables('storageAccountNameNonVNet'), '.blob.core.windows.net/vulnerability-assessment/')]",
-        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+        "storageContainerPath": "[concat('https://', parameters('storageAccountNonVNetName'), '.blob.core.windows.net/vulnerability-assessment/')]",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
         "recurringScans": {
           "isEnabled": true,
           "emailSubscriptionAdmins": true,
@@ -467,7 +469,7 @@
         "tier": "Standard"
       },
       "kind": "StorageV2",
-      "name": "[variables('storageAccountNameNonVNet')]",
+      "name": "[parameters('storageAccountNonVNetName')]",
       "tags": { "displayName": "Storage NonVNet" },
       "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
@@ -538,8 +540,8 @@
           ],
           "properties": {
             "ApplicationInsightsKey": "[reference(concat('microsoft.insights/components/', variables('applicationInsightsName'))).InstrumentationKey]",
-            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountNameNonVNet'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
-            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountNameNonVNet'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
+            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
             "alwaysOn": true,
             "minTlsVersion": "1.2",
             "ftpsState": "Disabled",
@@ -757,7 +759,7 @@
     },
     "NonVNetStorageApiKey": {
       "type": "string",
-      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameNonVNet')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
     },
     "AppInsightsInstrumentationKey": {
       "type": "string",

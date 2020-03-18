@@ -24,7 +24,9 @@ param (
 	[Parameter(Mandatory=$true)]
 	[string] $SqlAdminUserName,
 	[Parameter(Mandatory=$true)]
-	[string] $SqlAdminPassword
+	[string] $SqlAdminPassword,
+	[Parameter(Mandatory=$true)]
+	[string] $StorageAccountNonVNetName
 	)
 
 Write-Host ("Configure for Testing Started")
@@ -49,7 +51,13 @@ Write-Host ("Changing Web Server Url to $webServerUrl")
 $appSettingWebServerUrl = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
 $appSettingWebServerUrl.SetAttribute("value", $webServerUrl)
 $appSettingTakeScreenShotOnFailure = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TakeScreenShotOnFailure']")
-$appSettingTakeScreenShotOnFailure.SetAttribute("value", "false")
+$appSettingTakeScreenShotOnFailure.SetAttribute("value", "true")
+
+$storageApiKey = (Get-AzureRmStorageAccountKey -Name $StorageAccountNonVNetName -ResourceGroupName $ResourceGroup -ErrorAction Stop).Value[1]
+$TestScreenCaptureStorage = "DefaultEndpointsProtocol=https;AccountName=$StorageAccountNonVNetName;AccountKey=$storageApiKey;EndpointSuffix=core.windows.net"
+Write-Host ("Changing TestScreenCaptureStorage to $TestScreenCaptureStorage")
+$appSettingTestScreenCaptureStorage = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TestScreenCaptureStorage']")
+$appSettingTestScreenCaptureStorage.SetAttribute("value", $TestScreenCaptureStorage)
 Write-Host($appConfig.OuterXml)
 $appConfig.Save($TestConfigPath)
 

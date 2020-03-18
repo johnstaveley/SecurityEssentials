@@ -142,7 +142,7 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName)
+        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -storageAccountNonVNetName $(StorageAccountNonVNetName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName)
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3
@@ -167,7 +167,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -DeveloperIpAddresses ''$(DeveloperIpAddresses)'''
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput "$(ArmTemplateOutput)" -CloudFlareIpAddresses "$(CloudFlareIpAddresses)" -DeveloperIpAddresses "$(DeveloperIpAddresses)"'
         azurePowerShellVersion: LatestVersion
 
     - task: AzurePowerShell@3
@@ -175,7 +175,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
-        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -SiteBaseUrl $(SiteBaseUrl) -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword)'
+        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -SiteBaseUrl $(SiteBaseUrl) -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2

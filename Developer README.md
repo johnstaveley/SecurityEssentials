@@ -42,6 +42,7 @@ Azure Devops Setup
 	+ SqlAdminPassword - admin password for sql azure e.g. a secure randomly generated 15 digit password
 	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
 	+ SqlServerName - the name of the sql server to use e.g. securityessentialsint
+	+ StorageAccountNonVNetName - the name of the storage container which is not on the vnet e.g. securityessentialsint
 	+ SubscriptionId - guid representing the subscription in Azure. Search in Azure portal under subscriptions
 	+ WebDatabaseName - name of the sql database e.g. securityessentialsint
 * Add the following task types from the Azure Marketplace as follows:

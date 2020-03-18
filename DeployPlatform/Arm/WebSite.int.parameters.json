@@ -23,6 +23,7 @@
       }
     },
     "sqlserverName": { "value": "<ChangeMe>" },
+    "storageAccountNonVNetName": { "value": "<ChangeMe>" },
     "subscriptionId": { "value": "<ChangeMe>" },
     "webDatabaseName": { "value": "<ChangeMe>" }
   }
