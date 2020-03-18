@@ -71,7 +71,7 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 This solution comes with azure-pipelines.yml build and test script. Running this in Azure Devops ensures the following:
 * 2. Account management process - Partially checked using Unit tests and Acceptance tests
 * 4. Insecure direct object references - Partially checked using Unit tests
-* 5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure
+* 5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure and default features are switched off
 * 6. NoCache checked using Unit tests
 * 7. Missing file level access control - Partially checked using Unit tests
 * 8. CSRF - Partially checked using Unit tests

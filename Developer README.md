@@ -65,5 +65,5 @@ Screenshots from failed selenium tests are stored in StorageAccountNonVNetName i
 Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
 	Azure_SQLDatabase_AuthZ_Use_AAD_Admin - switched off because we don't run an AD server
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - switched off because threat detection is enabled at the server level and so doesn't need to be enabled at the database level
-	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
+	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN, Azure_AppService_AuthN_Use_Managed_Service_Identity - removed as application has its own user database
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
