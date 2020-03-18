@@ -61,10 +61,9 @@ In order to keep your solution secure you should run the acceptance tests on eac
 Notes
 -----
 
-In order to get the acceptance tests running on the CI server I have included the 32 bit version of GeckoDriver.exe in the project. If you use Firefox 64bit, you will need to replace this with the 64 bit version
+Screenshots from failed selenium tests are stored in StorageAccountNonVNetName in container Selenium
 Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
 	Azure_SQLDatabase_AuthZ_Use_AAD_Admin - switched off because we don't run an AD server
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - switched off because threat detection is enabled at the server level and so doesn't need to be enabled at the database level
-	Azure_AppService_BCDR_Use_Multiple_Instances - ok to have 1 instance for the integration
-	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as it has its own user database
+	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md

@@ -75,7 +75,7 @@ stages:
         
     - task: AzSKARMTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
+      #enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
@@ -198,8 +198,8 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
-      #condition: always()
+      #enabled: false # TODO: Removed temporarily to speed up build
+      condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\TearDown.ps1'
