@@ -11,7 +11,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
-  system_accesstoken: $(System.AccessToken) # OAuth token required for test run
 
 stages: 
 - stage: Build
@@ -45,7 +44,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Unit tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -126,7 +125,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment steps'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -163,7 +162,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
@@ -171,7 +170,7 @@ stages:
         azurePowerShellVersion: LatestVersion
 
     - task: AzurePowerShell@3
-      displayName: 'Allow Acceptance tests access to database'
+      displayName: 'Configure Acceptance tests to run'
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
@@ -194,8 +193,8 @@ stages:
         configuration: '$(buildConfiguration)'
         diagnosticsEnabled: false
         uiTests: true
-        minimumExpectedTests: 10
-        #testFilterCriteria: 'TestCategory=Smoke'
+        minimumExpectedTests: 2
+        testFilterCriteria: 'TestCategory=Smoke'
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'

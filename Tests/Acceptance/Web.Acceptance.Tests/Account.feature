@@ -194,7 +194,7 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	And I have 1 entry(ies) in the password history table
 	#And I receive an email notifying me of the password change
 
-@PAT
+@PAT @Smoke
 Scenario: I can change my password
 	Given the following users are setup in the database:
 	| UserName       | FirstName | LastName | Password          | SecurityQuestion                    | SecurityAnswer | PasswordResetToken | PasswordResetExpiry | NewEmailAddress | NewEmailAddressToken | NewEmailAddressRequestExpiryDate |

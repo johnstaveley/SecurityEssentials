@@ -764,10 +764,12 @@ this.FeatureBackground();
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I can change my password")]
         [NUnit.Framework.CategoryAttribute("PAT")]
+        [NUnit.Framework.CategoryAttribute("Smoke")]
         public virtual void ICanChangeMyPassword()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can change my password", null, new string[] {
-                        "PAT"});
+                        "PAT",
+                        "Smoke"});
 #line 198
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();

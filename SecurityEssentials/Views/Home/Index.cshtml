@@ -42,7 +42,12 @@
                         </ul>
                     </li>
                     <li>Insecure direct object references: In user edit page it checks the user is entitled to be there</li>
-                    <li>Security misconfiguration: Doesn't turn on anything you don't really need</li>
+                    <li>Security misconfiguration:
+                        <ul>
+                            <li>Base Application keeps as much switched off as possible</li>
+                            <li>AzSK Arm template checker ensures unwanted features are switched off and platform is secure as possible</li>
+                        </ul>
+                    </li>
                     <li>
                         Sensitive data exposure:
                         <ul>
@@ -109,6 +114,7 @@
                 <ul>
                     <li>2. Account management process - Partially checked using Unit tests and Acceptance tests</li>
                     <li>4. Insecure direct object references - Partially checked using Unit tests</li>
+                    <li>5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure</li>
                     <li>7. Missing file level access control - Partially checked using Unit tests</li>
                     <li>8. CSRF - Partially checked using Unit tests</li>
                     <li>9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
