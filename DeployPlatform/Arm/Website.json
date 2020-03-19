@@ -172,9 +172,9 @@
           {
             "name": "Default",
             "capacity": {
-              "minimum": "1",
+              "minimum": 1,
               "maximum": "[parameters('autoScaleMaxInstanceCount')]",
-              "default": "1"
+              "default": 1
             },
             "rules": [
               {
@@ -192,7 +192,7 @@
                 "scaleAction": {
                   "direction": "Increase",
                   "type": "ChangeCount",
-                  "value": "1",
+                  "value": 1,
                   "cooldown": "PT10M"
                 }
               },
@@ -211,7 +211,7 @@
                 "scaleAction": {
                   "direction": "Decrease",
                   "type": "ChangeCount",
-                  "value": "1",
+                  "value": 1,
                   "cooldown": "PT1H"
                 }
               }
@@ -231,7 +231,7 @@
       "kind": "v12.0,user",
       "name": "[variables('webDatabaseNameFull')]",
       "tags": { "displayName": "Database" },
-      "apiVersion": "2014-04-01-preview",
+      "apiVersion": "2014-04-01",
       "location": "[resourceGroup().location]",
       "scale": null,
       "properties": {
@@ -309,7 +309,7 @@
       "type": "Microsoft.Sql/servers",
       "location": "[resourceGroup().location]",
       "tags": { "displayName": "SQL Server" },
-      "apiVersion": "2014-04-01-preview",
+      "apiVersion": "2014-04-01",
       "properties": {
         "administratorLogin": "[parameters('sqlAdminUserName')]",
         "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
@@ -762,7 +762,7 @@
     },
     "PublishProfilePassword": {
       "type": "string",
-      "value": "[if(not(equals(parameters('environmentName'), 'development')), list(concat('Microsoft.Web/sites/', variables('webSiteName') ,'/config/publishingcredentials'), '2016-08-01').properties.publishingPassword, '')]"
+      "value": "[list(concat('Microsoft.Web/sites/', variables('webSiteName') ,'/config/publishingcredentials'), '2016-08-01').properties.publishingPassword]"
     }
   }
 }
