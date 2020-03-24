@@ -283,10 +283,12 @@ this.FeatureBackground();
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("The web application will return the correct security headers")]
         [NUnit.Framework.CategoryAttribute("CheckForErrors")]
+        [NUnit.Framework.CategoryAttribute("Smoke")]
         public virtual void TheWebApplicationWillReturnTheCorrectSecurityHeaders()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The web application will return the correct security headers", null, new string[] {
-                        "CheckForErrors"});
+                        "CheckForErrors",
+                        "Smoke"});
 #line 71
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();

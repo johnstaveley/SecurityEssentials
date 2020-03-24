@@ -67,7 +67,7 @@ Scenario: The web application will log a certificate policy violation
 	| Level   | Warning                 |
 	| Message | HostName: "example.com" |
 
-@CheckForErrors
+@CheckForErrors @Smoke
 Scenario: The web application will return the correct security headers
 	When I call http get on the website
 	Then the response headers will contain: 

@@ -30,12 +30,15 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		public void ThenTheResponseHeadersWillContain(Table table)
 		{
 			var actualHeaders = ScenarioContext.Current.GetHttpHeaders().ToList();
-			var expectedHeaders = table.CreateSet<HttpHeader>();
+			var expectedHeaders = table.CreateSet<HttpHeader>().ToList();			
 			foreach (var expectedHeader in expectedHeaders)
 			{
 				Assert.IsTrue(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key), $"Headers do not contain the key '{expectedHeader.Key}'");
 				var actualHeader = actualHeaders.First(a => a.Item1 == expectedHeader.Key);
-                Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, $"Header values do not match for key '{actualHeader.Item1}'");
+				if (actualHeader.Item1 == "Content-Security-Policy" && ConfigurationManager.AppSettings["WebServerUrl"].StartsWith("https:")) {
+					expectedHeader.Value = expectedHeader.Value.Replace("font-src 'self' https:", "font-src https:").Replace("*", "https:").Replace("'self'", "https:");
+				}
+				Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, $"Header values do not match for key '{actualHeader.Item1}'");
             }
 		}
 
