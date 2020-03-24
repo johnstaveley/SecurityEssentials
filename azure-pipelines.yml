@@ -75,7 +75,7 @@ stages:
         
     - task: AzSKARMTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      #enabled: false # TODO: Removed temporarily to speed up build.
+      enabled: false # TODO: Removed temporarily to speed up build.
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
@@ -178,6 +178,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
+      #enabled: false # TODO: Removed temporarily to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
@@ -197,7 +198,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
