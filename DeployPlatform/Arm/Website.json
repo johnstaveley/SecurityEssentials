@@ -236,7 +236,6 @@
       "scale": null,
       "properties": {
         "edition": "[parameters('databaseEdition')]",
-        "status": "Online",
         "serviceLevelObjective": "[parameters('databaseServiceLevelObjective')]",
         "collation": "SQL_Latin1_General_CP1_CI_AS",
         "maxSizeBytes": "[parameters('databaseMaxSizeBytes')]",
@@ -248,22 +247,21 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
-      ],
-      "resources": [
-        {
-          "name": "[concat(variables('webDatabaseNameFull'), '/current')]",
-          "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
-          "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
-            "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('webDatabaseName'))]"
-          ],
-          "location": null,
-          "apiVersion": "2014-04-01",
-          "properties": {
-            "status": "Enabled"
-          }
-        }
       ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+      "name": "[concat(variables('webDatabaseNameFull'), '/current')]",
+      "tags": { "displayName": "Transparent Data Encryption" },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('webDatabaseName'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "properties": {
+        "status": "Enabled"
+      }
     },
     {
       "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
@@ -285,8 +283,15 @@
     },
 
     {
-      "type": "Microsoft.Web/serverfarms",
-      "tags": { "displayName": "ServerFarm" },
+      "apiVersion": "2016-09-01",
+      "dependsOn": [],
+      "kind": "app",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('serverFarmName')]",
+      "properties": {
+        "name": "[variables('serverFarmName')]"
+      },
+      "scale": null,
       "sku": {
         "name": "[parameters('servicePlanSkuSize')]",
         "tier": "[parameters('servicePlanSkuTier')]",
@@ -294,15 +299,8 @@
         "family": "[parameters('servicePlanSkuFamily')]",
         "capacity": "[parameters('servicePlanSkuCapacity')]"
       },
-      "kind": "app",
-      "name": "[variables('serverFarmName')]",
-      "apiVersion": "2016-09-01",
-      "location": "[resourceGroup().location]",
-      "scale": null,
-      "properties": {
-        "name": "[variables('serverFarmName')]"
-      },
-      "dependsOn": []
+      "tags": { "displayName": "Server Farm Capabilities" },
+      "type": "Microsoft.Web/serverfarms"
     },
     {
       "name": "[parameters('sqlserverName')]",
@@ -320,6 +318,7 @@
           "type": "firewallRules",
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
+          "tags": { "displayName": "Firewall: Allow Azure IPs" },
           "name": "firewallRuleAllowAllWindowsAzureIpsName",
           "properties": {
             "endIpAddress": "0.0.0.0",
@@ -333,6 +332,7 @@
           "type": "firewallRules",
           "kind": "v12.0",
           "name": "firewallRuleAllowDeveloperIpAddress",
+          "tags": { "displayName": "Firewall: Allow Developer IP" },
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
           "scale": null,
@@ -380,24 +380,20 @@
         "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccountNonVNetName'))]"
       ],
       "properties": {
-        "state": "Enabled",
-        "disabledAlerts": [
-          ""
-        ],
-        "emailAddresses": [
-          "[parameters('adminEmailAddresses')]"
-        ],
+        "disabledAlerts": "",
         "emailAccountAdmins": true,
+        "emailAddresses": "[parameters('adminEmailAddresses')]",
         "retentionDays": 200,
-        "storageContainerPath": "[concat('https://', parameters('storageAccountNonVNetName'), '.blob.core.windows.net/vulnerability-assessment/')]",
-        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+        "state": "Enabled",
+        "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
+        "storageContainerPath": "[concat('https://', parameters('storageAccountNonVNetName'), '.blob.core.windows.net/vulnerability-assessment/')]"
       }
     },
     {
       "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
       "apiVersion": "2018-06-01-preview",
       "name": "[concat(parameters('sqlServerName'), '/Default')]",
-      "tags": { "displayName": "SQL Server vulnerability Assessment" },
+      "tags": { "displayName": "SQL Server Vulnerability Assessment" },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
         "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccountNonVNetName'))]",
@@ -431,6 +427,9 @@
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
       ],
       "properties": {
+        "deleteRetentionPolicy": {
+          "enabled": true
+        },
         "networkAcls": {
           "bypass": "AzureServices",
           "ipRules": "[variables('developerIpAddressArray')]",
@@ -465,7 +464,7 @@
       },
       "kind": "StorageV2",
       "name": "[parameters('storageAccountNonVNetName')]",
-      "tags": { "displayName": "Storage NonVNet" },
+      "tags": { "displayName": "Storage Non-VNet" },
       "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -505,6 +504,9 @@
         "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('serverFarmName'))]": "empty",
         "displayName": "Website"
       },
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "name": "[variables('webSiteName')]",
@@ -516,6 +518,9 @@
           "remoteDebuggingEnabled": false,
           "webSocketsEnabled": false,
           "netFrameworkVersion": "v4.7",
+          "requestTracingEnabled": true,
+          "httpLoggingEnabled": true,
+          "detailedErrorLoggingEnabled": true,
           "connectionStrings": [
             {
               "name": "DefaultConnection",
@@ -530,6 +535,7 @@
           "apiVersion": "2015-08-01",
           "name": "appsettings",
           "type": "config",
+          "tags": { "displayName": "Website App Settings" },
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
           ],
