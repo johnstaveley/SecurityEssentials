@@ -25,6 +25,7 @@
     "sqlserverName": { "value": "<ChangeMe>" },
     "storageAccountNonVNetName": { "value": "<ChangeMe>" },
     "subscriptionId": { "value": "<ChangeMe>" },
-    "webDatabaseName": { "value": "<ChangeMe>" }
+    "webDatabaseName": { "value": "<ChangeMe>" },
+    "websiteBaseUrl": { "value": "https://securityessentialsqa.azurewebsites.net/" }
   }
 }
