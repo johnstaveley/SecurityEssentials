@@ -318,7 +318,7 @@
           "type": "firewallRules",
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
-          "tags": { "displayName": "Firewall: Allow Azure IPs" },
+          "tags": { "displayName": "Allow Azure IPs through Firewall" },
           "name": "firewallRuleAllowAllWindowsAzureIpsName",
           "properties": {
             "endIpAddress": "0.0.0.0",
@@ -332,7 +332,7 @@
           "type": "firewallRules",
           "kind": "v12.0",
           "name": "firewallRuleAllowDeveloperIpAddress",
-          "tags": { "displayName": "Firewall: Allow Developer IP" },
+          "tags": { "displayName": "Allow Developer IP through Firewall" },
           "apiVersion": "2014-04-01",
           "location": "[resourceGroup().location]",
           "scale": null,
