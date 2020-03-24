@@ -33,6 +33,7 @@
     <Content Include="Arm\WebSite.int.parameters.json" />
     <Content Include="Arm\Website.json" />
     <Content Include="Arm\WebSite.qa.parameters.json" />
+    <None Include="Arm\AzSKArmTemplateCheckExclude.csv" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
