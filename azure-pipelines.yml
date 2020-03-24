@@ -75,7 +75,7 @@ stages:
         
     - task: AzSKARMTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      #enabled: false # TODO: Removed temporarily to speed up build. This needs revisiting as the Arm template has lots of seurity issues
+      #enabled: false # TODO: Removed temporarily to speed up build.
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'

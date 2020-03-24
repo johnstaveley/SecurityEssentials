@@ -382,7 +382,7 @@
       "properties": {
         "disabledAlerts": "",
         "emailAccountAdmins": true,
-        "emailAddresses": "[parameters('adminEmailAddresses')]",
+        "emailAddresses": [ "[parameters('adminEmailAddresses')]" ],
         "retentionDays": 200,
         "state": "Enabled",
         "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNonVNetName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]",
