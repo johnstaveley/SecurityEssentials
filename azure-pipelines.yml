@@ -79,8 +79,7 @@ stages:
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
-        TreatAsPassed: true # TODO: Remove this once rules are understood and exceptions added
-        ExcludeControlIds: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin,Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server,Azure_AppService_AuthN_Use_AAD_for_Client_AuthN'
+        SkipControlsFromFile: 'Azure_SQLDatabase_AuthZ_Use_AAD_Admin,Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server,Azure_AppService_AuthN_Use_AAD_for_Client_AuthN'
 
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
