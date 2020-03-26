@@ -18,8 +18,7 @@ This list is based on the OWASP Top 10 2013/2017
 	+ Emails on key account events and gives anti-phishing advice
 	+ Verifies user's email address by sending an email to the specified address
 	+ Re-verifies user's email address when requesting a change of email
-	+ Prevents brute force of logon
-	+ Prevents brute force of registration or password reset through anti-throttling and CAPTCHA (optional)
+	+ Prevents brute force of logon, registration or password reset through anti-throttling and CAPTCHA (optional)
 	+ Encryption of security question data using the RijndaelManaged AES 512 encryption algorithm
 	+ Increasing wait time on logon failure rather than account lock out
 	+ Unit tests for password hashing and authorization attributes
