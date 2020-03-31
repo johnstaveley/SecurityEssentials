@@ -218,8 +218,8 @@ if ($cloudFlareDnsEntry -eq $null) {
 $websites = (Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites)
 if ($websites -ne $null) {
     Write-Host ("Removing IP Address restrictions from scm site")
-    $apiVersion = ($websites.apiVersions[0]
-    $webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction Continue)
+    $apiVersion = $websites.apiVersions[0]
+    $webAppConfig = Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction Continue
     if ($webAppConfig -ne $null) {
         # NB: You need to do this otherwise Azure Devops can't deploy the site
         $webAppConfig.Properties.scmIpSecurityRestrictions = @()
