@@ -44,7 +44,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Unit tests'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -174,12 +174,12 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
-        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -SiteBaseUrl $(SiteBaseUrl) -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
+        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -WebServerUrl "https://$(SiteName).$(SiteBaseUrl)" -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |

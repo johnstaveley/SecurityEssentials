@@ -16,7 +16,6 @@ To set up the project take the following steps:
 2) Enable mail to be sent
 	2.1) Update your mail settings in web.config here:
 	<smtp host="localhost" port="25" defaultCredentials="true" />
-
 	2.2) Set in web.config HasEmailConfigured = true
 
 3) If you deploy this into production make sure you remove the test users from the databaseInitializer
