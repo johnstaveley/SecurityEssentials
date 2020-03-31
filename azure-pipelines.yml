@@ -174,7 +174,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
-        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -WebServerUrl "https://$(SiteName).$(SiteBaseUrl)" -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
+        ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -WebServerUrl "https://$(SiteName)$(EnvironmentName).$(SiteBaseUrl)" -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
         azurePowerShellVersion: LatestVersion
 
     - task: VSTest@2

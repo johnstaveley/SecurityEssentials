@@ -12,7 +12,7 @@ param (
 	[Parameter(Mandatory=$true)]
 	[string] $TestConfigPath,
 	[Parameter(Mandatory=$true)]
-	[string] $SiteBaseUrl,
+	[string] $WebServerUrl,
 	[Parameter(Mandatory=$true)]
 	[string] $ResourceGroup, 
 	[Parameter(Mandatory=$true)]
@@ -46,8 +46,7 @@ $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add")
 $defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=*******")
 
-[string] $webServerUrl = "https://" + $SiteBaseUrl
-Write-Host ("Changing Web Server Url to $webServerUrl")
+Write-Host ("Changing Web Server Url to $WebServerUrl")
 $appSettingWebServerUrl = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
 $appSettingWebServerUrl.SetAttribute("value", $webServerUrl)
 $appSettingTakeScreenShotOnFailure = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TakeScreenShotOnFailure']")
