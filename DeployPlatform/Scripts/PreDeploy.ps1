@@ -142,7 +142,6 @@ Write-Host "##vso[task.setvariable variable=cloudFlareIpAddresses;]$cloudFlareIp
 function Set-CloudFlareSetting {
 	Param ([string] $cloudFlareBaseUrl, [string] $zoneId, [string] $settingName, [string] $settingDesiredState, $cloudFlareHeaders)
     # https://api.cloudflare.com/#zone-settings-properties
-    Write-Host ("Get Cloudflare Settings for zone")
     $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/settings'
     $result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
     $zoneProperties = $result.result
@@ -161,6 +160,7 @@ function Set-CloudFlareSetting {
     }
 }
 
+Write-Host ("Get Cloudflare Settings for zone")
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "always_use_https" "on" $cloudFlareHeaders
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "min_tls_version" "1.2" $cloudFlareHeaders
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "tls_1_3" "on" $cloudFlareHeaders
@@ -183,7 +183,7 @@ $cloudFlareDnsEntry = $cloudFlareDnsEntries | Where-Object { $_.name -eq $extern
 if ($cloudFlareDnsEntry -eq $null) {
     Write-Host ("Url '" + $externalWebsiteUrl + "' not present in DNS, creating, linking to " + $azureWebsiteUrl)
     $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records'
-    $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
+    $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureWebsiteUrl + '","ttl":1,"proxied":true}'
     Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
 } else {
     Write-Host ("Url '" + $externalWebsiteUrl + "' present in DNS")
@@ -193,7 +193,7 @@ if ($cloudFlareDnsEntry -eq $null) {
     } else {
         Write-Host ("Url '" + $externalWebsiteUrl + "' not Proxied, switching Proxy on")
         $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records/' + $cloudFlareDnsEntry.id
-        $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
+        $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureWebsiteUrl + '","ttl":1,"proxied":true}'
         $result = Invoke-RestMethod -Method PUT -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
     }
 }

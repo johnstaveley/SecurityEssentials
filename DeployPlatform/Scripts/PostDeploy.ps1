@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-    Wakes up the site
+    Setups up IP address restrictions so site can only be accessed via cloudflare
+	Wakes up the site after deployment
 .NOTES
     Author: John Staveley
     Date:   16/03/2020    
@@ -37,47 +38,47 @@ if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
 [string] $vNetStorageAccountName = $siteNameLowerCase + $EnvironmentName.ToLower()
 [int] $softDeletePolicyDays = 7
 
-#Write-Host ("Cloudflare IP Address restrictions. $CloudFlareIpAddresses rules to process")
+Write-Host ("Cloudflare IP Address restrictions. $CloudFlareIpAddresses rules to process")
 
-#function AddRules($rulesToAdd) {
-#	$rules = @()
-#	foreach ($ruleToAdd in $rulesToAdd) 
-#	{
-#		$rule = [PSCustomObject] @{
-#			ipAddress = $ruleToAdd.ipAddress; 
-#			action = $ruleToAdd.action; 
-#			priority = $ruleToAdd.priority; 
-#			name = $ruleToAdd.name; 
-#			description = $ruleToAdd.description 
-#			}
-#		$rules += $rule
-#	}
-#return $rules
-#}
+function AddRules($rulesToAdd) {
+	$rules = @()
+	foreach ($ruleToAdd in $rulesToAdd) 
+	{
+		$rule = [PSCustomObject] @{
+			ipAddress = $ruleToAdd.ipAddress; 
+			action = $ruleToAdd.action; 
+			priority = $ruleToAdd.priority; 
+			name = $ruleToAdd.name; 
+			description = $ruleToAdd.description 
+			}
+		$rules += $rule
+	}
+return $rules
+}
 
 # Access to the main site should only be allowed through cloudflare
 [PSCustomObject] $websiteRulesToAdd = @()
-#[int] $cloudFlareRuleId = 1
-#foreach ($cloudFlareIpAddress in $CloudFlareIpAddresses) {
-#    $newRule = @{ipAddress=$cloudFlareIpAddress;action="Allow";priority="100";name="CF" + $cloudFlareRuleId.ToString().PadLeft(2, "0");description="CloudFlare IP Address"}
-#}
+[int] $cloudFlareRuleId = 1
+foreach ($cloudFlareIpAddress in $CloudFlareIpAddresses) {
+    $newRule = @{ipAddress=$cloudFlareIpAddress;action="Allow";priority="100";name="CF" + $cloudFlareRuleId.ToString().PadLeft(2, "0");description="CloudFlare IP Address"}
+}
 
 # Access to the development site should be locked down to developers (NB: These rules are temporarily disabled on deployment)
-#if ($DeveloperIpAddresses -ne '') {
+if ($DeveloperIpAddresses -ne '') {
 # TODO: Split $DeveloperIpAddresses into single addresses
-#	[PSCustomObject] $scmRulesToAdd = @{ipAddress=$DeveloperIpAddress;action="Allow";priority="100";name="dev1";description="Developer IP Address"}
-#	$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
-#	$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
-#	Write-Host ("Writing IP Address restrictions")
-#	$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
-#	$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
-#	Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
-#	Write-Host ("Completed IP Address restrictions")
-#}
+	[PSCustomObject] $scmRulesToAdd = @{ipAddress=$DeveloperIpAddress;action="Allow";priority="100";name="dev1";description="Developer IP Address"}
+	$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+	$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
+	Write-Host ("Writing IP Address restrictions")
+	$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
+	$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
+	Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+	Write-Host ("Completed IP Address restrictions")
+}
 
-#Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")
-#Update-AzureRmStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $vNetStorageAccountName -DefaultAction Deny
-#Write-Host ("Updated access restrictions for storage $vNetStorageAccountName")
+Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")
+Update-AzureRmStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $vNetStorageAccountName -DefaultAction Deny
+Write-Host ("Updated access restrictions for storage $vNetStorageAccountName")
 
 # Wait for website to restart
 $secondsToWait = 60
