@@ -215,9 +215,9 @@ if ($cloudFlareDnsEntry -eq $null) {
     Write-Host ("Url '" + $externalWebsiteVerifyUrl + "' present in DNS")
 }
 
-$websites = (Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites)
+$websites = (Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites
 if ($websites -ne $null) {
-    Write-Host ("Removing IP Address restrictions from scm site")
+    Write-Host ("Removing IP Address restrictions from azure deployment url")
     $apiVersion = $websites.apiVersions[0]
     $webAppConfig = Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction Continue
     if ($webAppConfig -ne $null) {
@@ -225,7 +225,7 @@ if ($websites -ne $null) {
         $webAppConfig.Properties.scmIpSecurityRestrictions = @()
         Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
     }
-    Write-Host ("Removed IP Address restrictions from scm site")
+    Write-Host ("Removed IP Address restrictions from azure deployment url")
 }
 
 Write-Host ("Pre-Deploy complete")
