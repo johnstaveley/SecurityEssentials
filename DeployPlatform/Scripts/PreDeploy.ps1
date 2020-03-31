@@ -215,17 +215,16 @@ if ($cloudFlareDnsEntry -eq $null) {
     Write-Host ("Url '" + $externalWebsiteVerifyUrl + "' present in DNS")
 }
 
-$websites = (Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites
-if ($websites -ne $null) {
-    Write-Host ("Removing IP Address restrictions from azure deployment url")
-    $apiVersion = $websites.apiVersions[0]
-    $webAppConfig = Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction Continue
+Write-Host ("Removing IP Address restrictions from azure deployment url")
+$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+if ((Get-AzureRmResource -ResourceType Microsoft.Web/sites -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue) -ne $null) {
+    $webAppConfig = Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue
     if ($webAppConfig -ne $null) {
-        # NB: You need to do this otherwise Azure Devops can't deploy the site
+        # NB: You need to do this otherwise Azure Devops can't deploy to the site
         $webAppConfig.Properties.scmIpSecurityRestrictions = @()
         Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
     }
-    Write-Host ("Removed IP Address restrictions from azure deployment url")
 }
+Write-Host ("Removed IP Address restrictions from azure deployment url")
 
 Write-Host ("Pre-Deploy complete")
