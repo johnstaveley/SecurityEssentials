@@ -123,6 +123,7 @@ stages:
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: drop'
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         artifact: drop
 
