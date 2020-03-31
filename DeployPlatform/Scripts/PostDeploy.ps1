@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
     Setups up IP address restrictions so site can only be accessed via cloudflare
+	Get OS Version to prove Azure are upgrading the OS over time
 	Wakes up the site after deployment
 .NOTES
     Author: John Staveley
@@ -61,7 +62,7 @@ return $rules
 
 # Access to the main site should only be allowed through cloudflare
 if ($CloudFlareIpAddresses -ne '' -and $CloudFlareIpAddresses -ne $null) {
-	$cloudFlareIpAddressCount = $CloudFlareIpAddresses.Length
+	$cloudFlareIpAddressCount = $CloudFlareIpAddresses.Split(",").Length
 	Write-Host ("Cloudflare firewall enabled - Starting IP Address restrictions. $cloudFlareIpAddressCount cloudflare rules to process")
 	[PSCustomObject] $websiteRulesToAdd = New-Object System.Collections.ArrayList
 	[int] $cloudFlareRuleId = 1
@@ -102,7 +103,7 @@ $environmentDetails = Invoke-RestMethod -Uri $kuduEnvironmentDetailsUrl -Headers
 $osIndexStart = $environmentDetails.IndexOf("OS version")
 $osIndexFinish = $environmentDetails.IndexOf("</li>", $osIndexStart)
 $osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIndexStart)
-Write-Host ("Paas Version: " + $osVersion)
+Write-Host ("PaaS Version: " + $osVersion)
 
 # Wait for website to restart
 $secondsToWait = 60

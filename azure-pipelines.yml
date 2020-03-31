@@ -44,7 +44,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Unit tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -141,7 +141,7 @@ stages:
         location: '$(AzureLocation)'
         csmFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
-        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -storageAccountNonVNetName $(StorageAccountNonVNetName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName) -siteBaseUrl $(SiteBaseUrl)
+        overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -siteBaseUrl $(SiteBaseUrl) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -storageAccountNonVNetName $(StorageAccountNonVNetName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName) 
         deploymentOutputs: ArmTemplateOutput
 
     - task: AzureRmWebAppDeployment@3
@@ -179,7 +179,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
