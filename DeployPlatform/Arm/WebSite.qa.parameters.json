@@ -6,7 +6,23 @@
     "developerIpAddresses": { "value": "<ChangeMe>" },
     "environmentName": { "value": "qa" },
     "hostNameSslStates": {
-      "value": []
+      "value": [
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.azurewebsites.net')]",
+          "sslState": "Disabled",
+          "hostType": "Standard"
+        },
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.', parameters('siteBaseUrl')]",
+          "sslState": "Disabled",
+          "hostType": "Standard"
+        },
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.scm.azurewebsites.net')]",
+          "sslState": "Disabled",
+          "hostType": "Repository"
+        }
+      ]
     },
     "servicePlanSkuTier": { "value": "Standard" },
     "servicePlanSkuSize": { "value": "S1" },
@@ -26,6 +42,6 @@
     "storageAccountNonVNetName": { "value": "<ChangeMe>" },
     "subscriptionId": { "value": "<ChangeMe>" },
     "webDatabaseName": { "value": "<ChangeMe>" },
-    "websiteBaseUrl": { "value": "https://securityessentialsqa.azurewebsites.net/" }
+    "siteBaseUrl": { "value": "<ChangeMe>" }
   }
 }

@@ -13,7 +13,7 @@
           "hostType": "Standard"
         },
         {
-          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.staveley.org')]",
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.', parameters('siteBaseUrl')]",
           "sslState": "Disabled",
           "hostType": "Standard"
         },
@@ -42,6 +42,6 @@
     "storageAccountNonVNetName": { "value": "<ChangeMe>" },
     "subscriptionId": { "value": "<ChangeMe>" },
     "webDatabaseName": { "value": "<ChangeMe>" },
-    "websiteBaseUrl": { "value": "https://securityessentialsint.azurewebsites.net/" }
+    "siteBaseUrl": { "value": "<ChangeMe>" }
   }
 }

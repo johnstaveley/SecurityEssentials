@@ -13,9 +13,9 @@ variables:
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
 
 stages: 
-- stage: Build
+- stage: Build_And_Unit_Tests
   jobs:
-  - job: Build
+  - job: Build_And_Unit_Tests
     pool:
       name: Hosted VS2017
       timeoutInMinutes: 180

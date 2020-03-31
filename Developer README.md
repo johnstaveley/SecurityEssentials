@@ -41,7 +41,7 @@ In order to keep your solution secure you should run the acceptance tests on eac
 	+ EnvironmentName - environment short hand, e.g. int, qa, uat, live
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
-	+ SiteBaseUrl - A reference url for the site e.g. securityessentials.org
+	+ SiteBaseUrl - A stem url for the site e.g. securityessentials.org
 	+ SiteName - name of the website to set up e.g. SecurityEssentials
 	+ SqlAdminPassword - * admin password for sql azure e.g. a secure randomly generated 15 digit password
 	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
@@ -59,6 +59,7 @@ In order to keep your solution secure you should run the acceptance tests on eac
 * Run the deployment once, this will fail but create the key vault. 
 	+ In Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the principal from Azure Devops
 	+ Repeat the above but add yourself as a user with all permissions
+	+ Note that the app service custom domain setup may fail until the DNS settings in cloudflare are propagated
 
 Notes
 -----

@@ -58,24 +58,32 @@ return $rules
 }
 
 # Access to the main site should only be allowed through cloudflare
-[PSCustomObject] $websiteRulesToAdd = @()
+$cloudFlareIpAddressCount = $CloudFlareIpAddresses.Length
+Write-Host ("Cloudflare firewall enabled - Starting IP Address restrictions. $cloudFlareIpAddressCount cloudflare rules to process")
+[PSCustomObject] $websiteRulesToAdd = New-Object System.Collections.ArrayList
 [int] $cloudFlareRuleId = 1
-foreach ($cloudFlareIpAddress in $CloudFlareIpAddresses) {
+foreach ($cloudFlareIpAddress in $cloudFlareIpAddresses.Split(",")) {
     $newRule = @{ipAddress=$cloudFlareIpAddress;action="Allow";priority="100";name="CF" + $cloudFlareRuleId.ToString().PadLeft(2, "0");description="CloudFlare IP Address"}
+	$websiteRulesToAdd.Add($newRule) | Out-Null
+	$cloudFlareRuleId += 1
 }
 
-# Access to the development site should be locked down to developers (NB: These rules are temporarily disabled on deployment)
+# Access to the deployment (scm) site should be locked down to developers (NB: These rules are temporarily disabled when deploying to allow azure devops access)
+[PSCustomObject] $scmRulesToAdd = New-Object System.Collections.ArrayList
+[int] $devRuleId = 1
 if ($DeveloperIpAddresses -ne '') {
-# TODO: Split $DeveloperIpAddresses into single addresses
-	[PSCustomObject] $scmRulesToAdd = @{ipAddress=$DeveloperIpAddress;action="Allow";priority="100";name="dev1";description="Developer IP Address"}
-	$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
-	$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
-	Write-Host ("Writing IP Address restrictions")
-	$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
-	$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
-	Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
-	Write-Host ("Completed IP Address restrictions")
+	foreach($developerIpAddress in $DeveloperIpAddresses.Split(",")) {
+		$scmRulesToAdd.Add(@{ipAddress=$developerIpAddress;action="Allow";priority="100";name="DEV" + $devRuleId.ToString().PadLeft(2, "0");description="Developer IP Address"}) | Out-Null
+	}
 }
+$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
+Write-Host ("Writing IP Address restrictions")
+$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
+$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
+Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+Write-Host ("Completed IP Address restrictions")
+
 
 Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")
 Update-AzureRmStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $vNetStorageAccountName -DefaultAction Deny
