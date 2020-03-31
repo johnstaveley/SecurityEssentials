@@ -77,4 +77,11 @@ This solution comes with azure-pipelines.yml build and test script. Running this
 * 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
 * 10. Unvalidated redirects and forwards - Partially checked using Unit tests
 
+## Platform features
+* Setup DNS and WAF settings in cloudflare
+* Enforce Cloudflare rules: Always use https, Min tls level 1.2, allow tls 1.3, set ssl level to full, allow http2
+* Restrict access to website in Azure from Cloudflare
+* Prove Azure are upgrading their PaaS platform over time
+
+
 [![Build Status](https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master)](https://johnstaveley.visualstudio.com/Security%20Essentials/_build/latest?definitionId=6&branchName=master)

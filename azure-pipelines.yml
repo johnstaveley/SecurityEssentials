@@ -83,7 +83,7 @@ stages:
 
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
         TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
