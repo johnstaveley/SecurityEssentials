@@ -29,19 +29,20 @@ Azure Devops Setup
 In order to keep your solution secure you should run the acceptance tests on each checkin. Take the following steps to set up an automated build in Azure:
 
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
-* Create the following pipeline variables as follows:
+* Create the following pipeline variables as follows: Those marked with * should be created as a secret
 	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
 	+ AdminEmailAddresses - email addresses for notifications and alerts NB: This can only support 1 email address at the moment
 	+ AzureLocation - location of azure data centre e.g. UKSouth
 	+ CloudFlareAuthEmail - Username for Cloudflare
-	+ CloudFlareUserServiceKey - Service Key for Cloudflare
-	+ CloudFlareZoneName - Zone id in Cloudflare
+	+ CloudFlarePlan - One of Free, Pro, Business or Enterprise
+	+ CloudFlareUserServiceKey - * Service Key for Cloudflare (this can be the global api key in your profile or an api key created with sufficient permissions). 
+	+ CloudFlareZoneName - Zone in Cloudflare such as the name of your site
 	+ DeveloperIpAddresses - Comma delimited list of IP addresses of any developers that need access to the backend database TOOD: This can only accept 1 IP address at the moment
 	+ EnvironmentName - environment short hand, e.g. int, qa, uat, live
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 	+ SiteName - name of the website to set up e.g. SecurityEssentials
-	+ SqlAdminPassword - admin password for sql azure e.g. a secure randomly generated 15 digit password
+	+ SqlAdminPassword - * admin password for sql azure e.g. a secure randomly generated 15 digit password
 	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
 	+ SqlServerName - the name of the sql server to use e.g. securityessentialsint
 	+ StorageAccountNonVNetName - the name of the storage container which is not on the vnet e.g. securityessentialsint

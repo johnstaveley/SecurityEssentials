@@ -38,7 +38,8 @@ Param(
 	[Parameter(Mandatory=$true)]
     [string] $CloudFlareZoneName,
     [Parameter(Mandatory=$true)]
-    [string] $SqlAdminPassword
+    [string] $SqlAdminPassword,
+    [string] $CloudFlarePlan = 'Free'
 )
 
 if ((Get-AzureRmContext) -eq $null -or [string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
@@ -127,92 +128,107 @@ if ($matchingSecrets -eq $null) {
 }
 
 # https://api.cloudflare.com/#zone-list-zones
-#Write-Host ("Get CloudFlare Zone")
-#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-#$cloudFlareUrl = $cloudFlareBaseUrl + 'zones?name=' + $CloudFlareZoneName
-#$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
-#$zoneId = $result.result.id
-#Write-Host ("CloudFlare Zone " + $zoneId)
+Write-Host ("Get CloudFlare Zone")
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$cloudFlareUrl = $cloudFlareBaseUrl + 'zones?name=' + $CloudFlareZoneName
+$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
+$zoneId = $result.result.id
+Write-Host ("CloudFlare Zone " + $zoneId)
 
 # https://api.cloudflare.com/#cloudflare-ips-properties
-#Write-Host ("Get Cloudflare Ips")
-#$cloudflareUrl = $cloudflareBaseUrl + 'ips'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudflareUrl -Headers $cloudflareHeaders
-#$cloudFlareIpv4 = $result.result.ipv4_cidrs -join ","
-#Write-Host "##vso[task.setvariable variable=CloudFlareIPv4;]$cloudFlareIpv4"
-#$cloudFlareIpv6 = $result.result.ipv6_cidrs -join ","
-#Write-Host "##vso[task.setvariable variable=CloudFlareIPv6;]$cloudFlareIpv6"
-    
-# https://api.cloudFlare.com/#zone-settings-get-all-zone-settings
-#Write-Host ("Get Cloudflare Settings for zone")
-#$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/settings'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
-#$result.result
+Write-Host ("Get Cloudflare Ips")
+$cloudflareUrl = $cloudflareBaseUrl + 'ips'
+$result = Invoke-RestMethod -Method Get -Uri $cloudflareUrl -Headers $cloudflareHeaders
+$cloudFlareIpv4 = $result.result.ipv4_cidrs -join ","
+Write-Host "##vso[task.setvariable variable=CloudFlareIPv4;]$cloudFlareIpv4"
+$cloudFlareIpv6 = $result.result.ipv6_cidrs -join ","
+Write-Host "##vso[task.setvariable variable=CloudFlareIPv6;]$cloudFlareIpv6"
 
-# https://api.cloudflare.com/#page-rules-for-a-zone-list-page-rules
-#Write-Host ("Get Cloudflare Page Rules for zone")
-#$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/pagerules'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
-#$result.result
-# This should show that caching is disabled for the site
+
+function Set-CloudFlareSetting {
+	Param ([string] $cloudFlareBaseUrl, [string] $zoneId, [string] $settingName, [string] $settingDesiredState, $cloudFlareHeaders)
+    # https://api.cloudflare.com/#zone-settings-properties
+    Write-Host ("Get Cloudflare Settings for zone")
+    $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/settings'
+    $result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
+    $zoneProperties = $result.result
+    $settingValue = $zoneProperties | Where-Object { $_.id -eq $settingName }
+    if ($settingValue.value -eq $settingDesiredState) {
+        Write-Host("Cloudflare: $settingName already set to $settingDesiredState")
+    } else {
+        Write-Host("Cloudflare: Setting $settingName")
+        $settingsUrl = $cloudFlareUrl + "/" + $settingName
+        $result = Invoke-RestMethod -Method Patch -Uri $settingsUrl -Headers $cloudflareHeaders -Body ('{"value":"' + $settingDesiredState + '"}')
+        if ($result.success -ne $true) {    
+            Write-Host("Updating $settingName failed with result " + $result.result)
+            Write-Host($result.messages)
+            Write-Host($result.errors)
+        }
+    }
+}
+
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "always_use_https" "on" $cloudFlareHeaders
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "min_tls_version" "1.2" $cloudFlareHeaders
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "tls_1_3" "on" $cloudFlareHeaders
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "ssl" "full" $cloudFlareHeaders
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "http2" "on" $cloudFlareHeaders
+if ($CloudFlarePlan -ne "Free") {
+    Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "waf" "on" $cloudFlareHeaders
+}
 
 # https://api.cloudflare.com/#dns-records-for-a-zone-properties
-#Write-Host ("Get DNS Records")
-#$cloudflareUrl = $cloudflareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=staged&match=any'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudflareUrl -Headers $cloudflareHeaders
-#$cloudFlareWafEntries = $result.result
-
-# https://api.cloudFlare.com/#dns-records-for-a-zone-properties
-#Write-Host ("DNS Records:")
-
+Write-Host ("Gettting existing DNS Records for site:")
+$externalWebsiteUrl = $SiteName.ToLower() + $EnvironmentName.ToLower() +"." + $SiteBaseUrl
 # Create entries for Azure App Service (Proxied)
-#$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=' + $SiteBaseUrl + '&match=all'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
-#$cloudFlareWafEntries = $result.result
-#$azureCustomerUrl = $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
+$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&match=all&name=' + $externalWebsiteUrl
+$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
+$cloudFlareDnsEntries = $result.result
+$azureWebsiteUrl = $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
 
-#$customerCloudFlareEntry = $cloudFlareWafEntries | Where-Object { $_.name -eq $customerUrl }
-#if ($customerCloudFlareEntry -eq $null) {
-#    Write-Host ("Url '" + $customerUrl + "' not present in DNS, creating, linking to " + $azureCustomerUrl)
-#    $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records'
-#    $dnsEntry = '{"type":"CNAME","name":"' + $customerUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
-#    Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
-#} else {
-#    Write-Host ("Url '" + $customerUrl + "' present in DNS")
-#    # NB: Proxied means it is behind the WAF
-#    if ($customerCloudFlareEntry.proxied -eq $true) {
-#        Write-Host ("Url '" + $customerUrl + "' present in WAF")
-#    } else {
-#        Write-Host ("Url '" + $customerUrl + "' not present in WAF, switching WAF on")
-#        $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records/' + $customerCloudFlareEntry.id
-#        $dnsEntry = '{"type":"CNAME","name":"' + $customerUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
-#        $result = Invoke-RestMethod -Method PUT -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
-#    }
-#}
+$cloudFlareDnsEntry = $cloudFlareDnsEntries | Where-Object { $_.name -eq $externalWebsiteUrl }
+if ($cloudFlareDnsEntry -eq $null) {
+    Write-Host ("Url '" + $externalWebsiteUrl + "' not present in DNS, creating, linking to " + $azureWebsiteUrl)
+    $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records'
+    $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
+    Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
+} else {
+    Write-Host ("Url '" + $externalWebsiteUrl + "' present in DNS")
+    # NB: Proxied means it is behind the WAF
+    if ($cloudFlareDnsEntry.proxied -eq $true) {
+        Write-Host ("Url '" + $externalWebsiteUrl + "' present in Proxy")
+    } else {
+        Write-Host ("Url '" + $externalWebsiteUrl + "' not Proxied, switching Proxy on")
+        $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records/' + $cloudFlareDnsEntry.id
+        $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":true}'
+        $result = Invoke-RestMethod -Method PUT -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
+    }
+}
 
-# Create AWVerify Entries (Not proxied)
-#$customerUrl = 'awverify.' + $SiteBaseUrl
-#$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=' + $customerUrl + '&match=all'
-#$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
-#$cloudFlareWafEntries = $result.result
-#$azureCustomerUrl = $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
+# Create AWVerify Entries (Not proxied) for manually registering TLS certificates, if required
+$externalWebsiteVerifyUrl = 'awverify.' + $externalWebsiteUrl 
+$azureWebsiteVerifyUrl = 'awverify.' + $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
+$cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=' + $externalWebsiteVerifyUrl + '&match=all'
+$result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
+$cloudFlareDnsEntries = $result.result
 
-#$customerCloudFlareEntry = $cloudFlareWafEntries | Where-Object { $_.name -eq $customerUrl }
-#if ($customerCloudFlareEntry -eq $null) {
-#    Write-Host ("Url '" + $customerUrl + "' not present in DNS, creating, linking to " + $azureCustomerUrl)
-#    $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records'
-#    $dnsEntry = '{"type":"CNAME","name":"' + $customerUrl + '","content":"' + $azureCustomerUrl + '","ttl":1,"proxied":false}'
-#    Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
-#} else {
-#    Write-Host ("Url '" + $customerUrl + "' present in DNS")
-#}
+$cloudFlareDnsEntry = $cloudFlareDnsEntries | Where-Object { $_.name -eq $externalWebsiteVerifyUrl }
+if ($cloudFlareDnsEntry -eq $null) {
+    Write-Host ("Url '" + $externalWebsiteVerifyUrl + "' not present in DNS, creating, linking to " + $azureWebsiteVerifyUrl)
+    $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records'
+    $dnsEntry = '{"type":"CNAME","name":"' + $externalWebsiteVerifyUrl + '","content":"' + $azureWebsiteVerifyUrl + '","ttl":1,"proxied":false}'
+    Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
+} else {
+    Write-Host ("Url '" + $externalWebsiteVerifyUrl + "' present in DNS")
+}
 
-#Write-Host ("Removing IP Address restrictions from scm site")
+Write-Host ("Removing IP Address restrictions from scm site")
 # NB: You need to do this otherwise Azure Devops can't deploy the site
-#$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
-#$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
-#$webAppConfig.Properties.scmIpSecurityRestrictions = @()
-#Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
-#Write-Host ("Removed IP Address restrictions from scm site")
+$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+$webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction Continue)
+if ($webAppConfig -ne $null) {
+    $webAppConfig.Properties.scmIpSecurityRestrictions = @()
+    Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+}
+Write-Host ("Removed IP Address restrictions from scm site")
 
 Write-Host ("Pre-Deploy complete")
