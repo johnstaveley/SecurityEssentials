@@ -528,6 +528,7 @@
           "requestTracingEnabled": true,
           "httpLoggingEnabled": true,
           "detailedErrorLoggingEnabled": true,
+          "httpsOnly": true,
           "connectionStrings": [
             {
               "name": "DefaultConnection",

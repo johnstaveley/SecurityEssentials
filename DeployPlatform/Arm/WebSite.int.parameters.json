@@ -6,7 +6,23 @@
     "developerIpAddresses": { "value": "<ChangeMe>" },
     "environmentName": { "value": "int" },
     "hostNameSslStates": {
-      "value": []
+      "value": [
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.azurewebsites.net')]",
+          "sslState": "Disabled",
+          "hostType": "Standard"
+        },
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.staveley.org')]",
+          "sslState": "Disabled",
+          "hostType": "Standard"
+        },
+        {
+          "name": "[concat(parameters('siteName'), parameters('environmentName'), '.scm.azurewebsites.net')]",
+          "sslState": "Disabled",
+          "hostType": "Repository"
+        }
+      ]
     },
     "servicePlanSkuTier": { "value": "Standard" },
     "servicePlanSkuSize": { "value": "S1" },

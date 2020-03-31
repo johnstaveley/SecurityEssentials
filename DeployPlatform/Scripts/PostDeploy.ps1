@@ -35,7 +35,8 @@ if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
 [string] $resourceGroupName = $SiteName + '-' + $EnvironmentName
 [string] $siteNameLowerCase = $SiteName.ToLower()
 [string] $webSiteName = $siteNameLowerCase + $EnvironmentName.ToLower()
-[string] $vNetStorageAccountName = $siteNameLowerCase + $EnvironmentName.ToLower()
+[string] $vNetStorageAccountName = $siteNameLowerCase + $EnvironmentName.ToLower() + "vnt"
+[string] $websiteUrl = "https://" + $siteNameLowerCase + $EnvironmentName.ToLower() + "." + $SiteBaseUrl
 [int] $softDeletePolicyDays = 7
 
 Write-Host ("Cloudflare IP Address restrictions. $CloudFlareIpAddresses rules to process")
@@ -88,7 +89,6 @@ Start-Sleep($secondsToWait)
 # Wake websites up
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ProgressPreference = 'SilentlyContinue'
-$websiteUrl = "https://" + $SiteBaseUrl
 Write-Host ("Hitting url " + $websiteUrl)
 $webRequest = [System.Net.WebRequest]::Create($websiteUrl)
 $webRequest.Timeout = 5 * 60 * 1000
