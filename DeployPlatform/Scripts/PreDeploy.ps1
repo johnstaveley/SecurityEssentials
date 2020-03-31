@@ -42,11 +42,6 @@ Param(
     [string] $CloudFlarePlan = 'Free'
 )
 
-if ((Get-AzureRmContext) -eq $null -or [string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) { 
-    Write-Host "Logging in...";
-    Login-AzureRmAccount 
-}
-
 Write-Host("Setup variables")
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3
@@ -78,19 +73,19 @@ else{
 $vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnt'
 $vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
 if ($vNetStorageAccount -eq $null) {
-	Write-Host "Creating Storage Account '$vNetStorageAccountName' in $resourceGroupName" 
+	Write-Host "Creating Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName" 
     $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
-	Write-Host "Storage Account '$vNetStorageAccountName' in $resourceGroupName already exists" 
+	Write-Host "Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName already exists" 
 }
 
 $storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
 $storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
 if ($storageAccount -eq $null) {
-	Write-Host "Creating Storage Account '$storageAccountName' in $resourceGroupName" 
+	Write-Host "Creating Storage Account '$storageAccountName' in Resource Group $resourceGroupName" 
     $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
-	Write-Host "Storage Account '$storageAccountName' in $resourceGroupName already exists" 
+	Write-Host "Storage Account '$storageAccountName' in Resource Group $resourceGroupName already exists" 
 }
 
 ipconfig /flushdns
@@ -101,10 +96,10 @@ Write-Host "Checking key Vault"
 $matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
 if ($matchingVaults -eq $null) { 
     # create vault and enable the key vault for template deployment
-    Write-Host "Creating Vault '$vaultName' in $resourceGroupName" 
+    Write-Host "Creating Vault '$vaultName' in Resource Group $resourceGroupName" 
     $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment
 } else {
-    Write-Host "Vault '$vaultName' in $resourceGroupName already exists" 
+    Write-Host "Vault '$vaultName' in Resource Group $resourceGroupName already exists" 
     $vault = $matchingVaults[0]
 }
 
@@ -138,12 +133,11 @@ Write-Host ("CloudFlare Zone " + $zoneId)
 # https://api.cloudflare.com/#cloudflare-ips-properties
 Write-Host ("Get Cloudflare Ips")
 $cloudflareUrl = $cloudflareBaseUrl + 'ips'
-$result = Invoke-RestMethod -Method Get -Uri $cloudflareUrl -Headers $cloudflareHeaders
+$result = Invoke-RestMethod -Method Get -Uri $cloudflareUrl -Headers $cloudFlareHeaders
 $cloudFlareIpv4 = $result.result.ipv4_cidrs -join ","
-Write-Host "##vso[task.setvariable variable=CloudFlareIPv4;]$cloudFlareIpv4"
 $cloudFlareIpv6 = $result.result.ipv6_cidrs -join ","
-Write-Host "##vso[task.setvariable variable=CloudFlareIPv6;]$cloudFlareIpv6"
-
+$cloudFlareIpAddresses = $cloudFlareIpv4 + "," + $cloudFlareIpv6
+Write-Host "##vso[task.setvariable variable=cloudFlareIpAddresses;]$cloudFlareIpAddresses"
 
 function Set-CloudFlareSetting {
 	Param ([string] $cloudFlareBaseUrl, [string] $zoneId, [string] $settingName, [string] $settingDesiredState, $cloudFlareHeaders)
@@ -158,7 +152,7 @@ function Set-CloudFlareSetting {
     } else {
         Write-Host("Cloudflare: Setting $settingName")
         $settingsUrl = $cloudFlareUrl + "/" + $settingName
-        $result = Invoke-RestMethod -Method Patch -Uri $settingsUrl -Headers $cloudflareHeaders -Body ('{"value":"' + $settingDesiredState + '"}')
+        $result = Invoke-RestMethod -Method Patch -Uri $settingsUrl -Headers $cloudFlareHeaders -Body ('{"value":"' + $settingDesiredState + '"}')
         if ($result.success -ne $true) {    
             Write-Host("Updating $settingName failed with result " + $result.result)
             Write-Host($result.messages)
@@ -193,7 +187,7 @@ if ($cloudFlareDnsEntry -eq $null) {
     Invoke-RestMethod -Method Post -Uri $cloudFlareUrl -Body $dnsEntry -Headers $cloudFlareHeaders
 } else {
     Write-Host ("Url '" + $externalWebsiteUrl + "' present in DNS")
-    # NB: Proxied means it is behind the WAF
+    # NB: Proxied means it is protected from DOS attacks and if in Pro version the WAF as well
     if ($cloudFlareDnsEntry.proxied -eq $true) {
         Write-Host ("Url '" + $externalWebsiteUrl + "' present in Proxy")
     } else {
@@ -205,7 +199,7 @@ if ($cloudFlareDnsEntry -eq $null) {
 }
 
 # Create AWVerify Entries (Not proxied) for manually registering TLS certificates, if required
-$externalWebsiteVerifyUrl = 'awverify.' + $externalWebsiteUrl 
+$externalWebsiteVerifyUrl = 'awverify.' + $SiteName.ToLower() + $EnvironmentName.ToLower() + "." + $SiteBaseUrl
 $azureWebsiteVerifyUrl = 'awverify.' + $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
 $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=' + $externalWebsiteVerifyUrl + '&match=all'
 $result = Invoke-RestMethod -Method Get -Uri $cloudFlareUrl -Headers $cloudFlareHeaders
