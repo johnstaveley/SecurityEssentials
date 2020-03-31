@@ -1,23 +1,11 @@
 <#
 .SYNOPSIS
-    Carries out pre deployment steps for deployment of site Security Essentials
+    Carries out pre deployment steps for deployment of the Security Essentials site
 .DESCRIPTION
-    Carries out the following functions:
     Creates the resource group, blob storage and key vault in Azure
     Sets up secure keys in the key vault
     Sets up Cloudflare settings, DNS and WAF (if applicable)
     Removes IP address restrictions so Azure Devops can deploy to site
-.PARAMETER Path
-    The path to the .
-.PARAMETER LiteralPath
-    Specifies a path to one or more locations. Unlike Path, the value of 
-    LiteralPath is used exactly as it is typed. No characters are interpreted 
-    as wildcards. If the path includes escape characters, enclose it in single
-    quotation marks. Single quotation marks tell Windows PowerShell not to 
-    interpret any characters as escape sequences.
-.EXAMPLE
-    C:\PS> 
-    <Description of example>
 .NOTES
     Author: John Staveley
     Date:   24/06/2019    
