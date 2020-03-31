@@ -78,10 +78,15 @@ This solution comes with azure-pipelines.yml build and test script. Running this
 * 10. Unvalidated redirects and forwards - Partially checked using Unit tests
 
 ## Platform features
+* Completely automated deployment using azure pipelines, See Developer readme for more details
 * Setup DNS and WAF settings in cloudflare
 * Enforce Cloudflare rules: Always use https, Min tls level 1.2, allow tls 1.3, set ssl level to full, allow http2
-* Restrict access to website in Azure from Cloudflare
+* Azure PaaS: Restrict access to only from Cloudflare, enforce https, lock down to virtual network, auto scale PaaS on heavy load, enforce TLS 1.2, disable ftp
 * Prove Azure are upgrading their PaaS platform over time
-
+* Storage - lock down to virtual network
+* Web Test - Prove the website is available from at least two world locations
+* SQL Database - Backup databases at regular intervals, encrypt database at rest, audit changes to database settings, perform regular vulnerability checking, restrict ip address access
+* Alerts - Alert admins on security warnings
+* Loggins - Log errors and metrics in application insights
 
 [![Build Status](https://johnstaveley.visualstudio.com/Security%20Essentials/_apis/build/status/johnstaveley.SecurityEssentials?branchName=master)](https://johnstaveley.visualstudio.com/Security%20Essentials/_build/latest?definitionId=6&branchName=master)

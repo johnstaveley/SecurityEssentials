@@ -84,6 +84,9 @@ if ($DeveloperIpAddresses -ne '' -and $DeveloperIpAddresses -ne $null) {
 		$devRuleId += 1
 	}
 }
+# TODO: Remove this
+$scmRulesToAdd
+
 $apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
 $webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
 Write-Host ("Writing IP Address restrictions")
@@ -108,7 +111,7 @@ $osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIn
 Write-Host ("PaaS Version: " + $osVersion)
 
 # Wait for website to restart
-$secondsToWait = 60
+$secondsToWait = 45
 Write-Host ("Waiting $secondsToWait seconds for site to restart")
 Start-Sleep($secondsToWait)
 

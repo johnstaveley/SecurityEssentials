@@ -179,7 +179,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
