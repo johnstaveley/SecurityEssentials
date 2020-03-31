@@ -60,22 +60,25 @@ return $rules
 }
 
 # Access to the main site should only be allowed through cloudflare
-$cloudFlareIpAddressCount = $CloudFlareIpAddresses.Length
-Write-Host ("Cloudflare firewall enabled - Starting IP Address restrictions. $cloudFlareIpAddressCount cloudflare rules to process")
-[PSCustomObject] $websiteRulesToAdd = New-Object System.Collections.ArrayList
-[int] $cloudFlareRuleId = 1
-foreach ($cloudFlareIpAddress in $cloudFlareIpAddresses.Split(",")) {
-    $newRule = @{ipAddress=$cloudFlareIpAddress;action="Allow";priority="100";name="CF" + $cloudFlareRuleId.ToString().PadLeft(2, "0");description="CloudFlare IP Address"}
-	$websiteRulesToAdd.Add($newRule) | Out-Null
-	$cloudFlareRuleId += 1
+if ($CloudFlareIpAddresses -ne '' -and $CloudFlareIpAddresses -ne $null) {
+	$cloudFlareIpAddressCount = $CloudFlareIpAddresses.Length
+	Write-Host ("Cloudflare firewall enabled - Starting IP Address restrictions. $cloudFlareIpAddressCount cloudflare rules to process")
+	[PSCustomObject] $websiteRulesToAdd = New-Object System.Collections.ArrayList
+	[int] $cloudFlareRuleId = 1
+	foreach ($cloudFlareIpAddress in $cloudFlareIpAddresses.Split(",")) {
+		$newRule = @{ipAddress=$cloudFlareIpAddress;action="Allow";priority="100";name="CF" + $cloudFlareRuleId.ToString().PadLeft(2, "0");description="CloudFlare IP Address"}
+		$websiteRulesToAdd.Add($newRule) | Out-Null
+		$cloudFlareRuleId += 1
+	}
 }
 
 # Access to the deployment (scm) site should be locked down to developers (NB: These rules are temporarily disabled when deploying to allow azure devops access)
 [PSCustomObject] $scmRulesToAdd = New-Object System.Collections.ArrayList
 [int] $devRuleId = 1
-if ($DeveloperIpAddresses -ne '') {
+if ($DeveloperIpAddresses -ne '' -and $DeveloperIpAddresses -ne $null) {
 	foreach($developerIpAddress in $DeveloperIpAddresses.Split(",")) {
 		$scmRulesToAdd.Add(@{ipAddress=$developerIpAddress;action="Allow";priority="100";name="DEV" + $devRuleId.ToString().PadLeft(2, "0");description="Developer IP Address"}) | Out-Null
+		$devRuleId += 1
 	}
 }
 $apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
