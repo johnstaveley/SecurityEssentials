@@ -5,6 +5,8 @@
     Carries out the following functions:
     Creates the resource group, blob storage and key vault in Azure
     Sets up secure keys in the key vault
+    Sets up Cloudflare settings, DNS and WAF (if applicable)
+    Removes IP address restrictions so Azure Devops can deploy to site
 .PARAMETER Path
     The path to the .
 .PARAMETER LiteralPath
@@ -198,7 +200,7 @@ if ($cloudFlareDnsEntry -eq $null) {
     }
 }
 
-# Create AWVerify Entries (Not proxied) for manually registering TLS certificates, if required
+# Create AWVerify Entries (Not proxied) for binding custom domain in cloudflare to azure
 $externalWebsiteVerifyUrl = 'awverify.' + $SiteName.ToLower() + $EnvironmentName.ToLower() + "." + $SiteBaseUrl
 $azureWebsiteVerifyUrl = 'awverify.' + $SiteName.ToLower() + $EnvironmentName.ToLower() + ".azurewebsites.net"
 $cloudFlareUrl = $cloudFlareBaseUrl + 'zones/' + $zoneId + '/dns_records?type=CNAME&per_page=100&name=' + $externalWebsiteVerifyUrl + '&match=all'

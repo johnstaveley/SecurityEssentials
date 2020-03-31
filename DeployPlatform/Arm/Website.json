@@ -540,8 +540,8 @@
       },
       "resources": [
         {
-          "apiVersion": "2015-08-01",
           "name": "appsettings",
+          "apiVersion": "2015-08-01",
           "type": "config",
           "tags": { "displayName": "Website App Settings" },
           "dependsOn": [
@@ -555,6 +555,20 @@
             "minTlsVersion": "1.2",
             "ftpsState": "Disabled",
             "httpsOnly": true
+          }
+        },
+        {
+          "name": "virtualNetwork",
+          "type": "config",
+          "apiVersion": "2018-02-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Web/sites/', variables('webSiteName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+          ],
+          "properties": {
+            "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'frontend')]",
+            "swiftSupported": true
           }
         }
       ]
