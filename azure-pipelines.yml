@@ -26,18 +26,15 @@ stages:
     steps:
     - task: NuGetToolInstaller@1
       displayName: 'Use NuGet 4.4.1'
-      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         versionSpec: 4.4.1
     
     - task: NuGetCommand@2
       displayName: 'Restore NuGet Packages'
-      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         restoreSolution: '$(solution)'
     
     - task: VSBuild@1
-      enabled: false # TODO: Removed temporarily to speed up build
       displayName: 'Build solution'
       inputs:
         solution: '$(solution)'
@@ -123,7 +120,6 @@ stages:
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: drop'
-      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         artifact: drop
 
