@@ -44,7 +44,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Unit tests'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -128,7 +128,7 @@ stages:
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
-        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName) -SqlAdminPassword $(SqlAdminPassword)' -CloudFlarePlan $(CloudFlarePlan)
+        ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName) -SqlAdminPassword $(SqlAdminPassword) -CloudFlarePlan $(CloudFlarePlan)' 
         azurePowerShellVersion: LatestVersion
 
     - task: AzureResourceGroupDeployment@2
