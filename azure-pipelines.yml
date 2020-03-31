@@ -100,7 +100,7 @@ stages:
         artifactName: drop
 
 - stage: Acceptance_Tests
-  dependsOn: Build
+  dependsOn: Build_And_Unit_Tests
   jobs:
   #- job: Approve_Deployment
   #  pool: server
