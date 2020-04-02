@@ -62,6 +62,7 @@ stages:
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
       enabled: false # TODO: Removed temporarily to speed up build
+      continueOnError: true
       inputs:
         projectName: 'Security Essentials'
         scanPath: '$(System.DefaultWorkingDirectory)'
@@ -70,12 +71,14 @@ stages:
     - task: WhiteSource Bolt@20      
       displayName: 'Whitesource bolt'
       enabled: false # TODO: Removed temporarily to speed up build
+      continueOnError: true
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
     - task: AzSKARMTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
       enabled: false # TODO: Removed temporarily to speed up build.
+      continueOnError: true
       inputs:
         ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
@@ -98,6 +101,28 @@ stages:
       inputs:
         pathtoPublish: '$(build.artifactstagingdirectory)'
         artifactName: drop
+
+    # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#anti-malware-scanner-task
+    - task: AntiMalware@3
+      displayName: 'MSCA: Run windows defender Anti-Malware Scan'
+      continueOnError: true
+      inputs:
+        InputType: 'Basic'
+        ScanType: 'CustomScan'
+        FileDirPath: '$(build.artifactstagingdirectory)'
+        EnableServices: false
+        SupportLogOnError: false
+        TreatSignatureUpdateFailureAs: 'Warning'
+        SignatureFreshness: 'UpToDate'
+        TreatStaleSignatureAs: 'Error'
+
+    - task: PublishSecurityAnalysisLogs@2
+      displayName: 'MSCA: Publish findings'
+      inputs:
+        ArtifactName: 'CodeAnalysisLogs'
+        ArtifactType: 'Container'
+        AllTools: true
+        ToolLogsNotFoundAction: 'Standard'
 
 - stage: Acceptance_Tests
   dependsOn: Build_And_Unit_Tests

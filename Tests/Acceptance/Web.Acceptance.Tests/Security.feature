@@ -67,7 +67,8 @@ Scenario: The web application will log a certificate policy violation
 	| Level   | Warning                 |
 	| Message | HostName: "example.com" |
 
-@CheckForErrors @Smoke
+# TODO: Need two versions of this test, one for debugging locally and one for server based regression tests, then enable as @Smoke
+@CheckForErrors
 Scenario: The web application will return the correct security headers
 	When I call http get on the website
 	Then the response headers will contain: 

@@ -529,6 +529,8 @@
           "httpLoggingEnabled": true,
           "detailedErrorLoggingEnabled": true,
           "httpsOnly": true,
+          "minTlsVersion": "1.2",
+          "localMySqlEnabled": false,
           "connectionStrings": [
             {
               "name": "DefaultConnection",
@@ -550,11 +552,7 @@
           "properties": {
             "ApplicationInsightsKey": "[reference(concat('microsoft.insights/components/', variables('applicationInsightsName'))).InstrumentationKey]",
             "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
-            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
-            "alwaysOn": true,
-            "minTlsVersion": "1.2",
-            "ftpsState": "Disabled",
-            "httpsOnly": true
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]"            
           }
         },
         {

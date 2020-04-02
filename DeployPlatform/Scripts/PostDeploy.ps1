@@ -93,7 +93,7 @@ $webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -R
 Write-Host ("Writing IP Address restrictions")
 $webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
 $webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
-Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force | Out-Null
 Write-Host ("Completed IP Address restrictions")
 
 Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")

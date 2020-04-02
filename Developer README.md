@@ -51,7 +51,8 @@ In order to keep your solution secure you should run the acceptance tests on eac
 * Add the following task types from the Azure Marketplace as follows:
 	+ OWASP Dependency checker
 	+ White source bolt. This needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
-	+ Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace	
+	+ Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace
+	+ Microsoft Security Code Analysis. If you purchase this extension it is shared with you, add from shared from the marketplace. If you do not purchase this then remove any tasks marked MSCA from azure-pipelines.yml
 * Set up service connection in Azure Devops -> Project Settings -> Service Connections -> Add new Azure Resource Manager service connection. This is to allow control of the Resource Group in Azure by Azure Devops
 * In Azure
 	+ Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
