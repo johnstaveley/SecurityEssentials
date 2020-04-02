@@ -123,6 +123,7 @@ stages:
       continueOnError: true
       inputs:
         toolMajorVersion: 'V1'
+        scanFolder: '$(build.artifactstagingdirectory)'
 
     - task: PublishSecurityAnalysisLogs@2
       displayName: 'MSCA: Publish findings'

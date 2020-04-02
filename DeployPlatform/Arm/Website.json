@@ -505,7 +505,8 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverFarms/', variables('serverFarmName'))]",
-        "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]"
+        "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
       ],
       "tags": {
         "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('serverFarmName'))]": "empty",
@@ -575,7 +576,6 @@
           "apiVersion": "2018-02-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Web/sites/', variables('webSiteName'))]",
             "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
           ],
           "properties": {
