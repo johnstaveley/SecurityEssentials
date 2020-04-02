@@ -38,6 +38,10 @@
     "developerIpAddresses": {
       "type": "string"
     },
+    "EncryptionPassword": {
+      "type": "securestring",
+      "defaultValue": "Not Specified"
+    },
     "environmentName": {
       "type": "string",
       "allowedValues": [
@@ -531,7 +535,14 @@
           "httpsOnly": true,
           "minTlsVersion": "1.2",
           "localMySqlEnabled": false,
-          "connectionStrings": [
+          "appSettings": [
+            {
+              "name": "EncryptionPassword",
+              "value": "[parameters('encryptionPassword')]"
+            }
+          ],
+          "connectionStrings":
+          [
             {
               "name": "DefaultConnection",
               "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
@@ -552,7 +563,7 @@
           "properties": {
             "ApplicationInsightsKey": "[reference(concat('microsoft.insights/components/', variables('applicationInsightsName'))).InstrumentationKey]",
             "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]",
-            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]"            
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountNonVNetName'), ';AccountKey=', listKeys(variables('storageAccountIdNonVNet'),'2015-05-01-preview').key1)]"
           }
         },
         {

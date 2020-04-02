@@ -36,6 +36,7 @@ In order to keep your solution secure you should run the acceptance tests on eac
 	+ CloudFlarePlan - One of Free, Pro, Business or Enterprise
 	+ CloudFlareUserServiceKey - * Service Key for Cloudflare (this can be the global api key in your profile or an api key created with sufficient permissions). 
 	+ CloudFlareZoneName - Zone in Cloudflare such as the name of your site
+	+ EncryptionPassword - * Cryptographically secure random string of at least 20 characters/digits/symbols in length
 	+ DeveloperIpAddresses - Comma delimited list of IP addresses of any developers that need access to the backend database TOOD: This can only accept 1 IP address at the moment
 	+ EnvironmentName - environment short hand, e.g. int, qa, uat, live
 	+ ResourceGroup - Name of resource group to deploy to e.g. SecurityEssentials-Int
