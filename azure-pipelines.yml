@@ -134,6 +134,7 @@ stages:
         ToolLogsNotFoundAction: 'Standard'
 
 - stage: Acceptance_Tests
+  enabled: false # TODO: Removed temporarily to speed up build
   dependsOn: Build_And_Unit_Tests
   jobs:
   #- job: Approve_Deployment

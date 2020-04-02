@@ -290,7 +290,6 @@
         "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('webDatabaseName'))]"
       ]
     },
-
     {
       "apiVersion": "2016-09-01",
       "dependsOn": [],
@@ -506,7 +505,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverFarms/', variables('serverFarmName'))]",
         "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
       ],
       "tags": {
         "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('serverFarmName'))]": "empty",
@@ -576,7 +575,8 @@
           "apiVersion": "2018-02-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
           ],
           "properties": {
             "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'frontend')]",
@@ -596,7 +596,6 @@
         "securityRules": [
           {
             "name": "Web",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
@@ -618,7 +617,6 @@
         "defaultSecurityRules": [
           {
             "name": "AllowVnetInBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow inbound traffic from all VMs in VNET",
               "protocol": "*",
@@ -637,7 +635,6 @@
           },
           {
             "name": "AllowAzureLoadBalancerInBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow inbound traffic from azure load balancer",
               "protocol": "*",
@@ -656,7 +653,6 @@
           },
           {
             "name": "DenyAllInBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Deny all inbound traffic",
               "protocol": "*",
@@ -675,7 +671,6 @@
           },
           {
             "name": "AllowVnetOutBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow outbound traffic from all VMs to all VMs in VNET",
               "protocol": "*",
@@ -694,7 +689,6 @@
           },
           {
             "name": "AllowInternetOutBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow outbound traffic from all VMs to Internet",
               "protocol": "*",
@@ -713,7 +707,6 @@
           },
           {
             "name": "DenyAllOutBound",
-            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Deny all outbound traffic",
               "protocol": "*",
@@ -743,7 +736,6 @@
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupsFrontEndName'))]"
       ],
       "properties": {
-        "resourceGuid": "a16d4f1c-5648-4752-8cbe-5b68ffaea00b",
         "addressSpace": {
           "addressPrefixes": [
             "192.168.0.0/23"
