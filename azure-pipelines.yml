@@ -134,7 +134,6 @@ stages:
         ToolLogsNotFoundAction: 'Standard'
 
 - stage: Acceptance_Tests
-  enabled: false # TODO: Removed temporarily to speed up build
   dependsOn: Build_And_Unit_Tests
   jobs:
   #- job: Approve_Deployment
@@ -146,6 +145,7 @@ stages:
   #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
   #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
+    enabled: false # TODO: Removed temporarily to speed up build
     pool:
       name: Hosted VS2017
       demands:
