@@ -70,6 +70,11 @@ if ($vNetStorageAccount -eq $null) {
 } else {
 	Write-Host "Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName already exists" 
 }
+$vNetStorageContext = $vNetStorageAccount.Context
+$loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $vNetStorageContext)
+if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $vNetStorageContext -RetentionDays '90' -PassThru
+}
 
 $storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
 $storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
@@ -78,6 +83,11 @@ if ($storageAccount -eq $null) {
     $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$storageAccountName' in Resource Group $resourceGroupName already exists" 
+}
+$storageContext = $storageAccount.Context
+$loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $storageContext)
+if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $storageContext -RetentionDays '90' -PassThru
 }
 
 ipconfig /flushdns
@@ -89,7 +99,7 @@ $matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq
 if ($matchingVaults -eq $null) { 
     # create vault and enable the key vault for template deployment
     Write-Host "Creating Vault '$vaultName' in Resource Group $resourceGroupName" 
-    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment
+    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment -EnableSoftDelete
 } else {
     Write-Host "Vault '$vaultName' in Resource Group $resourceGroupName already exists" 
     $vault = $matchingVaults[0]
