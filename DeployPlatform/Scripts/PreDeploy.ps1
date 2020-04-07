@@ -73,6 +73,7 @@ if ($vNetStorageAccount -eq $null) {
 $vNetStorageContext = $vNetStorageAccount.Context
 $loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $vNetStorageContext)
 if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    # SECURE: Set logging of failed authenication attempts
     Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $vNetStorageContext -RetentionDays '90' -PassThru
 }
 
@@ -87,6 +88,7 @@ if ($storageAccount -eq $null) {
 $storageContext = $storageAccount.Context
 $loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $storageContext)
 if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    # SECURE: Set logging of failed authenication attempts
     Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $storageContext -RetentionDays '90' -PassThru
 }
 
@@ -97,7 +99,7 @@ Sleep 2
 Write-Host "Checking key Vault" 
 $matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
 if ($matchingVaults -eq $null) { 
-    # create vault and enable the key vault for template deployment
+    # Create vault and enable the key vault for template deployment SECURE: Enable soft delete so keys can be recovered
     Write-Host "Creating Vault '$vaultName' in Resource Group $resourceGroupName" 
     $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment -EnableSoftDelete
 } else {
