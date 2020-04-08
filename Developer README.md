@@ -72,3 +72,9 @@ Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/az
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - removed as this rule signature enforces a format which does not comply with ARM Template format
 	Azure_Storage_BCDR_Enable_Soft_Delete - Soft delete off just for assets not on the virtual network
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
+
+
+Known Issues
+------------
+
+Creating secrets with $^ in them can cause the build pipeline to fail
