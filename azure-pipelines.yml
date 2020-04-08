@@ -75,7 +75,7 @@ stages:
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
-    - task: AzSKARMTemplateChecker@4
+    - task: AzSKArmTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
       enabled: false # TODO: Removed temporarily to speed up build.
       continueOnError: true
