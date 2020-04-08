@@ -119,7 +119,6 @@ $matchingSecrets = Get-AzureKeyVaultSecret -VaultName $vaultName -ErrorAction St
 if ($matchingSecrets -eq $null) { 
 	Write-Host "Settings '$secretKey' in vault $vaultName" 
     $secret = ConvertTo-SecureString -string $SqlAdminPassword -asplaintext -force
-	Write-Host "."
     Set-AzureKeyVaultSecret -VaultName $vaultName -name $secretKey -SecretValue $secret -ErrorAction Stop
     Sleep 5
 } else {
