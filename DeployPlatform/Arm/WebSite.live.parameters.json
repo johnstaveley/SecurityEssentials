@@ -3,6 +3,9 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminEmailAddresses": { "value": "<ChangeMe>" },
+    "databaseEdition": { "value": "Standard" },
+    "databaseMaxSizeBytes": { "value": "5368709120" },
+    "databaseServiceLevelObjective": { "value": "S1" },
     "developerIpAddresses": { "value": "<ChangeMe>" },
     "encryptionPassword": {
       "reference": {
@@ -32,9 +35,9 @@
         }
       ]
     },
-    "servicePlanSkuTier": { "value": "Standard" },
-    "servicePlanSkuSize": { "value": "S1" },
-    "servicePlanSkuFamily": { "value": "S" },
+    "servicePlanSkuTier": { "value": "Premium" },
+    "servicePlanSkuSize": { "value": "P1v2" },
+    "servicePlanSkuFamily": { "value": "Pv2" },
     "servicePlanSkuCapacity": { "value": 2 },
     "siteName": { "value": "securityessentials" },
     "sqlAdminUserName": { "value": "<ChangeMe>" },

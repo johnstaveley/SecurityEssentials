@@ -58,7 +58,7 @@ In order to keep your solution secure you should run the acceptance tests on eac
 * In Azure
 	+ Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
 * Run the deployment once, this will fail but create the key vault. 
-	+ In Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the principal from Azure Devops
+	+ In Key Vault -> Access Policies -> Add Access Policy -> Configure from template (key, Secret and Certificate Management), select the service connection principal from Azure Devops and yourself
 	+ Repeat the above but add yourself as a user with all permissions
 	+ Note that the app service custom domain setup may fail until the DNS settings in cloudflare are propagated
 

@@ -66,6 +66,7 @@ $vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnt
 $vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
 if ($vNetStorageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName" 
+    # NB: If the vault is showing up as soft deleted -InRemovedState you might have to might have to execute Remove-AzureRmKeyVault before it can be created again. Soft delete will be enabled by default in future
     $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName already exists" 

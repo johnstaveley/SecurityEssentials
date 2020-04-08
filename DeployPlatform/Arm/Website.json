@@ -16,7 +16,7 @@
     },
     "databaseEdition": {
       "type": "string",
-      "defaultValue": "Standard",
+      "defaultValue": "Basic",
       "allowedValues": [
         "Basic",
         "Standard",
@@ -29,7 +29,7 @@
     },
     "databaseServiceLevelObjective": {
       "type": "string",
-      "defaultValue": "S0",
+      "defaultValue": "Basic",
       "allowedValues": [ "Basic", "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "P1", "P2", "P3" ],
       "metadata": {
         "description": "Describes the performance level for Edition"
@@ -508,8 +508,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverFarms/', variables('serverFarmName'))]",
-        "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[resourceId('microsoft.insights/components/', variables('applicationInsightsName'))]"
       ],
       "tags": {
         "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('serverFarmName'))]": "empty",
@@ -586,8 +585,9 @@
           "apiVersion": "2018-02-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
+            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]",
+            "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+
           ],
           "properties": {
             "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'frontend')]",
@@ -607,6 +607,7 @@
         "securityRules": [
           {
             "name": "Web",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
@@ -628,6 +629,7 @@
         "defaultSecurityRules": [
           {
             "name": "AllowVnetInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow inbound traffic from all VMs in VNET",
               "protocol": "*",
@@ -646,6 +648,7 @@
           },
           {
             "name": "AllowAzureLoadBalancerInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow inbound traffic from azure load balancer",
               "protocol": "*",
@@ -664,6 +667,7 @@
           },
           {
             "name": "DenyAllInBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Deny all inbound traffic",
               "protocol": "*",
@@ -682,6 +686,7 @@
           },
           {
             "name": "AllowVnetOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow outbound traffic from all VMs to all VMs in VNET",
               "protocol": "*",
@@ -700,6 +705,7 @@
           },
           {
             "name": "AllowInternetOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Allow outbound traffic from all VMs to Internet",
               "protocol": "*",
@@ -718,6 +724,7 @@
           },
           {
             "name": "DenyAllOutBound",
+            "etag": "W/\"795b3fd7-6745-4fce-b584-f9d0d77e7afe\"",
             "properties": {
               "description": "Deny all outbound traffic",
               "protocol": "*",
