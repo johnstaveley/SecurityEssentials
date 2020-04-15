@@ -125,13 +125,16 @@ stages:
         toolMajorVersion: 'V1'
         scanFolder: '$(build.artifactstagingdirectory)'
 
+    # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#binskim-task
     - task: BinSkim@3
       displayName: 'MSCA: BinSkim'
-      #enabled: false # Need to fix errors for ChromeDriver and IEDriver not having symbols or search a different path
+      enabled: false # This task throws an exception as there are not pdb files for all packages used. See Dev readme for more information
       inputs:
         InputType: 'Basic'
         Function: 'analyze'
         AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'
+        AnalyzeRecurse: true
+        toolVersion: 'Latest'
 
     - task: PublishSecurityAnalysisLogs@2
       displayName: 'MSCA: Publish findings'
@@ -139,6 +142,20 @@ stages:
         ArtifactName: 'CodeAnalysisLogs'
         ArtifactType: 'Container'
         AllTools: true
+        ToolLogsNotFoundAction: 'Standard'
+
+    - task: PostAnalysis@1
+      displayName: 'MSCA: Post Analysis'
+      #enabled: false # Enable if you need to break the build on security findings from MCSA
+      inputs:
+        AllTools: false
+        BinSkim: true
+        BinSkimBreakOn: 'Error'
+        CredScan: true
+        RoslynAnalyzers: true
+        RoslynAnalyzersBreakOn: 'Error'
+        TSLint: true
+        TSLintBreakOn: 'Error'
         ToolLogsNotFoundAction: 'Standard'
 
 - stage: Acceptance_Tests
