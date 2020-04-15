@@ -80,6 +80,10 @@ if ($DeveloperIpAddresses -ne '' -and $DeveloperIpAddresses -ne $null) {
 	$developerIpAddressCount = $DeveloperIpAddresses.Split(",").Length
 	Write-Host ("Developer access to app service enabled - Starting IP Address restrictions. $developerIpAddressCount dev rules to process")
 	foreach($developerIpAddress in $DeveloperIpAddresses.Split(",")) {
+		if ($developerIpAddress -notcontains "/") {
+			# Assume a specific IP address has been provided
+			$developerIpAddress += "/32"
+		}
 		$newRule = @{ipAddress=$developerIpAddress;action="Allow";priority="100";name="DEV" + $devRuleId.ToString().PadLeft(2, "0");description="Developer IP Address"}
 		$scmRulesToAdd.Add($newRule) | Out-Null
 		$devRuleId += 1
