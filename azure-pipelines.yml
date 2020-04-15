@@ -244,7 +244,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Website to AppService'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -260,7 +260,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
@@ -277,7 +277,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Run Acceptance tests'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # Removed to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
@@ -297,7 +297,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Added to speed up build
       condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
