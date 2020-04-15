@@ -71,7 +71,8 @@ Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/az
 	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - removed as this rule signature enforces a format which does not comply with ARM Template format
 	Azure_Storage_BCDR_Enable_Soft_Delete - Soft delete off just for assets not on the virtual network
-BinSkim currently fails as follows. There doesn't seem to be a way for it just to report the issues instead of breaking the build.
+BinSkim. When scanning AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll' it throws an exception due to the following issues.
+I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
 	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
 	some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md

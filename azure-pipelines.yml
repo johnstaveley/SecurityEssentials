@@ -126,13 +126,14 @@ stages:
         scanFolder: '$(build.artifactstagingdirectory)'
 
     # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#binskim-task
+    # See Dev readme for more information
     - task: BinSkim@3
       displayName: 'MSCA: BinSkim'
-      enabled: false # This task throws an exception as there are not pdb files for all packages used. See Dev readme for more information
+      #enabled: false 
       inputs:
         InputType: 'Basic'
         Function: 'analyze'
-        AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'
+        AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\SecurityEssentials.dll'
         AnalyzeRecurse: true
         toolVersion: 'Latest'
 
