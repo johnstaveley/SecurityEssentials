@@ -522,6 +522,7 @@
         "name": "[variables('webSiteName')]",
         "hostNameSslStates": "[parameters('hostNameSslStates')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
+        "httpsOnly": true,
         "siteConfig": {
           "AlwaysOn": true,
           "ftpsState": "Disabled",
@@ -531,7 +532,7 @@
           "requestTracingEnabled": true,
           "httpLoggingEnabled": true,
           "detailedErrorLoggingEnabled": true,
-          "httpsOnly": true,
+          "http20Enabled": true,
           "minTlsVersion": "1.2",
           "localMySqlEnabled": false,
           "appSettings": [
@@ -540,8 +541,7 @@
               "value": "[parameters('encryptionPassword')]"
             }
           ],
-          "connectionStrings":
-          [
+          "connectionStrings": [
             {
               "name": "DefaultConnection",
               "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
