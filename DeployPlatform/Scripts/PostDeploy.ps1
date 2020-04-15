@@ -42,6 +42,17 @@ if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
 [string] $kuduWwwRootUrl = $kuduBaseUrl + "api/vfs/site/wwwroot/"
 [int] $softDeletePolicyDays = 7
 
+Write-Host("Get OS Version to prove Azure are upgrading the OS over time")
+$kuduEnvironmentDetailsUrl = $kuduBaseUrl + "Env.cshtml"
+$azureKuduUsername = "`$$webSiteName";
+$base64KuduAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $azureKuduUsername, $publishProfilePassword)))
+$powershellUserAgent = "powershell/1.0";
+$environmentDetails = Invoke-RestMethod -Uri $kuduEnvironmentDetailsUrl -Headers @{Authorization=("Basic {0}" -f $base64KuduAuthInfo)} -UserAgent $powershellUserAgent -Method GET
+$osIndexStart = $environmentDetails.IndexOf("OS version")
+$osIndexFinish = $environmentDetails.IndexOf("</li>", $osIndexStart)
+$osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIndexStart)
+Write-Host ("PaaS Version: " + $osVersion)
+
 Write-Host ("Cloudflare IP Address restrictions. $CloudFlareIpAddresses rules to process")
 
 function AddRules($rulesToAdd) {
@@ -102,17 +113,6 @@ Write-Host ("Completed IP Address restrictions")
 Write-Host ("Enabling access restrictions for storage $vNetStorageAccountName")
 Update-AzureRmStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $vNetStorageAccountName -DefaultAction Deny
 Write-Host ("Updated access restrictions for storage $vNetStorageAccountName")
-
-Write-Host("Get OS Version to prove Azure are upgrading the OS over time")
-$kuduEnvironmentDetailsUrl = $kuduBaseUrl + "Env.cshtml"
-$azureKuduUsername = "`$$webSiteName";
-$base64KuduAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $azureKuduUsername, $publishProfilePassword)))
-$powershellUserAgent = "powershell/1.0";
-$environmentDetails = Invoke-RestMethod -Uri $kuduEnvironmentDetailsUrl -Headers @{Authorization=("Basic {0}" -f $base64KuduAuthInfo)} -UserAgent $powershellUserAgent -Method GET
-$osIndexStart = $environmentDetails.IndexOf("OS version")
-$osIndexFinish = $environmentDetails.IndexOf("</li>", $osIndexStart)
-$osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIndexStart)
-Write-Host ("PaaS Version: " + $osVersion)
 
 # Wait for website to restart
 $secondsToWait = 45

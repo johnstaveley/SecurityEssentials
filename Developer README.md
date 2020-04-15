@@ -66,11 +66,13 @@ Notes
 -----
 
 Screenshots from failed selenium tests are stored in StorageAccountNonVNetName in container Selenium
+
 Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
 	Azure_SQLDatabase_AuthZ_Use_AAD_Admin - switched off because we don't run an AD server
 	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - removed as this rule signature enforces a format which does not comply with ARM Template format
 	Azure_Storage_BCDR_Enable_Soft_Delete - Soft delete off just for assets not on the virtual network
+
 The Microsoft Security Code Analysis tool set contains the following build tasks to check for security. Details are here: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-overview
 	Anti-Malware scanner
 	Binskim
@@ -78,12 +80,13 @@ The Microsoft Security Code Analysis tool set contains the following build tasks
 	Microsoft Security Risk Detection
 	Roslyn Analyzers
 	TSLint
+
 BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
-I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
 	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
 	some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
-Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
+I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
 
+Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
 
 Known Issues
 ------------
