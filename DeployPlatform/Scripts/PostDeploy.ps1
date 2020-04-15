@@ -51,9 +51,10 @@ function AddRules($rulesToAdd) {
 		$rule = [PSCustomObject] @{
 			ipAddress = $ruleToAdd.ipAddress; 
 			action = $ruleToAdd.action; 
+			tag = "Default";
 			priority = $ruleToAdd.priority; 
 			name = $ruleToAdd.name; 
-			description = $ruleToAdd.description 
+			description = $ruleToAdd.description;
 			}
 		$rules += $rule
 	}
@@ -95,8 +96,8 @@ $scmRulesToAdd
 $apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
 $webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
 Write-Host ("Writing IP Address restrictions")
-$webAppConfig.Properties.ipSecurityRestrictions = AddRules -rulesToAdd $websiteRulesToAdd
-$webAppConfig.Properties.scmIpSecurityRestrictions = AddRules -rulesToAdd $scmRulesToAdd
+$webAppConfig.Properties.ipSecurityRestrictions = [array] (AddRules -rulesToAdd $websiteRulesToAdd)
+$webAppConfig.Properties.scmIpSecurityRestrictions = [array] (AddRules -rulesToAdd $scmRulesToAdd)
 Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force | Out-Null
 Write-Host ("Completed IP Address restrictions")
 
