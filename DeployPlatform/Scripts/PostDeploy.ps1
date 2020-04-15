@@ -90,8 +90,6 @@ if ($DeveloperIpAddresses -ne '' -and $DeveloperIpAddresses -ne $null) {
 		$devRuleId += 1
 	}
 }
-# TODO: Remove this
-$scmRulesToAdd
 
 $apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
 $webAppConfig = (Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion)
