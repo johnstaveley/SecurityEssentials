@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
+using SecurityEssentials.Core.Constants;
 
 namespace SecurityEssentials.Core
 {
@@ -20,8 +21,9 @@ namespace SecurityEssentials.Core
 				string encryptedSecurityAnswerSalt;
 
 				// Roles
-				var adminRole = new Role {Id = 1, Description = "Admin"};
+				var adminRole = new Role {Id = Consts.Roles.Admin, Description = "Admin"};
 				context.Role.Add(adminRole);
+                context.SaveChanges();
 
 				// Users
 				string salt =
@@ -52,7 +54,7 @@ namespace SecurityEssentials.Core
 					SecurityQuestionLookupItemId = 271,
 					Title = "Mrs",
 					UserName = "admin@admin.com",
-					UserRoles = new List<UserRole>() {new UserRole() {RoleId = adminRole.Id, UserId = 1}}
+					UserRoles = new List<UserRole> {new UserRole {RoleId = adminRole.Id, UserId = 1}}
 				});
 
 				salt =
@@ -166,6 +168,7 @@ namespace SecurityEssentials.Core
 					UserName = "user5@user.com"
 				});
 				encryptor.Dispose();
+                context.SaveChanges();
 
 				// Lookup Types
 				context.LookupType.Add(new LookupType
@@ -485,6 +488,7 @@ namespace SecurityEssentials.Core
 					LookupTypeId = 2,
 					Ordinal = 5
 				});
+                context.SaveChanges();
 			}
 			base.Seed(context);
 		}
