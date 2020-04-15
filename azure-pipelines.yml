@@ -48,12 +48,12 @@ stages:
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        pathtoCustomTestAdapters: '$(build.sourcesdirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
+        pathtoCustomTestAdapters: '$(Build.SourcesDirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
         testAssemblyVer2: |
           **\SecurityEssentials.Unit.Tests.dll
           !**\*TestAdapter.dll
           !**\obj\**'
-        searchFolder: '$(build.sourcesdirectory)'
+        searchFolder: '$(Build.SourcesDirectory)'
         runInParallel: true
         codeCoverageEnabled: true
         diagnosticsEnabled: true
@@ -80,16 +80,16 @@ stages:
       enabled: false # TODO: Removed temporarily to speed up build.
       continueOnError: true
       inputs:
-        ARMTemplateFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
-        ARMTemplateParameterFilePath: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
-        SkipControlsFromFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\AzSKArmTemplateCheckExclude.csv'
+        ARMTemplateFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'
+        ARMTemplateParameterFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
+        SkipControlsFromFile: '$(Build.SourcesDirectory)\DeployPlatform\Arm\AzSKArmTemplateCheckExclude.csv'
 
     - task: CopyFiles@2
-      displayName: 'Copy Test Adapter to $(build.artifactstagingdirectory)'
+      displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
       #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
-        SourceFolder: '$(build.sourcesdirectory)\packages\NUnit3TestAdapter.3.16.1\'
-        TargetFolder: '$(build.artifactstagingdirectory)\Tests\NUnit3TestAdapter.3.16.1\'
+        SourceFolder: '$(Build.SourcesDirectory)\packages\NUnit3TestAdapter.3.16.1\'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\Tests\NUnit3TestAdapter.3.16.1\'
 
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'
@@ -99,7 +99,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: drop'
       inputs:
-        pathtoPublish: '$(build.artifactstagingdirectory)'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: drop
 
     # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#anti-malware-scanner-task
@@ -110,26 +110,26 @@ stages:
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
-        FileDirPath: '$(build.artifactstagingdirectory)'
+        FileDirPath: '$(Build.ArtifactStagingDirectory)'
         EnableServices: true
         SupportLogOnError: false
         TreatSignatureUpdateFailureAs: 'Warning'
         SignatureFreshness: 'UpToDate'
         TreatStaleSignatureAs: 'Error'
 
-    # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#credential-scanner-task
+    # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#credential-scanner-task
     - task: CredScan@2
       displayName: 'MSCA: Credential Scanner'
       continueOnError: true
       inputs:
         toolMajorVersion: 'V1'
-        scanFolder: '$(build.artifactstagingdirectory)'
+        scanFolder: '$(Build.ArtifactStagingDirectory)'
 
-    # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#binskim-task
+    # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#binskim-task
     # See Dev readme for more information
     - task: BinSkim@3
       displayName: 'MSCA: BinSkim'
-      #enabled: false 
+      #enabled: false # Removed to speed up build
       inputs:
         InputType: 'Basic'
         Function: 'analyze'
@@ -137,17 +137,47 @@ stages:
         AnalyzeRecurse: true
         toolVersion: 'Latest'
 
-    - task: PublishSecurityAnalysisLogs@2
-      displayName: 'MSCA: Publish findings'
+    # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#tslint-task
+    - task: TSLint@1
+      displayName: 'MSCA: TSLint'
       inputs:
-        ArtifactName: 'CodeAnalysisLogs'
+        RuleLibrary: 'microsoft'
+        RulesetMicrosoft: 'mssdlrequired'
+        FileSelectionType: 'fileGlob'
+        Files: '**\*.ts'
+        ECMAScriptVersion: 'ES3'
+        OutputFormat: 'json'
+        TypeScriptVersion: 'latest'
+
+    # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#publish-security-analysis-logs-task
+    - task: PublishSecurityAnalysisLogs@2
+      displayName: 'MSCA: Publish log files'
+      inputs:
+        ArtifactName: 'MCSA'
         ArtifactType: 'Container'
         AllTools: true
         ToolLogsNotFoundAction: 'Standard'
 
+    # About this task: 
+    - task: SdtReport@1
+      displayName: 'MSCA: Produce Report'
+      inputs:
+        VstsConsole: false
+        TsvFile: false
+        AllTools: false
+        BinSkim: true
+        BinSkimBreakOn: 'WarningAbove'
+        CredScan: true
+        MSRD: true
+        RoslynAnalyzers: true
+        RoslynAnalyzersBreakOn: 'WarningAbove'
+        TSLint: true
+        TSLintBreakOn: 'WarningAbove'
+        ToolLogsNotFoundAction: 'Standard'
+    
+    # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#post-analysis-task
     - task: PostAnalysis@1
-      displayName: 'MSCA: Post Analysis'
-      #enabled: false # Enable if you need to break the build on security findings from MCSA
+      displayName: 'MSCA: Break build on security defects'
       inputs:
         AllTools: false
         BinSkim: true
@@ -189,7 +219,7 @@ stages:
       #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
+        ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
         ScriptArguments: '-AzureLocation $(AzureLocation) -EncryptionPassword $(EncryptionPassword) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -SubscriptionId $(SubscriptionId) -CloudFlareAuthEmail $(CloudFlareAuthEmail) -CloudFlareUserServiceKey $(CloudFlareUserServiceKey) -CloudFlareZoneName $(CloudFlareZoneName) -SqlAdminPassword $(SqlAdminPassword) -CloudFlarePlan $(CloudFlarePlan)' 
         azurePowerShellVersion: LatestVersion
 
@@ -200,8 +230,8 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
         location: '$(AzureLocation)'
-        csmFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.json'
-        csmParametersFile: '$(build.sourcesdirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
+        csmFile: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.int.parameters.json'
         overrideParameters: -adminEmailAddresses $(AdminEmailAddresses) -developerIpAddresses $(DeveloperIpAddresses) -encryptionPassword $(EncryptionPassword) -siteBaseUrl $(SiteBaseUrl) -sqlAdminUserName $(SqlAdminUserName) -sqlserverName $(SqlServerName) -storageAccountNonVNetName $(StorageAccountNonVNetName) -subscriptionId $(SubscriptionId) -webDatabaseName $(WebDatabaseName) 
         deploymentOutputs: ArmTemplateOutput
 
@@ -226,7 +256,7 @@ stages:
       #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
+        ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
         ScriptArguments: '-AzureLocation $(AzureLocation) -EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SiteBaseUrl $(SiteBaseUrl) -ArmTemplateOutput ''$(ArmTemplateOutput)'' -CloudFlareIpAddresses ''$(CloudFlareIpAddresses)'' -DeveloperIpAddresses ''$(DeveloperIpAddresses)'''
         azurePowerShellVersion: LatestVersion
 
@@ -234,7 +264,7 @@ stages:
       displayName: 'Configure Acceptance tests to run'
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
+        ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
         ScriptArguments: '-TestConfigPath "$(Pipeline.Workspace)\SecurityEssentials.Acceptance.Tests.dll.config" -WebServerUrl "https://$(SiteName)$(EnvironmentName).$(SiteBaseUrl)" -ResourceGroup "$(ResourceGroup)" -SqlServerName "$(SqlServerName)" -RuleName "AcceptanceTestRule-$(Build.BuildNumber)" -WebDatabaseName $(WebDatabaseName) -SqlAdminUserName $(SqlAdminUserName) -SqlAdminPassword $(SqlAdminPassword) -StorageAccountNonVNetName $(StorageAccountNonVNetName)'
         azurePowerShellVersion: LatestVersion
 
@@ -264,7 +294,7 @@ stages:
       condition: always()
       inputs:
         azureSubscription: '$(ServiceConnection)'
-        ScriptPath: '$(build.sourcesdirectory)\DeployPlatform\Scripts\TearDown.ps1'
+        ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\TearDown.ps1'
         ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId)'
         azurePowerShellVersion: LatestVersion
 

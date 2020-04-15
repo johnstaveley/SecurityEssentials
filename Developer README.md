@@ -71,7 +71,14 @@ Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/az
 	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
 	Azure_SQLDatabase_Audit_Enable_Threat_Detection_Server - removed as this rule signature enforces a format which does not comply with ARM Template format
 	Azure_Storage_BCDR_Enable_Soft_Delete - Soft delete off just for assets not on the virtual network
-BinSkim. When scanning AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll' it throws an exception due to the following issues.
+The Microsoft Security Code Analysis tool set contains the following build tasks to check for security. Details are here: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-overview
+	Anti-Malware scanner
+	Binskim
+	Credential Scanner
+	Microsoft Security Risk Detection
+	Roslyn Analyzers
+	TSLint
+BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
 I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
 	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
 	some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
@@ -81,4 +88,4 @@ Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: 
 Known Issues
 ------------
 
-Creating secrets with $^ in them can cause the build pipeline to fail
+Creating secrets such as passwords with $^ in them can cause the build pipeline to fail, this is because the characters are handled properly in powershell.
