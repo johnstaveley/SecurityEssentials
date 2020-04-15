@@ -127,11 +127,11 @@ stages:
 
     - task: BinSkim@3
       displayName: 'MSCA: BinSkim'
-      enabled: false # Need to fix errors for ChromeDriver and IEDriver not having symbols or search a different path
+      #enabled: false # Need to fix errors for ChromeDriver and IEDriver not having symbols or search a different path
       inputs:
         InputType: 'Basic'
         Function: 'analyze'
-        AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll;$(Build.ArtifactStagingDirectory)\*.exe'
+        AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'
 
     - task: PublishSecurityAnalysisLogs@2
       displayName: 'MSCA: Publish findings'
