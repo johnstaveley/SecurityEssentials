@@ -28,6 +28,7 @@ Azure Devops Setup
 In order to keep your solution secure you should run the acceptance tests on each checkin. Take the following steps to set up an automated build in Azure:
 
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
+* Set up account in sonarcloud.io and generate a token in Account -> Security
 * Create the following pipeline variables as follows: Those marked with * should be created as a secret
 	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
 	+ AdminEmailAddresses - email addresses for notifications and alerts NB: This can only support 1 email address at the moment
@@ -43,9 +44,10 @@ In order to keep your solution secure you should run the acceptance tests on eac
 	+ ServiceConnection - Azure Devops service connection approved to deploy to Azure from Azure Devops. In Azure Devops, go to Project settings -> Service Connections
 	+ SiteBaseUrl - A stem url for the site e.g. securityessentials.org
 	+ SiteName - name of the website to set up e.g. SecurityEssentials
-	+ SonarCloudOrganisation - name of the organisation from sonarcloud.io setup
-	+ SonarCloudProjectKey - Project key from sonarcloud.io indicating where to store the reports
-	+ SonarCloudProjectName - Project name from sonarcloud.io
+	+ SonarCloudConnectionName - connection name set up in AzureDevops to connect to SonarCloud e.g. SonarCloud.io
+	+ SonarCloudOrganisation - name of the organisation from sonarcloud.io setup e.g. Acme
+	+ SonarCloudProjectKey - Project key from sonarcloud.io indicating where to store the reports e.g. SecurityEssentials
+	+ SonarCloudProjectName - Project name from sonarcloud.io e.g. SecurityEssentials
 	+ SqlAdminPassword - * admin password for sql azure e.g. a secure randomly generated 15 digit password
 	+ SqlAdminUserName - admin username for sql azure e.g. AdminUser1486
 	+ SqlServerName - the name of the sql server to use e.g. securityessentialsint
@@ -58,10 +60,9 @@ In order to keep your solution secure you should run the acceptance tests on eac
 	+ Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace
 	+ Microsoft Security Code Analysis. If you purchase this extension it is shared with you, add from shared from the marketplace. If you do not purchase this then remove any tasks marked MSCA from azure-pipelines.yml
 	+ SonarCloud. If your project is public you can use the free version otherwise you have to use the paid version
-* Set up account in sonarcloud.io and generate a token in Account -> Security
 * Set up service connection in Azure Devops -> Project Settings -> Service Connections ->
     + Add new Azure Resource Manager service connection. This is to allow control of the Resource Group in Azure by Azure Devops
-	+ Add new SonarCloud connection called 'SonarCloud.io' using token created above.
+	+ Add new SonarCloud connection with the same name as set in variable SonarCloudConnectionName above and created using token from setup sonarcloud step
 * In Azure
 	+ Manage Service Principal -> View API Permissions -> Add Permission -> Azure Key Vault. Grant Admin Consent for Default Directory
 * Run the deployment once, this will fail but create the key vault. 
