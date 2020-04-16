@@ -8,6 +8,7 @@ namespace SecurityEssentials.Controllers
 	{
 
 		[AllowAnonymous]
+		[HttpGet]
 		public ViewResult TooManyRequests()
 		{
 			return View();

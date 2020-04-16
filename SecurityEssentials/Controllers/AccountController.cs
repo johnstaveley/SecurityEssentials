@@ -374,14 +374,14 @@ namespace SecurityEssentials.Controllers
             var user = _context.User.Include("SecurityQuestionLookupItem").SingleOrDefault(u => u.PasswordResetToken == passwordResetToken && u.PasswordResetExpiryDateUtc > DateTime.UtcNow);
             if (user == null)
             {
-                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException("INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
+                HandleErrorInfo error = new HandleErrorInfo(new ArgumentException(@"INFO: The password recovery token is not valid or has expired"), "Account", "RecoverPassword");
                 Logger.Information("Failed Account RecoverPassword Get, recovery token {passwordResetToken} is not valid or expired by requester {@requester}", passwordResetToken, requester);
                 return View("Error", error);
             }
             if (user.Enabled == false)
             {
                 var userName = user.UserName;
-                HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException("INFO: Your account is not currently approved or active"), "Account", "Recover");
+                HandleErrorInfo error = new HandleErrorInfo(new InvalidOperationException(@"INFO: Your account is not currently approved or active"), "Account", "Recover");
                 Logger.Information("Failed Account RecoverPassword Get, account {userName} not approved or active by requester {@requester}", userName, requester);
                 return View("Error", error);
             }

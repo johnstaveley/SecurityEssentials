@@ -13,6 +13,7 @@ namespace SecurityEssentials.Controllers
 		}
 
 		// GET: Error
+		[HttpGet]
 		public ActionResult NotFound()
         {
 			ActionResult result;
@@ -43,6 +44,7 @@ namespace SecurityEssentials.Controllers
 		}
 
 		// GET: Error
+		[HttpGet]
 		public ActionResult Forbidden()
 		{
 			ActionResult result;
@@ -70,6 +72,7 @@ namespace SecurityEssentials.Controllers
 		}
 
 		// GET: Error
+		[HttpGet]
 		public ActionResult Index()
 		{
 			ActionResult result;
