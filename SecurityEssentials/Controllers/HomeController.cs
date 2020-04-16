@@ -12,18 +12,21 @@ namespace SecurityEssentials.Controllers
 
 		}
 
+		[HttpGet]
 		public ActionResult Index()
 		{
 			ViewBag.Message = "Security Essentials";
 			return View("Index");
 		}
 
+		[HttpGet]
 		public ActionResult About()
 		{
 			ViewBag.Message = "";
 			return View("About");
 		}
 
+		[HttpGet]
 		public ActionResult Contact()
 		{
 			ViewBag.Message = "Your contact page.";
