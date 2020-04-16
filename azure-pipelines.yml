@@ -24,6 +24,14 @@ stages:
       - visualstudio
       - vstest
     steps:
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'SonarCloud.io'
+        organization: '$(SonarCloudOrganisation)'
+        scannerMode: 'MSBuild'
+        projectKey: '$(SonarCloudProjectKey)'
+        projectName: '$(SonarCloudProjectName)'
+
     - task: NuGetToolInstaller@1
       displayName: 'Use NuGet 4.4.1'
       inputs:
@@ -58,6 +66,12 @@ stages:
         codeCoverageEnabled: true
         diagnosticsEnabled: true
         minimumExpectedTests: 10
+
+    - task: SonarCloudAnalyze@1
+
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
 
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
