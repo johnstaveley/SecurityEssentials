@@ -167,7 +167,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordAsync(TestUser.Id, oldPassword, newPassword);
 
 			// Assert
-			Assert.AreEqual(0, result);
+			Assert.AreEqual(0, result, "Password was invalid");
 			_context.AssertWasCalled(a => a.SaveChanges());
 			Assert.AreEqual(1, TestUser.UserLogs.Count);
 			Assert.IsTrue(TestUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
@@ -250,8 +250,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			return new User
 			{
 				Id = 7,
-				PasswordHash = "BpC/5HcMA4pnktXCPGY6HeNY9fPPk24JvvN2YyR3JFcd2j6Nen0sZHrf1mucLSMuuxp3CfHWaPIct8jp11YYyUXgihhS+9VA4OUJVz7Ak1uvuT6M+qItK1+tdlsihrpk3PkiuWafte0lcStImz2sCJroxtoGzOxOGSnpFehPIgd5TZBvmI3Crphdxq/dJhRwHIVQrnrXzwA+Aapy3bcXvutFmxS9F3/31BU4F5dJcYWHu+KbPydUlFl7RnM6A7DsnNKVcoDnk1CJZiJCz7WWNos+m+iv0CBE4ENDuP20sLW6x51S/ktcz3mdbn9wT38JM5CoLbS1UdVxdYC+Dkv+kQ==",
-				PasswordSalt = "K6GuRmwFwOupdDba+C1FqKYwyBuxCykesgiY+fmCVBNVwr7qafuQ7oj9HrgM3LTXMB9LtOkWc4Z7VzB3AjobRk4trmwy7yOyvXnZj9XcBom2s5htHz8tiYhgsV/fHLlNfbeFseOXMLqUN4AFf+/+07j2NiaQK+qLFDSOAFpvsfB6kHF5vk2JgJb8qQSaLAW5FrDFn4f6cqYQJg8H127xPm8WYJiU94sw4dd13XxneKUbzez3yikR20U7rfQMRFKUr2a14vApH4kGsg3F89n8B+w2A/Orz/iarA9uzATag0t2r5MPnQeG58odK5uOPTbWz1mka+gXVcY620SAdyo07Q==", // xsHDjxshdjkKK917&
+				PasswordHash = "Wt0p8sAmUDvxS+HmZ42imVg815KBGh0r/svNe6V+zvmvfmHshMhnX/792wUVSLp1F8jJ+HIGwS19zwM6LKpUEPJpZ9NlfzMsNPoKXeLz3VyC2vBEar0CGKzwcGQu3cn674L5WI/J8n0mZYKbZlbKuTBw8bqx7TLXXKZE0I2+hdAE4XkLvaL+1d3A1ILSwJnyYcIWvuhEtBc9BpiCFc7JmfKAS44WZry873Zj7qSB2cQ/EYfX+jVKHc0MAer0aSjFNRDnl1Kp5ZbwuIiTj2ROtbP0uKmvbTYwnPlTHmD+iTn9Go2Sg+mWRmrIYWdBCF9q5RLfJbf6fpdESSiQDcXwfw==",
+				PasswordSalt = "JObSM3IqX1sTTCRd77tyzi/DYemkzH9y4DceDEqnF88kuYvs/oPkyLFiLsgyv7IGN2LWnkE2ZIClLpt+msg6VFZ5vdkvfBLUD9HrzL5YXu//mEwQQjA1wx1EJ8ZMtkWffo19qp6UAJF1elPQ0ihARfUxgqVAkB8w1BsXnX44/dQmCyRm5rmU4h9uACyWDFyjGblY1nt3h9BWNjUmL+5tXnN/cq1XJO4M2ivRRr8ZlQgZNh3DC2H86n9nZjKob1nft6E27+2oza7KwtVlq0GIielqtqzF974mQ+lQ30ViDvfbV9EduEOe7Yeicv/ZycwOwx1FINrq52Nb7bh83eDv6Q==", // xsHDjxshdjkKK917&
 				Enabled = true,
 				Approved = true,
 				EmailVerified = true,

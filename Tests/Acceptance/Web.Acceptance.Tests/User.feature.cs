@@ -379,7 +379,7 @@ this.FeatureBackground();
                         "SkypeName"});
             table9.AddRow(new string[] {
                         "admin@test.net",
-                        "Pbkdf28000Iterations",
+                        "Pbkdf210001Iterations",
                         "True",
                         "True",
                         "True",
@@ -393,7 +393,7 @@ this.FeatureBackground();
                         ""});
             table9.AddRow(new string[] {
                         "user1@test.net",
-                        "Pbkdf28000Iterations",
+                        "Pbkdf210001Iterations",
                         "True",
                         "True",
                         "True",
@@ -407,7 +407,7 @@ this.FeatureBackground();
                         "skype"});
             table9.AddRow(new string[] {
                         "user2@test.net",
-                        "Pbkdf28000Iterations",
+                        "Pbkdf210001Iterations",
                         "True",
                         "True",
                         "True",
@@ -421,7 +421,7 @@ this.FeatureBackground();
                         ""});
             table9.AddRow(new string[] {
                         "user3@test.net",
-                        "Pbkdf28000Iterations",
+                        "Pbkdf210001Iterations",
                         "True",
                         "True",
                         "True",

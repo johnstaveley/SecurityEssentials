@@ -26,11 +26,11 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		}
 
 		[Test]
-		public void Given_PasswordHashWithIterationsChanged_Then_PasswordHashesDoNotMatch()
+		public void Given_PasswordHashChanged_Then_PasswordHashesDoNotMatch()
 		{
 			string password = "password1*SASDes";
 			var securedPassword = new SecuredPassword(password, HashStrategyKind.Argon2WorkCost);
-			var securedPassword2 = new SecuredPassword(password, HashStrategyKind.Pbkdf28000Iterations);
+			var securedPassword2 = new SecuredPassword(password, HashStrategyKind.Pbkdf210001Iterations);
 			Assert.IsFalse(securedPassword2.Equals(securedPassword));
 		}
 
@@ -110,7 +110,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Security
 		public void Given_PasswordVerifiesIsNull_Then_ThrowsException()
 		{
 			Assert.Throws<ArgumentNullException>(() =>
-				{ new SecuredPassword(null, HashStrategyKind.Pbkdf25009Iterations); }
+				{ new SecuredPassword(null, HashStrategyKind.Pbkdf210001Iterations); }
 			);
 		}
 	}

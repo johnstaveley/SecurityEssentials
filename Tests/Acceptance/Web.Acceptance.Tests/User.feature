@@ -84,11 +84,11 @@ Scenario: I can change my account information
 	| Description    |
 	| User Logged On |
 	And I have the following users in the system:
-	| UserName       | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName | TelNoWork  | TelNoHome  | TelNoMobile | Town  | PostCode | SkypeName |
-	| admin@test.net | Pbkdf28000Iterations | True    | True     | True          | Admin     | User     |            |            |             |       |          |           |
-	| user1@test.net | Pbkdf28000Iterations | True    | True     | True          | User     | One | 0123       | 0456       | 0789        | town  | postcode | skype     |
-	| user2@test.net | Pbkdf28000Iterations | True    | True     | True          | User     | Two     |            |            |             |       |          |           |
-	| user3@test.net | Pbkdf28000Iterations | True    | True     | True          | Sarah     | Page     | 0123456789 | 0987654321 | 0778412457  | Leeds | LS10 1EF | SarahPage |
+	| UserName       | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName | TelNoWork  | TelNoHome  | TelNoMobile | Town  | PostCode | SkypeName |
+	| admin@test.net | Pbkdf210001Iterations | True    | True     | True          | Admin     | User     |            |            |             |       |          |           |
+	| user1@test.net | Pbkdf210001Iterations | True    | True     | True          | User     | One | 0123       | 0456       | 0789        | town  | postcode | skype     |
+	| user2@test.net | Pbkdf210001Iterations | True    | True     | True          | User     | Two     |            |            |             |       |          |           |
+	| user3@test.net | Pbkdf210001Iterations | True    | True     | True          | Sarah     | Page     | 0123456789 | 0987654321 | 0778412457  | Leeds | LS10 1EF | SarahPage |
 
 Scenario: I can add the administrator privilege
 	Given I navigate to the website

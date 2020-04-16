@@ -72,8 +72,8 @@ Scenario: When I enter valid registration details I can register a new user
 	| Description     |
 	| Account Created |
 	And I have the following users in the system:
-	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| test@test.net | Pbkdf28000Iterations | True    | True     | False         | Tester1   | Tester2  |
+	| UserName      | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| test@test.net | Pbkdf210001Iterations | True    | True     | False         | Tester1   | Tester2  |
 	#And I receive a registration email
 
 Scenario: When I enter valid registration details with a pwned password, an error is displayed
@@ -120,8 +120,8 @@ Scenario: When I enter registration details which are currently being used I am 
 	When I submit my registration details
 	Then I am navigated to the 'Register Success' page
 	And I have the following users in the system:
-	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| user@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
+	| UserName      | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| user@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     |
 	And I have the following user logs in the system:
 	| Description |
 	#And I am notified via email
@@ -138,13 +138,13 @@ Scenario: When I attempt password recovery using a valid account I am notified o
 	And I click recover password
 	And I am navigated to the 'Recover' page
 	And I enter the following recover data:
-	| Field    | Value        |
+	| Field    | Value         |
 	| UserName | user@test.net |
 	When I submit the recover form
 	Then I am navigated to the 'Recover Success' page
 	And I have the following users in the system:
-	| UserName      | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| user@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
+	| UserName      | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| user@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     |
 	And the user 'user@test.net' has the password reset token set and password reset expiry is at least 14 minutes from now
 	And I have the following user logs in the system:
 	| Description                            |
@@ -184,8 +184,8 @@ Scenario: When I click on a valid password reset link, I can enter my security i
 	When I submit the recover passord form
 	Then I am navigated to the 'Recover Password Success' page
 	And I have the following users in the system:
-	| UserName       | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| user2@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
+	| UserName       | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| user2@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     |
 	And the password reset token and expiry for user 'user2@test.net' are not set
 	And I have the following user logs in the system:
 	| Description                  |
@@ -254,8 +254,8 @@ Scenario: I can change my email address
 	When I submit the change email address form
 	Then I am navigated to the 'Change Email Address Pending' page
 	And I have the following users in the system:
-	| UserName       | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| user5@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
+	| UserName       | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| user5@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     |
 	And the user 'user5@test.net' has the new email address token set and new email address expiry is at least 14 minutes from now
 	And I have the following user logs in the system:
 	| Description                                                                        |
@@ -271,8 +271,8 @@ Scenario: When I click on a valid change email address link, I change my email a
 	When I navigate to the change email address link with token 'B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F'
 	Then I am navigated to the 'Change Email Address Success' page
 	And I have the following users in the system:
-	| UserName        | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName |
-	| samuel@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     |
+	| UserName        | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName |
+	| samuel@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     |
 	And the user 'samuel@test.net' has the new email address token and expiry cleared
 	And I have the following user logs in the system:
 	| Description                                                                             |
@@ -307,8 +307,8 @@ Scenario: I can change my security information
 	When I submit the change security information form
 	Then I am navigated to the 'Change Security Information Success' page
 	And I have the following users in the system:
-	| UserName       | HashStrategy         | Enabled | Approved | EmailVerified | FirstName | LastName | SecurityQuestionLookupItemId      |
-	| user3@test.net | Pbkdf28000Iterations | True    | True     | True          | Standard  | User     | What was your childhood nickname? |
+	| UserName       | HashStrategy          | Enabled | Approved | EmailVerified | FirstName | LastName | SecurityQuestionLookupItemId      |
+	| user3@test.net | Pbkdf210001Iterations | True    | True     | True          | Standard  | User     | What was your childhood nickname? |
 	And The security information for 'user3@test.net' has changed
 	And I have the following user logs in the system:
 	| Description                       |

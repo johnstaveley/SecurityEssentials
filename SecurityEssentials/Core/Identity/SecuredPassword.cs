@@ -45,9 +45,10 @@ namespace SecurityEssentials.Core.Identity
 
 			switch (hashStrategy)
 			{
-				case HashStrategyKind.Pbkdf25009Iterations:
-				case HashStrategyKind.Pbkdf28000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, (int) _hashingParameter))
+				case HashStrategyKind.Pbkdf210001Iterations:
+                    var numberOfIterations = (int) _hashingParameter;
+					if (numberOfIterations <= 10000) throw new ArgumentException("Iterations must be greater than 10000");
+					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, _saltSize, numberOfIterations, HashAlgorithmName.SHA256))
 					{
 						_salt = deriveBytes.Salt;
 						_hash = deriveBytes.GetBytes(_saltSize);
@@ -91,9 +92,10 @@ namespace SecurityEssentials.Core.Identity
 			SetHashStrategy(hashStrategy);
 			switch (hashStrategy)
 			{
-				case HashStrategyKind.Pbkdf25009Iterations:
-				case HashStrategyKind.Pbkdf28000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, (int)_hashingParameter))
+				case HashStrategyKind.Pbkdf210001Iterations:
+					var numberOfIterations = (int) _hashingParameter;
+                    if (numberOfIterations <= 10000) throw new ArgumentException("Iterations must be greater than 10000");
+					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, numberOfIterations, HashAlgorithmName.SHA256))
 					{
 						_hash = deriveBytes.GetBytes(_saltSize);
 					}
@@ -133,9 +135,10 @@ namespace SecurityEssentials.Core.Identity
 			byte[] newKey;
 			switch (hashStrategy)
 			{
-				case HashStrategyKind.Pbkdf25009Iterations:
-				case HashStrategyKind.Pbkdf28000Iterations:
-					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, (int) _hashingParameter))
+				case HashStrategyKind.Pbkdf210001Iterations:
+                    var numberOfIterations = (int) _hashingParameter;
+                    if (numberOfIterations <= 10000) throw new ArgumentException("Iterations must be greater than 10000");
+					using (var deriveBytes = new Rfc2898DeriveBytes(plainPassword, salt, numberOfIterations, HashAlgorithmName.SHA256))
 					{
 						newKey = deriveBytes.GetBytes(_saltSize);
 						IsValid = newKey.SequenceEqual(hash);
@@ -186,12 +189,8 @@ namespace SecurityEssentials.Core.Identity
 			_hashStrategy = hashStrategy;
 			switch (hashStrategy)
 			{
-				case HashStrategyKind.Pbkdf25009Iterations:
-					_hashingParameter = 5009;
-					_saltSize = 256;
-					break;
-				case HashStrategyKind.Pbkdf28000Iterations:
-					_hashingParameter = 8000;
+				case HashStrategyKind.Pbkdf210001Iterations:
+					_hashingParameter = 100001;
 					_saltSize = 256;
 					break;
 				case HashStrategyKind.Argon2WorkCost:

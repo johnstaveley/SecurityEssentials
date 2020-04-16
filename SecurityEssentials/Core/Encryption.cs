@@ -23,7 +23,7 @@ namespace SecurityEssentials.Core
 			{
 				BlockSize = 128,
 				KeySize = 256,
-				Mode = CipherMode.CFB,      // Cipher feedback mode
+				Mode = CipherMode.CBC,
 				Padding = PaddingMode.PKCS7 // How to deal with the padding of blocks
 			};
 
@@ -124,8 +124,7 @@ namespace SecurityEssentials.Core
 		{
 
 			Byte[] saltBytes = System.Text.Encoding.Unicode.GetBytes(salt);
-			Rfc2898DeriveBytes rfc2898DeriveBytes =
-				new Rfc2898DeriveBytes(password, saltBytes) { IterationCount = iterationCount };
+			Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, iterationCount, HashAlgorithmName.SHA256);
 			key = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.KeySize / 8);
 			iv = rfc2898DeriveBytes.GetBytes(_encryptionAlgorithm.BlockSize / 8);
 
@@ -133,7 +132,7 @@ namespace SecurityEssentials.Core
 
 		private string GenerateRandomSalt(string plainText)
 		{
-			using (var deriveBytes = new Rfc2898DeriveBytes(plainText, _saltSize, 6000))
+			using (var deriveBytes = new Rfc2898DeriveBytes(plainText, _saltSize, 6000, HashAlgorithmName.SHA256))
 			{
 				return Convert.ToBase64String(deriveBytes.Salt);
 

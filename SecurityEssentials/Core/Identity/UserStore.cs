@@ -218,7 +218,7 @@ namespace SecurityEssentials.Core.Identity
 			}
 			else
 			{
-				return 0;
+				return -1;
 			}
 			return _context.SaveChanges();
 		}

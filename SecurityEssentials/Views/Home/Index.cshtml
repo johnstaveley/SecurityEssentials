@@ -9,7 +9,7 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                <h4>Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@@johnstaveley</a> - Last updated 12/05/2020</h4>
+                <h4>Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0" rel="noopener noreferrer">@@johnstaveley</a> - Last updated 12/05/2020</h4>
                 This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today (2013/2017).
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
@@ -83,7 +83,7 @@
                     <li>Form overposting: Example given of how to avoid this</li>
                     <li>Acceptance tests for key functionality</li>
                     <li>Forces user to change their password if their password has expired</li>
-                    <li>FxCop security rules enabled to check the code at build for security flaws<a href="https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings" target="_blank">https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings</a></li>
+                    <li>FxCop security rules enabled to check the code at build for security flaws<a href="https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings" target="_blank" rel="noopener noreferrer">https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings</a></li>
                     <li>Professionally pentested</li>
                 </ul>
                 <h4>OWASP Top 10 2017</h4>
@@ -99,11 +99,11 @@
                 <h2>Steps to secure your website on the server</h2>
                 When you have your application ready to deploy (or even before) you need to consider the additional steps you will need to take on the server. Generally these will be undertaken by an infrastructure person. I would recommend the following steps:
                 <ul>
-                    <li>Apply a good SSL policy on the server: <a href="https://www.ssllabs.com/ssltest/" target="_blank">https://www.ssllabs.com/ssltest/</a> e.g. Configure your server to avoid a Poodle downgrade attack</li>
+                    <li>Apply a good SSL policy on the server: <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer">https://www.ssllabs.com/ssltest/</a> e.g. Configure your server to avoid a Poodle downgrade attack</li>
                     <li>Enable retail mode on the production server</li>
                     <li>Patch the server up to the hilt</li>
                     <li>Register for HSTS preload here: https://hstspreload.appspot.com/ (This requires your site is published with TLS)</li>
-                    <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
+                    <li>Set the CAA DNS record, this says who can issue a certificate for your website. Use <a href="http://www.sslmate.com/caa" target="_blank" rel="noopener noreferrer">http://www.sslmate.com/caa</a>. This is preferred over setting the HPKP header as it is easier to change.</li>
                     <li>Register SPF DNS record for sending email</li>
                     <li>Set Expect-CT header to enforce who is allowed to issue TLS certificates</li>
                     <li>Secure access to the database and blob storage by putting them on their own virtual network with firewalled access</li>
@@ -118,13 +118,13 @@
                     <li>5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure and default features are switched off</li>
                     <li>7. Missing file level access control - Partially checked using Unit tests</li>
                     <li>8. CSRF - Partially checked using Unit tests</li>
-                    <li>9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
+                    <li>9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank" rel="noopener noreferrer">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank" rel="noopener noreferrer">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
                     <li>10. Unvalidated redirects and forwards - Partially checked using Unit tests</li>
                 </ul>
             </p>
             <p>
                 <h2>How your testing process can ensure you remain secure over time</h2>
-                Following this process will help prevent security regressions from occurring. As part of your build process you should run all acceptance tests provided with this project. You can also run <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
+                Following this process will help prevent security regressions from occurring. As part of your build process you should run all acceptance tests provided with this project. You can also run <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project" target="_blank" rel="noopener noreferrer">OWASP Zap</a> automated pen-testing tool. Below is shown how each of these steps protects against the OWASP Top 10.
                 <ul>
                     <li>(Some of) 1, 3, 5, 6, 8, 10 - OWASP Zap, check the report for vulnerabilities</li>                    
                     <li>8. CSRF - OWASP ZAP</li>
@@ -136,10 +136,10 @@
                     <li>Add unit tests to ensure correct role is applied to functions requiring security such as admin</li>
                     <li>Run the build process detailed above</li>
                     <li>Patch the server!</li>
-                    <li>Ensure SSL policy remains current: <a href="https://www.ssllabs.com/ssltest/" target="_blank">https://www.ssllabs.com/ssltest/</a></li>
+                    <li>Ensure SSL policy remains current: <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer">https://www.ssllabs.com/ssltest/</a></li>
                     <li>Check the logs for repeated security violation attempts and block users if required</li>
-                    <li>Check your CSP against <a href="https://csp-evaluator.withgoogle.com/" target="_blank">https://csp-evaluator.withgoogle.com/</a></li>
-                    <li>Check your headers <a href="https://securityheaders.com/" target="_blank">https://securityheaders.com/</a></li>
+                    <li>Check your CSP against <a href="https://csp-evaluator.withgoogle.com/" target="_blank" rel="noopener noreferrer">https://csp-evaluator.withgoogle.com/</a></li>
+                    <li>Check your headers <a href="https://securityheaders.com/" target="_blank" rel="noopener noreferrer">https://securityheaders.com/</a></li>
                 </ul>
             </p>
             <p>Created 29/01/2015</p>

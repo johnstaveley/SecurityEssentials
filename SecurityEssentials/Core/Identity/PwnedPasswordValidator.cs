@@ -15,7 +15,7 @@ namespace SecurityEssentials.Core.Identity
         public async Task<PwnedPasswordDto> Validate(string password)
         {
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // SECURE: Advice from FxCop to allow system to choose best, however this is required to run locally
             var client = new PwnedPasswordsClient(new HttpClient());
             var pwnedPassword = await client.GetHasBeenPwnedAsync(password);
             return new PwnedPasswordDto

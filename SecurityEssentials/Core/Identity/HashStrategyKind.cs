@@ -2,8 +2,7 @@
 {
 	public enum HashStrategyKind
 	{
-		Pbkdf25009Iterations = 0,
-		Pbkdf28000Iterations = 1,
-		Argon2WorkCost = 2
+		Pbkdf210001Iterations = 0,
+		Argon2WorkCost = 1
 	}
 }

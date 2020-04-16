@@ -299,9 +299,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		}
 
 		[Test]
-		[TestCase(HashStrategyKind.Pbkdf25009Iterations)]
-		[TestCase(HashStrategyKind.Pbkdf28000Iterations)]
-		[TestCase(HashStrategyKind.Argon2WorkCost), Ignore("Requires dlls to be loaded into path")]
+		[TestCase(HashStrategyKind.Pbkdf210001Iterations)]
+		[TestCase(HashStrategyKind.Argon2WorkCost)]
 		public async Task Given_UserIsReusingAPassword_When_ValidatePassword_Then_ErrorReturned(HashStrategyKind hashStrategy)
 		{
 
@@ -332,7 +331,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 		{
 			// Arrange
 			var password = "MyNewPassword2";
-			var currentPassword = new SecuredPassword(password, HashStrategyKind.Pbkdf28000Iterations);
+			var currentPassword = new SecuredPassword(password, HashStrategyKind.Pbkdf210001Iterations);
 			_configuration.MaxNumberOfPreviousPasswords = 4;
 			var user = new User
 			{

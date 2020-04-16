@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using SecurityEssentials.Core.Constants;
+using SecurityEssentials.Core.Identity;
 
 namespace SecurityEssentials.Core
 {
@@ -25,152 +26,7 @@ namespace SecurityEssentials.Core
 				context.Role.Add(adminRole);
                 context.SaveChanges();
 
-				// Users
-				string salt =
-					"K6GuRmwFwOupdDba+C1FqKYwyBuxCykesgiY+fmCVBNVwr7qafuQ7oj9HrgM3LTXMB9LtOkWc4Z7VzB3AjobRk4trmwy7yOyvXnZj9XcBom2s5htHz8tiYhgsV/fHLlNfbeFseOXMLqUN4AFf+/+07j2NiaQK+qLFDSOAFpvsfB6kHF5vk2JgJb8qQSaLAW5FrDFn4f6cqYQJg8H127xPm8WYJiU94sw4dd13XxneKUbzez3yikR20U7rfQMRFKUr2a14vApH4kGsg3F89n8B+w2A/Orz/iarA9uzATag0t2r5MPnQeG58odK5uOPTbWz1mka+gXVcY620SAdyo07Q==";
-				var standardPasswordHash =
-					"8FEhrfoeG+vhIwFUEGvEMv/dSYs4dfnjZJRMeSrgkOtrnwPUAwc4Y35eGiRMU3Gw2NS/sCbnHUpeOn+4kNR/AN+FuyfkZBuZZ/72WiAbFIy+o8CzlCSkvv3H7z2rXyw6UgQXJtYcFLJr0GfIZC2xOWbeaBHvFJLpyxkvXORLHzAM779UPHS9at+wOwAr0cf0nfEIpI58tzCQCadBi9fyg4lxDEvpkISDFxE7YKiSrAp5bofosOnNuDRdidBUwqOGvZM9IvaNUigSpY6LKXpe/x7pv72+4jnSmK5QFylXfA33dc8Jl5r1LGDsJa/hKajoCjACYeD0L5ShPd4RrKbPCw==";
-				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"],
-					Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Chairman Meow",
-					out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
-
-				context.User.Add(new User
-				{
-					Id = 1,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Admin",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User",
-					TelNoMobile = "07740101235",
-					PasswordHash =
-						"BpC/5HcMA4pnktXCPGY6HeNY9fPPk24JvvN2YyR3JFcd2j6Nen0sZHrf1mucLSMuuxp3CfHWaPIct8jp11YYyUXgihhS+9VA4OUJVz7Ak1uvuT6M+qItK1+tdlsihrpk3PkiuWafte0lcStImz2sCJroxtoGzOxOGSnpFehPIgd5TZBvmI3Crphdxq/dJhRwHIVQrnrXzwA+Aapy3bcXvutFmxS9F3/31BU4F5dJcYWHu+KbPydUlFl7RnM6A7DsnNKVcoDnk1CJZiJCz7WWNos+m+iv0CBE4ENDuP20sLW6x51S/ktcz3mdbn9wT38JM5CoLbS1UdVxdYC+Dkv+kQ==", // Password xsHDjxshdjkKK917&
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password xsHDjxshdjkKK917&
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mrs",
-					UserName = "admin@admin.com",
-					UserRoles = new List<UserRole> {new UserRole {RoleId = adminRole.Id, UserId = 1}}
-				});
-
-				salt =
-					"weSUvc9heWYq/6v1OeefzxiFoQBW8f0+g2nV7d77xGeOwKLR5FG/KTWyjfBED7g3vQIr2lL7Nm6kY1XfQQwAL5A6dhy2lS7CSLxUnmifIPqThKuzyL54xzRfBIdqtrAT+TF74BeMXoIW/KdFXYdHMf8hgSHbDyKQkQQ29bpSLb/ieQPniwTeQTUkI+FE5Mgz2wst2uM/76GWo5QIkxRztQ141I0dpdFn7XoNdOFmMnyg2wDceK73nWi3E4ehuHHGuKLfxQTeRKpV183OW6RHMMSpt97g6VPSS1S367nTMHjj0fYFEtBgdSDPHXdpA0m1ZJwbPzzv+xOX0TIBGdNJdQ==";
-				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"],
-					Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Mr Miggins",
-					out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
-				context.User.Add(new User
-				{
-					Id = 2,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Standard",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User",
-					TelNoMobile = "07881231234",
-					PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password x12a;pP02icdjshER
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mr",
-					UserName = "user@user.com"
-				});
-				context.User.Add(new User
-				{
-					Id = 3,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Standard",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User2",
-					TelNoMobile = "07881231234",
-					PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password x12a;pP02icdjshER
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mrs",
-					UserName = "user2@user.com",
-					PasswordResetToken = "83ababb4-a0c1-4f2c-8593-32dd40b920d2",
-					PasswordResetExpiryDateUtc = DateTime.UtcNow.AddDays(1)
-				});
-				context.User.Add(new User
-				{
-					Id = 4,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Standard",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User3",
-					TelNoMobile = "07881231234",
-					PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password x12a;pP02icdjshER
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mrs",
-					UserName = "user3@user.com"
-				});
-				context.User.Add(new User
-				{
-					Id = 5,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Standard",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User",
-					TelNoMobile = "07881231234",
-					PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password x12a;pP02icdjshER
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mr",
-					UserName = "user4@user.com",
-					NewEmailAddress = "samuel@pepys.org",
-					NewEmailAddressRequestExpiryDateUtc = DateTime.UtcNow.AddDays(1),
-					NewEmailAddressToken = "B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F"
-				});
-				context.User.Add(new User
-				{
-					Id = 6,
-					Approved = true,
-					CreatedDateUtc = DateTime.UtcNow,
-					EmailVerified = true,
-					Enabled = true,
-					FirstName = "Standard",
-					HashStrategy = Identity.HashStrategyKind.Pbkdf25009Iterations,
-					LastName = "User",
-					TelNoMobile = "07881231234",
-					PasswordHash = standardPasswordHash, // Password x12a;pP02icdjshER
-					PasswordLastChangedDateUtc = DateTime.UtcNow,
-					PasswordSalt = salt, // Password x12a;pP02icdjshER
-					SecurityAnswer = encryptedSecurityAnswer,
-					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
-					SecurityQuestionLookupItemId = 271,
-					Title = "Mr",
-					UserName = "user5@user.com"
-				});
-				encryptor.Dispose();
-                context.SaveChanges();
-
-				// Lookup Types
+								// Lookup Types
 				context.LookupType.Add(new LookupType
 				{
 					Id = 1,
@@ -181,6 +37,7 @@ namespace SecurityEssentials.Core
 					Id = 2,
 					Description = "Security Questions"
 				}); // SECURE: Included some sample security questions which are difficult to obtain from existing corpus of security breaches
+                context.SaveChanges();
 
 				// Lookup Items
 				context.LookupItem.Add(new LookupItem {Id = 1, Description = "primetime21", LookupTypeId = 1});
@@ -489,6 +346,150 @@ namespace SecurityEssentials.Core
 					Ordinal = 5
 				});
                 context.SaveChanges();
+
+				// Users
+				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Chairman Meow",
+					out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+
+                var hashStrategy = (HashStrategyKind) Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
+				var adminPassword = new SecuredPassword("xsHDjxshdjkKK917&", hashStrategy);
+
+				context.User.Add(new User
+				{
+					Id = 1,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Admin",
+					HashStrategy = adminPassword.HashStrategy,
+					LastName = "User",
+					TelNoMobile = "07740101235",
+					PasswordHash = Convert.ToBase64String(adminPassword.Hash),
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(adminPassword.Salt), // Password xsHDjxshdjkKK917&
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mrs",
+					UserName = "admin@admin.com",
+					UserRoles = new List<UserRole> {new UserRole {RoleId = adminRole.Id, UserId = 1}}
+				});
+
+				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Mr Miggins",
+					out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+
+                var standardPassword = new SecuredPassword("x12a;pP02icdjshER", hashStrategy);
+
+				context.User.Add(new User
+				{
+					Id = 2,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Standard",
+					HashStrategy = standardPassword.HashStrategy,
+					LastName = "User",
+					TelNoMobile = "07881231234",
+					PasswordHash = Convert.ToBase64String(standardPassword.Hash), // Password x12a;pP02icdjshER
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(standardPassword.Salt), // Password x12a;pP02icdjshER
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mr",
+					UserName = "user@user.com"
+				});
+				context.User.Add(new User
+				{
+					Id = 3,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Standard",
+					HashStrategy = standardPassword.HashStrategy,
+					LastName = "User2",
+					TelNoMobile = "07881231234",
+					PasswordHash = Convert.ToBase64String(standardPassword.Hash), // Password x12a;pP02icdjshER
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(standardPassword.Salt), // Password x12a;pP02icdjshER
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mrs",
+					UserName = "user2@user.com",
+					PasswordResetToken = "83ababb4-a0c1-4f2c-8593-32dd40b920d2",
+					PasswordResetExpiryDateUtc = DateTime.UtcNow.AddDays(1)
+				});
+				context.User.Add(new User
+				{
+					Id = 4,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Standard",
+					HashStrategy = standardPassword.HashStrategy,
+					LastName = "User3",
+					TelNoMobile = "07881231234",
+					PasswordHash = Convert.ToBase64String(standardPassword.Hash), // Password x12a;pP02icdjshER
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(standardPassword.Salt), // Password x12a;pP02icdjshER
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mrs",
+					UserName = "user3@user.com"
+				});
+				context.User.Add(new User
+				{
+					Id = 5,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Standard",
+					HashStrategy = standardPassword.HashStrategy,
+					LastName = "User",
+					TelNoMobile = "07881231234",
+					PasswordHash = Convert.ToBase64String(standardPassword.Hash), // Password x12a;pP02icdjshER
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(standardPassword.Salt), // Password x12a;pP02icdjshER
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mr",
+					UserName = "user4@user.com",
+					NewEmailAddress = "samuel@pepys.org",
+					NewEmailAddressRequestExpiryDateUtc = DateTime.UtcNow.AddDays(1),
+					NewEmailAddressToken = "B386B07A-FF0C-4B2B-9DAD-7D32CFD5A92F"
+				});
+				context.User.Add(new User
+				{
+					Id = 6,
+					Approved = true,
+					CreatedDateUtc = DateTime.UtcNow,
+					EmailVerified = true,
+					Enabled = true,
+					FirstName = "Standard",
+					HashStrategy = standardPassword.HashStrategy,
+					LastName = "User",
+					TelNoMobile = "07881231234",
+					PasswordHash = Convert.ToBase64String(standardPassword.Hash), // Password x12a;pP02icdjshER
+					PasswordLastChangedDateUtc = DateTime.UtcNow,
+					PasswordSalt = Convert.ToBase64String(standardPassword.Salt), // Password x12a;pP02icdjshER
+					SecurityAnswer = encryptedSecurityAnswer,
+					SecurityAnswerSalt = encryptedSecurityAnswerSalt,
+					SecurityQuestionLookupItemId = 271,
+					Title = "Mr",
+					UserName = "user5@user.com"
+				});
+				encryptor.Dispose();
+                context.SaveChanges();
+
+
 			}
 			base.Seed(context);
 		}

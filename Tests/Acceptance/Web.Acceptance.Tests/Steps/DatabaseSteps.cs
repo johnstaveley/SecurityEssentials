@@ -24,17 +24,15 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		{
 			var usersToCreate = table.CreateSet<UserToCreate>().ToList();
 			var users = new List<User>();
-			var hashStrategy = (HashStrategyKind)Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
+			var hashStrategy = (HashStrategyKind) Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
 			var encryptor = new Encryption();
 			var adminRole = SeDatabase.GetRoleByName("Admin");
 
 			foreach (var userToCreate in usersToCreate)
 			{
-				string encryptedSecurityAnswer;
-				string encryptedSecurityAnswerSalt;
-				var securePassword = new SecuredPassword(userToCreate.Password, hashStrategy);
+                var securePassword = new SecuredPassword(userToCreate.Password, hashStrategy);
 				var securityQuestion = SeDatabase.GetLookupItemsByLookupType(Consts.LookupTypeId.SecurityQuestion).Single(a => a.Description == userToCreate.SecurityQuestion);
-				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), userToCreate.SecurityAnswer, out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), userToCreate.SecurityAnswer, out var encryptedSecurityAnswerSalt, out var encryptedSecurityAnswer);
 
 				var user = new User
 				{
