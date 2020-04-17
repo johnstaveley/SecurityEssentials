@@ -254,7 +254,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
