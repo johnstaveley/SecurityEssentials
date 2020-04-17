@@ -11,6 +11,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
+  websiteFullUrl: 'https://$(SiteName}$(EnvironmentName).$(SiteBaseUrl)'
 
 stages: 
 - stage: Build_And_Unit_Tests
@@ -230,6 +231,7 @@ stages:
   #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
   #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
+    dependsOn: Build_And_Unit_Tests
     pool:
       name: Hosted VS2017
       demands:
@@ -317,6 +319,7 @@ stages:
         testFilterCriteria: 'TestCategory=Smoke'
 
   - job: Penetration_Test
+    dependsOn: Deploy_To_Integration
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -329,7 +332,7 @@ stages:
         port: '443'
         threshold: '75'
         scantype: 'targetedScan'
-        url: 'https://$(SiteBaseUrl)'
+        url: '$(websiteFullUrl)'
         #provideCustomContext: true
         #contextPath: 'sdsdsd'
 
@@ -385,7 +388,7 @@ stages:
        </test-run>
        {{/each}}
        EOF
-      displayName: 'owasp nunit template'
+      displayName: 'Zap NUnit Template'
       #enabled: false # Removed to speed up build
 
     - bash: ' handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml'
@@ -407,6 +410,7 @@ stages:
         artifactName: 'Zap Reports'
 
   - job: Cleanup
+    dependsOn: Penetration_Test
     pool:
       name: Hosted VS2017
 
