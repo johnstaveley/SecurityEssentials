@@ -231,7 +231,6 @@ stages:
   #      instructions: 'Ready to deploy to $(Release.EnvironmentName) and run acceptance tests?'
   #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
-    dependsOn: Build_And_Unit_Tests
     pool:
       name: Hosted VS2017
       demands:
