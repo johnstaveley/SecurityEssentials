@@ -49,7 +49,7 @@ stages:
       displayName: 'Build solution'
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:PackageLocation=$(Build.ArtifactStagingDirectory) /p:OutDir=$(Build.ArtifactStagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
+        msbuildArgs: '/p:PackageLocation=$(Build.ArtifactStagingDirectory) /p:OutDir=$(Build.ArtifactStagingDirectory) /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:TransformWebConfigEnabled=true'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
