@@ -329,7 +329,7 @@ stages:
         port: '443'
         threshold: '75'
         scantype: 'targetedScan'
-        url: '$(SiteBaseUrl)'
+        url: 'https://$(SiteBaseUrl)'
         #provideCustomContext: true
         #contextPath: 'sdsdsd'
 
