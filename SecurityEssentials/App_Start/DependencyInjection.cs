@@ -12,7 +12,7 @@ namespace SecurityEssentials.App_Start
     public static class DependencyInjection
 	{
 
-		public static Container Container;
+		public static Container Container { get; set; }
 
 		public static void Configure()
 		{

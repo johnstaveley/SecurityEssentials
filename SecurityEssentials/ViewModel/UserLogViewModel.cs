@@ -7,7 +7,7 @@ namespace SecurityEssentials.ViewModel
 	public class UserLogViewModel
 	{
 
-		public List<UserLog> UserLogs;
+		public List<UserLog> UserLogs { get; set; }
 
 		public UserLogViewModel(User user)
 		{

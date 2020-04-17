@@ -11,9 +11,9 @@ namespace SecurityEssentials.Controllers
 	public abstract class SecurityControllerBase : Controller
 	{
 
-		public ILogger Logger;
-		protected IUserIdentity UserIdentity;
-		protected IAppSensor AppSensor;
+		public ILogger Logger { get; set; }
+		protected IUserIdentity UserIdentity { get; set; }
+		protected IAppSensor AppSensor { get; set; }
 
 		protected SecurityControllerBase(IUserIdentity userIdentity, IAppSensor appSensor)
 		{

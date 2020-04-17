@@ -4,8 +4,8 @@ namespace SecurityEssentials.ViewModel
 {
 	public class RemoveRoleViewModel
 	{
-		public User User;
-		public bool IsOwnProfile;
+		public User User { get; set; }
+		public bool IsOwnProfile { get; set; }
 
 		public RemoveRoleViewModel(User user, bool isOwnProfile)
 		{
