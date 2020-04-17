@@ -75,6 +75,8 @@ Notes
 
 Screenshots from failed selenium tests are stored in StorageAccountNonVNetName in container Selenium
 
+Whitesource bolt free will allow you to scan your provide up to 5 times per day, for unlimited, get the paid version.
+
 Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
 	Azure_SQLDatabase_AuthZ_Use_AAD_Admin - switched off because we don't run an AD server
 	Azure_AppService_AuthN_Use_AAD_for_Client_AuthN - removed as application has its own user database
