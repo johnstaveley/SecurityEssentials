@@ -254,7 +254,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
@@ -271,9 +271,6 @@ stages:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
         Package: '$(Pipeline.Workspace)/**/SecurityEssentials.Web.zip'
-        ScriptType: 'Inline Script'
-        InlineScript: |
-          del /Q .\Web.*.config
         TakeAppOfflineFlag: true
         UseWebDeploy: true
         RemoveAdditionalFilesFlag: true
@@ -333,9 +330,10 @@ stages:
         threshold: '75'
         scantype: 'targetedScan'
         url: '$(websiteFullUrl)'
-        #provideCustomContext: true
-        #contextPath: 'sdsdsd'
+        provideCustomContext: true
+        contextPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\OWaspZap.context'
 
+    # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - bash: |
        sudo npm install -g handlebars-cmd
        
@@ -391,10 +389,12 @@ stages:
       displayName: 'Zap NUnit Template'
       #enabled: false # Removed to speed up build
 
+    # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - bash: ' handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml'
       displayName: 'Generate NUnit Type file for Zap report'
       #enabled: false # Removed to speed up build
 
+    # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishTestResults@2
       displayName: 'Publish Zap Test Results **/TEST-*.xml'
       #enabled: false # Removed to speed up build
@@ -402,6 +402,7 @@ stages:
         testResultsFormat: NUnit
         testResultsFiles: 'owaspzap/test-results.xml'
 
+    # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Zap Report'
       #enabled: false # Removed to speed up build

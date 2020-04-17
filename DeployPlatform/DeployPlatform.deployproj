@@ -39,6 +39,7 @@
     </None>
     <Content Include="Scripts\PreDeploy.ps1" />
     <None Include="Scripts\ConfigureForTesting.ps1" />
+    <None Include="Scripts\OwaspZap.context" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>

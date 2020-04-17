@@ -4,7 +4,9 @@
         <name>Default Context</name>
         <desc/>
         <inscope>true</inscope>
+        <incregexes>https://securityessentials*</incregexes>
         <excregexes>cdn-cgi</excregexes>
+        <excregexes>https://www.owasp.org/</excregexes>
         <tech>
             <include>Db.Microsoft SQL Server</include>
             <include>Language.C</include>
@@ -52,6 +54,8 @@
         </postparser>
         <authentication>
             <type>0</type>
+            <loggedin>Logged on as</loggedin>
+            <loggedout>Log in</loggedout>
         </authentication>
         <forceduser>-1</forceduser>
         <session>
