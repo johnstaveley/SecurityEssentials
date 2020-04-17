@@ -231,7 +231,7 @@ stages:
   #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
     pool:
-      name: linux
+      vmImage: 'ubuntu-latest'
     #  name: Hosted VS2017
       demands:
       - vstest
