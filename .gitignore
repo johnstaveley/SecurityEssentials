@@ -208,3 +208,4 @@ ModelManifest.xml
 /.vs/SecurityEssentials/v16/TestStore/0/002.testlog
 /DeployPlatform/ManualDeploy.ps1
 *.testlog
+/.vs/SecurityEssentials/v16/TestStore/1/testlog.manifest
