@@ -30,8 +30,9 @@ In order to keep your solution secure you should run the acceptance tests on eac
 * Create a new build pipeline in Azure Devops and reference file azure-pipelines.yml from this solution
 * Set up account in sonarcloud.io and generate a token in Account -> Security
 * Create the following pipeline variables as follows: Those marked with * should be created as a secret
-	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
 	+ AdminEmailAddresses - email addresses for notifications and alerts NB: This can only support 1 email address at the moment
+	+ AppServiceName - Name of the app service resource in Azure e.g. securityessentialsint
+	+ ArmTemplateOutput - set to blank string. Check the box 'Let users override this value when running this pipeline'
 	+ AzureLocation - location of azure data centre e.g. UKSouth
 	+ CloudFlareAuthEmail - Username for Cloudflare
 	+ CloudFlarePlan - One of Free, Pro, Business or Enterprise

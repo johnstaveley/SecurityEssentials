@@ -1173,12 +1173,12 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="SecurityRulesEnabled.ruleset" />
-    <None Include="Web.Integration.config">
+    <Content Include="Web.Integration.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Live.config">
+    </Content>
+    <Content Include="Web.Live.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+    </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Images\accent.png" />
