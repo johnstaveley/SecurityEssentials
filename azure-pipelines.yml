@@ -54,7 +54,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Unit tests'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -231,12 +231,11 @@ stages:
   #      emailRecipients: '$(AdminEmailAddresses)'
   - job: Deploy_To_Integration
     pool:
-      vmImage: 'ubuntu-latest'
-    #  name: Hosted VS2017
+      name: Hosted VS2017
       demands:
       - vstest
-    #  - msbuild
-    #  - visualstudio
+      - msbuild
+      - visualstudio
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: drop'
@@ -317,6 +316,10 @@ stages:
         minimumExpectedTests: 2
         testFilterCriteria: 'TestCategory=Smoke'
 
+  - job: Penetration_Test
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: owaspzap@1
       displayName: 'OWASP Zap penetration test'
@@ -403,6 +406,11 @@ stages:
         pathtoPublish: '$(Build.SourcesDirectory)/owaspzap'
         artifactName: 'Zap Reports'
 
+  - job: Cleanup
+    pool:
+      name: Hosted VS2017
+
+    steps:
     - task: AzurePowerShell@3
       displayName: 'Teardown Azure Resources'
       enabled: false # TODO: Added to speed up build
@@ -412,4 +420,3 @@ stages:
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\TearDown.ps1'
         ScriptArguments: '-EnvironmentName $(EnvironmentName) -SiteName $(SiteName) -SubscriptionId $(SubscriptionId)'
         azurePowerShellVersion: LatestVersion
-
