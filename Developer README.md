@@ -56,6 +56,7 @@ In order to keep your solution secure you should run the acceptance tests on eac
 	+ WebDatabaseName - name of the sql database e.g. securityessentialsint
 * Add the following task types from the Azure Marketplace as follows:
 	+ OWASP Dependency checker
+	+ OWASP Zap Scanner. This is the version created by the MS Devops team
 	+ White source bolt. This needs activation to run. See video here: https://bolt.whitesourcesoftware.com/whitesource-bolt-azure-devops#activate (You don't need to select to receive emails)
 	+ Secure DevOps Kit (AzSK) CICD Extensions for Azure tasks which have to be added to Azure Devops from the marketplace
 	+ Microsoft Security Code Analysis. If you purchase this extension it is shared with you, add from shared from the marketplace. If you do not purchase this then remove any tasks marked MSCA from azure-pipelines.yml
