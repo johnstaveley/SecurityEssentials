@@ -15,7 +15,6 @@ Param(
     [string] $SiteBaseUrl,
 	[Parameter(Mandatory=$true)]
     [string] $SiteName,
-	[Parameter(Mandatory=$true)]
 	[string] $ArmTemplateOutput,
 	[string] $CloudFlareIpAddresses,
 	[string] $DeveloperIpAddresses
@@ -26,10 +25,10 @@ Param(
 [string] $publishProfilePassword = ''
 
 # Parse ARM Template Output
-if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
+if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 15) {
 	$armTemplateJson = $ArmTemplateOutput | ConvertFrom-Json
-	$vnetStorageApiKey = $armTemplateJson.vNetStorageConnectionString.value
-	$nonVnetStorageApiKey = $armTemplateJson.nonVNetStorageConnectionString.value
+	#$vnetStorageApiKey = $armTemplateJson.vNetStorageConnectionString.value
+	#$nonVnetStorageApiKey = $armTemplateJson.nonVNetStorageConnectionString.value
 	$publishProfilePassword = $armTemplateJson.publishProfilePassword.value
 }
 
@@ -43,15 +42,19 @@ if ($ArmTemplateOutput -ne $null -and $ArmTemplateOutput.Length -gt 3) {
 [int] $softDeletePolicyDays = 7
 
 Write-Host("Get OS Version to prove Azure are upgrading the OS over time")
-$kuduEnvironmentDetailsUrl = $kuduBaseUrl + "Env.cshtml"
-$azureKuduUsername = "`$$webSiteName";
-$base64KuduAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $azureKuduUsername, $publishProfilePassword)))
-$powershellUserAgent = "powershell/1.0";
-$environmentDetails = Invoke-RestMethod -Uri $kuduEnvironmentDetailsUrl -Headers @{Authorization=("Basic {0}" -f $base64KuduAuthInfo)} -UserAgent $powershellUserAgent -Method GET
-$osIndexStart = $environmentDetails.IndexOf("OS version")
-$osIndexFinish = $environmentDetails.IndexOf("</li>", $osIndexStart)
-$osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIndexStart)
-Write-Host ("PaaS Version: " + $osVersion)
+if ($publishProfilePassword -eq '') {
+	Write-Host("Skipped Get OS Version due to publish profile not being provided")
+} else {
+	$kuduEnvironmentDetailsUrl = $kuduBaseUrl + "Env.cshtml"
+	$azureKuduUsername = "`$$webSiteName";
+	$base64KuduAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $azureKuduUsername, $publishProfilePassword)))
+	$powershellUserAgent = "powershell/1.0";
+	$environmentDetails = Invoke-RestMethod -Uri $kuduEnvironmentDetailsUrl -Headers @{Authorization=("Basic {0}" -f $base64KuduAuthInfo)} -UserAgent $powershellUserAgent -Method GET
+	$osIndexStart = $environmentDetails.IndexOf("OS version")
+	$osIndexFinish = $environmentDetails.IndexOf("</li>", $osIndexStart)
+	$osVersion = $environmentDetails.Substring($osIndexStart, $osIndexFinish - $osIndexStart)
+	Write-Host ("PaaS Version: " + $osVersion)
+}
 
 Write-Host ("Cloudflare IP Address restrictions. $CloudFlareIpAddresses rules to process")
 
