@@ -544,7 +544,7 @@
           "connectionStrings": [
             {
               "name": "DefaultConnection",
-              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('webDatabaseName'), ';User Id=', parameters('sqlAdminUserName'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';Encrypt=True;TrustServerCertificate=False;')]",
               "type": 1
             }
           ]

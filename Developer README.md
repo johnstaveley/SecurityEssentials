@@ -22,6 +22,7 @@ To set up the project take the following steps:
 4) Apply the NoCache attribute to any controllers which have sensitive data
 5) Search for TODO in code to see further actions which could be taken
 6) When creating a build pipeline for your company, ensure you add in the extensions mentioned in azure-pipelines.yml
+7) If you want to do threat modelling then install Microsoft threat modelling tool preview https://aka.ms/tmtpreview
 
 Azure Devops Setup
 ------------------
