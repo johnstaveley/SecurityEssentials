@@ -9,7 +9,7 @@ trigger:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Integration'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
   websiteFullUrl: 'https://$(SiteName)$(EnvironmentName).$(SiteBaseUrl)'
 
