@@ -101,6 +101,8 @@ I have temporarily got around this problem by just scanning SecurityEssentials.d
 
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
 
+VNet integration for the Azure App Service only works on the Premium tier
+
 Known Issues
 ------------
 

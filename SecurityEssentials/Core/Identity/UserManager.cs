@@ -75,9 +75,7 @@ namespace SecurityEssentials.Core.Identity
 						user.PasswordHash = Convert.ToBase64String(securedPassword.Hash);
 						user.PasswordSalt = Convert.ToBase64String(securedPassword.Salt);
 						user.SecurityQuestionLookupItemId = securityQuestionLookupItemId;
-						string encryptedSecurityAnswer;
-						string encryptedSecurityAnswerSalt;
-						_encryption.Encrypt(_configuration.EncryptionPassword, _configuration.EncryptionIterationCount, securityAnswer, out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+                        _encryption.Encrypt(_configuration.EncryptionPassword, _configuration.EncryptionIterationCount, securityAnswer, out var encryptedSecurityAnswerSalt, out var encryptedSecurityAnswer);
 						user.SecurityAnswer = encryptedSecurityAnswer;
 						user.SecurityAnswerSalt = encryptedSecurityAnswerSalt;
 						user.UserName = userName;
@@ -161,8 +159,7 @@ namespace SecurityEssentials.Core.Identity
 		public async Task<SeIdentityResult> ChangePasswordFromTokenAsync(int userId, string token, string newPassword)
 		{
 			var user = await FindUserByIdAsync(userId);
-			string decryptedSecurityAnswer;
-			_encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out decryptedSecurityAnswer);
+            _encryption.Decrypt(_configuration.EncryptionPassword, user.SecurityAnswerSalt, _configuration.EncryptionIterationCount, user.SecurityAnswer, out var decryptedSecurityAnswer);
 			var bannedWords = new List<string> { user.FirstName, user.LastName, decryptedSecurityAnswer };
 			var passwordValidationResult = await ValidatePassword(user, newPassword, bannedWords);
 			if (passwordValidationResult.Succeeded)

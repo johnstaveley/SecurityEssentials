@@ -27,7 +27,7 @@ stages:
     steps:
     - task: SonarCloudPrepare@1
       displayName: 'Setup SonarCloud connection'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         SonarCloud: '$(SonarCloudConnectionName)'
         organization: '$(SonarCloudOrganisation)'
@@ -55,7 +55,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Unit tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
@@ -72,7 +72,7 @@ stages:
 
     - task: SonarCloudAnalyze@1
       displayName: 'Analyse Code using SonarCloud'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
 
     - task: SonarCloudPublish@1
       displayName: 'Publish SonarCloud results'
@@ -80,25 +80,28 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
 
+    # About: https://owasp.org/www-project-dependency-check/
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         projectName: 'Security Essentials'
         scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'         
 
-    - task: WhiteSource Bolt@20      
+    # About: https://bolt.whitesourcesoftware.com/
+    - task: WhiteSource Bolt@20
       displayName: 'Whitesource bolt'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
+    # About: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#azsk-arm-template-checker
     - task: AzSKArmTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      enabled: false # TODO: Removed temporarily to speed up build.
+      #enabled: false # TODO: Removed temporarily to speed up build.
       continueOnError: true
       inputs:
         ARMTemplateFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'
@@ -123,7 +126,7 @@ stages:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: drop
 
-    # About this step: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#anti-malware-scanner-task
+    # About: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#anti-malware-scanner-task
     # Requires build agent with Windows Defender enabled. Hosted Visual Studio 2017 and later provide such an agent
     - task: AntiMalware@3
       displayName: 'MSCA: Windows defender Anti-Malware Scan'
