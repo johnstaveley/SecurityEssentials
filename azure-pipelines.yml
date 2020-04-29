@@ -27,7 +27,7 @@ stages:
     steps:
     - task: SonarCloudPrepare@1
       displayName: 'Setup SonarCloud connection'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         SonarCloud: '$(SonarCloudConnectionName)'
         organization: '$(SonarCloudOrganisation)'
@@ -72,11 +72,11 @@ stages:
 
     - task: SonarCloudAnalyze@1
       displayName: 'Analyse Code using SonarCloud'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
 
     - task: SonarCloudPublish@1
       displayName: 'Publish SonarCloud results'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         pollingTimeoutSec: '300'
 
@@ -101,7 +101,7 @@ stages:
     # About: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#azsk-arm-template-checker
     - task: AzSKArmTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      #enabled: false # TODO: Removed temporarily to speed up build.
+      enabled: false # TODO: Removed temporarily to speed up build.
       continueOnError: true
       inputs:
         ARMTemplateFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'

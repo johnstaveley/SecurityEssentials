@@ -523,6 +523,7 @@
         "hostNameSslStates": "[parameters('hostNameSslStates')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]",
         "httpsOnly": true,
+        "AlwaysOn": true,
         "siteConfig": {
           "AlwaysOn": true,
           "ftpsState": "Disabled",
