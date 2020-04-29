@@ -248,7 +248,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment steps'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -269,7 +269,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Website to AppService'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -282,7 +282,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
@@ -291,7 +291,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Configure Acceptance tests'
-      enabled: false # Removed to speed up build
+      #enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
@@ -300,7 +300,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Acceptance tests'
-      enabled: false # Removed to speed up build
+      #enabled: false # Removed to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
@@ -326,7 +326,7 @@ stages:
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: owaspzap@1
       displayName: 'OWASP Zap penetration test'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         aggressivemode: true
         port: '443'
@@ -390,17 +390,17 @@ stages:
        {{/each}}
        EOF
       displayName: 'Zap NUnit Template'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
 
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - bash: ' handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml'
       displayName: 'Generate NUnit Type file for Zap report'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
 
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishTestResults@2
       displayName: 'Publish Zap Test Results **/TEST-*.xml'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         testResultsFormat: NUnit
         testResultsFiles: 'owaspzap/test-results.xml'
@@ -408,7 +408,7 @@ stages:
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Zap Report'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         pathtoPublish: '$(Build.SourcesDirectory)/owaspzap'
         artifactName: 'Zap Reports'
