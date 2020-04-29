@@ -101,9 +101,13 @@ I have temporarily got around this problem by just scanning SecurityEssentials.d
 
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
 
-VNet integration for the Azure App Service only works on the Premium tier
+FXCop and code analysis have switches to check security. They are added through NuGet packages and then you can see the analyzers installed under references. Each of the analyzers contains code rules, the severity of which can be 
+tweeked for your application. A detailed description can also be viewed. The security rules 'SecurityRulesEnabled.ruleset' is taken from %USERPROFILE%\.nuget\packages\microsoft.codeanalysis.fxcopanalyzers\ then current version and 
+rulesets subfolder. Get SecurityRulesEnabled.ruleset and copy it to the root of your project. Then edit the project add <CodeAnalysisRuleSet>SecurityRulesEnabled.ruleset</CodeAnalysisRuleSet> to the first property group. This will 
+only show you security issues.
 
 Known Issues
 ------------
 
 Creating secrets such as passwords with $^ in them can cause the build pipeline to fail, this is because the characters are handled properly in powershell.
+VNet integration for the Azure App Service only works on the Premium tier. The Premium tier cannot be deployed to an MSDN subscription.

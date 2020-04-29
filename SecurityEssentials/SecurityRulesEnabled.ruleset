@@ -39,7 +39,7 @@
       <Rule Id="CA3147" Action="Warning" />          <!-- Mark Verb Handlers With Validate Antiforgery Token -->
       <Rule Id="CA5350" Action="Warning" />          <!-- Do Not Use Weak Cryptographic Algorithms -->
       <Rule Id="CA5351" Action="Warning" />          <!-- Do Not Use Broken Cryptographic Algorithms -->
-      <Rule Id="CA5358" Action="Warning" />          <!-- Do Not Use Unsafe Cipher Modes -->
+      <Rule Id="CA5358" Action="Warning" />          <!-- Review cipher mode usage with cryptography experts -->
       <Rule Id="CA5359" Action="Warning" />          <!-- Do Not Disable Certificate Validation -->
       <Rule Id="CA5360" Action="Warning" />          <!-- Do Not Call Dangerous Methods In Deserialization -->
       <Rule Id="CA5361" Action="Warning" />          <!-- Do Not Disable SChannel Use of Strong Crypto -->
@@ -95,13 +95,14 @@
       <Rule Id="CA1001" Action="None" />             <!-- Types that own disposable fields should be disposable -->
       <Rule Id="CA1003" Action="None" />             <!-- Use generic event handler instances -->
       <Rule Id="CA1008" Action="None" />             <!-- Enums should have zero value -->
-      <Rule Id="CA1010" Action="None" />             <!-- Collections should implement generic interface -->
+      <Rule Id="CA1010" Action="None" />             <!-- Generic interface should also be implemented -->
       <Rule Id="CA1012" Action="None" />             <!-- Abstract types should not have constructors -->
       <Rule Id="CA1014" Action="None" />             <!-- Mark assemblies with CLSCompliant -->
       <Rule Id="CA1016" Action="None" />             <!-- Mark assemblies with assembly version -->
       <Rule Id="CA1017" Action="None" />             <!-- Mark assemblies with ComVisible -->
       <Rule Id="CA1018" Action="None" />             <!-- Mark attributes with AttributeUsageAttribute -->
       <Rule Id="CA1019" Action="None" />             <!-- Define accessors for attribute arguments -->
+      <Rule Id="CA1021" Action="None" />             <!-- Avoid out parameters -->
       <Rule Id="CA1024" Action="None" />             <!-- Use properties where appropriate -->
       <Rule Id="CA1027" Action="None" />             <!-- Mark enums with FlagsAttribute -->
       <Rule Id="CA1028" Action="None" />             <!-- Enum Storage should be Int32 -->
@@ -131,6 +132,7 @@
       <Rule Id="CA1066" Action="None" />             <!-- Type {0} should implement IEquatable<T> because it overrides Equals -->
       <Rule Id="CA1067" Action="None" />             <!-- Override Object.Equals(object) when implementing IEquatable<T> -->
       <Rule Id="CA1068" Action="None" />             <!-- CancellationToken parameters must come last -->
+      <Rule Id="CA1069" Action="None" />             <!-- Enums values should not be duplicated -->
       <Rule Id="CA1200" Action="None" />             <!-- Avoid using cref tags with a prefix -->
       <Rule Id="CA1303" Action="None" />             <!-- Do not pass literals as localized parameters -->
       <Rule Id="CA1304" Action="None" />             <!-- Specify CultureInfo -->
@@ -185,6 +187,9 @@
       <Rule Id="CA2008" Action="None" />             <!-- Do not create tasks without passing a TaskScheduler -->
       <Rule Id="CA2009" Action="None" />             <!-- Do not call ToImmutableCollection on an ImmutableCollection value -->
       <Rule Id="CA2010" Action="None" />             <!-- Always consume the value returned by methods marked with PreserveSigAttribute -->
+      <Rule Id="CA2011" Action="None" />             <!-- Avoid infinite recursion -->
+      <Rule Id="CA2012" Action="None" />             <!-- Use ValueTasks correctly -->
+      <Rule Id="CA2013" Action="None" />             <!-- Do not use ReferenceEquals with value types -->
       <Rule Id="CA2101" Action="None" />             <!-- Specify marshaling for P/Invoke string arguments -->
       <Rule Id="CA2200" Action="None" />             <!-- Rethrow to preserve stack details. -->
       <Rule Id="CA2201" Action="None" />             <!-- Do not raise reserved exception types -->
@@ -193,6 +198,7 @@
       <Rule Id="CA2211" Action="None" />             <!-- Non-constant fields should not be visible -->
       <Rule Id="CA2213" Action="None" />             <!-- Disposable fields should be disposed -->
       <Rule Id="CA2214" Action="None" />             <!-- Do not call overridable methods in constructors -->
+      <Rule Id="CA2215" Action="None" />             <!-- Dispose methods should call base class dispose -->
       <Rule Id="CA2216" Action="None" />             <!-- Disposable types should declare finalizer -->
       <Rule Id="CA2217" Action="None" />             <!-- Do not mark enums with FlagsAttribute -->
       <Rule Id="CA2218" Action="None" />             <!-- Override GetHashCode on overriding Equals -->
