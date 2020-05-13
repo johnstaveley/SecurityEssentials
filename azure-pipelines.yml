@@ -131,7 +131,7 @@ stages:
     - task: AntiMalware@3
       displayName: 'MSCA: Windows defender Anti-Malware Scan'
       continueOnError: true
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         InputType: 'Basic'
         ScanType: 'CustomScan'
@@ -146,7 +146,7 @@ stages:
     - task: CredScan@2
       displayName: 'MSCA: Credential Scanner'
       continueOnError: true
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         toolMajorVersion: 'V1'
         scanFolder: '$(Build.ArtifactStagingDirectory)'
@@ -156,7 +156,7 @@ stages:
     - task: BinSkim@3
       displayName: 'MSCA: BinSkim'
       continueOnError: true
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         InputType: 'Basic'
         Function: 'analyze'
@@ -168,7 +168,7 @@ stages:
     - task: TSLint@1
       displayName: 'MSCA: TSLint'
       continueOnError: true
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         RuleLibrary: 'microsoft'
         RulesetMicrosoft: 'mssdlrequired'
@@ -181,7 +181,7 @@ stages:
     # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#publish-security-analysis-logs-task
     - task: PublishSecurityAnalysisLogs@2
       displayName: 'MSCA: Publish log files'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         ArtifactName: 'MSCA'
         ArtifactType: 'Container'
@@ -191,7 +191,7 @@ stages:
     # About this task: 
     - task: SdtReport@1
       displayName: 'MSCA: Produce Report'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         VstsConsole: false
         TsvFile: false
@@ -209,7 +209,7 @@ stages:
     # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#post-analysis-task
     - task: PostAnalysis@1
       displayName: 'MSCA: Break build on security defects'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         AllTools: false
         BinSkim: true
