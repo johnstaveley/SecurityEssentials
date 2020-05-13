@@ -238,7 +238,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			// Assert
 			AssertViewResultReturned(result, "ChangeEmailAddressPending");
 			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
-			Context.AssertWasCalled(a => a.SaveChanges());
+			Context.AssertWasCalled(a => a.SaveChangesAsync());
 			var user = Context.User.Include("UserLogs").First(a => a.Id == TestUserId);
 			Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddressToken));
 			Assert.IsNotNull(user.NewEmailAddressRequestExpiryDateUtc);
@@ -320,7 +320,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
 				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
 			_formsAuth.AssertWasCalled(a => a.SignOut());
-			Context.AssertWasCalled(a => a.SaveChanges());
+			Context.AssertWasCalled(a => a.SaveChangesAsync());
 			_httpCache.AssertWasCalled(a => a.RemoveFromCache(Arg<string>.Is.Equal("MustChangePassword-5")));
 
 		}
@@ -644,7 +644,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			AssertViewResultReturned(result, "RecoverPasswordSuccess");
-			Context.AssertWasCalled(a => a.SaveChanges());
+			Context.AssertWasCalled(a => a.SaveChangesAsync());
 			_httpCache.AssertWasCalled(a => a.RemoveFromCache(Arg<string>.Is.Equal("MustChangePassword-5")));
 
 		}
