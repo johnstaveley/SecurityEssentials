@@ -5,8 +5,15 @@
         <desc/>
         <inscope>true</inscope>
         <incregexes>https://securityessentials*</incregexes>
-        <excregexes>cdn-cgi</excregexes>
+        <incregexes>http://localhost:4845/*</incregexes>
+        <excregexes>cdn-cgi/*</excregexes>
         <excregexes>https://www.owasp.org/</excregexes>
+        <excregexes>https://johnstaveley.visualstudio.com/</excregexes>
+        <excregexes>https://www.ssllabs.com/ssltest/</excregexes>
+        <excregexes>https://csp-evaluator.withgoogle.com/</excregexes>
+        <excregexes>https://securityheaders.com/</excregexes>
+        <excregexes>https://aka.ms/tmtpreview</excregexes>
+        <excregexes>https://bolt.whitesourcesoftware.com/</excregexes>
         <tech>
             <include>Db.Microsoft SQL Server</include>
             <include>Language.C</include>
@@ -53,11 +60,20 @@
             <config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
         </postparser>
         <authentication>
-            <type>0</type>
+            <type>2</type>
             <loggedin>Logged on as</loggedin>
             <loggedout>Log in</loggedout>
+            <form>
+                <loginurl>http://localhost:4845/Account/Logon</loginurl>
+                <loginbody>UserName={%username%}&amp;Password={%password%}</loginbody>
+                <loginpageurl>http://localhost:4845/Account/LogOn</loginpageurl>
+            </form>
         </authentication>
-        <forceduser>-1</forceduser>
+        <users>
+            <user>186;true;QWRtaW4=;2;YWRtaW5AYWRtaW4uY29t~eHNIRGp4c2hkamtLSzkxNyY=~</user>
+            <user>187;true;Tm9ybWFsIFVzZXI=;2;dXNlckB1c2VyLmNvbQ==~eDEyYTtwUDAyaWNkanNoRVI=~</user>
+        </users>
+        <forceduser>186</forceduser>
         <session>
             <type>0</type>
         </session>
