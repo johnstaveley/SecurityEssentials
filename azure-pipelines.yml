@@ -82,12 +82,13 @@ stages:
 
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         projectName: 'Security Essentials'
         scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'         
+        suppressionPath: '$(Build.SourcesDirectory)\Build\OwaspDcSupression.xml'
 
     - task: WhiteSource Bolt@20      
       displayName: 'Whitesource bolt'
@@ -103,7 +104,7 @@ stages:
       inputs:
         ARMTemplateFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'
         ARMTemplateParameterFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.live.parameters.json'
-        SkipControlsFromFile: '$(Build.SourcesDirectory)\DeployPlatform\Arm\AzSKArmTemplateCheckExclude.csv'
+        SkipControlsFromFile: '$(Build.SourcesDirectory)\Build\AzSKArmTemplateCheckExclude.csv'
 
     - task: CopyFiles@2
       displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
@@ -331,7 +332,7 @@ stages:
         scantype: 'targetedScan'
         url: '$(websiteFullUrl)'
         provideCustomContext: true
-        contextPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\OWaspZap.context'
+        contextPath: '$(Build.SourcesDirectory)\Build\OwaspZap.context'
 
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - bash: |

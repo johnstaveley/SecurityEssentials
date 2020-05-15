@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 12/05/2020
+### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 15/05/2020
 
 ## Introduction
 This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
@@ -46,7 +46,7 @@ This list is based on the OWASP Top 10 2013/2017
 	+ Uses SameSite Lax attribute on session cookie
 * Using components with known vulnerabilities: 
     + .Net framework is the latest version and all NuGet packages kept updated
-	+ Binaries are scanned using OWASP Dependency checker on checkin
+	+ Binaries are scanned using OWASP Dependency checker, uses a supression file for mitigated vulnerabilities
 	+ All components are scanned using Whitesource bolt on checkin for finding open source vulnerabilities
 * Unvalidated redirects and forwards: Covered by RedirectToLocal in MVC4
 
