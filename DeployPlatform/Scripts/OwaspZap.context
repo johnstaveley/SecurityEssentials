@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <context>
+        <name>Default Context</name>
+        <desc/>
+        <inscope>true</inscope>
+        <incregexes>https://securityessentials*</incregexes>
+        <incregexes>http://localhost:4845/*</incregexes>
+        <excregexes>cdn-cgi/*</excregexes>
+        <excregexes>https://www.owasp.org/</excregexes>
+        <excregexes>https://johnstaveley.visualstudio.com/</excregexes>
+        <excregexes>https://www.ssllabs.com/ssltest/</excregexes>
+        <excregexes>https://csp-evaluator.withgoogle.com/</excregexes>
+        <excregexes>https://securityheaders.com/</excregexes>
+        <excregexes>https://aka.ms/tmtpreview</excregexes>
+        <excregexes>https://bolt.whitesourcesoftware.com/</excregexes>
+        <tech>
+            <include>Db.Microsoft SQL Server</include>
+            <include>Language.C</include>
+            <include>Language.JavaScript</include>
+            <include>OS.Windows</include>
+            <include>SCM.Git</include>
+            <include>WS.IIS</include>
+            <exclude>Db</exclude>
+            <exclude>Db.CouchDB</exclude>
+            <exclude>Db.Firebird</exclude>
+            <exclude>Db.HypersonicSQL</exclude>
+            <exclude>Db.IBM DB2</exclude>
+            <exclude>Db.Microsoft Access</exclude>
+            <exclude>Db.MongoDB</exclude>
+            <exclude>Db.MySQL</exclude>
+            <exclude>Db.Oracle</exclude>
+            <exclude>Db.PostgreSQL</exclude>
+            <exclude>Db.SAP MaxDB</exclude>
+            <exclude>Db.SQLite</exclude>
+            <exclude>Db.Sybase</exclude>
+            <exclude>Language</exclude>
+            <exclude>Language.ASP</exclude>
+            <exclude>Language.JSP/Servlet</exclude>
+            <exclude>Language.Java</exclude>
+            <exclude>Language.PHP</exclude>
+            <exclude>Language.Python</exclude>
+            <exclude>Language.Ruby</exclude>
+            <exclude>Language.XML</exclude>
+            <exclude>OS</exclude>
+            <exclude>OS.Linux</exclude>
+            <exclude>OS.MacOS</exclude>
+            <exclude>SCM</exclude>
+            <exclude>SCM.SVN</exclude>
+            <exclude>WS</exclude>
+            <exclude>WS.Apache</exclude>
+            <exclude>WS.Tomcat</exclude>
+        </tech>
+        <urlparser>
+            <class>org.zaproxy.zap.model.StandardParameterParser</class>
+            <config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
+        </urlparser>
+        <postparser>
+            <class>org.zaproxy.zap.model.StandardParameterParser</class>
+            <config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
+        </postparser>
+        <authentication>
+            <type>2</type>
+            <loggedin>Logged on as</loggedin>
+            <loggedout>Log in</loggedout>
+            <form>
+                <loginurl>http://localhost:4845/Account/Logon</loginurl>
+                <loginbody>UserName={%username%}&amp;Password={%password%}</loginbody>
+                <loginpageurl>http://localhost:4845/Account/LogOn</loginpageurl>
+            </form>
+        </authentication>
+        <users>
+            <user>186;true;QWRtaW4=;2;YWRtaW5AYWRtaW4uY29t~eHNIRGp4c2hkamtLSzkxNyY=~</user>
+            <user>187;true;Tm9ybWFsIFVzZXI=;2;dXNlckB1c2VyLmNvbQ==~eDEyYTtwUDAyaWNkanNoRVI=~</user>
+        </users>
+        <forceduser>186</forceduser>
+        <session>
+            <type>0</type>
+        </session>
+        <authorization>
+            <type>0</type>
+            <basic>
+                <header/>
+                <body/>
+                <logic>AND</logic>
+                <code>-1</code>
+            </basic>
+        </authorization>
+    </context>
+</configuration>

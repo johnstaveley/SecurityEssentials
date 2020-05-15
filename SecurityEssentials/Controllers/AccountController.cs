@@ -155,7 +155,7 @@ namespace SecurityEssentials.Controllers
                         {
                             Description = $"Change email address request started to change from {user.UserName} to {user.NewEmailAddress}"
                         });
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         return View("ChangeEmailAddressPending");
                     }
                     else
@@ -260,7 +260,7 @@ namespace SecurityEssentials.Controllers
                         string emailBody = EmailTemplates.ChangePasswordCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
                         string emailSubject = $"{_configuration.ApplicationName} - Password change confirmation";
                         _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string> { user.UserName }, null, null, emailSubject, emailBody, true);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         _formsAuth.SignOut();
                         _userManager.SignOut();
                         _httpCache.RemoveFromCache($"MustChangePassword-{userId}");
@@ -445,24 +445,18 @@ namespace SecurityEssentials.Controllers
                     var result = await _userManager.ChangePasswordFromTokenAsync(user.Id, recoverPasswordModel.PasswordResetToken, recoverPasswordModel.Password);
                     if (result.Succeeded)
                     {
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         _httpCache.RemoveFromCache(string.Concat("MustChangePassword-", user.Id));
                         await _userManager.LogOnAsync(user.UserName, false);
                         Logger.Information("Successful RecoverPassword Post by requester {@requester}", requester);
                         return View("RecoverPasswordSuccess");
                     }
-                    else
-                    {
-                        AddErrors(result);
-                        Logger.Information("Failed Account RecoverPassword Post, change password async failed by requester {@requester}", requester);
-                        return View("RecoverPassword", recoverPasswordModel);
-                    }
+                    AddErrors(result);
+                    Logger.Information("Failed Account RecoverPassword Post, change password async failed by requester {@requester}", requester);
+                    return View("RecoverPassword", recoverPasswordModel);
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Password change was not successful");
-                    AppSensor.InspectModelStateErrors(this);
-                }
+                ModelState.AddModelError("", "Password change was not successful");
+                AppSensor.InspectModelStateErrors(this);
             }
             else
             {
@@ -513,7 +507,7 @@ namespace SecurityEssentials.Controllers
                             await _context.SaveChangesAsync();
 
                             // Email the user to complete the email verification process or inform them of a duplicate registration and would they like to change their password
-                            string emailSubject = string.Format("{0} - Security Information Changed", _configuration.ApplicationName);
+                            string emailSubject = $"{_configuration.ApplicationName} - Security Information Changed";
                             string emailBody = EmailTemplates.ChangeSecurityInformationCompletedBodyText(user.FirstName, user.LastName, _configuration.ApplicationName);
                             _services.SendEmail(_configuration.DefaultFromEmailAddress, new List<string>() { logonResult.UserName }, null, null, emailSubject, emailBody, true);
                             return View("ChangeSecurityInformationSuccess");

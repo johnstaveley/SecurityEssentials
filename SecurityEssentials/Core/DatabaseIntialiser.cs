@@ -18,10 +18,7 @@ namespace SecurityEssentials.Core
 
 			if (!context.Role.Any())
 			{
-				string encryptedSecurityAnswer;
-				string encryptedSecurityAnswerSalt;
-
-				// Roles
+                // Roles
 				var adminRole = new Role {Id = Consts.Roles.Admin, Description = "Admin"};
 				context.Role.Add(adminRole);
                 context.SaveChanges();
@@ -349,7 +346,7 @@ namespace SecurityEssentials.Core
 
 				// Users
 				encryptor.Encrypt(ConfigurationManager.AppSettings["EncryptionPassword"], Convert.ToInt32(ConfigurationManager.AppSettings["EncryptionIterationCount"]), "Chairman Meow",
-					out encryptedSecurityAnswerSalt, out encryptedSecurityAnswer);
+					out var encryptedSecurityAnswerSalt, out var encryptedSecurityAnswer);
 
                 var hashStrategy = (HashStrategyKind) Convert.ToInt32(ConfigurationManager.AppSettings["DefaultHashStrategy"]);
 				var adminPassword = new SecuredPassword("xsHDjxshdjkKK917&", hashStrategy);

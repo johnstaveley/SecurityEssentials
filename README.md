@@ -69,24 +69,26 @@ The Top 10 list of vulnerabilities has been updated in 2017. The list is much th
 
 ## How the incorporated build process ensures you remain secure over time.
 This solution comes with azure-pipelines.yml build and test script. Running this in Azure Devops ensures the following:
+* 1. SQL Injection - Check OWASP Zap report for vulnerabilities
 * 2. Account management process - Partially checked using Unit tests and Acceptance tests
+* 3. XSS - Check OWASP Zap report for vulnerabilities
 * 4. Insecure direct object references - Partially checked using Unit tests
-* 5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure and default features are switched off
-* 6. NoCache checked using Unit tests
+* 5. Security misconfiguration - AzSK Arm template checker ensures the platform is secure and default features are switched off, Check OWASP Zap report for vulnerabilities
+* 6. NoCache checked using Unit tests, Check OWASP Zap report for vulnerabilities
 * 7. Missing file level access control - Partially checked using Unit tests
-* 8. CSRF - Partially checked using Unit tests
+* 8. CSRF - Partially checked using Unit tests, Check OWASP Zap report for vulnerabilities
 * 9. Vulnerable dependencies - Checked using <a href="https://www.owasp.org/index.php/OWASP_Dependency_Check" target="_blank">OWASP Dependency checker</a> and <a href="https://bolt.whitesourcesoftware.com/" target="_blank">Whitesource bolt</a>, check the reports in Azure Devops, stored as a build artefact for OWASP DC and in the Whitesource bolt tab under pipelines. These can also be set to fail the build, if required</li>
-* 10. Unvalidated redirects and forwards - Partially checked using Unit tests
+* 10. Unvalidated redirects and forwards - Partially checked using Unit tests, Check OWASP Zap report for vulnerabilities
 
 ## Platform features
 * Completely automated deployment using azure pipelines, See Developer readme for more details
 * Setup DNS and WAF settings in cloudflare
 * Enforce Cloudflare rules: Always use https, Min tls level 1.2, allow tls 1.3, set ssl level to full, allow http2
-* Azure PaaS: Restrict access to only from Cloudflare, enforce https, lock down to virtual network, auto scale PaaS on heavy load, enforce TLS 1.2, disable ftp
+* PaaS: Restrict access to only from Cloudflare, enforce https, lock down to virtual network, auto scale PaaS on heavy load, enforce TLS 1.2, disable ftp
 * Prove Azure are upgrading their PaaS platform over time
 * Storage - lock down to virtual network, enable soft delete for 7 days
-* Web Test - Prove the website is available from at least two world locations
-* SQL Database - Backup databases at regular intervals, encrypt database at rest, audit changes to database settings, perform regular vulnerability checking, restrict ip address access
+* Web Test - Prove the website is available from at least two world locations, alert admins if not
+* SQL Database - Backup databases at regular intervals, encrypt database at rest, audit changes to database settings, perform regular vulnerability checking, restrict ip address access, send automated vulnerability checks to admins
 * Alerts - Alert admins on security warnings
 * Logins - Log errors and metrics in application insights
 
