@@ -43,8 +43,8 @@ $appConfig = (Get-Content $TestConfigPath) -as [Xml]
 $appConfigRoot = $appConfig.get_DocumentElement()
 $defaultConnection = $appConfigRoot.connectionStrings.SelectNodes("add")
 [string] $defaultConnectionString = "Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=$SqlAdminPassword"
-$defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 Write-Host ("Changing connection string to Data Source=tcp:$SqlServerName.database.windows.net,1433;Initial Catalog=$WebDatabaseName;User Id=$SqlAdminUserName;Password=********")
+$defaultConnection.SetAttribute("connectionString", $defaultConnectionString)
 
 Write-Host ("Changing Web Server Url to $WebServerUrl")
 $appSettingWebServerUrl = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='WebServerUrl']")
@@ -57,7 +57,7 @@ $TestScreenCaptureStorage = "DefaultEndpointsProtocol=https;AccountName=$Storage
 Write-Host ("Changing TestScreenCaptureStorage to $TestScreenCaptureStorage")
 $appSettingTestScreenCaptureStorage = $appConfigRoot.appSettings.SelectSingleNode("//add[@key='TestScreenCaptureStorage']")
 $appSettingTestScreenCaptureStorage.SetAttribute("value", $TestScreenCaptureStorage)
-Write-Host("Writing changes to $TestConfigPath")
+Write-Host("Writing test config changes to $TestConfigPath")
 $appConfig.Save($TestConfigPath)
 
 Write-Host ("Configure for Testing Complete")

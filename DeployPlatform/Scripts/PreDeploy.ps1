@@ -180,7 +180,7 @@ Write-Host ("Get Cloudflare Settings for zone")
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "always_use_https" "on" $cloudFlareHeaders
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "min_tls_version" "1.2" $cloudFlareHeaders
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "tls_1_3" "on" $cloudFlareHeaders
-Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "ssl" "full" $cloudFlareHeaders
+Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "ssl" "full" $cloudFlareHeaders # How cloudflare connects with the origin server (normally off)
 Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "http2" "on" $cloudFlareHeaders
 if ($CloudFlarePlan -ne "Free") {
     Set-CloudFlareSetting $cloudflareBaseUrl $zoneId "waf" "on" $cloudFlareHeaders
