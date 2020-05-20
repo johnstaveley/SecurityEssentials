@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: DotNetOpenAuth.AspNet:4.3.4.13329
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/DotNetOpenAuth\.AspNet@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Identity.Core:2.2.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Identity\.Core@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Identity.EntityFramework:2.2.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Identity\.EntityFramework@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Mvc.FixedDisplayModes:5.0.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Mvc\.FixedDisplayModes@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Mvc:5.2.7
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Mvc@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Razor:3.2.7
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Razor@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.Web.Optimization:1.1.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.Web\.Optimization@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.WebApi.Core:5.2.7
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.WebApi\.Core@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.WebApi.OData:5.7.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.WebApi\.OData@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.WebApi:5.2.7
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.WebApi@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNet.WebPages.Data:3.2.7
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.AspNet\.WebPages\.Data@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Web.Infrastructure.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Web\.Infrastructure@.*$</packageUrl>
+    <cve>CVE-2008-0333</cve>
+  </suppress>
+</suppressions>
