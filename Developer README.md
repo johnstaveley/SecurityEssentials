@@ -94,11 +94,6 @@ The Microsoft Security Code Analysis tool set contains the following build tasks
 	Roslyn Analyzers
 	TSLint
 
-BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
-	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
-	some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
-I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
-
 Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
 
 FXCop and code analysis have switches to check security. They are added through NuGet packages and then you can see the analyzers installed under references. Each of the analyzers contains code rules, the severity of which can be 
@@ -111,3 +106,7 @@ Known Issues
 
 Creating secrets such as passwords with $^ in them can cause the build pipeline to fail, this is because the characters are handled properly in powershell.
 VNet integration for the Azure App Service only works on the Premium tier. The Premium tier cannot be deployed to an MSDN subscription.
+BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
+	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
+	Some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
+I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
