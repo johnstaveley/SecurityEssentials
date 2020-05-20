@@ -89,7 +89,7 @@ stages:
         projectName: 'Security Essentials'
         scanPath: '$(System.DefaultWorkingDirectory)'
         format: 'HTML'
-        suppressionPath: '$(Build.SourcesDirectory)\Build\OwaspDcSupression.xml'
+        suppressionPath: '$(Build.SourcesDirectory)\Build\OwaspDcSuppression.xml'
         #failOnCVSS: '5' # If you want to fail the build on vulnerability level. In range 0-10. Medium importance vulnerability ~5.0, and ~7.5 for High
 
     # About: https://bolt.whitesourcesoftware.com/
