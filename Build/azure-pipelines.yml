@@ -250,7 +250,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Pre Deployment steps'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PreDeploy.ps1'
@@ -259,7 +259,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
@@ -271,7 +271,7 @@ stages:
 
     - task: AzureRmWebAppDeployment@3
       displayName: 'Deploy Website to AppService'
-      enabled: false # Removed to speed up build
+      #enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         WebAppName: '$(AppServiceName)'
@@ -284,7 +284,7 @@ stages:
     
     - task: AzurePowerShell@3
       displayName: 'Post Deployment steps'
-      enabled: false # Removed to speed up build
+      #enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\PostDeploy.ps1'
@@ -293,7 +293,7 @@ stages:
 
     - task: AzurePowerShell@3
       displayName: 'Configure Acceptance tests'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         ScriptPath: '$(Build.SourcesDirectory)\DeployPlatform\Scripts\ConfigureForTesting.ps1'
@@ -302,7 +302,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Acceptance tests'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       timeoutInMinutes: 60
       inputs:
         testAssemblyVer2: |
