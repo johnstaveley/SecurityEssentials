@@ -83,7 +83,7 @@ stages:
     # About: https://owasp.org/www-project-dependency-check/
     - task: dependency-check-build-task@5
       displayName: 'OWASP Dependency Checker'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         projectName: 'Security Essentials'
@@ -259,7 +259,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'Deploy Azure Resources'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         azureSubscription: '$(ServiceConnection)'
         resourceGroupName: '$(ResourceGroup)'
