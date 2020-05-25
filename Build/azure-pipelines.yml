@@ -225,7 +225,7 @@ stages:
 
 - stage: Acceptance_Tests
   dependsOn: Build_And_Unit_Tests
-  #condition: eq(0, 1) # TODO: Removed temporarily to speed up build
+  condition: eq(0, 1) # TODO: Removed temporarily to speed up build
   jobs:
   #- job: Approve_Deployment
   #  pool: server
