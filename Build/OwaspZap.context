@@ -64,9 +64,9 @@
             <loggedin>Logged on as</loggedin>
             <loggedout>Log in</loggedout>
             <form>
-                <loginurl>http://localhost:4845/Account/Logon</loginurl>
+                <loginurl>https://securityessentialsint.staveley.org/Account/Logon</loginurl>
                 <loginbody>UserName={%username%}&amp;Password={%password%}</loginbody>
-                <loginpageurl>http://localhost:4845/Account/LogOn</loginpageurl>
+                <loginpageurl>https://securityessentialsint.staveley.org/Account/LogOn</loginpageurl>
             </form>
         </authentication>
         <users>
