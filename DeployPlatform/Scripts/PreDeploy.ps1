@@ -71,14 +71,17 @@ if ($vNetStorageAccount -eq $null) {
 } else {
 	Write-Host "Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName already exists" 
 }
+Write-Host("Checking properties of $vNetStorageAccountName")
 $vNetStorageContext = $vNetStorageAccount.Context
 $loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $vNetStorageContext)
 if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    Write-Host("Setting logging properties of $vNetStorageAccountName")
     # SECURE: Set logging of failed authenication attempts
     Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $vNetStorageContext -RetentionDays '90' -PassThru
 }
 
 $storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
+Write-Host("Checking storage account $storageAccountName")
 $storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
 if ($storageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$storageAccountName' in Resource Group $resourceGroupName" 
@@ -86,9 +89,11 @@ if ($storageAccount -eq $null) {
 } else {
 	Write-Host "Storage Account '$storageAccountName' in Resource Group $resourceGroupName already exists" 
 }
+Write-Host("Checking properties of storage account $storageAccountName")
 $storageContext = $storageAccount.Context
 $loggingProperty = (Get-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -Context $storageContext)
 if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None') {
+    Write-Host("Setting logging properties of storage account $storageAccountName")
     # SECURE: Set logging of failed authenication attempts
     Set-AzureStorageServiceLoggingProperty -ServiceType 'Blob' -LoggingOperations 'All' -Context $storageContext -RetentionDays '90' -PassThru
 }
