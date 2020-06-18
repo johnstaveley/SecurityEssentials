@@ -6,7 +6,7 @@
         <inscope>true</inscope>
         <incregexes>https://securityessentials*</incregexes>
         <incregexes>http://localhost:4845/*</incregexes>
-        <excregexes>cdn-cgi/*</excregexes>
+        <excregexes>*/cdn-cgi/*</excregexes>
         <excregexes>https://www.owasp.org/</excregexes>
         <excregexes>https://johnstaveley.visualstudio.com/</excregexes>
         <excregexes>https://www.ssllabs.com/ssltest/</excregexes>
