@@ -102,7 +102,7 @@ ipconfig /flushdns
 Sleep 2
 
 # create key vault
-Write-Host "Checking key Vault" 
+Write-Host "Checking key Vault $vaultName" 
 $matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
 if ($matchingVaults -eq $null) { 
     # Create vault and enable the key vault for template deployment SECURE: Enable soft delete so keys can be recovered
