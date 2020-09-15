@@ -58,7 +58,7 @@ Other threats it protects against and features:
 * Forces user to change their password if their password has expired
 * FxCop security rules enabled to check the code at build for security flaws https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings
 * Professionally pentested
-* Additional Http Headers such as Permissions-Policy
+* Additional Http Headers such as Permissions-Policy, X-Frame-Options, Referrer-Policy, Expect-CT, X-Content-Type-Options
 
 ## OWASP Top 10 2017
 The Top 10 list of vulnerabilities has been updated in 2017. The list is much the same with the addition of:

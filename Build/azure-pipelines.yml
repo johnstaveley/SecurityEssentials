@@ -59,7 +59,7 @@ stages:
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-        pathtoCustomTestAdapters: '$(Build.SourcesDirectory)/packages/NUnit3TestAdapter.3.16.1/build/net35/'
+        pathtoCustomTestAdapters: '$(Build.SourcesDirectory)/packages/NUnit3TestAdapter.3.17.0/build/net35/'
         testAssemblyVer2: |
           **\SecurityEssentials.Unit.Tests.dll
           !**\*TestAdapter.dll
@@ -114,8 +114,8 @@ stages:
       displayName: 'Copy Test Adapter to $(Build.ArtifactStagingDirectory)'
       #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)\packages\NUnit3TestAdapter.3.16.1\'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)\Tests\NUnit3TestAdapter.3.16.1\'
+        SourceFolder: '$(Build.SourcesDirectory)\packages\NUnit3TestAdapter.3.17.0\'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\Tests\NUnit3TestAdapter.3.17.0\'
 
     - task: PublishSymbols@1
       displayName: 'Publish symbols path'

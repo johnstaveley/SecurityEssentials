@@ -20,4 +20,17 @@
    ]]></notes>
     <cve>CVE-2007-6357</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   According to this link: https://www.securityfocus.com/bid/14217
+   Only these versions are vulnerable:
+    	Microsoft ASP.NET 1.1 SP1
+      Microsoft ASP.NET 1.1
+      Microsoft ASP.NET 1.0 SP2
+      Microsoft ASP.NET 1.0 SP1
+      Microsoft ASP.NET 1.0
+      Microsoft ASP.NET 0   
+   ]]></notes>
+    <cve>CVE-2005-2224</cve>
+  </suppress>
 </suppressions>
