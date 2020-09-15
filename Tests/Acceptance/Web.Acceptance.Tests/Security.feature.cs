@@ -311,10 +311,9 @@ this.FeatureBackground();
                         "Referrer-Policy",
                         "origin"});
             table8.AddRow(new string[] {
-                        "Feature-Policy",
-                        "geolocation \'none\'; midi \'none\'; camera \'none\'; usb \'none\'; magnetometer \'none\'; " +
-                            "sync-xhr \'none\'; microphone \'none\'; camera \'none\'; gyroscope \'none\'; speaker \'no" +
-                            "ne\'; payment \'none\'"});
+                        "Permissions-Policy",
+                        "geolocation=(), midi=(), camera=(),usb=(), magnetometer=(), sync-xhr=(), micropho" +
+                            "ne=(), camera=(), gyroscope=(), speaker=(), payment=()"});
             table8.AddRow(new string[] {
                         "Content-Security-Policy",
                         @"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting"});

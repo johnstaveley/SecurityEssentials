@@ -20,8 +20,8 @@ namespace SecurityEssentials.Core
 			// SECURE: Can effectively prevent information being inadvertently leaked to other websites
 			HttpContext.Current.Response.Headers.Add("Referrer-Policy", "origin");
             // SECURE Turn off features that can be used in the browser by default
-            HttpContext.Current.Response.Headers.Add("Feature-Policy",
-                "geolocation 'none'; midi 'none'; camera 'none'; usb 'none'; magnetometer 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; gyroscope 'none'; speaker 'none'; payment 'none'");
+            HttpContext.Current.Response.Headers.Add("Permissions-Policy",
+                "geolocation=(), midi=(), camera=(),usb=(), magnetometer=(), sync-xhr=(), microphone=(), camera=(), gyroscope=(), speaker=(), payment=()");
 #if DEBUG
                // SECURE: Enable Content security policy with reporting
                HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting");

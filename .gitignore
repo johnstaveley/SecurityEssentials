@@ -209,3 +209,5 @@ ModelManifest.xml
 /DeployPlatform/ManualDeploy.ps1
 *.testlog
 /.vs/SecurityEssentials/v16/TestStore/1/testlog.manifest
+/.vs/SecurityEssentials/v16/TestStore/OutputMessages/*/StandardOutput.txt
+/.vs/SecurityEssentials/v16/TestStore/OutputMessages
