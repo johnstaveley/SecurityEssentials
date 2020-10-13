@@ -437,6 +437,8 @@
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
       ],
       "properties": {
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_0",
         "deleteRetentionPolicy": {
           "enabled": true
         },
