@@ -311,7 +311,7 @@ stages:
          !**\*TestAdapter.dll
          !**\obj\**
         searchFolder: '$(Pipeline.Workspace)/'
-        pathtoCustomTestAdapters: '$(Pipeline.Workspace)/Tests/NUnit3TestAdapter.3.16.1/build/net35/'
+        pathtoCustomTestAdapters: '$(Pipeline.Workspace)/Tests/NUnit3TestAdapter.3.17.0/build/net35/'
         runInParallel: false
         codeCoverageEnabled: false
         platform: '$(buildPlatform)'
