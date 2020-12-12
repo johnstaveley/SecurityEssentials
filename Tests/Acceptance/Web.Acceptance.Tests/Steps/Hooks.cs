@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -13,6 +12,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs.Models;
 using TechTalk.SpecFlow;
 
 namespace SecurityEssentials.Acceptance.Tests.Steps
@@ -91,38 +91,30 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.LookupRestore.sql");
 				DatabaseCommand.Execute("SecurityEssentials.Acceptance.Tests.Resources.DatabaseRestore.sql");
 			}
-			// Cleanup screenshot files after 1 day
+			// Cleanup screenshot files after X days
+			var numberOfDays = 3;
 			var storage = ConfigurationManager.AppSettings["TestScreenCaptureStorage"];
 			if (Convert.ToBoolean(ConfigurationManager.AppSettings["TakeScreenShotOnFailure"]))
 			{
-				Console.WriteLine("Cleaning up screen captures older than 7 days");
+				Console.WriteLine($"Cleaning up screen captures older than {numberOfDays} days");
 				if (storage.Contains("Endpoint"))
 				{
-					if (CloudStorageAccount.TryParse(storage, out var storageAccount))
+
+					BlobServiceClient cloudBlobClient = new BlobServiceClient(storage);
+					var cloudBlobContainer = cloudBlobClient.GetBlobContainerClient("selenium");
+					await cloudBlobContainer.CreateIfNotExistsAsync();
+					if (await cloudBlobContainer.ExistsAsync())
 					{
-						CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-						var cloudBlobContainer = cloudBlobClient.GetContainerReference("selenium");
-						await cloudBlobContainer.CreateIfNotExistsAsync();
-						if (await cloudBlobContainer.ExistsAsync())
+						var results = cloudBlobContainer.GetBlobs(BlobTraits.None, BlobStates.All, null);
+						foreach (var blobItem in results)
 						{
-							BlobContinuationToken continuationToken = null;
-							do
+							if (blobItem.Properties.LastModified.HasValue && blobItem.Properties.LastModified.Value.UtcDateTime < DateTime.UtcNow.AddDays(-numberOfDays))
 							{
-								var results = await cloudBlobContainer.ListBlobsSegmentedAsync(null, true, BlobListingDetails.All, null, continuationToken, null, null);
-								continuationToken = results.ContinuationToken;
-								foreach (IListBlobItem blobItem in results.Results)
-								{
-									if (blobItem is CloudBlockBlob blob)
-									{
-										if (blob.Properties.LastModified < DateTime.UtcNow.AddDays(-7))
-										{
-											await blob.DeleteIfExistsAsync();
-										}
-									}
-								}
-							} while (continuationToken != null);
+								await cloudBlobContainer.DeleteBlobAsync(blobItem.Name);
+							}
 						}
 					}
+
 				}
 				else
 				{
@@ -130,7 +122,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 					{
 						var screenshots = Directory.GetFiles(storage, "*.png")
 							.Select(a => new FileInfo(a))
-							.Where(b => b.CreationTimeUtc < DateTime.UtcNow.AddDays(-7))
+							.Where(b => b.CreationTimeUtc < DateTime.UtcNow.AddDays(-numberOfDays))
 							.ToList();
 						foreach (var screenshot in screenshots)
 						{
@@ -162,16 +154,13 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 						if (webDriver is ITakesScreenshot screenshotDriver)
 						{
 							Screenshot screenshot = screenshotDriver.GetScreenshot();
-							if (CloudStorageAccount.TryParse(storage, out var storageAccount))
-							{
-								CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-								var cloudBlobContainer = cloudBlobClient.GetContainerReference("selenium");
-								await cloudBlobContainer.CreateIfNotExistsAsync();
-								CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-								var memoryStream = new MemoryStream(screenshot.AsByteArray);
-								memoryStream.Seek(0, SeekOrigin.Begin);
-								await cloudBlockBlob.UploadFromStreamAsync(memoryStream);
-							}
+							BlobServiceClient  cloudBlobClient = new BlobServiceClient(storage);
+							var cloudBlobContainer = cloudBlobClient.GetBlobContainerClient("selenium");
+							await cloudBlobContainer.CreateIfNotExistsAsync();
+							var cloudBlockBlob = cloudBlobContainer.GetBlobClient(filename);
+							var memoryStream = new MemoryStream(screenshot.AsByteArray);
+							memoryStream.Seek(0, SeekOrigin.Begin);
+							await cloudBlockBlob.UploadAsync(memoryStream);
 						}
 					}
 					TestContext.WriteLine("Failed on url " + webDriver.Url);
