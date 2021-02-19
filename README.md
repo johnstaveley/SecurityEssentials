@@ -3,7 +3,9 @@
 ### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 12/12/2020
 
 ## Introduction
-This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. Following is how using this solution protects you against the Open Web Application Security Project (OWASP) Top 10 security threats in the world today.
+The security essentials project takes a standard Mvc project and applies Azure platform and .net application security best practise to it. Following are the list of threats it protects you from. 
+It keeps your application secure through build, platform checks and unit tests. 
+This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. 
 
 ## Security Enhancements
 This list is based on the OWASP Top 10 2013/2017
