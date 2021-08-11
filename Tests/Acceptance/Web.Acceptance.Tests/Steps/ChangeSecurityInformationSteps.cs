@@ -8,20 +8,29 @@ using TechTalk.SpecFlow;
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
     [Binding]
-	public class ChangeSecurityInformationSteps
+	public class ChangeSecurityInformationSteps : TechTalk.SpecFlow.Steps
 	{
+
+		private readonly FeatureContext _featureContext;
+        private readonly ScenarioContext _scenarioContext;
+
+        public ChangeSecurityInformationSteps(FeatureContext featureContext, ScenarioContext scenarioContext)
+        {
+            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
+        }
 
 		[Given(@"I enter the following change security information data:")]
 		public void GivenIEnterTheFollowingChangeSecurityInformationData(Table table)
 		{
-			var changeSecurityInformationPage = ScenarioContext.Current.GetPage<ChangeSecurityInformationPage>();
+			var changeSecurityInformationPage = _scenarioContext.GetPage<ChangeSecurityInformationPage>();
 			changeSecurityInformationPage.EnterDetails(table);
 		}
 
 		[When(@"I submit the change security information form")]
 		public void WhenISubmitTheChangeSecurityInformationForm()
 		{
-			var changeSecurityInformationPage = ScenarioContext.Current.GetPage<ChangeSecurityInformationPage>();
+			var changeSecurityInformationPage = _scenarioContext.GetPage<ChangeSecurityInformationPage>();
 			changeSecurityInformationPage.ClickSubmit();
 		}
 
@@ -29,16 +38,16 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		public void GivenIMakeANoteOfTheSecurityInformationAndSaltForUser(string userName)
 		{
 			var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-			ScenarioContext.Current.SetHash(user.SecurityAnswer);
-			ScenarioContext.Current.SetSalt(user.SecurityAnswerSalt);
+			_scenarioContext.SetHash(user.SecurityAnswer);
+			_scenarioContext.SetSalt(user.SecurityAnswerSalt);
 		}
 
 		[Then(@"The security information for '(.*)' has changed")]
 		public void ThenTheSecurityInformationForHasChanged(string userName)
 		{
 			var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-			var expectedHash = ScenarioContext.Current.GetHash();
-			var expectedSalt = ScenarioContext.Current.GetSalt();
+			var expectedHash = _scenarioContext.GetHash();
+			var expectedSalt = _scenarioContext.GetSalt();
 			Assert.IsFalse(string.IsNullOrEmpty(expectedHash), "Hash has not previously been captured");
 			Assert.IsFalse(string.IsNullOrEmpty(expectedSalt), "Salt has not previously been captured");
 			Assert.That(user.PasswordHash, Is.Not.EqualTo(expectedHash), "The hash was expected to have changed");

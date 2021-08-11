@@ -14,9 +14,16 @@ using TechTalk.SpecFlow.Assist;
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
     [Binding]
-    public class ReportSteps
+    public class ReportSteps : TechTalk.SpecFlow.Steps
     {
+        private readonly FeatureContext _featureContext;
+        private readonly ScenarioContext _scenarioContext;
 
+        public ReportSteps(FeatureContext featureContext, ScenarioContext scenarioContext)
+        {
+            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
+        }
         [Given(@"I have a content security policy violation with details:")]
         public void GivenIHaveAContentSecurityPolicyViolationWithDetails(Table table)
         {
@@ -32,7 +39,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
                 SourceFile = cspInstance.SourceFile,
                 ViolatedDirective = cspInstance.ViolatedDirective
             };
-            ScenarioContext.Current.SetCspReport(cspReport);
+            _scenarioContext.SetCspReport(cspReport);
         }
         [Given(@"I have a http public key pinning violation with details:")]
         public void GivenIHaveAHttpPublicKeyPinningViolationWithDetails(Table table)
@@ -50,7 +57,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
                 ServedCertificateChain = hpkpModel.ServedCertificateChainDelimited.Split(','),
                 ValidatedCertificateChain = hpkpModel.ValidatedCertificateChainDelimited.Split(',')
             };
-            ScenarioContext.Current.SetHpkpReport(hpkpReport);
+            _scenarioContext.SetHpkpReport(hpkpReport);
         }
         [Given(@"I have a certificate policy violation with details:")]
         public void GivenIHaveACertificatePolicyViolationWithDetails(Table table)
@@ -63,21 +70,21 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
                 HostName = ctInstance.HostName,
                 Port = ctInstance.Port
             };
-            ScenarioContext.Current.SetCtReport(ctReport);
+            _scenarioContext.SetCtReport(ctReport);
         }
         [Given(@"I have the following certificate policy violation scts:")]
         public void GivenIHaveTheFollowingCertificatePolicyViolationScts(Table table)
         {
-            var ctReport = ScenarioContext.Current.GetCtReport();
+            var ctReport = _scenarioContext.GetCtReport();
             var scts = table.CreateSet<Sct>();
             ctReport.Scts = scts.ToArray();
-            ScenarioContext.Current.SetCtReport(ctReport);
+            _scenarioContext.SetCtReport(ctReport);
         }
 
         [When(@"I post the content security policy violation to the website")]
         public void WhenIPostTheContentSecurityPolicyViolationToTheWebsite()
         {
-            var cspReport = ScenarioContext.Current.GetCspReport();
+            var cspReport = _scenarioContext.GetCspReport();
             var url = $"{ConfigurationManager.AppSettings["WebServerUrl"]}Security/CspReporting/";
             var response = HttpWeb.PostJsonStream(url, new CspHolder { CspReport = cspReport });
             Assert.That(response.ResponseStatus, Is.EqualTo(ResponseStatus.Completed));
@@ -86,7 +93,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         [When(@"I post the http public key pinning violation to the website")]
         public void WhenIPostTheHttpPublicKeyPinningViolationToTheWebsite()
         {
-            var hpkpReport = ScenarioContext.Current.GetHpkpReport();
+            var hpkpReport = _scenarioContext.GetHpkpReport();
             var url = $"{ConfigurationManager.AppSettings["WebServerUrl"]}Security/HpkpReporting/";
             var response = HttpWeb.PostJsonStream(url, hpkpReport);
             Assert.That(response.ResponseStatus, Is.EqualTo(ResponseStatus.Completed));
@@ -95,7 +102,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         [When(@"I post the certificate policy violation to the website")]
         public void WhenIPostTheCertificatePolicyViolationToTheWebsite()
         {
-            var ctReport = ScenarioContext.Current.GetCtReport();
+            var ctReport = _scenarioContext.GetCtReport();
             var url = $"{ConfigurationManager.AppSettings["WebServerUrl"]}Security/CtReporting/";
             var response = HttpWeb.PostJsonStream(url, new CtHolder { CtReport = ctReport });
             Assert.That(response.ResponseStatus, Is.EqualTo(ResponseStatus.Completed));

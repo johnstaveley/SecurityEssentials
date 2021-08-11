@@ -8,13 +8,22 @@ using TechTalk.SpecFlow;
 namespace SecurityEssentials.Acceptance.Tests.Steps
 {
     [Binding]
-	public class BasePageSteps
+	public class BasePageSteps : TechTalk.SpecFlow.Steps
 	{
+
+        private readonly FeatureContext _featureContext;
+        private readonly ScenarioContext _scenarioContext;
+
+        public BasePageSteps(FeatureContext featureContext, ScenarioContext scenarioContext)
+        {
+            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
+        }
 
 		[Then(@"an error message is shown '(.*)'")]
 		public void ThenAnErrorMessageIsShown(string errorMessage)
 		{
-			var driver = FeatureContext.Current.GetWebDriver();
+			var driver = _featureContext.GetWebDriver();
 			Assert.IsTrue(driver.PageSource.Contains(errorMessage), $"Page should have contained error message '{errorMessage}'");
 		}
         [Then(@"The following errors are displayed on the '(.*)' page:")]
@@ -24,10 +33,10 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             switch (pageName.ToLower())
             {
                 case "login":
-                    page = ScenarioContext.Current.GetPage<LoginPage>();
+                    page = _scenarioContext.GetPage<LoginPage>();
                     break;
                 case "register":
-                    page = ScenarioContext.Current.GetPage<RegisterPage>();
+                    page = _scenarioContext.GetPage<RegisterPage>();
                     break;
                 default:
                     throw new Exception($"Unknown page {pageName}");
