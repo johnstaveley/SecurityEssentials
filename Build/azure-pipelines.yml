@@ -27,7 +27,7 @@ stages:
     steps:
     - task: SonarCloudPrepare@1
       displayName: 'Setup SonarCloud connection'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         SonarCloud: '$(SonarCloudConnectionName)'
         organization: '$(SonarCloudOrganisation)'
@@ -72,11 +72,11 @@ stages:
 
     - task: SonarCloudAnalyze@1
       displayName: 'Analyse Code using SonarCloud'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
 
     - task: SonarCloudPublish@1
       displayName: 'Publish SonarCloud results'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         pollingTimeoutSec: '300'
 
@@ -95,7 +95,7 @@ stages:
     # About: https://bolt.whitesourcesoftware.com/
     - task: WhiteSource Bolt@20
       displayName: 'Whitesource bolt'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
@@ -225,7 +225,7 @@ stages:
 
 - stage: Acceptance_Tests
   dependsOn: Build_And_Unit_Tests
-  condition: eq(0, 1) # TODO: Removed temporarily to speed up build
+  #condition: eq(0, 1) # TODO: Removed temporarily to speed up build
   jobs:
   #- job: Approve_Deployment
   #  pool: server
@@ -329,7 +329,7 @@ stages:
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: owaspzap@1
       displayName: 'OWASP Zap penetration test'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         aggressivemode: true
         port: '443'
@@ -393,17 +393,17 @@ stages:
        {{/each}}
        EOF
       displayName: 'Zap NUnit Template'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
 
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - bash: ' handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml'
       displayName: 'Generate NUnit Type file for Zap report'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
 
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishTestResults@2
       displayName: 'Publish Zap Test Results **/TEST-*.xml'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         testResultsFormat: NUnit
         testResultsFiles: 'owaspzap/test-results.xml'
@@ -411,7 +411,7 @@ stages:
     # About this task: https://marketplace.visualstudio.com/items?itemName=CSE-DevOps.zap-scanner
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Zap Report'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         pathtoPublish: '$(Build.SourcesDirectory)/owaspzap'
         artifactName: 'Zap Reports'
