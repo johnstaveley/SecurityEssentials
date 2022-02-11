@@ -23,7 +23,7 @@ namespace SecurityEssentials.Core
 
             RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
 
-            if (recaptchaResult != RecaptchaVerificationResult.Success)
+            if (!recaptchaResult.Success)
             {
                 controller.ModelState.AddModelError("", "Incorrect captcha answer.");
                 recaptchaSuccess = false;
