@@ -18,11 +18,12 @@ stages:
   jobs:
   - job: Build_And_Unit_Tests
     pool:
-      name: Default
+      name: Azure Pipelines
       timeoutInMinutes: 180
       demands:
       - msbuild
       - vstest
+      - visualstudio
     steps:
     - task: SonarCloudPrepare@1
       displayName: 'Setup SonarCloud connection'
@@ -237,10 +238,11 @@ stages:
   - job: Deploy_To_Integration
     condition: eq(0, 1) # TODO: Removed temporarily to speed up build
     pool:
-      name: Default
+      name: Azure Pipelines
       demands:
       - vstest
       - msbuild
+      - visualstudio
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: drop'
@@ -418,7 +420,7 @@ stages:
   - job: Cleanup
     dependsOn: Penetration_Test
     pool:
-      name: Default
+      name: Azure Pipelines
 
     steps:
     - task: AzurePowerShell@3
