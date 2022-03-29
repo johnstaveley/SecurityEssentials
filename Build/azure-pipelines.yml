@@ -22,7 +22,6 @@ stages:
       timeoutInMinutes: 180
       demands:
       - msbuild
-      - visualstudio
       - vstest
     steps:
     - task: SonarCloudPrepare@1
@@ -242,7 +241,6 @@ stages:
       demands:
       - vstest
       - msbuild
-      - visualstudio
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Artifacts: drop'
