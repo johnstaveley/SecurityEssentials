@@ -18,7 +18,7 @@ stages:
   jobs:
   - job: Build_And_Unit_Tests
     pool:
-      name: windows-2022
+      name: Azure Pipelines
       timeoutInMinutes: 180
       demands:
       - msbuild
