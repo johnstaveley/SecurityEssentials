@@ -19,6 +19,7 @@ stages:
   - job: Build_And_Unit_Tests
     pool:
       name: Azure Pipelines
+      vmImage: 'windows-2022'
       timeoutInMinutes: 180
       demands:
       - msbuild
