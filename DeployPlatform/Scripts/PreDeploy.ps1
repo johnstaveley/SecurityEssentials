@@ -47,15 +47,15 @@ $cloudFlareHeaders = @{"Content-Type"= "application/json; charset=utf-8"; 'X-Aut
 
 # Select subscription
 Write-Host "Selecting subscription '$SubscriptionId'"
-Select-AzureRmSubscription -SubscriptionID $SubscriptionId -ErrorAction Stop
-Set-AzureRmContext -SubscriptionId $SubscriptionId -ErrorAction Stop
+Select-AzSubscription -SubscriptionID $SubscriptionId -ErrorAction Stop
+Set-AzContext -SubscriptionId $SubscriptionId -ErrorAction Stop
 
 # Create or check for existing resource group
-$resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
+$resourceGroup = Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
 if(!$resourceGroup)
 {
     Write-Host "Creating resource group '$resourceGroupName' in location '$AzureLocation'";
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $AzureLocation
+    New-AzResourceGroup -Name $resourceGroupName -Location $AzureLocation
     Start-Sleep(5) # Give it some time to create the resource group
 }
 else{
@@ -63,11 +63,11 @@ else{
 }
 # Create the storage accounts if they don't already exist
 $vNetStorageAccountName = $siteNameLowercase + $EnvironmentName.tolower() + 'vnt'
-$vNetStorageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
+$vNetStorageAccount = (Get-AzStorageAccount | Where-Object {$_.StorageAccountName -eq $vNetStorageAccountName})
 if ($vNetStorageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName" 
-    # NB: If the vault is showing up as soft deleted -InRemovedState you might have to might have to execute Remove-AzureRmKeyVault before it can be created again. Soft delete will be enabled by default in future
-    $vNetStorageAccount = New-AzureRmStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
+    # NB: If the vault is showing up as soft deleted -InRemovedState you might have to might have to execute Remove-AzKeyVault before it can be created again. Soft delete will be enabled by default in future
+    $vNetStorageAccount = New-AzStorageAccount -StorageAccountName $vNetStorageAccountName -Type 'Standard_GRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$vNetStorageAccountName' in Resource Group $resourceGroupName already exists" 
 }
@@ -82,10 +82,10 @@ if ($loggingProperty -eq $null -or $loggingProperty.LoggingOperations -eq 'None'
 
 $storageAccountName = $siteNameLowercase + $EnvironmentName.tolower()
 Write-Host("Checking storage account $storageAccountName")
-$storageAccount = (Get-AzureRmStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
+$storageAccount = (Get-AzStorageAccount | Where-Object {$_.StorageAccountName -eq $storageAccountName})
 if ($storageAccount -eq $null) {
 	Write-Host "Creating Storage Account '$storageAccountName' in Resource Group $resourceGroupName" 
-    $storageAccount = New-AzureRmStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
+    $storageAccount = New-AzStorageAccount -StorageAccountName $storageAccountName -Type 'Standard_LRS' -ResourceGroupName $resourceGroupName -Location $AzureLocation -EnableHttpsTrafficOnly $True
 } else {
 	Write-Host "Storage Account '$storageAccountName' in Resource Group $resourceGroupName already exists" 
 }
@@ -103,19 +103,18 @@ Sleep 2
 
 # create key vault
 Write-Host "Checking key Vault $vaultName" 
-$matchingVaults = (Get-AzureRMKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
+$matchingVaults = (Get-AzKeyVault | Where-Object { $_.ResourceGroupName -eq $resourceGroupName -and $_.vaultName -eq $vaultName })
 if ($matchingVaults -eq $null) { 
     # Create vault and enable the key vault for template deployment SECURE: Enable soft delete so keys can be recovered
     Write-Host "Creating Vault '$vaultName' in Resource Group $resourceGroupName" 
-    $vault = New-AzureRMKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -enabledfortemplatedeployment -EnableSoftDelete
+    $vault = New-AzKeyVault -vaultName $vaultName -ResourceGroupName $resourceGroupName -location $AzureLocation -EnabledForTemplateDeployment -SoftDeleteRetentionInDays 90 -EnablePurgeProtection
 } else {
     Write-Host "Vault '$vaultName' in Resource Group $resourceGroupName already exists" 
     $vault = $matchingVaults[0]
 }
 
 # Enable logging for key vault
-# TODO: Change AuditEvent to AuditEvent,AllMetrics when the powershell command supports it. In the meantime, set this manually
-Set-AzureRmDiagnosticSetting -ResourceId $vault.ResourceId -StorageAccountId $storageAccount.Id -Enabled $true -Categories AuditEvent -RetentionEnabled $true -RetentionInDays 365 `
+Set-AzDiagnosticSetting -ResourceId $vault.ResourceId -StorageAccountId $storageAccount.Id -Enabled $true -Categories AuditEvent,AllMetrics -RetentionEnabled $true -RetentionInDays 365 `
     -Name $keyVaultDiagnosticsName
 
 $secretKey = 'SqlAzurePassword'
@@ -237,13 +236,13 @@ if ($cloudFlareDnsEntry -eq $null) {
 }
 
 Write-Host ("Removing IP Address restrictions from azure deployment url")
-$apiVersion = ((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
-if ((Get-AzureRmResource -ResourceType Microsoft.Web/sites -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue) -ne $null) {
-    $webAppConfig = Get-AzureRmResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue
+$apiVersion = ((Get-AzResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).apiVersions[0]
+if ((Get-AzResource -ResourceType Microsoft.Web/sites -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue) -ne $null) {
+    $webAppConfig = Get-AzResource -ResourceType Microsoft.Web/sites/config -ResourceName $webSiteName -ResourceGroupName $resourceGroupName -apiVersion $apiVersion -ErrorAction SilentlyContinue
     if ($webAppConfig -ne $null) {
         # NB: You need to do this otherwise Azure Devops can't deploy to the site
         $webAppConfig.Properties.scmIpSecurityRestrictions = @()
-        Set-AzureRmResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
+        Set-AzResource -ResourceId $webAppConfig.ResourceId -Properties $webAppConfig.Properties -apiVersion $apiVersion -Force
     }
 }
 Write-Host ("Removed IP Address restrictions from azure deployment url")
