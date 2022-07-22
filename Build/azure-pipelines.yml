@@ -56,7 +56,7 @@ stages:
 
     - task: VSTest@2
       displayName: 'Unit tests'
-      enabled: false # TODO: Removed temporarily to speed up build
+      #enabled: false # TODO: Removed temporarily to speed up build
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
