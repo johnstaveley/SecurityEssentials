@@ -7,7 +7,7 @@ trigger:
   - master
 
 variables:
-  solution: '**/*.sln'
+  solution: '**\*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Integration'
   Release.EnvironmentName: 'Integration' # This is so the web deployment xml transformation works
