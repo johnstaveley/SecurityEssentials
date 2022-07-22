@@ -23,9 +23,9 @@ Scenario: The web application will log a content security policy violation
 	And I wait 2 seconds
 	Then I have 1 content security policy violation in the system  
 	And I have a log in the system matching the following:
-	| Field   | Value                                                     |  
-	| Level   | Warning                                                   |
-	| Message | BlockedUri: "http://myevilsite.com/stealdetails/capture/" |
+	| Field   | Value                             |
+	| Level   | Warning                           |
+	| Message | Content Security Policy Violation |
 
 Scenario: The web application will log a http public key pinning violation
 	Given I have a http public key pinning violation with details:
@@ -63,9 +63,9 @@ Scenario: The web application will log a certificate policy violation
 	And I wait 2 seconds
 	Then I have 1 certificate policy violation in the system  
 	And I have a log in the system matching the following:
-	| Field   | Value                   |
-	| Level   | Warning                 |
-	| Message | HostName: "example.com" |
+	| Field   | Value                              |
+	| Level   | Warning                            |
+	| Message | Certificate Transparency Violation |
 
 # TODO: Need two versions of this test, one for debugging locally and one for server based regression tests, then enable as @Smoke
 @CheckForErrors

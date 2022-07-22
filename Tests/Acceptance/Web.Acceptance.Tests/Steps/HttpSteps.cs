@@ -28,9 +28,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void WhenICallHttpGetOnTheWebsite()
         {
             var response = HttpWeb.Get(ConfigurationManager.AppSettings["WebServerUrl"]);
-            var headers = Enumerable
-                .Range(0, response.Headers.Count)
-                .Select(v => Tuple.Create(response.Headers[v].Name, response.Headers[v].Value.ToString()));
+            var headers = response.Headers.Select(a => new Tuple<string, string>(a.Name, a.Value.ToString()));
             _scenarioContext.SetHttpHeaders(headers);
         }
 

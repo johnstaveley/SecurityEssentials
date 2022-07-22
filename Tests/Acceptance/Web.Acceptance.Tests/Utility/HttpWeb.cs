@@ -6,19 +6,19 @@ namespace SecurityEssentials.Acceptance.Tests.Utility
     public static class HttpWeb
 	{
 
-		public static IRestResponse Get(string url)
+		public static RestResponse Get(string url)
 		{
-			var client = new RestClient(url);
-			var request = new RestRequest(Method.GET);
+			var client = new RestClient();
+			var request = new RestRequest(url, Method.Get);
 			return client.Execute(request);
 		}
 
-		public static IRestResponse PostJsonStream(string url, object body)
+		public static RestResponse PostJsonStream(string url, object body)
 		{
-			var client = new RestClient(url);
-			var request = new RestRequest(Method.POST)
+			var client = new RestClient();
+			var request = new RestRequest(url, Method.Post)
 			{
-				JsonSerializer = NewtonsoftJsonSerializer.Default,
+				//JsonSerializer = NewtonsoftJsonSerializer.Default,
 				RequestFormat = DataFormat.Json
 			};
 			request.AddJsonBody(body);

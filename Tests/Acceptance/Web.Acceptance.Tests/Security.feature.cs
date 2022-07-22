@@ -166,7 +166,7 @@ this.FeatureBackground();
                             "Warning"});
                 table51.AddRow(new string[] {
                             "Message",
-                            "BlockedUri: \"http://myevilsite.com/stealdetails/capture/\""});
+                            "Content Security Policy Violation"});
 #line 25
  testRunner.And("I have a log in the system matching the following:", ((string)(null)), table51, "And ");
 #line hidden
@@ -348,7 +348,7 @@ this.FeatureBackground();
                             "Warning"});
                 table56.AddRow(new string[] {
                             "Message",
-                            "HostName: \"example.com\""});
+                            "Certificate Transparency Violation"});
 #line 65
  testRunner.And("I have a log in the system matching the following:", ((string)(null)), table56, "And ");
 #line hidden

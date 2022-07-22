@@ -239,7 +239,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         {
             var logModel = table.CreateInstance<LogModel>();
             var logs = SeDatabase.GetLogs();
-            Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1, "Log does not match message");
+            Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1, $"Log does not match message. Expected: '{logModel.Message}', found: '{string.Join(",", logs.Select(b => b.Message))}'");
         }
 
         [Then(@"I have the following logs in the system:")]

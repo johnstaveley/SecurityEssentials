@@ -48,5 +48,7 @@ namespace SecurityEssentials.Model
 
 		[JsonProperty(PropertyName = "source-file")]
 		public string SourceFile { get; set; }
+
+
 	}
 }

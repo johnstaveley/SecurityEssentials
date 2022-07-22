@@ -38,7 +38,7 @@
 				}
 			}
 
-			public T Deserialize<T>(RestSharp.IRestResponse response)
+			public T Deserialize<T>(RestSharp.RestResponse response)
 			{
 				var content = response.Content;
 

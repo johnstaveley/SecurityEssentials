@@ -10,7 +10,7 @@ namespace SecurityEssentials.Controllers
 
     public class SecurityController : Controller
     {
-
+//#pragma warning disable CA3147 // Csp Reporting cannot be made to have anti forgery tokens
         [HttpPost]
         [AllowXRequestsEveryXSeconds(Name = "CspReporting", ContentName = "TooManyRequests", Requests = 15, Seconds = 60)]
         public JsonResult CspReporting([ModelBinder(typeof(JsonModelBinder<CspHolder>))] CspHolder data)
@@ -34,6 +34,7 @@ namespace SecurityEssentials.Controllers
             Serilog.Log.Logger.Warning("Certificate Transparency Violation {@data}", data.CtReport);
             return Json(new { success = true });
         }
+//#pragma warning restore
     }
 
     internal class JsonModelBinder<T> : IModelBinder where T : class
