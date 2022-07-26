@@ -96,7 +96,7 @@ stages:
     # About: https://bolt.whitesourcesoftware.com/
     - task: WhiteSource Bolt@20
       displayName: 'Whitesource bolt'
-      #enabled: false # TODO: Removed temporarily to speed up build
+      enabled: false # TODO: Removed temporarily to speed up build
       continueOnError: true
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
@@ -104,7 +104,7 @@ stages:
     # About: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#azsk-arm-template-checker
     - task: AzSKArmTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
-      #enabled: false # TODO: Removed temporarily to speed up build.
+      enabled: false # TODO: Removed temporarily to speed up build.
       continueOnError: true
       inputs:
         ARMTemplateFilePath: '$(Build.SourcesDirectory)\DeployPlatform\Arm\WebSite.json'

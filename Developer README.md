@@ -108,5 +108,5 @@ Creating secrets such as passwords with $^ in them can cause the build pipeline 
 VNet integration for the Azure App Service only works on the Premium tier. The Premium tier cannot be deployed to an MSDN subscription.
 BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
 	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
-	Some libraries are signed using SHA1. This includes: Microsoft.Azure.KeyVault.Core.dll, System.Web.Http.OData.dll etc
+	Some libraries are signed using SHA1. This includes: System.Web.Http.OData.dll etc
 I have temporarily got around this problem by just scanning SecurityEssentials.dll without packages
