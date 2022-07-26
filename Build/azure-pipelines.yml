@@ -101,7 +101,6 @@ stages:
       inputs:
         cwd: '$(System.DefaultWorkingDirectory)'
         
-    # About: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#azsk-arm-template-checker
     - task: AzSKArmTemplateChecker@4
       displayName: 'AzSK Arm Template Checker'
       enabled: false # TODO: Removed temporarily to speed up build.
@@ -212,7 +211,7 @@ stages:
     # About this task: https://docs.microsoft.com/en-us/azure/security/develop/security-code-analysis-customize#post-analysis-task
     - task: PostAnalysis@1
       displayName: 'MSCA: Break build on security defects'
-      #enabled: false # Removed to speed up build
+      enabled: false # Removed to speed up build
       inputs:
         AllTools: false
         BinSkim: true
