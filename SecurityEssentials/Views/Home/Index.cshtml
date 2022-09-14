@@ -12,7 +12,7 @@
                 <h4>Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0" rel="noopener noreferrer">@@johnstaveley</a> - Last updated 13/09/2022</h4>
                 The security essentials project takes a standard Mvc project and applies Azure platform and .net application security best practise to it. Following are the list of threats it protects you from.
                 It keeps your application secure through build, platform checks and unit tests.
-                This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4.
+                This Mvc solution was adapted from the standard MVC template in Visual Studio, MVC5, .net 4.8 and Bootstrap 4.
                 <ol>
                     <li>SQL Injection: It uses Entity Framework ORM</li>
                     <li>
@@ -136,6 +136,8 @@
                     <li>Add unit tests to ensure correct role is applied to functions requiring security such as admin</li>
                     <li>Run the build process detailed above</li>
                     <li>Patch the server!</li>
+                    <li>If you are using Github then you can setup SAST code scanning alerts in the security tab using .github\workflows\codeql-analysis.yml</li>
+                    <li>If doing an open source project, updating the security policy SECURITY.md will tell developers how to contact you if they spot a vulnerability and which versions are maintained for security patches</li>
                     <li>Ensure SSL policy remains current: <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer">https://www.ssllabs.com/ssltest/</a></li>
                     <li>Check the logs for repeated security violation attempts and block users if required</li>
                     <li>Check your CSP against <a href="https://csp-evaluator.withgoogle.com/" target="_blank" rel="noopener noreferrer">https://csp-evaluator.withgoogle.com/</a></li>

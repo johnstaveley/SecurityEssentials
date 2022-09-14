@@ -23,6 +23,7 @@ To set up the project take the following steps:
 5) Search for TODO in code to see further actions which could be taken
 6) When creating a build pipeline for your company, ensure you add in the extensions mentioned in azure-pipelines.yml
 7) If you want to do threat modelling then install Microsoft threat modelling tool preview https://aka.ms/tmtpreview
+8) Update the security policy Security.md or remove if project is not open source
 
 Azure Devops Setup
 ------------------
@@ -78,6 +79,12 @@ Notes
 
 Screenshots from failed selenium tests are stored in StorageAccountNonVNetName in container Selenium
 
+Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
+Please note Recaptcha is NOT GDPR compliant as it will harvest information outside of the EU. If you are in the EU you should use Google's reCAPTCHA v3 which is more GDPR compliant. See here: https://developers.google.com/recaptcha/docs/v3
+
+DevSecOps
+---------
+
 Whitesource bolt free will allow you to scan your provide up to 5 times per day, for unlimited, get the paid version.
 
 Secure DevOps Kit for Azure (AzSK). Documentation is here: https://github.com/azsk/DevOpsKit-docs and here: https://azsk.azurewebsites.net/03-Security-In-CICD/Readme.html#enable-azsk-extension-for-your-vsts-1
@@ -94,18 +101,18 @@ The Microsoft Security Code Analysis tool set contains the following build tasks
 	Roslyn Analyzers
 	TSLint
 
-Recaptcha repository: https://github.com/tanveery/recaptcha-net, Documentation: https://github.com/tanveery/recaptcha-net/blob/master/README.md
-
 FXCop and code analysis have switches to check security. They are added through NuGet packages and then you can see the analyzers installed under references. Each of the analyzers contains code rules, the severity of which can be 
 tweeked for your application. A detailed description can also be viewed. The security rules 'SecurityRulesEnabled.ruleset' is taken from %USERPROFILE%\.nuget\packages\microsoft.codeanalysis.fxcopanalyzers\ then current version and 
 rulesets subfolder. Get SecurityRulesEnabled.ruleset and copy it to the root of your project. Then edit the project add <CodeAnalysisRuleSet>SecurityRulesEnabled.ruleset</CodeAnalysisRuleSet> to the first property group. This will 
 only show you security issues.
 
+If you are using Github then you can setup SAST code scanning alerts in the security tab using .github\workflows\codeql-analysis.yml
+
 Known Issues
 ------------
 
 Creating secrets such as passwords with $^ in them can cause the build pipeline to fail, this is because the characters are handled properly in powershell.
-VNet integration for the Azure App Service only works on the Premium tier. The Premium tier cannot be deployed to an MSDN subscription.
+Azure VNet integration for the Azure App Service only works on the Premium tier. The Premium tier cannot be deployed to an MSDN subscription.
 BinSkim throws an exception with setting "AnalyzeTarget: '$(Build.ArtifactStagingDirectory)\*.dll'" due to the following issues:
 	Pdb files aren't included with all NuGet packages. This includes: AntiXssLibrary.dll, HtmlSanitizationLibrary.dll, libargon2.dll etc
 	Some libraries are signed using SHA1. This includes: System.Web.Http.OData.dll etc

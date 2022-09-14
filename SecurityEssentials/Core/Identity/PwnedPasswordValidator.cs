@@ -1,5 +1,5 @@
-﻿using System.Net;
-using ByteDev.PwnedPasswords;
+﻿using ByteDev.PwnedPasswords;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,7 +17,7 @@ namespace SecurityEssentials.Core.Identity
             ServicePointManager.Expect100Continue = true;
 #if DEBUG
             // SECURE: Advice from FxCop to allow system to choose best, however this is required to run locally
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 #else
             ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
 #endif

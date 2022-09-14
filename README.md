@@ -5,7 +5,7 @@
 ## Introduction
 The security essentials project takes a standard Mvc project and applies Azure platform and .net application security best practise to it. Following are the list of threats it protects you from. 
 It keeps your application secure through build, platform checks and unit tests. 
-This Mvc solution was adapted from the standard MVC template in VS 2019, MVC5, .net 4.8 and Bootstrap 4. 
+This Mvc solution was adapted from the standard MVC template in Visual Studio, MVC5, .net 4.8 and Bootstrap 4. 
 
 ## Security Enhancements
 This list is based on the OWASP Top 10 2013/2017

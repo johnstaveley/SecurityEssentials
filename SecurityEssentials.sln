@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Developer README.md = Developer README.md
 		README.md = README.md
+		SECURITY.md = SECURITY.md
 		Threat Model.tm7 = Threat Model.tm7
 	EndProjectSection
 EndProject
