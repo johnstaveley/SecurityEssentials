@@ -106,7 +106,7 @@ tweeked for your application. A detailed description can also be viewed. The sec
 rulesets subfolder. Get SecurityRulesEnabled.ruleset and copy it to the root of your project. Then edit the project add <CodeAnalysisRuleSet>SecurityRulesEnabled.ruleset</CodeAnalysisRuleSet> to the first property group. This will 
 only show you security issues.
 
-If you are using Github then you can setup SAST code scanning alerts in the security tab using .github\workflows\codeql-analysis.yml
+If you are using Github then you can setup SAST code scanning alerts in the security tab using \.github\workflows\codeql-analysis.yml
 
 Known Issues
 ------------
