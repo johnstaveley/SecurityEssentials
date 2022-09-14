@@ -62,7 +62,7 @@ jobs:
       run: nuget restore SecurityEssentials.sln
  
     - name: Build and Publish Web App
-      run: msbuild SecurityEssentials.sln /p:Configuration=Release
+      run: msbuild SecurityEssentials.sln /p:Configuration=Release /p:UseSharedCompilation=false
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
