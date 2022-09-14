@@ -45,6 +45,7 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+        queries: security-extended
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
@@ -62,7 +63,7 @@ jobs:
       run: nuget restore SecurityEssentials.sln
  
     - name: Build and Publish Web App
-      run: msbuild SecurityEssentials.sln /p:Configuration=Release /p:UseSharedCompilation=false
+      run: msbuild SecurityEssentials.sln /p:Configuration=Release /p:UseSharedCompilation=false /p:TransformWebConfigEnabled=true
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
