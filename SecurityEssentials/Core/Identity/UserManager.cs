@@ -5,6 +5,7 @@ using SecurityEssentials.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -33,7 +34,7 @@ namespace SecurityEssentials.Core.Identity
 
 		public AppUserManager(IAppConfiguration configuration, ISeContext context, IEncryption encryption, IPwnedPasswordValidator pwnedPasswordValidator, IServices services, IAppUserStore<User> userStore)
 		{
-			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 			_encryption = encryption ?? throw new ArgumentNullException(nameof(encryption));
             _pwnedPasswordValidator = pwnedPasswordValidator ?? throw new ArgumentNullException(nameof(pwnedPasswordValidator));

@@ -58,7 +58,7 @@ Other threats it protects against and features:
 * Form overposting: Example given of how to avoid this
 * Acceptance tests for key functionality
 * Forces user to change their password if their password has expired
-* FxCop security rules enabled to check the code at build for security flaws https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings
+* Roslyn Analyzers security rules enabled to check the code at build for security flaws https://docs.microsoft.com/en-us/visualstudio/code-quality/security-warnings
 * Professionally pentested
 * Additional Http Headers such as Permissions-Policy, X-Frame-Options, Referrer-Policy, Expect-CT, X-Content-Type-Options
 
