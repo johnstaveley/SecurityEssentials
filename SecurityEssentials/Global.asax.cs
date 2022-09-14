@@ -71,7 +71,7 @@ namespace SecurityEssentials
 
 			var ex = Server.GetLastError();
 			// TODO: Remove service location antipattern
-			var controller = new ErrorController(DependencyInjection.Container.GetInstance<IUserIdentity>(), DependencyInjection.Container.GetInstance<AppSensor>());
+			var controller = new ErrorController(DependencyInjection.Container.GetInstance<IUserIdentity>(), DependencyInjection.Container.GetInstance<IAppSensor>());
 			var routeData = new RouteData();
 			var action = "Index";
 

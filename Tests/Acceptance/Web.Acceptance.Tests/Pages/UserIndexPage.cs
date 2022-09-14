@@ -15,7 +15,7 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
 			var row = UserTable.FindElement(By.XPath($"//tr[td//text()[contains(., '{text}')]]"));
 			return row.FindElement(By.CssSelector("a.editUser"));
 		}
-		private IWebElement UserTable => GetVisibleWebElement(By.Id("kendoUserGrid"));
+		private IWebElement UserTable => GetVisibleWebElement(By.Id("userGrid"));
 		public UserIndexPage(IWebDriver webDriver, Uri baseUri)
 			: base(webDriver, baseUri, PageTitles.USERS_INDEX)
 		{
@@ -46,11 +46,11 @@ namespace SecurityEssentials.Acceptance.Tests.Pages
 		{
 			var model = new UserModel
 			{
-				UserName = columnCollection[2].Text.Trim(' '),
+				UserName = columnCollection[1].Text.Trim(' '),
 				FullName = columnCollection[0].Text.Trim(' '),
-				TelNoMobile = columnCollection[3].Text.Trim(' '),
-				Enabled = columnCollection[4].FindElements(By.CssSelector("input[checked='']")).Count > 0,
-				Approved = columnCollection[5].FindElements(By.CssSelector("input[checked='']")).Count > 0
+				TelNoMobile = columnCollection[2].Text.Trim(' '),
+				Enabled = columnCollection[3].Text == "Yes",
+				Approved = columnCollection[4].Text == "Yes"
 			};
 			return model;
 		}

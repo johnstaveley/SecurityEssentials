@@ -372,7 +372,7 @@ this.FeatureBackground();
                                 "ne=(), camera=(), gyroscope=(), speaker=(), payment=()"});
                 table57.AddRow(new string[] {
                             "Content-Security-Policy",
-                            @"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting"});
+                            @"default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com/gridjs/; img-src * data:; font-src 'self' https: data:; script-src 'self' https://unpkg.com/gridjs-jquery/; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting"});
 #line 74
  testRunner.Then("the response headers will contain:", ((string)(null)), table57, "Then ");
 #line hidden

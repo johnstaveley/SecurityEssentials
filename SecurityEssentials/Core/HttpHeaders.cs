@@ -24,12 +24,12 @@ namespace SecurityEssentials.Core
                 "geolocation=(), midi=(), camera=(),usb=(), magnetometer=(), sync-xhr=(), microphone=(), camera=(), gyroscope=(), speaker=(), payment=()");
 #if DEBUG
                // SECURE: Enable Content security policy with reporting
-               HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; font-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting");
+               HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com/gridjs/; img-src * data:; font-src 'self' https: data:; script-src 'self' https://unpkg.com/gridjs-jquery/; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; report-uri /Security/CspReporting");
 #else
-			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline'; img-src https: data:; font-src https: data:; script-src https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-ancestors https:; form-action https:; base-uri https:; object-src 'none'; report-uri /Security/CspReporting");
+			HttpContext.Current.Response.Headers.Add("Content-Security-Policy", "default-src https:; style-src https: 'unsafe-inline' https://unpkg.com/gridjs/; img-src https: data:; font-src https: data:; script-src https: https://unpkg.com/gridjs-jquery/; connect-src https:; frame-ancestors https:; form-action https:; base-uri https:; object-src 'none'; report-uri /Security/CspReporting");
 #endif
-			// SECURE: Enable Expect-CT header with reporting
-			HttpContext.Current.Response.Headers.Add("Expect-CT", "max-age=0, report-uri /Security/CtReporting");
+            // SECURE: Enable Expect-CT header with reporting
+            HttpContext.Current.Response.Headers.Add("Expect-CT", "max-age=0, report-uri /Security/CtReporting");
             HttpContext.Current.Response.Headers.Add("X-Content-Type-Options", "nosniff"); // SECURE: Prevent site being displayed in a different format in older browsers c.f. https://www.owasp.org/index.php/List_of_useful_HTTP_headers
 			HttpContext.Current.Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=/Security/CspReporting"); // SECURE: Enable browsers anti-XSS protection and report any violations  https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
 			// SECURE: Public key pinning to be deprecated, do not use: http://www.zdnet.com/article/google-chrome-is-backing-away-from-public-key-pinning-and-heres-why/

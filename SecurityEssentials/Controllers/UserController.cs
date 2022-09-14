@@ -257,29 +257,29 @@ namespace SecurityEssentials.Controllers
 
 		[SeAuthorize(Roles = "Admin")]
 		[HttpGet]
-		public JsonResult Read(int page = 0, int pageSize = 20, string searchText = "", [Bind(Prefix = "sort[0][dir]")] string sortOrder = null, [Bind(Prefix = "sort[0][field]")] string sortField = null)
+		public JsonResult Read(int limit = 20, int offset = 0, string search = "", string dir = null, string order = null)
 		{
-			string sortDirection = sortOrder == "desc" ? "Desc" : "Asc";
+			string sortDirection = dir == "desc" ? "Desc" : "Asc";
 
-			var firstNameSearch = searchText;
-			var lastNameSearch = searchText;
+			var firstNameSearch = search;
+			var lastNameSearch = search;
 			bool isFullNameSearch = false;
-			if (!string.IsNullOrEmpty(searchText))
+			if (!string.IsNullOrEmpty(search))
 			{
-				searchText = searchText.Trim(' ');
-				if (searchText.IndexOf(' ') > 0)
+				search = search.Trim(' ');
+				if (search.IndexOf(' ') > 0)
 				{
-					firstNameSearch = searchText.Substring(0, searchText.LastIndexOf(' ')).Trim(' ');
-					lastNameSearch = searchText.Replace(firstNameSearch, "").Trim(' ');
+					firstNameSearch = search.Substring(0, search.LastIndexOf(' ')).Trim(' ');
+					lastNameSearch = search.Replace(firstNameSearch, "").Trim(' ');
 					isFullNameSearch = true;
 				}
 			}
 
 			var users = _context.User.Where(
-				u => (searchText == "" ||
+				u => (search == "" ||
 					  (
 						  ((isFullNameSearch && (!string.IsNullOrEmpty(u.FirstName) && !string.IsNullOrEmpty(u.LastName) && u.FirstName.Contains(firstNameSearch) && u.LastName.Contains(lastNameSearch))) ||
-						   (!isFullNameSearch && ((string.IsNullOrEmpty(searchText)) ||
+						   (!isFullNameSearch && ((string.IsNullOrEmpty(search)) ||
 												  (
 													  (!string.IsNullOrEmpty(u.FirstName) && u.FirstName.Contains(firstNameSearch)) ||
 													  (!string.IsNullOrEmpty(u.LastName) && u.LastName.Contains(lastNameSearch))
@@ -288,19 +288,19 @@ namespace SecurityEssentials.Controllers
 					  )
 					));
 
-			string sortClause = $"{sortField} {sortDirection}";
-			if (string.IsNullOrEmpty(sortField) || sortField == "FullName")
+			string sortClause = $"{order} {sortDirection}";
+			if (string.IsNullOrEmpty(order) || order == "FullName")
 			{
 				// set default sorting of users
 				sortClause = $"LastName {sortDirection}, FirstName {sortDirection}";
 			}
 
 			var recordCount = users.Count();
-
+            
 			var results = users
 				.OrderBy(sortClause)
-				.Skip(pageSize * (page - 1))
-				.Take(pageSize).ToList()
+				.Skip(offset)
+				.Take(limit).ToList()
 				.Select(u => new
 			{
 				u.Id,

@@ -54,7 +54,6 @@ namespace SecurityEssentials.Core
                     methodName = "OrderByDescending";
             }
 
-            //TODO: apply caching to the generic methodsinfos?
             return (IOrderedQueryable<T>)typeof(Queryable).GetMethods().Single(
                 method => method.Name == methodName
                           && method.IsGenericMethodDefinition

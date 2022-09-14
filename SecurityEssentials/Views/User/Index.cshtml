@@ -7,16 +7,8 @@
 <div>
     <div class="scrollable">
         <div>
-            <div class="input-group">                
-                <label for="quickFindCriteria" class="input-group-addon">Quick Find:</label>
-                <input type="text" class="form-control" id="quickFindCriteria" placeholder="First name, last name or email" />
-                <div class="input-group-btn">
-                    <a id="clearquickfind" style="display: none" class="button">Clear</a>
-                    <a id="disableclear" class="button">Clear</a>
-                </div>
-            </div>
             <div id="DisableUserDialog"></div>
-            <div id="kendoUserGrid"></div>
+            <div id="userGrid"></div>
             @Html.HiddenFor(model => model.CurrentUserId)
 
             <form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form>
@@ -25,9 +17,7 @@
 </div>
 @section scripts
 {
-    @Styles.Render("~/Content/kendo/2014.1.318/kendoui")
-    @Scripts.Render("~/bundles/kendoui")
-    @Scripts.Render("~/bundles/quickfind")
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" />
+    <script src="https://unpkg.com/gridjs-jquery/dist/gridjs.production.min.js"></script>
     @Scripts.Render("~/bundles/users")
-
 }

@@ -1,4 +1,4 @@
-﻿/*global $,alert,console,document,AddAntiForgeryToken,kendo,window,refreshGrid */
+﻿/*global $,alert,console,document,AddAntiForgeryToken,window,refreshGrid */
 
 function refreshData(gotoFirstPage) {
     'use strict';
@@ -72,7 +72,7 @@ function disableUserCommand(e) {
 $(document).ready(function () {
     'use strict';
 
-    var usersData = new kendo.data.DataSource({
+/*    var usersData = new kendo.data.DataSource({
         transport: {
             read: {
                 url: 'User/Read/',
@@ -94,9 +94,9 @@ $(document).ready(function () {
         serverPaging: true,
         serverFiltering: true,
         serverSorting: true
-    });
+    });*/
 
-    $("#kendoUserGrid").kendoGrid({
+    /*$("#kendoUserGrid").kendoGrid({
         dataBound: function () {
             var userList = $(this)[0]._data,
                 user,
@@ -161,6 +161,58 @@ $(document).ready(function () {
 
     $('#kendoUserGrid tbody').on('click', ':checkbox', function (e) {
         e.stopPropagation();
+    });*/
+
+    $("#userGrid").Grid({
+        search: {
+            server: {
+                url: (prev, keyword) => `${prev}&search=${keyword}`
+            }
+        },
+        pagination: {
+            enabled: true,
+            limit: 20,
+            server: {
+                url: (prev, page, limit) => `${prev}&limit=${limit}&offset=${page * limit}`
+            }
+        },
+        sort: {
+            multiColumn: false,
+            server: {
+                url: (prev, columns) => {
+                    if (!columns.length) return prev;
+
+                    const col = columns[0];
+                    const dir = col.direction === 1 ? 'asc' : 'desc';
+                    let colName = ["FullName", "Id", "UserName", "TelNoMobile", "Enabled", "Approved"][col.index];
+
+                    return `${prev}&order=${colName}&dir=${dir}`;
+                }
+            }
+        },
+        columns: [
+            {
+                name: "FullName",
+                sort: false
+            }, {
+                name: 'Id',
+                hidden: true                
+            },
+            "UserName",
+            "TelNoMobile",
+            {
+                name: 'Enabled',
+                formatter: (_, row) => row.cells[4].data === true ? "Yes" : "No"
+            },
+            {
+                name: 'Approved',
+                formatter: (_, row) => row.cells[5].data === true ? "Yes" : "No"
+            },
+        ],
+        server: {
+            url: "User/Read/?",
+            then: result => result.data.map(user => [user.FullName, user.Id, user.UserName, user.TelNoMobile, user.Enabled, user.Approved])
+        } 
     });
 
 });

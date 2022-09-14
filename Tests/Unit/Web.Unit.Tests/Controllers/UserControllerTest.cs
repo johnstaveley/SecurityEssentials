@@ -371,7 +371,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Context.User.Add(new User { Id = 9, FirstName = "User", LastName = "I" });
 
             // Act
-            var result = _sut.Read(pageNumber, numberOfRowsInPage, searchName, sortDirection, sortIndex);
+            var result = _sut.Read(numberOfRowsInPage, numberOfRowsInPage * (pageNumber - 1), searchName, sortDirection, sortIndex);
 
             // Assert
             var model = AssertJsonResultReturned(result);
