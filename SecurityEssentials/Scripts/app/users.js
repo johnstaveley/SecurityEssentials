@@ -203,8 +203,7 @@ $(document).ready(function () {
             {
                 name: 'Enabled',
                 formatter: (_, row) => row.cells[4].data === true ? "Yes" : "No"
-            },
-            {
+            },{
                 name: 'Approved',
                 formatter: (_, row) => row.cells[5].data === true ? "Yes" : "No"
             },
