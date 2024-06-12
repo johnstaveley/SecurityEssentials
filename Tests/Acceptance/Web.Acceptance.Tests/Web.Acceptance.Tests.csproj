@@ -84,8 +84,8 @@
     <Reference Include="BoDi, Version=1.5.0.0, Culture=neutral, PublicKeyToken=ff7cd5ea2744b496, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\BoDi.1.5.0\lib\net45\BoDi.dll</HintPath>
     </Reference>
-    <Reference Include="Cucumber.Messages, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b10c5988214f940c, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Cucumber.Messages.6.0.1\lib\net45\Cucumber.Messages.dll</HintPath>
+    <Reference Include="Cucumber.Messages, Version=24.1.0.0, Culture=neutral, PublicKeyToken=b10c5988214f940c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Cucumber.Messages.24.1.0\lib\net45\Cucumber.Messages.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -93,8 +93,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Gherkin, Version=23.0.1.0, Culture=neutral, PublicKeyToken=86496cfa5b4a5851, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Gherkin.23.0.1\lib\net45\Gherkin.dll</HintPath>
+    <Reference Include="Gherkin, Version=28.0.0.0, Culture=neutral, PublicKeyToken=86496cfa5b4a5851, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Gherkin.28.0.0\lib\net462\Gherkin.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.27.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Google.Protobuf.3.27.1\lib\net45\Google.Protobuf.dll</HintPath>
