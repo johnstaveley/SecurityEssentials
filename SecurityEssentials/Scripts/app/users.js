@@ -1,16 +1,5 @@
 ﻿/*global $,alert,console,document,AddAntiForgeryToken,window,refreshGrid */
 
-function refreshData(gotoFirstPage) {
-    'use strict';
-
-    if (gotoFirstPage === true) {
-        $("#kendoUserGrid").data("kendoGrid").dataSource.page(1);
-    } else {
-        $("#kendoUserGrid").data("kendoGrid").dataSource.read();
-        $("#kendoUserGrid").data("kendoGrid").refresh();
-    }
-}
-
 function editUserCommand(e) {
     //'use strict';
 

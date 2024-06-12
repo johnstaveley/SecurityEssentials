@@ -16,7 +16,7 @@ namespace SecurityEssentials.Core.Identity
         {
             ServicePointManager.Expect100Continue = true;
 #if DEBUG
-            // SECURE: Advice from Roslyn Analyzers to allow system to choose best, however this is required to run locally
+            // SECURE: Advice from Roslyn Analyzers is to allow system to choose best, however this is required to run locally
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 #else
             ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;

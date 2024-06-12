@@ -1,6 +1,6 @@
 # Security Essentials MVC Project Template
 
-### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 13/09/2022
+### Created by <a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&amp;region=follow_link&amp;screen_name=johnstaveley&amp;tw_p=followbutton&amp;variant=2.0">@johnstaveley</a> - Last updated 12/06/2024
 
 ## Introduction
 The security essentials project takes a standard Mvc project and applies Azure platform and .net application security best practise to it. Following are the list of threats it protects you from. 

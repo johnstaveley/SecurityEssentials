@@ -38,7 +38,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 					if (!storage.Contains("Endpoint"))
 					{
 						string filePath = $"{storage}{filename}";
-						webDriver.TakeScreenshot().SaveAsFile(filePath, ScreenshotImageFormat.Png);
+						webDriver.TakeScreenshot().SaveAsFile(filePath);
 					}
 					else
 					{
