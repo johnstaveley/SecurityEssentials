@@ -37,6 +37,7 @@ stages:
         projectName: '$(SonarCloudProjectName)'
 
     - task: NuGetToolInstaller@1
+      enabled: false
       displayName: 'Use NuGet 4.4.1'
       inputs:
         versionSpec: 4.4.1
