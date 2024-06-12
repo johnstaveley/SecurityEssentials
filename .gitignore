@@ -197,3 +197,5 @@ ModelManifest.xml
 /SecurityEssentials/.vs
 /Tests/Acceptance/Web.Acceptance.Tests/.vs
 /Tests/Unit/Web.Unit.Tests/.vs
+/.idea/.idea.SecurityEssentials/.idea
+/.idea/config
