@@ -194,3 +194,6 @@ ModelManifest.xml
 /DeployPlatform/ManualDeploy.ps1
 *.testlog
 /.vs/*
+/SecurityEssentials/.vs
+/Tests/Acceptance/Web.Acceptance.Tests/.vs
+/Tests/Unit/Web.Unit.Tests/.vs
