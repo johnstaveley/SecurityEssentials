@@ -22,7 +22,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenIAmTakenToTheHomepage()
         {
             var homePage = _scenarioContext.GetPage<HomePage>();
-            Assert.IsTrue(homePage.IsCurrentPage);
+            Assert.That(homePage.IsCurrentPage);
         }
 
         [Given(@"I click register in the title bar")]

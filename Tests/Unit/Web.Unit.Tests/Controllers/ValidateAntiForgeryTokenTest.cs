@@ -47,7 +47,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 					failingActions.Select(method => $"{method.Name} in {method.DeclaringType.Name}")
 						.Aggregate((a, b) => $"{a},\n{b}");
 			}
-			Assert.IsFalse(failingActions.Any(), message);
+			Assert.That(failingActions.Any(), Is.False, message);
 		}
 	}
 }

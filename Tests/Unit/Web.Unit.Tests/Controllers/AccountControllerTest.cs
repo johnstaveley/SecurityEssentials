@@ -67,7 +67,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             var type = _sut.GetType();
             var attributes = type.GetCustomAttributes(typeof(NoCacheAttribute), true);
-            Assert.IsTrue(attributes.Any(), "No NoCache Attribute found");
+            Assert.That(attributes.Any(), "No NoCache Attribute found");
         }
 
 		[Test]
@@ -81,8 +81,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var data = AssertViewResultReturnsType<LandingViewModel>(result);
-			Assert.AreEqual(LastAccountActivity.ToLocalTime().ToString("dd/MM/yyyy HH:mm"), data.LastAccountActivity);
-			Assert.AreEqual(TestFirstName, data.FirstName);
+			Assert.That(LastAccountActivity.ToLocalTime().ToString("dd/MM/yyyy HH:mm"), Is.EqualTo(data.LastAccountActivity));
+			Assert.That(TestFirstName, Is.EqualTo(data.FirstName));
 
 		}		
 
@@ -96,7 +96,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			var result = _sut.Landing();
 
 			// Assert
-			Assert.IsNotNull(result, "No result was returned from controller");
+			Assert.That(result, Is.Not.Null, "No result was returned from controller");
 			AssertRedirectToActionReturned(result, "Index", "Home");
 
 		}
@@ -219,8 +219,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var viewModel = AssertViewResultReturnsType<ChangeEmailAddressViewModel>(result);
-			Assert.AreEqual(TestUserName, viewModel.EmailAddress);
-			Assert.IsFalse(viewModel.IsFormLocked);
+			Assert.That(TestUserName, Is.EqualTo(viewModel.EmailAddress));
+			Assert.That(viewModel.IsFormLocked, Is.False);
 
 		}
 
@@ -240,9 +240,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything));
 			Context.AssertWasCalled(a => a.SaveChangesAsync());
 			var user = Context.User.Include("UserLogs").First(a => a.Id == TestUserId);
-			Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddressToken));
-			Assert.IsNotNull(user.NewEmailAddressRequestExpiryDateUtc);
-			Assert.IsFalse(string.IsNullOrEmpty(user.NewEmailAddress));
+			Assert.That(string.IsNullOrEmpty(user.NewEmailAddressToken), Is.False);
+			Assert.That(user.NewEmailAddressRequestExpiryDateUtc, Is.Not.Null);
+			Assert.That(string.IsNullOrEmpty(user.NewEmailAddress), Is.False);
 
 		}
 
@@ -262,7 +262,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 			AssertViewResultWithError(result, "This email address is already in use");
 			Context.AssertWasNotCalled(a => a.SaveChanges());
 			var user = Context.User.First(a => a.Id == TestUserId);
-			Assert.IsTrue(string.IsNullOrEmpty(user.NewEmailAddress));
+			Assert.That(string.IsNullOrEmpty(user.NewEmailAddress));
 
 		}
 
@@ -285,12 +285,12 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			AssertViewResultReturned(result, "ChangeEmailAddressSuccess");
-			Assert.IsNull(user.NewEmailAddressRequestExpiryDateUtc);
-			Assert.IsNull(user.NewEmailAddress);
-			Assert.IsNull(user.NewEmailAddressToken);
-			Assert.AreEqual(newEmaiLAddress, user.UserName);
-			Assert.AreEqual(3, user.UserLogs.Count, "Account activity was not logged");
-			Assert.IsTrue(user.UserLogs.Any(a => a.Description.Contains(user.UserName)));
+			Assert.That(user.NewEmailAddressRequestExpiryDateUtc, Is.Null);
+			Assert.That(user.NewEmailAddress, Is.Null);
+			Assert.That(user.NewEmailAddressToken, Is.Null);
+			Assert.That(newEmaiLAddress, Is.EqualTo(user.UserName));
+			Assert.That(3, Is.EqualTo(user.UserLogs.Count), "Account activity was not logged");
+			Assert.That(user.UserLogs.Any(a => a.Description.Contains(user.UserName)));
 			_services.AssertWasCalled(a => a.SendEmail(Arg<string>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
 				Arg<List<string>>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything), options => options.Repeat.Times(2));
 			_userManager.AssertWasCalled(a => a.SignOut());
@@ -369,7 +369,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<ChangePasswordViewModel>(result);
-			Assert.IsTrue(model.HasRecaptcha);
+			Assert.That(model.HasRecaptcha);
 			Assert.That(model.MustChangePassword, Is.EqualTo(mustChangePassword));
 		}
 
@@ -384,7 +384,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<ChangePasswordViewModel>(result);
-			Assert.IsTrue(model.HasRecaptcha);
+			Assert.That(model.HasRecaptcha);
 			var viewResult = AssertViewResultReturned(result, "ChangePasswordSuccess");
 			Assert.That(viewResult.ViewData["ReturnUrl"], Is.EqualTo("~/ChangePassword"));
 
@@ -400,7 +400,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<ChangeSecurityInformationViewModel>(result);
-			Assert.IsTrue(model.HasRecaptcha);
+			Assert.That(model.HasRecaptcha);
 		}
 
 		[Test]
@@ -502,7 +502,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<RecoverViewModel>(result);
-			Assert.IsTrue(model.HasRecaptcha);
+			Assert.That(model.HasRecaptcha);
 
 		}
 
@@ -516,7 +516,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<RegisterViewModel>(result);
-			Assert.IsTrue(model.HasRecaptcha);
+			Assert.That(model.HasRecaptcha);
 		}
 
 		[Test]
@@ -575,9 +575,9 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 			// Assert
 			var model = AssertViewResultReturnsType<RecoverPasswordViewModel>(result);
-			Assert.AreEqual(passwordResetToken, model.PasswordResetToken);
-			Assert.AreEqual(TestUserId, model.Id);
-			Assert.AreEqual("test question", model.SecurityQuestion);
+			Assert.That(passwordResetToken, Is.EqualTo(model.PasswordResetToken));
+			Assert.That(TestUserId, Is.EqualTo(model.Id));
+			Assert.That("test question", Is.EqualTo(model.SecurityQuestion));
 		}
 
 		[Test]

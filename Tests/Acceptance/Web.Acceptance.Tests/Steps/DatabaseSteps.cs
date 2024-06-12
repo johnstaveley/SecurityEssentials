@@ -136,8 +136,8 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenTheUserHasThePasswordResetTokenSetAndPasswordResetExpirySetToMinutes(string userName, int expiryMinutes)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsTrue(!string.IsNullOrEmpty(user.PasswordResetToken), $"User {user.UserName} should have had the password reset token set");
-            Assert.IsTrue(user.PasswordResetExpiryDateUtc.HasValue, $"User {user.UserName} should have had the password reset token expiry date set");
+            Assert.That(!string.IsNullOrEmpty(user.PasswordResetToken), Is.True, $"User {user.UserName} should have had the password reset token set");
+            Assert.That(user.PasswordResetExpiryDateUtc.HasValue, Is.True, $"User {user.UserName} should have had the password reset token expiry date set");
             Assert.That(user.PasswordResetExpiryDateUtc.Value, Is.GreaterThan(DateTime.UtcNow.AddMinutes(expiryMinutes)));
 
         }
@@ -147,7 +147,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenTheUserHasThePasswordExpiryDateSet(string userName)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsTrue(user.PasswordExpiryDateUtc.HasValue, $"User {user.UserName} should have had the password expiry date set");
+            Assert.That(user.PasswordExpiryDateUtc.HasValue, Is.True, $"User {user.UserName} should have had the password expiry date set");
             Assert.That(user.PasswordExpiryDateUtc.Value, Is.LessThan(DateTime.UtcNow));
 
         }
@@ -155,32 +155,32 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenTheUserDoesNotHaveThePasswordExpiryDateSet(string userName)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsFalse(user.PasswordExpiryDateUtc.HasValue, $"User {user.UserName} should not have the password expiry date set");
+            Assert.That(user.PasswordExpiryDateUtc.HasValue, Is.False, $"User {user.UserName} should not have the password expiry date set");
         }
         [Then(@"the password reset token and expiry for user '(.*)' are not set")]
         public void ThenThePasswordResetTokenAndExpiryForUserAreNotSet(string userName)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsTrue(string.IsNullOrEmpty(user.PasswordResetToken), $"User {user.UserName} should have had the password reset token cleared");
-            Assert.IsFalse(user.PasswordResetExpiryDateUtc.HasValue, $"User {user.UserName} should have had the password reset token expiry date cleared");
+            Assert.That(string.IsNullOrEmpty(user.PasswordResetToken), Is.True, $"User {user.UserName} should have had the password reset token cleared");
+            Assert.That(user.PasswordResetExpiryDateUtc.HasValue, Is.False, $"User {user.UserName} should have had the password reset token expiry date cleared");
         }
 
         [Then(@"the user '(.*)' has the new email address token and expiry cleared")]
         public void ThenTheUserHasTheNewEmailAddressTokenAndExpiryCleared(string userName)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsNull(user.NewEmailAddress, "New Email Address should be cleared");
-            Assert.IsNull(user.NewEmailAddressToken, $"User {user.UserName} should have had the new email address token cleared");
-            Assert.IsFalse(user.NewEmailAddressRequestExpiryDateUtc.HasValue, $"User {user.UserName} should have had the new email address expiry date cleared");
+            Assert.That(user.NewEmailAddress, Is.Null, "New Email Address should be cleared");
+            Assert.That(user.NewEmailAddressToken, Is.Null, $"User {user.UserName} should have had the new email address token cleared");
+            Assert.That(user.NewEmailAddressRequestExpiryDateUtc.HasValue, Is.False, $"User {user.UserName} should have had the new email address expiry date cleared");
         }
 
         [Then(@"the user '(.*)' has the new email address token set and new email address expiry is at least (.*) minutes from now")]
         public void ThenTheUserHasTheNewEmailAddressTokenSetAndNewEmailAddressExpiryIsAtLeastMinutesFromNow(string userName, int expiryMinutes)
         {
             var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
-            Assert.IsTrue(!string.IsNullOrEmpty(user.NewEmailAddress), $"User {user.UserName} should have had the new email address set");
-            Assert.IsTrue(!string.IsNullOrEmpty(user.NewEmailAddressToken), $"User {user.UserName} should have had the new email address token set");
-            Assert.IsTrue(user.NewEmailAddressRequestExpiryDateUtc.HasValue, $"User {user.UserName} should have had the new email address expiry date set");
+            Assert.That(!string.IsNullOrEmpty(user.NewEmailAddress), Is.True, $"User {user.UserName} should have had the new email address set");
+            Assert.That(!string.IsNullOrEmpty(user.NewEmailAddressToken), Is.True, $"User {user.UserName} should have had the new email address token set");
+            Assert.That(user.NewEmailAddressRequestExpiryDateUtc.HasValue, Is.True, $"User {user.UserName} should have had the new email address expiry date set");
             Assert.That(user.NewEmailAddressRequestExpiryDateUtc.Value, Is.GreaterThan(DateTime.UtcNow.AddMinutes(expiryMinutes)));
         }
         [Given(@"the following user roles are setup in the system for user '(.*)'")]
@@ -239,7 +239,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         {
             var logModel = table.CreateInstance<LogModel>();
             var logs = SeDatabase.GetLogs();
-            Assert.IsTrue(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1, $"Log does not match message. Expected: '{logModel.Message}', found: '{string.Join(",", logs.Select(b => b.Message))}'");
+            Assert.That(logs.Count(a => a.Level == logModel.Level && a.Message.Contains(logModel.Message)) == 1, $"Log does not match message. Expected: '{logModel.Message}', found: '{string.Join(",", logs.Select(b => b.Message))}'");
         }
 
         [Then(@"I have the following logs in the system:")]

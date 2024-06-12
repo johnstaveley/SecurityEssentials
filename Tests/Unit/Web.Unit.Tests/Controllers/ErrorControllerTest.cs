@@ -39,7 +39,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			var type = _sut.GetType();
 			var attributes = type.GetCustomAttributes(typeof(SeAuthorizeAttribute), true);
-			Assert.IsFalse(attributes.Any(), "Authorize Attribute not found");
+			Assert.That(attributes.Any(), Is.False, "Authorize Attribute not found");
 
 		}
 

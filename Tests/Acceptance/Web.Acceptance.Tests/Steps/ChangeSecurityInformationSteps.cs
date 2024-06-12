@@ -48,8 +48,8 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 			var user = SeDatabase.GetUsers().Single(a => a.UserName == userName);
 			var expectedHash = _scenarioContext.GetHash();
 			var expectedSalt = _scenarioContext.GetSalt();
-			Assert.IsFalse(string.IsNullOrEmpty(expectedHash), "Hash has not previously been captured");
-			Assert.IsFalse(string.IsNullOrEmpty(expectedSalt), "Salt has not previously been captured");
+			Assert.That(string.IsNullOrEmpty(expectedHash), Is.False, "Hash has not previously been captured");
+			Assert.That(string.IsNullOrEmpty(expectedSalt), Is.False, "Salt has not previously been captured");
 			Assert.That(user.PasswordHash, Is.Not.EqualTo(expectedHash), "The hash was expected to have changed");
 			Assert.That(user.PasswordSalt, Is.Not.EqualTo(expectedSalt), "The salt was expected to have changed");
 		}

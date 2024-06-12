@@ -58,7 +58,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             var type = _sut.GetType();
             var attributes = type.GetCustomAttributes(typeof(SeAuthorizeAttribute), true);
-            Assert.IsTrue(attributes.Any(), "No Authorize Attribute found");
+            Assert.That(attributes.Any(), "No Authorize Attribute found");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             var type = _sut.GetType();
             var attributes = type.GetCustomAttributes(typeof(NoCacheAttribute), true);
-            Assert.IsTrue(attributes.Any(), "No NoCache Attribute found");
+            Assert.That(attributes.Any(), "No NoCache Attribute found");
         }
 
         [Test]
@@ -158,8 +158,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewModel = AssertViewResultReturnsType<UserViewModel>(result);
-            Assert.AreEqual(TestUserId, viewModel.User.Id);
-            Assert.IsTrue(viewModel.IsOwnProfile);
+            Assert.That(TestUserId, Is.EqualTo(viewModel.User.Id));
+            Assert.That(viewModel.IsOwnProfile);
 
         }
 
@@ -191,7 +191,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
                 Assert.That(modifiedUser.UserName, Is.Not.EqualTo("new@new.test.net"));
             }
             var viewResult = AssertViewResultReturned(result, "Edit");
-            Assert.AreEqual("Your account information has been saved", viewResult.ViewBag.StatusMessage);
+            Assert.That("Your account information has been saved", Is.EqualTo(viewResult.ViewBag.StatusMessage));
 
         }
 
@@ -255,7 +255,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewModel = AssertViewResultReturnsType<UserLogViewModel>(result);
-            Assert.AreEqual(2, viewModel.UserLogs.Count);
+            Assert.That(2, Is.EqualTo(viewModel.UserLogs.Count));
         }
 
         [Test]
@@ -269,7 +269,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewModel = AssertViewResultReturnsType<User>(result);
-            Assert.AreEqual(TestUserId, viewModel.Id);
+            Assert.That(TestUserId, Is.EqualTo(viewModel.Id));
         }
 
         [Test]
@@ -344,7 +344,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Assert.That(user.UserRoles.Count, Is.EqualTo(1), "User Role has not been added");
             Assert.That(user.UserRoles.Any(a => a.RoleId == Consts.Roles.Admin), Is.True);
             Assert.That(user.UserLogs.Count, Is.EqualTo(3), "User Log has not been added");
-            Assert.IsTrue(user.UserLogs.Any(a => a.Description.Contains("made a system admin")));
+            Assert.That(user.UserLogs.Any(a => a.Description.Contains("made a system admin")));
 
         }
 
@@ -396,7 +396,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewModel = AssertViewResultReturnsType<RemoveRoleViewModel>(result);
-            Assert.AreEqual(TestUserId, viewModel.User.Id);
+            Assert.That(TestUserId, Is.EqualTo(viewModel.User.Id));
         }
 
         [Test]
@@ -497,7 +497,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewModel = AssertViewResultReturnsType<User>(result);
-            Assert.AreEqual(TestUserId, viewModel.Id);
+            Assert.That(TestUserId, Is.EqualTo(viewModel.Id));
         }
 
         [Test]
@@ -539,7 +539,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewResult = AssertViewResultReturned(result, "ResetPassword");
-            Assert.NotNull(viewResult.ViewBag.Message, "ViewBag Message Return should be set");
+            Assert.That(viewResult.ViewBag.Message, Is.Not.Null, "ViewBag Message Return should be set");
             Assert.That(viewResult.ViewBag.Message, Is.EqualTo("An error occurred whilst trying to perform this action"));
         }
 
@@ -563,7 +563,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
             Context.AssertWasCalled(a => a.SaveChanges());
             Context.AssertWasCalled(a => a.SetDeleted(Arg<UserRole>.Matches(b => b.RoleId == Consts.Roles.Admin)));
             Assert.That(user.UserLogs.Count, Is.EqualTo(3), "User Log has not been added");
-            Assert.IsTrue(user.UserLogs.Any(a => a.Description.Contains("had administrator privileges removed")));
+            Assert.That(user.UserLogs.Any(a => a.Description.Contains("had administrator privileges removed")));
         }
 
 

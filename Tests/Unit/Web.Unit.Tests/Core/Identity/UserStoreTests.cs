@@ -50,9 +50,9 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.TryLogOnAsync(TestUser.UserName, "xsHDjxshdjkKK917&");
 
 			// Assert
-			Assert.IsTrue(result.Success);
-			Assert.AreEqual(0, TestUser.FailedLogonAttemptCount);
-			Assert.AreEqual(TestUser.UserName, result.UserName);
+			Assert.That(result.Success);
+			Assert.That(0, Is.EqualTo(TestUser.FailedLogonAttemptCount));
+			Assert.That(TestUser.UserName, Is.EqualTo(result.UserName));
 			Assert.That(result.MustChangePassword, Is.EqualTo(expectedMustChangePassword));
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
 		}
@@ -66,8 +66,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.TryLogOnAsync("test", "AnythingYouWant");
 
 			// Assert
-			Assert.IsFalse(result.Success);
-			Assert.IsTrue(result.IsCommonUserName, "Common User name flag not set");
+			Assert.That(result.Success, Is.False);
+			Assert.That(result.IsCommonUserName, "Common User name flag not set");
 			_context.AssertWasNotCalled(a => a.SaveChangesAsync());
 		}
 
@@ -81,8 +81,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.TryLogOnAsync("test", "ThisIsAnIncorrectPassword");
 
 			// Assert
-			Assert.IsFalse(result.Success);
-			Assert.IsFalse(result.IsCommonUserName, "Common User name flag was set");
+			Assert.That(result.Success, Is.False);
+			Assert.That(result.IsCommonUserName, Is.False, "Common User name flag was set");
 			_context.AssertWasNotCalled(a => a.SaveChangesAsync());
 		}
 
@@ -95,11 +95,11 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.TryLogOnAsync(TestUser.UserName, "rubbish");
 
 			// Assert
-			Assert.IsFalse(result.Success);
-			Assert.AreEqual(2, TestUser.FailedLogonAttemptCount);
-			Assert.AreNotEqual(TestUser.UserName, result.UserName);
-			Assert.IsTrue(TestUser.UserLogs.Any(b => b.Description.Contains("Failed Logon")));
-			Assert.IsFalse(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
+			Assert.That(result.Success, Is.False);
+			Assert.That(2, Is.EqualTo(TestUser.FailedLogonAttemptCount));
+			Assert.That(TestUser.UserName, Is.Not.EqualTo(result.UserName));
+			Assert.That(TestUser.UserLogs.Any(b => b.Description.Contains("Failed Logon")));
+			Assert.That(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5), Is.False);
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
 
 		}
@@ -114,13 +114,13 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.CreateIdentityAsync(TestUser, authenticationType);
 
 			// Assert
-			Assert.AreEqual(4, result.Claims.Count());
+			Assert.That(4, Is.EqualTo(result.Claims.Count()));
 			var nameIdentifier = result.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier);
-			Assert.IsNotNull(nameIdentifier);
-			Assert.AreEqual(TestUser.Id.ToString(), nameIdentifier.Value);
+			Assert.That(nameIdentifier, Is.Not.Null);
+			Assert.That(TestUser.Id.ToString(), Is.EqualTo(nameIdentifier.Value));
 			var roleName = result.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role);
-			Assert.IsNotNull(roleName);
-			Assert.AreEqual(_testRoleName, roleName.Value);
+			Assert.That(roleName, Is.Not.Null);
+			Assert.That(_testRoleName, Is.EqualTo(roleName.Value));
 		}
 
 		[Test]
@@ -139,17 +139,17 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordFromTokenAsync(TestUser.Id, passwordResetToken, newPassword);
 
 			// Assert
-			Assert.AreEqual(0, result.Errors.Count());
+			Assert.That(0, Is.EqualTo(result.Errors.Count()));
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
-			Assert.IsNull(TestUser.PasswordResetExpiryDateUtc);
-			Assert.IsNull(TestUser.PasswordResetToken);
-			Assert.AreEqual(0, TestUser.FailedLogonAttemptCount);
-			Assert.AreEqual(1, TestUser.UserLogs.Count);
-			Assert.IsTrue(TestUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
+			Assert.That(TestUser.PasswordResetExpiryDateUtc, Is.Null);
+			Assert.That(TestUser.PasswordResetToken, Is.Null);
+			Assert.That(0, Is.EqualTo(TestUser.FailedLogonAttemptCount));
+			Assert.That(1, Is.EqualTo(TestUser.UserLogs.Count));
+			Assert.That(TestUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
 			Assert.That(TestUser.PreviousPasswords.Count, Is.EqualTo(1));
-			Assert.IsNotNull(TestUser.PasswordHash);
-			Assert.IsNotNull(TestUser.PasswordSalt);
-			Assert.IsTrue(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
+			Assert.That(TestUser.PasswordHash, Is.Not.Null);
+			Assert.That(TestUser.PasswordSalt, Is.Not.Null);
+			Assert.That(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
 
 		}
 
@@ -167,14 +167,14 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordAsync(TestUser.Id, oldPassword, newPassword);
 
 			// Assert
-			Assert.AreEqual(0, result, "Password was invalid");
+			Assert.That(0, Is.EqualTo(result), "Password was invalid");
 			_context.AssertWasCalled(a => a.SaveChanges());
-			Assert.AreEqual(1, TestUser.UserLogs.Count);
-			Assert.IsTrue(TestUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
+			Assert.That(1, Is.EqualTo(TestUser.UserLogs.Count));
+			Assert.That(TestUser.UserLogs.Any(a => a.Description.Contains("Password changed")));
 			Assert.That(TestUser.PreviousPasswords.Count, Is.EqualTo(1));
-			Assert.AreNotEqual(oldPasswordHash, TestUser.PasswordHash);
-			Assert.AreNotEqual(oldSalt, TestUser.PasswordSalt);
-			Assert.IsTrue(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
+			Assert.That(oldPasswordHash, Is.Not.EqualTo(TestUser.PasswordHash));
+			Assert.That(oldSalt, Is.Not.EqualTo(TestUser.PasswordSalt));
+			Assert.That(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
 
 		}
 
@@ -202,11 +202,11 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordAsync(TestUser.Id, oldPassword, newPassword);
 
 			// Assert
-			Assert.AreEqual(0, result);
+			Assert.That(0, Is.EqualTo(result));
 			_context.AssertWasCalled(a => a.SaveChanges());
 			_context.AssertWasCalled(a => a.SetDeleted(Arg<PreviousPassword>.Matches(b => b.Salt == "To be removed")));
-			Assert.AreNotEqual(oldPasswordHash, TestUser.PasswordHash);
-			Assert.AreNotEqual(oldSalt, TestUser.PasswordSalt);
+			Assert.That(oldPasswordHash, Is.Not.EqualTo(TestUser.PasswordHash));
+			Assert.That(oldSalt, Is.Not.EqualTo(TestUser.PasswordSalt));
 			var mostRecentPasswordChange = TestUser.PreviousPasswords.OrderByDescending(a => a.ActiveFromDateUtc).Take(1).Single();
 			Assert.That(mostRecentPasswordChange.ActiveFromDateUtc, Is.EqualTo(passwordLastChangedDate));
 
@@ -226,20 +226,20 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ResetPasswordAsync(TestUser.Id, newPassword, actioningUserName);
 
 			// Assert
-			Assert.AreEqual(0, result.Errors.Count());
+			Assert.That(0, Is.EqualTo(result.Errors.Count()));
 			_context.AssertWasCalled(a => a.SaveChangesAsync());
-			Assert.IsNull(TestUser.PasswordResetExpiryDateUtc);
-			Assert.IsNull(TestUser.PasswordResetToken);
-			Assert.AreEqual(0, TestUser.FailedLogonAttemptCount);
-			Assert.AreEqual(1, TestUser.UserLogs.Count);
-			Assert.IsTrue(TestUser.UserLogs.Any(a => a.Description.Contains("User had password reset sent out via email by bob")));
-			Assert.AreNotEqual(TestUser.PasswordHash, oldHash);
-			Assert.AreNotEqual(TestUser.PasswordSalt, oldSalt);
-			Assert.AreEqual(1, TestUser.PreviousPasswords.Count);
+			Assert.That(TestUser.PasswordResetExpiryDateUtc, Is.Null);
+			Assert.That(TestUser.PasswordResetToken, Is.Null);
+			Assert.That(0, Is.EqualTo(TestUser.FailedLogonAttemptCount));
+			Assert.That(1, Is.EqualTo(TestUser.UserLogs.Count));
+			Assert.That(TestUser.UserLogs.Any(a => a.Description.Contains("User had password reset sent out via email by bob")));
+			Assert.That(TestUser.PasswordHash, Is.Not.EqualTo(oldHash));
+			Assert.That(TestUser.PasswordSalt, Is.Not.EqualTo(oldSalt));
+			Assert.That(1, Is.EqualTo(TestUser.PreviousPasswords.Count));
 			var previousPassword = TestUser.PreviousPasswords.First();
 			Assert.That(previousPassword.Hash, Is.EqualTo(oldHash));
 			Assert.That(previousPassword.Salt, Is.EqualTo(oldSalt));
-			Assert.IsTrue(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
+			Assert.That(TestUser.PasswordLastChangedDateUtc > DateTime.UtcNow.AddMinutes(-5));
 			Assert.That(TestUser.PasswordExpiryDateUtc, Is.LessThanOrEqualTo(DateTime.UtcNow), "User should be required to change password on next logon");
 
 		}

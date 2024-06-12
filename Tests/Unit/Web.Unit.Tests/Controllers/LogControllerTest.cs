@@ -42,8 +42,8 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		{
 			var type = _sut.GetType();
 			var attributes = type.GetCustomAttributes(typeof(SeAuthorizeAttribute), true);
-			Assert.IsTrue(attributes.Any(), "No Hep C Authorize Attribute found");
-			Assert.IsTrue(((SeAuthorizeAttribute)attributes.First()).Roles.Contains("Admin"), "No Admin role found on attribute");
+			Assert.That(attributes.Any(), "No Hep C Authorize Attribute found");
+			Assert.That(((SeAuthorizeAttribute)attributes.First()).Roles.Contains("Admin"), "No Admin role found on attribute");
 		}
 
 		[Test]

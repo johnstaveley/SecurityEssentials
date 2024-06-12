@@ -29,7 +29,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
         {
             var type = _sut.GetType();
             var attributes = type.GetCustomAttributes(typeof(NoCacheAttribute), true);
-            Assert.IsTrue(attributes.Any(), "No NoCache Attribute found");
+            Assert.That(attributes.Any(), "No NoCache Attribute found");
         }
 
     }

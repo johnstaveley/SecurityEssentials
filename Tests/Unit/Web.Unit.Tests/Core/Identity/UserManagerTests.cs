@@ -76,7 +76,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordAsync(userId, oldPassword, newPassword);
 
 			// Assert
-			Assert.IsTrue(result.Succeeded, "Expected to Succeed but result was failure");
+			Assert.That(result.Succeeded, "Expected to Succeed but result was failure");
 
 		}
 
@@ -101,7 +101,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordAsync(userId, oldPassword, newPassword);
 
 			// Assert
-			Assert.IsFalse(result.Succeeded);
+			Assert.That(result.Succeeded, Is.False);
 			_userStore.AssertWasNotCalled(a => a.ChangePasswordAsync(userId, oldPassword, newPassword));
 		}
 
@@ -122,7 +122,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordFromTokenAsync(userId, token, newPassword);
 
 			// Assert
-			Assert.IsTrue(result.Succeeded, "Expected to Succeed but result was failure");
+			Assert.That(result.Succeeded, "Expected to Succeed but result was failure");
 
 		}
 
@@ -147,7 +147,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ChangePasswordFromTokenAsync(userId, token, newPassword);
 
 			// Assert
-			Assert.IsFalse(result.Succeeded);
+			Assert.That(result.Succeeded, Is.False);
 			_userStore.AssertWasNotCalled(a => a.ChangePasswordFromTokenAsync(userId, token, newPassword));
 
 		}
@@ -167,7 +167,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ResetPasswordAsync(userId, actioningUserName);
 
 			// Assert
-			Assert.IsTrue(result.Succeeded, "Expected to Succeed but result was failure");
+			Assert.That(result.Succeeded, "Expected to Succeed but result was failure");
 
 		}
 
@@ -181,8 +181,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.CreateAsync(userName, "bob", "the bod", "Secure1HJ", "Secure1HJ", 143, "Jo was my mother");
 
 			// Assert
-			Assert.IsFalse(result.Succeeded);
-			Assert.IsTrue(result.Errors.Contains("Illegal security question"));
+			Assert.That(result.Succeeded, Is.False);
+			Assert.That(result.Errors.Contains("Illegal security question"));
 			_userStore.AssertWasNotCalled(u => u.CreateAsync(Arg<User>.Is.Anything));
 
 		}
@@ -197,8 +197,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.CreateAsync(userName, "bob", "the bod", "insecure", "insecure", 142, "Jo was my mother");
 
 			// Assert
-			Assert.IsFalse(result.Succeeded);
-			Assert.IsTrue(result.Errors.Contains(Consts.UserManagerMessages.PasswordValidityMessage));
+			Assert.That(result.Succeeded, Is.False);
+			Assert.That(result.Errors.Contains(Consts.UserManagerMessages.PasswordValidityMessage));
 			_userStore.AssertWasNotCalled(u => u.CreateAsync(Arg<User>.Is.Anything));
 
 		}
@@ -216,7 +216,7 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.CreateAsync(userName, "bob", "the bod", "Secure1HJ", "Secure1HJ", 142, "Jo was my mother");
 
 			// Assert
-			Assert.IsTrue(result.Succeeded);
+			Assert.That(result.Succeeded);
 			_userStore.AssertWasCalled(u => u.CreateAsync(Arg<User>.Matches(c =>
 				!string.IsNullOrEmpty(c.EmailConfirmationToken) &&
 				c.Approved == _configuration.AccountManagementRegisterAutoApprove &&
@@ -293,8 +293,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
-			Assert.IsTrue(result.Succeeded);
-			Assert.AreEqual(0, result.Errors.Count());
+			Assert.That(result.Succeeded);
+			Assert.That(0, Is.EqualTo(result.Errors.Count()));
 
 		}
 
@@ -361,8 +361,8 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 			var result = await _sut.ValidatePassword(new User(), password, _bannedWords);
 
 			// Assert
-			Assert.IsTrue(result.Succeeded);
-			Assert.AreEqual(0, result.Errors.Count());
+			Assert.That(result.Succeeded);
+			Assert.That(0, Is.EqualTo(result.Errors.Count()));
 		}
         [Test]
         public async Task Given_PasswordIsPwned_When_ValidatePassword_Then_Succeeds()
@@ -444,11 +444,11 @@ namespace SecurityEssentials.Unit.Tests.Core.Identity
 
 		private void AssertValidationResultFailed(SeIdentityResult result, string errorMessageContains)
 		{
-			Assert.IsFalse(result.Succeeded);
-			Assert.AreEqual(1, result.Errors.Count());
+			Assert.That(result.Succeeded, Is.False);
+			Assert.That(1, Is.EqualTo(result.Errors.Count()));
 			if (!string.IsNullOrEmpty(errorMessageContains))
 			{
-				Assert.IsTrue(result.Errors.All(a => a.Contains(errorMessageContains)));
+				Assert.That(result.Errors.All(a => a.Contains(errorMessageContains)), Is.True);
 			}
 		}
 

@@ -20,7 +20,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenTheFollowingLastActivityMessageIsShown(string textToMatch)
         {
             var landingPage = _scenarioContext.GetPage<LandingPage>();
-            Assert.IsTrue(landingPage.GetLastAccountActivity().Contains(textToMatch), $"Expected text '{textToMatch}' but was '{landingPage.GetLastAccountActivity()}'");
+            Assert.That(landingPage.GetLastAccountActivity().Contains(textToMatch), $"Expected text '{textToMatch}' but was '{landingPage.GetLastAccountActivity()}'");
         }
     }
 }

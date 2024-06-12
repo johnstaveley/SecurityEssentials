@@ -152,10 +152,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 		private void AssertMethodIsDecoratedWithAntiThrottlingAttribute(MethodInfo methodInfo)
 		{
 			var attributes = methodInfo.GetCustomAttributes(typeof(AllowXRequestsEveryXSecondsAttribute), true);
-			Assert.IsTrue(attributes.Any(), "No Throttling Attribute found");
+			Assert.That(attributes.Any(), "No Throttling Attribute found");
 			var attribute = ((AllowXRequestsEveryXSecondsAttribute)attributes.First());
-			Assert.IsTrue(attribute.Seconds > 40 && attribute.Seconds < 120);
-			Assert.IsTrue(attribute.Requests < 6);
+			Assert.That(attribute.Seconds > 40 && attribute.Seconds < 120);
+			Assert.That(attribute.Requests < 6);
 
 		}
 

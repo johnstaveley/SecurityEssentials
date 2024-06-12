@@ -34,7 +34,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void GivenIAmTakenToThePasswordRecoveryPage()
         {
             BasePage page = _scenarioContext.GetPage<RecoverPage>();
-            Assert.IsTrue(page.IsCurrentPage);
+            Assert.That(page.IsCurrentPage);
         }
 
     }

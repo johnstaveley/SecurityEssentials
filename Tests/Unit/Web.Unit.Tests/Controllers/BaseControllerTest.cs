@@ -94,10 +94,10 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 		public dynamic AssertJsonResultReturned(ActionResult actionResult)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<JsonResult>(actionResult, "Not JsonResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<JsonResult>(), "Not JsonResult returned from controller");
 			var jsonResult = (JsonResult)actionResult;
-			Assert.IsNotNull(jsonResult.Data, "Json Result should contain data");
+			Assert.That(jsonResult.Data, Is.Not.Null, "Json Result should contain data");
 			var serializer = new JavaScriptSerializer();
 			var responseObject = serializer.Serialize(jsonResult.Data) as dynamic;
 			var response = serializer.Deserialize<dynamic>(responseObject);
@@ -106,87 +106,87 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
 		public void AssertViewResultWithError(ActionResult actionResult, string errorValue)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<ViewResult>(actionResult, "Not ViewResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<ViewResult>(), "Not ViewResult returned from controller");
 			var viewResult = (ViewResult)actionResult;
-			Assert.IsNotNull(viewResult.ViewData.ModelState);
-			Assert.IsFalse(viewResult.ViewData.ModelState.ToList().Count == 0);
+			Assert.That(viewResult.ViewData.ModelState, Is.Not.Null);
+			Assert.That(viewResult.ViewData.ModelState.ToList().Count == 0, Is.False);
 			var error = viewResult.ViewData.ModelState.ToList().Select(a => a.Value.Errors).Where(b => b.Count > 0).ToList();
-			Assert.AreEqual(errorValue, error[0][0].ErrorMessage);
+			Assert.That(errorValue, Is.EqualTo(error[0][0].ErrorMessage));
 
 		}
 
 		public T AssertViewResultReturnsType<T>(ActionResult actionResult)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<ViewResult>(actionResult, "Not ViewResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<ViewResult>(), "Not ViewResult returned from controller");
 			var viewResult = (ViewResult)actionResult;
-			Assert.IsInstanceOf<T>(viewResult.ViewData.Model, "Not expected type returned as data");
+			Assert.That(viewResult.ViewData.Model, Is.Not.EqualTo("Not expected type returned as data"));
 			return (T)viewResult.ViewData.Model;
 
 		}
 		public T AssertHttpContentReturnsType<T>(IHttpActionResult result)
 		{
-			Assert.IsInstanceOf<OkNegotiatedContentResult<T>>(result);
+			Assert.That(result, Is.InstanceOf<OkNegotiatedContentResult<T>>());
 			var conNegResult = result as OkNegotiatedContentResult<T>;
-			Assert.IsNotNull(conNegResult);
+			Assert.That(conNegResult, Is.Not.Null);
 			return conNegResult.Content;
 		}
 		public ViewResult AssertViewResultReturned(ActionResult actionResult, string viewName)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<ViewResult>(actionResult, "Not ViewResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<ViewResult>(), "Not ViewResult returned from controller");
 			var viewResult = (ViewResult)actionResult;
 			if (!string.IsNullOrEmpty(viewName))
 			{
-				Assert.AreEqual(viewName, viewResult.ViewName);
+				Assert.That(viewName, Is.EqualTo(viewResult.ViewName));
 			}
 			return viewResult;
 		}
 
 		public void AssertNotFoundReturned(ActionResult actionResult)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<HttpNotFoundResult>(actionResult, "Not HttpNotFoundResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<HttpNotFoundResult>(), "Not HttpNotFoundResult returned from controller");
 		}
 
 		public void AssertBadRequestReturned(ActionResult actionResult)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<HttpStatusCodeResult>(actionResult, "Not BadRequestResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<HttpStatusCodeResult>(), "Not BadRequestResult returned from controller");
 			var statusCodeResult = (HttpStatusCodeResult)actionResult;
 			Assert.That(statusCodeResult.StatusCode, Is.EqualTo(400));
 		}
 
 		public void AssertPartialViewResultReturned(ActionResult actionResult, string partialViewName)
 		{
-			Assert.IsNotNull(actionResult, "No result was returned from controller");
-			Assert.IsInstanceOf<PartialViewResult>(actionResult, "Not PartialViewResult returned from controller");
+			Assert.That(actionResult, Is.Not.Null, "No result was returned from controller");
+			Assert.That(actionResult, Is.InstanceOf<PartialViewResult>(), "Not PartialViewResult returned from controller");
 			var viewResult = (PartialViewResult)actionResult;
 			if (!string.IsNullOrEmpty(partialViewName))
 			{
-				Assert.AreEqual(partialViewName, viewResult.ViewName);
+				Assert.That(partialViewName, Is.EqualTo(viewResult.ViewName));
 			}
 		}
 
 		public void AssertRedirectToActionReturned(ActionResult result, object action, string controller)
 		{
-			Assert.IsNotNull(result, "No result was returned from controller");
-			Assert.IsInstanceOf<System.Web.Mvc.RedirectToRouteResult>(result, "Not RedirectToRouteResult returned from controller");
+			Assert.That(result, Is.Not.Null, "No result was returned from controller");
+			Assert.That(result, Is.InstanceOf<System.Web.Mvc.RedirectToRouteResult>(), "Not RedirectToRouteResult returned from controller");
 			var redirectResult = (System.Web.Mvc.RedirectToRouteResult)result;
-			Assert.AreEqual(action, redirectResult.RouteValues.Values.ToList()[0]);
-			Assert.AreEqual(controller, redirectResult.RouteValues.Values.ToList()[1]);
+			Assert.That(action, Is.EqualTo(redirectResult.RouteValues.Values.ToList()[0]));
+			Assert.That(controller, Is.EqualTo(redirectResult.RouteValues.Values.ToList()[1]));
 
 		}
 
 		public void AssertRedirectToActionReturned(ActionResult result, object routeValue, object action, string controller)
 		{
-			Assert.IsNotNull(result, "No result was returned from controller");
-			Assert.IsInstanceOf<System.Web.Mvc.RedirectToRouteResult>(result, "Not RedirectToRouteResult returned from controller");
+			Assert.That(result, Is.Not.Null, "No result was returned from controller");
+			Assert.That(result, Is.InstanceOf<System.Web.Mvc.RedirectToRouteResult>(), "Not RedirectToRouteResult returned from controller");
 			var redirectResult = (System.Web.Mvc.RedirectToRouteResult)result;
-			Assert.AreEqual(routeValue, redirectResult.RouteValues.Values.ToList()[0], "Route variable was not correct");
-			Assert.AreEqual(action, redirectResult.RouteValues.Values.ToList()[1], "Route action was not correct");
-			Assert.AreEqual(controller, redirectResult.RouteValues.Values.ToList()[2], "Route controller name was not correct");
+			Assert.That(routeValue, Is.EqualTo(redirectResult.RouteValues.Values.ToList()[0]), "Route variable was not correct");
+			Assert.That(action, Is.EqualTo(redirectResult.RouteValues.Values.ToList()[1]), "Route action was not correct");
+			Assert.That(controller, Is.EqualTo(redirectResult.RouteValues.Values.ToList()[2]), "Route controller name was not correct");
 
 		}
 		protected void ExpectGetUserId()

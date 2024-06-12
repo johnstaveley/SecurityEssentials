@@ -24,7 +24,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
 		public void ThenAnErrorMessageIsShown(string errorMessage)
 		{
 			var driver = _featureContext.GetWebDriver();
-			Assert.IsTrue(driver.PageSource.Contains(errorMessage), $"Page should have contained error message '{errorMessage}'");
+			Assert.That(driver.PageSource.Contains(errorMessage), Is.True, $"Page should have contained error message '{errorMessage}'");
 		}
         [Then(@"The following errors are displayed on the '(.*)' page:")]
         public void ThenTheFollowingErrorsAreDisplayedOnThePage(string pageName, Table table)
@@ -43,7 +43,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             }
             var actualErrors = page.ErrorSummary;
             var expectedErrors = table.Rows.Select(a => a[0]).ToList();
-            Assert.IsTrue(actualErrors.SequenceEqual(expectedErrors), "Expected FieldErrors are not present");
+            Assert.That(actualErrors.SequenceEqual(expectedErrors), Is.True, "Expected FieldErrors are not present");
         }
 	}
 }

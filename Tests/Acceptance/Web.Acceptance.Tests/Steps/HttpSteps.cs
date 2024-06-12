@@ -39,13 +39,13 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             var expectedHeaders = table.CreateSet<HttpHeader>().ToList();
             foreach (var expectedHeader in expectedHeaders)
             {
-                Assert.IsTrue(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key), $"Headers do not contain the key '{expectedHeader.Key}'");
+                Assert.That(actualHeaders.ToList().Any(a => a.Item1 == expectedHeader.Key), $"Headers do not contain the key '{expectedHeader.Key}'");
                 var actualHeader = actualHeaders.First(a => a.Item1 == expectedHeader.Key);
                 if (actualHeader.Item1 == "Content-Security-Policy" && ConfigurationManager.AppSettings["WebServerUrl"].StartsWith("https:"))
                 {
                     expectedHeader.Value = expectedHeader.Value.Replace("font-src 'self' https:", "font-src https:").Replace("*", "https:").Replace("'self'", "https:");
                 }
-                Assert.AreEqual(expectedHeader.Value, actualHeader.Item2, $"Header values do not match for key '{actualHeader.Item1}'");
+                Assert.That(expectedHeader.Value, Is.EqualTo(actualHeader.Item2), $"Header values do not match for key '{actualHeader.Item1}'");
             }
         }
 
@@ -56,7 +56,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
             var excludedHeaders = table.CreateSet<HttpHeader>();
             foreach (var excludedHeader in excludedHeaders)
             {
-                Assert.IsFalse(actualHeaders.Any(a => a.Item1 == excludedHeader.Key), $"Headers contain a header key '{excludedHeader.Key}' when it should not");
+                Assert.That(actualHeaders.Any(a => a.Item1 == excludedHeader.Key), Is.False, $"Headers contain a header key '{excludedHeader.Key}' when it should not");
             }
         }
     }

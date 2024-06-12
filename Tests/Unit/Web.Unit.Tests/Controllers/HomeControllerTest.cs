@@ -55,7 +55,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewResult = AssertViewResultReturned(result, "Contact");
-            Assert.AreEqual("Your contact page.", viewResult.ViewData["Message"]);
+            Assert.That("Your contact page.", Is.EqualTo(viewResult.ViewData["Message"]));
 
         }
 
@@ -70,7 +70,7 @@ namespace SecurityEssentials.Unit.Tests.Controllers
 
             // Assert
             var viewResult = AssertViewResultReturned(result, "Index");
-            Assert.AreEqual("Security Essentials", viewResult.ViewData["Message"]);
+            Assert.That("Security Essentials", Is.EqualTo(viewResult.ViewData["Message"]));
 
         }
 

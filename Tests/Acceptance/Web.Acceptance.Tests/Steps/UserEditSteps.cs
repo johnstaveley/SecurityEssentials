@@ -38,7 +38,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         public void ThenAConfirmationMessageIsShown(string message)
         {
             var page = _scenarioContext.GetPage<UserEditPage>();
-            Assert.IsTrue(page.GetStatusMessage().Contains(message), $"A confirmation message '{message}' should have been displayed");
+            Assert.That(page.GetStatusMessage().Contains(message), Is.True, $"A confirmation message '{message}' should have been displayed");
         }
 
         [Then(@"The following user edit information is displayed:")]
@@ -51,43 +51,43 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
                 switch (row[0].ToLower().Replace(" ", ""))
                 {
                     case "approved":
-                        Assert.AreEqual(user.Approved, page.GetApproved());
+                        Assert.That(user.Approved, Is.EqualTo(page.GetApproved()));
                         break;
                     case "emailverified":
-                        Assert.AreEqual(user.EmailVerified, page.GetEmailVerified());
+                        Assert.That(user.EmailVerified, Is.EqualTo(page.GetEmailVerified()));
                         break;
                     case "enabled":
-                        Assert.AreEqual(user.Enabled, page.GetEnabled());
+                        Assert.That(user.Enabled, Is.EqualTo(page.GetEnabled()));
                         break;
                     case "firstname":
-                        Assert.AreEqual(user.FirstName, page.GetFirstName());
+                        Assert.That(user.FirstName, Is.EqualTo(page.GetFirstName()));
                         break;
                     case "hometelephonenumber":
-                        Assert.AreEqual(user.HomeTelephoneNumber, page.GetTelNoHome());
+                        Assert.That(user.HomeTelephoneNumber, Is.EqualTo(page.GetTelNoHome()));
                         break;
                     case "lastname":
-                        Assert.AreEqual(user.LastName, page.GetLastName());
+                        Assert.That(user.LastName, Is.EqualTo(page.GetLastName()));
                         break;
                     case "mobiletelephonenumber":
-                        Assert.AreEqual(user.MobileTelephoneNumber, page.GetTelNoMobile());
+                        Assert.That(user.MobileTelephoneNumber, Is.EqualTo(page.GetTelNoMobile()));
                         break;
                     case "postcode":
-                        Assert.AreEqual(user.Postcode, page.GetPostcode());
+                        Assert.That(user.Postcode, Is.EqualTo(page.GetPostcode()));
                         break;
                     case "skypename":
-                        Assert.AreEqual(user.SkypeName, page.GetSkypeName());
+                        Assert.That(user.SkypeName, Is.EqualTo(page.GetSkypeName()));
                         break;
                     case "title":
-                        Assert.AreEqual(user.Title, page.GetTitle());
+                        Assert.That(user.Title, Is.EqualTo(page.GetTitle()));
                         break;
                     case "town":
-                        Assert.AreEqual(user.Town, page.GetTown());
+                        Assert.That(user.Town, Is.EqualTo(page.GetTown()));
                         break;
                     case "username":
-                        Assert.AreEqual(user.UserName, page.GetUserName());
+                        Assert.That(user.UserName, Is.EqualTo(page.GetUserName()));
                         break;
                     case "worktelephonenumber":
-                        Assert.AreEqual(user.WorkTelephoneNumber, page.GetTelNoWork());
+                        Assert.That(user.WorkTelephoneNumber, Is.EqualTo(page.GetTelNoWork()));
                         break;
 
                     default:
@@ -167,14 +167,14 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         {
             var page = _scenarioContext.GetPage<MakeAdminPage>();
             var user = table.CreateInstance<UserViewModel>();
-            Assert.AreEqual(user.UserName, page.GetUserName());
+            Assert.That(user.UserName, Is.EqualTo(page.GetUserName()));
         }
         [Given(@"I am shown the following remove admin details:")]
         public void GivenIAmShownTheFollowingRemoveAdminDetails(Table table)
         {
             var page = _scenarioContext.GetPage<RemoveAdminPage>();
             var user = table.CreateInstance<UserViewModel>();
-            Assert.AreEqual(user.UserName, page.GetUserName());
+            Assert.That(user.UserName, Is.EqualTo(page.GetUserName()));
         }
         [Given(@"I click Delete User")]
         public void GivenIClickDeleteUser()
@@ -194,7 +194,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         {
             var page = _scenarioContext.GetPage<ResetPasswordPage>();
             var user = table.CreateInstance<UserViewModel>();
-            Assert.AreEqual(user.UserName, page.GetUserName());
+            Assert.That(user.UserName, Is.EqualTo(page.GetUserName()));
         }
         [When(@"I click confirm reset password")]
         public void WhenIClickConfirmResetPassword()
@@ -207,7 +207,7 @@ namespace SecurityEssentials.Acceptance.Tests.Steps
         {
             var page = _scenarioContext.GetPage<DeleteUserPage>();
             var user = table.CreateInstance<UserViewModel>();
-            Assert.AreEqual(user.UserName, page.GetUserName());
+            Assert.That(user.UserName, Is.EqualTo(page.GetUserName()));
         }
         [When(@"I click confirm delete user")]
         public void WhenIClickConfirmDeleteUser()
