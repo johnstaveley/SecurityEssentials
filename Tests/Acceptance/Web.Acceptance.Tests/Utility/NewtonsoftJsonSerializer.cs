@@ -1,7 +1,9 @@
 ﻿namespace SecurityEssentials.Acceptance.Tests.Utility
 {
     using Newtonsoft.Json;
+    using RestSharp.Serializers;
     using System.IO;
+    using System.Net.Mime;
 
     namespace SecurityEssentials.Acceptance.Tests.Utility
     {
@@ -14,10 +16,9 @@
 				_serializer = serializer;
 			}
 
-			public string ContentType
-			{
-				get => "application/json";
-                set { }
+            RestSharp.ContentType ISerializer.ContentType {
+				get => RestSharp.ContentType.Json;
+				set => throw new System.NotImplementedException();
 			}
 
 			public string DateFormat { get; set; }
@@ -55,6 +56,7 @@
 			{
 				NullValueHandling = NullValueHandling.Ignore,
 			});
-		}
+            
+        }
 	}
 }
