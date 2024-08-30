@@ -102,8 +102,9 @@
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Build.Framework.17.10.4\lib\net472\Microsoft.Build.Framework.dll</HintPath>
@@ -132,8 +133,9 @@
     <Reference Include="nunit.framework.legacy, Version=4.0.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.4.1.0\lib\net462\nunit.framework.legacy.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=108.0.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\RestSharp.108.0.1\lib\netstandard2.0\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=112.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <HintPath>..\..\..\packages\RestSharp.112.0.0\lib\net48\RestSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SeleniumExtras.PageObjects, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\DotNetSeleniumExtras.PageObjects.3.11.0\lib\net45\SeleniumExtras.PageObjects.dll</HintPath>
@@ -224,11 +226,13 @@
     <Reference Include="System.Spatial, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Spatial.5.8.5\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Text.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.Text.Json.6.0.0\lib\net461\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
