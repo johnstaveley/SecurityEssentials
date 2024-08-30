@@ -3,7 +3,6 @@
     using Newtonsoft.Json;
     using RestSharp.Serializers;
     using System.IO;
-    using System.Net.Mime;
 
     namespace SecurityEssentials.Acceptance.Tests.Utility
     {
